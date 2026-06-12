@@ -4,7 +4,7 @@
 
 > Status: ACTIVE — Post-Portal Strategic Layer
 > Authority: Platform Architecture + Governance
-> Version: 4.0 — June 2026
+> Version: 4.1 — June 2026
 > Priority: Long-Term Platform Evolution
 > Truth State: [Future Vision] — Gate A not yet PASSED
 > Governance State: [Draft]
@@ -18,11 +18,14 @@
 ```
 C-83 defines what things mean.
 C-84 defines when runtime may exist and when it is trusted to act.
+C-85 defines infrastructure sequencing and layer identity.
+C-87 defines execution governance and ownership classification.
 
-Three questions answered:
-1. When may the runtime be built?    → Runtime Readiness Gates
-2. What may the runtime do?          → Runtime Governance Boundary
-3. How may the runtime be trusted?   → Constitutional Rules
+Four questions answered:
+1. When may the runtime be built?        → Runtime Readiness Gates
+2. What may the runtime do?              → Runtime Governance Boundary
+3. How may the runtime be trusted?       → Constitutional Rules
+4. When may TEC AI Reasoning exist?      → Reasoning Infrastructure Gate
 ```
 
 ---
@@ -38,6 +41,7 @@ UI Platform
 → State-Aware Platform     (Stage B)
 → Semantic Resolution      (Stage C)
 → Economic Runtime MVP     (Stage D)
+→ Reasoning Infrastructure (Stage D+)
 → Adaptive Runtime         (Stage E — far future)
 ```
 
@@ -113,10 +117,21 @@ Regression Rule: PASSED → EXPIRED → dependent stages FROZEN.
 | Active users | ≥ 10,000 |
 | State reconstruction from events | 100% success |
 
+## GATE D+ — Reasoning Infrastructure
+**Unlocks:** Stage D+ (TEC AI may begin) | **State:** LOCKED — Gate D.5 prerequisite
+
+| Criterion | Target |
+|-----------|--------|
+| Economic Runtime MVP operational | ≥ 30 days stable |
+| All Layer 1-6 infrastructure mature | Gates B+C+D passed |
+| Governance audit trail complete | 100% economic events |
+| Human override tested | All runtime decisions |
+| Reasoning reproducibility verified | 100% |
+
 ## GATE E — Adaptive Runtime
 **Unlocks:** Stage E | **State:** LOCKED — far future
 
-All Gates A–D.5 PASSED + platform reliability ≥ 99.9% (30-day).
+All Gates A–D+ PASSED + platform reliability ≥ 99.9% (30-day).
 
 ---
 
@@ -149,7 +164,62 @@ All Gates A–D.5 PASSED + platform reliability ≥ 99.9% (30-day).
 
 ---
 
-# 5. CONSTITUTIONAL RULES (Stage D onward — forever)
+# 5. TEC AI — REASONING INFRASTRUCTURE GOVERNANCE
+
+> Truth State: [Future Vision] | Gate: D+ | Commitment: [Tentative]
+
+```
+TEC AI is NOT an App.
+TEC AI is NOT a Domain.
+TEC AI IS: Institutional Reasoning Runtime — Layer 7 of C-85 Infrastructure Stack.
+```
+
+## What TEC AI Consumes
+```
+✅ Economic events from all 12 services
+✅ State snapshots from all infrastructure layers
+✅ Governance rules from SYSTEM layer
+✅ Risk signals from ALERT layer
+✅ Relationship context from Connection layer
+✅ Intelligence signals from Analytics layer
+```
+
+## What TEC AI Produces
+```
+✅ Recommendations  → surfaced to human for decision
+✅ Reasoning chains → explainable + reproducible always
+✅ Guidance signals → to Nexus coordination layer only
+```
+
+## TEC AI Constitutional Rules
+```
+❌ NEVER execute economic actions
+❌ NEVER move funds
+❌ NEVER alter governance rules
+❌ NEVER alter ownership records
+❌ NEVER suppress Risk signals
+❌ NEVER make recommendations it cannot explain
+❌ NEVER make recommendations it cannot replay
+
+✅ Every recommendation reproducible from: state + events + rules
+✅ Human override always available
+✅ Every output carries: reproducible_from + assurance_level
+✅ Kill switch required (AL-5)
+```
+
+## TEC AI Assurance Level
+```
+Minimum: AL-5 (Constitutional)
+  → ADR required before any TEC AI capability ships
+  → Governance board review required
+  → Blast radius classified
+  → Kill switch tested
+  → Full audit trail on every output
+```
+
+---
+
+# 6. CONSTITUTIONAL RULES (Stage D onward — forever)
 
 ## Rule 1 — Runtime Determinism
 ```
@@ -200,10 +270,10 @@ All runtime decisions MUST support:
 
 ---
 
-# 6. GOVERNANCE ASSURANCE LEVELS
+# 7. GOVERNANCE ASSURANCE LEVELS
 
 | Level | Name | Requirements |
-|-------|------|-------------|
+|-------|------|--------------|
 | AL-1 | Minimal | Logs + basic observability |
 | AL-2 | Standard | Metrics + tracing + determinism |
 | AL-3 | Enhanced | Full audit trail + explainability + human override |
@@ -218,21 +288,23 @@ All runtime decisions MUST support:
 | Risk Escalation | AL-4 |
 | Trust Engine | AL-5 |
 | Economic State Mutation | AL-5 |
+| TEC AI Reasoning Output | AL-5 |
 
 ---
 
-# 7. BLAST RADIUS CLASSIFICATION
+# 8. BLAST RADIUS CLASSIFICATION
 
 | Capability | Blast Radius | Severity | Kill Switch |
 |-----------|-------------|----------|-------------|
 | Risk Escalation | Platform-wide | P0 | ✅ Required |
 | Trust Engine | Identity-wide | P1 | ✅ Required |
+| TEC AI Reasoning | Platform-wide | P0 | ✅ Required |
 | Semantic Resolver | App-level | P2 | Feature flag |
 | Attention Engine | UI-only | P3 | Feature flag |
 
 ---
 
-# 8. PACKAGE EVOLUTION
+# 9. PACKAGE EVOLUTION
 
 | Phase | Package | Gate |
 |-------|---------|------|
@@ -240,11 +312,12 @@ All runtime decisions MUST support:
 | Post-Portal | @tec/evl-core | Gate A PASSED |
 | Runtime Foundation | @tec/runtime-state | Gates B+C |
 | Runtime MVP | @tec/economic-runtime | Gates D+D.5 |
+| Reasoning Infrastructure | @tec/reasoning-runtime | Gate D+ |
 | Adaptive | @tec/adaptive-runtime | Gate E |
 
 ---
 
-# 9. PRIORITY ORDER (Post-Portal)
+# 10. PRIORITY ORDER (Post-Portal)
 
 | Priority | Objective | Gate |
 |----------|-----------|------|
@@ -254,7 +327,8 @@ All runtime decisions MUST support:
 | P2 | State Models + Ownership Registry | Gate B |
 | P2 | Semantic Resolver | Gate C |
 | P3 | Economic Runtime MVP | Gates D + D.5 |
-| P4 | Adaptive Runtime | Gate E |
+| P4 | TEC AI Reasoning Infrastructure | Gate D+ |
+| P5 | Adaptive Runtime | Gate E |
 
 ---
 
@@ -266,9 +340,11 @@ Then:    events + ownership
 Then:    state + audit
 Then:    semantic coordination
 Then:    runtime intelligence
+Then:    institutional reasoning (earned, not assumed)
 Then:    adaptive intelligence (earned, not assumed)
 
 Each step gated. Each gate measured.
 Each decision explainable. Each decision deterministic.
 Each decision reversible. Each human override preserved.
+TEC AI advises. Humans decide. Governance rules.
 ```

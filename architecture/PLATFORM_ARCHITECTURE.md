@@ -1,6 +1,8 @@
 # TEC Platform Architecture
 
+> Version: 2.0 — June 2026
 > Truth State: [Current State] — verified against live platform (June 2026)
+> Future Vision sections explicitly labeled
 > Authority: C-00 Platform Constitution + C-67 Source of Truth Matrix
 > ADR References: ADR-001 → ADR-007 (C-64)
 
@@ -9,19 +11,83 @@
 ## 1. PLATFORM IDENTITY
 
 ```
-TEC = Stripe + Tencent + Shopify — inside Pi Network
+TEC TODAY:    Federated Pi-Native Economic Coordination Platform
+TEC DIRECTION: Pi-Native Economic Operating Infrastructure
+TEC LONG-TERM: Pi-Native Economic Operating Infrastructure
 
 Not: a super app
 Not: a monolithic SaaS
-Is:  a Federated Economic Coordination Platform
+Is:  a Federated Economic Operating Infrastructure
 
 Core Flow:
-  Economic Graph → Identity Graph → Federated Applications → Coordination
+  Economic Graph → Identity Graph → Federated Applications → Operating Infrastructure
 ```
 
 ---
 
-## 2. SYSTEM LAYERS
+## 2. THE 9-LAYER INFRASTRUCTURE MODEL
+
+> Truth State: [Future Vision] (complete model) — Layers 1, 4 (partial), 8, 9 are [Current State]
+
+```
+ Pi Network (Blockchain + Settlement + Wallet)       [External — Foundation]
+      ↓
+ Layer 1:  Identity Infrastructure                   [Current State]
+           Hub Auth + Trust + Pi identity
+      ↓
+ Layer 2:  Reality Infrastructure                    [Planned → Future]
+           Life (Personal Context) + Connection (Relationships) + Explorer (Discovery)
+           → System of Record
+      ↓
+ Layer 3:  Intelligence Infrastructure               [Planned State]
+           Analytics — economic signals + health + risk
+      ↓
+ Layer 4:  Governance Infrastructure                 [Current State — partial]
+           SYSTEM (API Gateway + ADRs + Policy CI + Kill Switches)
+      ↓
+ Layer 5:  Coordination Infrastructure              [Future Vision]
+           Nexus — orchestrates mature layers
+      ↓
+ Layer 6:  Risk Infrastructure                      [Future Vision]
+           ALERT + NX
+      ↓
+ Layer 7:  Reasoning Infrastructure                 [Future Vision]
+           TEC AI — Institutional Reasoning Runtime (cross-layer)
+      ↓
+ Layer 8:  Access Infrastructure                    [Current State]
+           Hub — Unified Access Platform
+      ↓
+ Layer 9:  Production Infrastructure                [Current State]
+           Commerce + Assets + Ecommerce + Apps
+      ↓
+    Economic Activity
+```
+
+### Three-Way System Classification
+
+```
+System of Record    = Layers 1-6 (Infrastructure)
+  → defines economic reality
+  → Truth Owner of all economic state
+
+System of Reasoning = Layer 7 (TEC AI)
+  → interprets economic reality
+  → produces Recommendations only — NEVER executes
+  → Recommendation Owner
+
+System of Access    = Layer 8 (Hub)
+  → provides access to TEC infrastructure
+  → SSO Authority + Payment Orchestrator + App Registry
+  → Access Owner
+
+Systems of Production = Layer 9 (Apps)
+  → create economic value within infrastructure
+  → Execution Owner within sovereign domain
+```
+
+---
+
+## 3. TECHNICAL SYSTEM LAYERS
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -54,7 +120,7 @@ Core Flow:
 
 ---
 
-## 3. FEDERATED APP MODEL
+## 4. FEDERATED APP MODEL
 
 ```
                     HUB (Conductor)
@@ -84,7 +150,7 @@ Core Flow:
 
 ---
 
-## 4. IDENTITY & AUTH ARCHITECTURE
+## 5. IDENTITY & AUTH ARCHITECTURE
 
 ```
 Pi Network
@@ -113,7 +179,7 @@ Hub sets HttpOnly cookies:
 
 ---
 
-## 5. PAYMENT ARCHITECTURE (DUAL-MODE)
+## 6. PAYMENT ARCHITECTURE (DUAL-MODE)
 
 Based on ADR-002 + ADR-007. Every app supports both modes.
 
@@ -156,10 +222,10 @@ if (isHubNavigation() || !window.Pi || !piReady) {
 
 ---
 
-## 6. BACKEND SERVICES MAP
+## 7. BACKEND SERVICES MAP
 
 | Service | Port | Role | Owner Entity |
-|---------|------|------|--------------|
+|---------|------|------|------|
 | tec-api-gateway | 4000 | Entry point, routing, JWT verify | — |
 | tec-auth-service | 4001 | Pi identity, SSO, JWT issuance | Principal, Session |
 | tec-payment-service | 4002 | Pi payments, Outbox pattern | Payment |
@@ -179,7 +245,7 @@ if (isHubNavigation() || !window.Pi || !piReady) {
 
 ---
 
-## 7. EVENT ARCHITECTURE
+## 8. EVENT ARCHITECTURE
 
 ```
 Service emits event
@@ -202,7 +268,7 @@ Consumer groups (idempotent)
 
 ---
 
-## 8. DATA ARCHITECTURE
+## 9. DATA ARCHITECTURE
 
 ### Database
 - PostgreSQL per service (Railway) — no shared databases (ADR-005)
@@ -230,7 +296,7 @@ Consumer groups (idempotent)
 
 ---
 
-## 9. SECURITY ARCHITECTURE
+## 10. SECURITY ARCHITECTURE
 
 | Control | Implementation |
 |---------|---------------|
@@ -252,7 +318,7 @@ Consumer groups (idempotent)
 
 ---
 
-## 10. TECHNOLOGY STACK
+## 11. TECHNOLOGY STACK
 
 | Layer | Technology |
 |-------|------------|
@@ -272,7 +338,7 @@ Consumer groups (idempotent)
 
 ---
 
-## 11. ARCHITECTURE DECISION RECORDS
+## 12. ARCHITECTURE DECISION RECORDS
 
 | ADR | Decision | Status |
 |-----|----------|--------|
@@ -288,14 +354,14 @@ Full ADR details → [`knowledge-base/C-64___ADR_SYSTEM.md`](../knowledge-base/C
 
 ---
 
-## 12. PLATFORM EVOLUTION STAGES
+## 13. PLATFORM EVOLUTION STAGES
 
 ```
 Stage 1  Multi-App Startup           ✅  COMPLETE
 Stage 2  Federated Platform          ◀   CURRENT
 Stage 3  Operational Platform            Gate A required
 Stage 4  Economic Coordination           Gates B+C+D required
-Stage 5  Ecosystem Infrastructure        Gate E required
+Stage 5  Economic Operating Infrastructure Gate E required
 ```
 
 ### Expansion Gates
@@ -311,7 +377,54 @@ Full maturity model → [`knowledge-base/C-82___PLATFORM_MATURITY_EVOLUTION.md`]
 
 ---
 
-## 13. FAILURE DOMAINS
+## 14. FUTURE VISION — TEC AI REASONING INFRASTRUCTURE
+
+> Truth State: [Future Vision] | Gate: D+ | Commitment: [Tentative]
+
+```
+TEC AI = Institutional Reasoning Runtime
+
+NOT: an App
+NOT: a Domain
+NOT: a chatbot
+IS:  Cross-layer intelligence that consumes all infrastructure layers
+
+Inputs:
+  Economic events from all 12 services
+  State from Identity + Reality + Intelligence layers
+  Governance rules from SYSTEM layer
+  Risk signals from ALERT layer
+
+Outputs:
+  Recommendations    → surfaced to human for decision
+  Reasoning chains   → explainable, reproducible
+  Guidance signals   → to Nexus coordination layer
+
+Constitutional Rules (same as C-84):
+  ❌ NEVER execute economic actions
+  ❌ NEVER move funds
+  ❌ NEVER alter governance rules
+  ✅ Every output reproducible from: state + events + rules
+  ✅ Human override always available
+```
+
+### VAPI — Natural Language Coordination Interface
+
+> Truth State: [Future Vision] | Gate: E | Commitment: [Exploratory]
+
+```
+VAPI is an Interaction Runtime — NOT a Domain
+VAPI is a Channel — like Hub (web), Mobile (native), Email
+
+VAPI answers: "How does a user speak to TEC's economic infrastructure?"
+
+VAPI routes user intent → TEC Infrastructure
+VAPI does NOT define economic reality — it accesses it
+```
+
+---
+
+## 15. FAILURE DOMAINS
 
 | Domain | Components | Blast Radius | Priority |
 |--------|-----------|-------------|----------|
@@ -331,7 +444,7 @@ Full maturity model → [`knowledge-base/C-82___PLATFORM_MATURITY_EVOLUTION.md`]
 
 ---
 
-## 14. COMPOSABLE SOVEREIGNTY
+## 16. COMPOSABLE SOVEREIGNTY
 
 ```
 SHARED (platform governs — apps cannot override):
