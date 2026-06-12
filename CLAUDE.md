@@ -1,0 +1,48 @@
+# TEC Knowledge Base
+
+Centralized knowledge base for the TEC Federated Platform Ecosystem.
+
+## Structure
+
+```
+knowledge-base/     # Platform knowledge (C-00 → C-86)
+governance/         # Platform governance documents
+```
+
+## Contents
+
+| Range | Domain |
+|-------|--------|
+| C-00 | Platform Constitution |
+| C-01–C-02 | Identity + Current State |
+| C-10–C-16 | Architecture + Rules |
+| C-20–C-23 | Backend + Apps + SDK |
+| C-30–C-32 | Vision + App Blueprints |
+| C-40–C-49 | Engineering + Violations + Roadmap |
+| C-50–C-58 | Session + Patterns + Protocols |
+| C-59–C-66 | Templates + Code + Guides |
+| C-67–C-78 | Governance + Integrity + Operations |
+| C-82–C-86 | Future Vision (Draft) |
+
+## Governance
+
+- `governance/TEC_GOVERNANCE_CHARTER_v1.1.md` — Platform governance charter
+
+## Navigation
+
+For full index → `knowledge-base/C-57___MASTER_CONTENTS_INDEX.md`
+
+## Authority Hierarchy
+
+C-00 → C-67 → ADRs (C-64) → Current State docs → Runtime Evidence → Code
+
+## Truth Framework
+
+Every architectural statement must declare:
+- Truth State: [Current State] | [Planned State] | [Future Vision] | [Speculation]
+- Governance State: [ADR Approved] | [Governance Approved] | [Draft] | [Rejected]
+- Verification: [Documentation Verified] | [Code Verified] | [Runtime Verified] | [Assumed]
+
+## Version
+
+Knowledge Base v2.0 | Governance Charter v1.1
