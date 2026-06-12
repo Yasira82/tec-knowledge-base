@@ -6,19 +6,38 @@
 
 ---
 
-## 1. PLATFORM MATURITY MODEL
+## 1. PLATFORM IDENTITY EVOLUTION
 
-| Stage | Name | Status | Gate |
-|-------|------|--------|------|
-| 1 | Multi-App Startup | ✅ COMPLETED | — |
-| 2 | Federated Platform | 🔄 CURRENT | — |
-| 3 | Operational Platform | 📋 IN PROGRESS | Gate A |
-| 4 | Economic Coordination | 📋 FUTURE | Gate B+C+D |
-| 5 | Ecosystem Infrastructure | 📋 LONG-TERM | Gate E |
+```
+TEC TODAY:     Federated Pi-Native Economic Coordination Platform
+TEC DIRECTION: Pi-Native Economic Operating Infrastructure
+TEC LONG-TERM: Pi-Native Economic Operating Infrastructure
+```
+
+## 2. THREE-WAY SYSTEM MODEL (C-85)
+
+| System | Layer | Role |
+|--------|-------|------|
+| System of Record | Layers 1-6 Infrastructure | defines economic reality |
+| System of Reasoning | Layer 7 (TEC AI) | interprets economic reality |
+| System of Access | Layer 8 (Hub) | provides access to reality |
+| Systems of Production | Layer 9 (Apps) | creates economic value |
 
 ---
 
-## 2. EXPANSION GATES (C-84)
+## 3. PLATFORM MATURITY MODEL
+
+| Stage | Name | Status | Gate | System Model |
+|-------|------|--------|------|---------------|
+| 1 | Multi-App Startup | ✅ COMPLETED | — | Apps only |
+| 2 | Federated Platform | 🔄 CURRENT | — | Access + Production |
+| 3 | Operational Platform | 📋 IN PROGRESS | Gate A | + Governance layer |
+| 4 | Economic Coordination | 📋 FUTURE | Gate B+C+D | + Reality + Intelligence |
+| 5 | Economic Operating Infrastructure | 📋 LONG-TERM | Gate E | + Reasoning layer |
+
+---
+
+## 4. EXPANSION GATES (C-84)
 
 | Gate | Requirement | Status |
 |------|------------|--------|
@@ -26,16 +45,17 @@
 | **Gate B** | Event schemas complete + 10k+ active users | LOCKED |
 | **Gate C** | Observability fully operational (Prometheus + tracing) | LOCKED |
 | **Gate D** | State models audited + 10k events/day + load validated | LOCKED |
-| **Gate E** | All A-D passed + 99.9% reliability (30-day) | LOCKED |
+| **Gate D+** | Economic Runtime MVP ≥ 30 days stable + Reasoning prerequisites met | LOCKED |
+| **Gate E** | All A-D+ passed + 99.9% reliability (30-day) | LOCKED |
 
 ---
 
-## 3. PLATFORM READINESS INDEX (PRI)
+## 5. PLATFORM READINESS INDEX (PRI)
 
 | Category | Weight | Current Score | Criteria |
 |----------|--------|--------------|----------|
 | Reliability | 25% | 7.5/10 | Auth/Payment 99.9% target — partial. SLOs defined, not measured |
-| Governance | 20% | 9.0/10 | 62 contents + ADR-007 + Truth Framework + C-00 v3.0 |
+| Governance | 20% | 9.0/10 | 63 contents + ADR-007 + Truth Framework + C-00 v3.0 |
 | Security | 15% | 8.5/10 | All P1 closed + Policy CI + JWT HS256 + CORS 5 domains |
 | Observability | 15% | 4.0/10 | Pino logs ✅ — Prometheus partial — no distributed tracing |
 | Operational Readiness | 15% | 7.0/10 | 4 apps live + 12 services — no unified runbooks |
@@ -52,7 +72,7 @@
 
 ---
 
-## 4. READINESS LEVELS
+## 6. READINESS LEVELS
 
 | Score | Status |
 |-------|--------|
@@ -64,12 +84,12 @@
 
 ---
 
-## 5. EXPANSION FREEZE (ACTIVE until Portal)
+## 7. EXPANSION FREEZE (ACTIVE until Portal)
 
 ```
 NO new apps
 NO Layer 3+ execution
-NO new contents after C-86
+NO new contents after C-87
 NO major runtime changes
 
 Freeze lifted when:
@@ -80,7 +100,7 @@ Freeze lifted when:
 
 ---
 
-## 6. PATH TO STAGE 3
+## 8. PATH TO STAGE 3
 
 Stage 3 (Operational Platform) requires Gate A:
 
@@ -94,7 +114,25 @@ Stage 3 (Operational Platform) requires Gate A:
 
 ---
 
-## 7. DEVELOPER PLATFORM VISION (Stage 4+)
+## 9. STAGE 5 VISION — ECONOMIC OPERATING INFRASTRUCTURE
+
+> Truth State: [Future Vision] | Gate: E | Commitment: [Tentative]
+
+```
+Stage 5 = all Three-Way Systems fully operational:
+
+  System of Record      → all 9 infrastructure layers live
+  System of Reasoning   → TEC AI operational (Gate D+)
+  System of Access      → Hub as Unified Access Platform
+  Systems of Production → mature app ecosystem
+
+External API surface → TEC becomes infrastructure for Pi ecosystem
+Not just TEC apps — any Pi-native app may use TEC infrastructure
+```
+
+---
+
+## 10. DEVELOPER PLATFORM VISION (Stage 4+)
 
 ```
 create-tec-app auto-provisions:
@@ -112,6 +150,11 @@ Truth State: [Future Vision] | Commitment: [Exploratory]
 The goal is not to build more software.
 The goal is to build a platform capable of
 evolving safely, operating reliably, and scaling sustainably.
+
+Today:   Federated Platform — apps share identity + payments
+Stage 3: Operational Platform — infrastructure observable + governed
+Stage 4: Economic Coordination — reality + intelligence + coordination active
+Stage 5: Economic Operating Infrastructure — reasoning layer + external API
 
 Current PRI: ~7.25/10
 Portal target: external audit ≥ 9.5
