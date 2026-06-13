@@ -46,3 +46,18 @@ Every architectural statement must declare:
 ## Version
 
 Knowledge Base v2.0 | Governance Charter v1.1
+
+
+---
+
+## Skills
+
+Available via plugin — invoke automatically when the situation matches:
+
+| Situation | Skill |
+|-----------|-------|
+| Updating or reviewing any knowledge-base document | `/docs-guard` |
+| Stress-testing an architectural decision against existing ADRs | `/grill-with-docs` |
+| Converting a strategic discussion into a PRD | `/to-prd` |
+| Breaking a roadmap item into GitHub Issues | `/to-issues` |
+| Session is getting long or context is filling up | `/handoff` |
