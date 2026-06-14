@@ -33,6 +33,9 @@
 | Hub sub-pages | KYC + Subscription + Notifications + Profile |
 | Session Start protocol | SESSION START instruction في CLAUDE.md — 4 repos |
 | C-02 living document | Restructured as always-current state doc |
+| **tec-ui v1.2.1** | PaymentModal + createU2APayment() + PaymentStatusBadge + ObservabilityStatus — 75 tests 80% coverage — PR #4 merged |
+| **Consumer apps on v1.2.1** | Ecommerce `^1.2.1` + Commerce `^1.2.1` + Assets `^1.2.0` ✅ |
+| **NEW-E** | tec-ui tests done — 75 tests 80% coverage ✅ |
 
 ---
 
@@ -41,29 +44,27 @@
 | Item | الإجراء |
 |------|----------|
 | NEW-B INTERNAL_SECRET | Set على Railway (4 services) — 30 min ops task — `tec-api-gateway`, `tec-auth-service`, `tec-payment-service`, `tec-commerce-service` |
-| CLAUDE.md session start → main | Feature branch `claude/gifted-knuth-1yhom3` — needs PR → main for each of 4 repos to activate in production sessions |
+| CLAUDE.md session start → main | Feature branch — محتاج PRs لـ main ليشتغل في production sessions |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. tec-ui v1.2.0 — createU2APayment() + PaymentModal + C-83 Phase 1 tokens
-2. P2 violations (NEW-C, NEW-E, NEW-F, NEW-G) — قبل audit
-3. External Audit ≥ 9.5
-4. Portal Submission → Pi Network
+1. P2 violations (NEW-C, NEW-F, NEW-G) — قبل audit
+2. External Audit ≥ 9.5
+3. Portal Submission → Pi Network
 ```
 
 ---
 
 ## P2 OPEN (يؤثر على Score, مش blocking)
 
-| ID | المشكلة |
-|----|----------|
-| NEW-C | CSRF exclusion على payment routes غير موثق — محتاج ADR |
-| NEW-E | tec-ui: لا tests |
-| NEW-F | Ecommerce: Pi App ID + domain غير موثقين |
-| NEW-G | Dual-Mode Payment مش في Architecture Binding |
+| ID | المشكلة | الحل |
+|----|----------|---------|
+| NEW-C | CSRF exclusion على payment routes غير موثق | أضف ADR في C-64 |
+| NEW-F | Ecommerce: Pi App ID + domain غير موثقين | دوّن في CLAUDE.md |
+| NEW-G | Dual-Mode Payment مش في Architecture Binding | أضف لـ C-47 Architecture Binding table |
 
 ---
 
@@ -72,11 +73,13 @@
 ```
 12 Railway services:   Active
 4 apps (Vercel):      Hub + Commerce + Assets + Ecommerce
-4 npm packages:       tec-auth + tec-ui + tec-sdk + tec-shared
+4 npm packages:       tec-auth + tec-ui (v1.2.1) + tec-sdk + tec-shared
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
+tec-ui coverage:      80% (75 tests)
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 Ecommerce payment:    ✅ 503 fixed (PR #25 merged)
+tec-ui v1.2.1:        ✅ PaymentModal + createU2APayment — all 3 apps upgraded
 ```
 
 ---
