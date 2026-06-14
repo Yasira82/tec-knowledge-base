@@ -33,9 +33,12 @@
 | Hub sub-pages | KYC + Subscription + Notifications + Profile |
 | Session Start protocol | SESSION START instruction في CLAUDE.md — 4 repos |
 | C-02 living document | Restructured as always-current state doc |
-| **tec-ui v1.2.1** | PaymentModal + createU2APayment() + PaymentStatusBadge + ObservabilityStatus — 75 tests 80% coverage — PR #4 merged |
-| **Consumer apps on v1.2.1** | Ecommerce `^1.2.1` + Commerce `^1.2.1` + Assets `^1.2.0` ✅ |
+| tec-ui v1.2.1 | PaymentModal + createU2APayment() + 75 tests 80% — PR #4 merged |
+| Consumer apps on v1.2.1 | Ecommerce `^1.2.1` + Commerce `^1.2.1` + Assets `^1.2.0` ✅ |
+| **NEW-C** | ADR-006 موجود في C-64 — CSRF exclusion موثق ✅ |
 | **NEW-E** | tec-ui tests done — 75 tests 80% coverage ✅ |
+| **NEW-F** | Ecommerce Pi App ID: `ecommerce-app-71ca4d3e462eaf54` + domain `ecommerce.tecosystem.app` — موثق في C-01 + CLAUDE.md ✅ |
+| **NEW-G** | Dual-Mode Payment موثق في ADR-002 (C-64) + C-12 ✅ |
 
 ---
 
@@ -43,28 +46,24 @@
 
 | Item | الإجراء |
 |------|----------|
-| NEW-B INTERNAL_SECRET | Set على Railway (4 services) — 30 min ops task — `tec-api-gateway`, `tec-auth-service`, `tec-payment-service`, `tec-commerce-service` |
+| NEW-B INTERNAL_SECRET | Set على Railway (4 services) — 30 min ops task |
 | CLAUDE.md session start → main | Feature branch — محتاج PRs لـ main ليشتغل في production sessions |
+| Commerce + Assets + Hub Pi App IDs | Register على Pi Developer Portal + وثّق في C-01 |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. P2 violations (NEW-C, NEW-F, NEW-G) — قبل audit
-2. External Audit ≥ 9.5
-3. Portal Submission → Pi Network
+1. External Audit ≥ 9.5
+2. Portal Submission → Pi Network
 ```
 
 ---
 
-## P2 OPEN (يؤثر على Score, مش blocking)
+## P2 OPEN
 
-| ID | المشكلة | الحل |
-|----|----------|---------|
-| NEW-C | CSRF exclusion على payment routes غير موثق | أضف ADR في C-64 |
-| NEW-F | Ecommerce: Pi App ID + domain غير موثقين | دوّن في CLAUDE.md |
-| NEW-G | Dual-Mode Payment مش في Architecture Binding | أضف لـ C-47 Architecture Binding table |
+**✅ ALL P2 CLOSED** — NEW-C, NEW-E, NEW-F, NEW-G كلهم addressed
 
 ---
 
@@ -78,8 +77,9 @@ PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
-Ecommerce payment:    ✅ 503 fixed (PR #25 merged)
-tec-ui v1.2.1:        ✅ PaymentModal + createU2APayment — all 3 apps upgraded
+Ecommerce payment:    ✅ 503 fixed (PR #25)
+Ecommerce Pi App ID:  ecommerce-app-71ca4d3e462eaf54
+All P2 violations:    ✅ CLOSED
 ```
 
 ---
