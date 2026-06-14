@@ -14,17 +14,11 @@ Only VERIFIED (with test evidence) counts toward score
 
 ---
 
-## P1 — يمنع Mainnet
+## P1 — ZERO OPEN ✅
 
-### NEW-B: INTERNAL_SECRET — Ops Task Only
+كل P1 violations اتعالجت. الوحيد الباقي هو Railway ops task:
 
-| Field | Value |
-|-------|-------|
-| Severity | P1 |
-| Status | ⚠️ OPS ONLY — كود OK |
-| Repo | tec-core-backend (tec-payment-service) |
-
-الكود اتصلح (z.string().min(32) + process.exit(1)) — الـ fix الوحيد الباقي هو set الـ env var على Railway:
+### NEW-B: INTERNAL_SECRET — Ops Only
 
 ```bash
 # Generate once — same value for all 4 services
@@ -33,173 +27,88 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 # tec-api-gateway, tec-auth-service, tec-payment-service, tec-commerce-service
 ```
 
-Test: Start payment-service بدون INTERNAL_SECRET → crash immediately
+الكود صح — فقط Railway env var.
 
 ---
 
 ## P2 — يؤثر على Score
 
-### NEW-C: Payment BFF CSRF Exclusion Undocumented
-
-| Field | Value |
-|-------|-------|
-| Severity | P2 |
-| Status | OPEN |
-| File | Commerce/src/middleware.ts |
-
-المشكلة:
-  CSRF_EXCLUDED = ['/api/bff/payment/']
-  Payment mutations بدون CSRF — محتاج توثيق رسمي
-
-القرار المعماري المبرر:
-  JWT verification في كل BFF route
-  Idempotency-Key يمنع replay
-  HTTPS فقط
-
-Fix: أضف ADR (Architecture Decision Record) في Architecture Binding
-Test: Document الـ decision رسمياً
+| ID | المشكلة | الحالة |
+|----|---------|--------|
+| NEW-C | CSRF exclusion للـ payment routes غير موثق — محتاج ADR | OPEN |
+| NEW-E | tec-ui: لا tests | OPEN |
+| NEW-F | Tec-Ecommerce: Pi App ID + domain غير موثقين | OPEN |
+| NEW-G | Dual-Mode Payment مش في Architecture Binding | OPEN |
 
 ---
 
-### NEW-E: tec-ui Package No Tests
+## OPEN — يحتاج قرار
+
+### Ecommerce PR #25
 
 | Field | Value |
 |-------|-------|
-| Severity | P2 |
-| Status | OPEN |
-| Repo | Tec-ui |
-
-Fix: Tests لـ:
-  - buildHubPayUrl (URL building)
-  - getPaymentReturnParams (URL parsing)
-  - formatPi / parsePiAmount
-  - TEC_DOMAINS constants
-
----
-
-### NEW-F: Tec-Ecommerce Undocumented
-
-| Field | Value |
-|-------|-------|
-| Severity | P2 |
-| Status | OPEN |
-
-يحتاج:
-  □ Pi App ID مسجل في Pi Developer Portal؟
-  □ ecommerce.tecosystem.app domain مؤكد؟
-  □ Tests مكتوبة
-  □ Architecture Binding محدث
-
----
-
-### NEW-G: Dual-Mode Payment Not in Architecture Binding
-
-| Field | Value |
-|-------|-------|
-| Severity | P2 |
-| Status | OPEN |
-
-Fix: حدّث Architecture Binding بـ:
-  - Dual-Mode Payment pattern documented
-  - __TEC_PI_FOREIGN_SESSION behavior
-  - Per-app Pi App ID requirement
-  - FOREIGN_SESSION detection in layout.tsx
+| PR | https://github.com/Yasira82/Tec-Ecommerce/pull/25 |
+| المشكلة | 503 على approve/complete في Vercel |
+| السبب | `API_GATEWAY_URL` undefined في Vercel runtime |
+| PR #25 | أضاف NEXT_PUBLIC_ fallback — لكن PR #22 شاله (security) |
+| الحل الصح | تحقق إن `API_GATEWAY_URL` (server-only) set في Vercel → لو صح close PR #25 |
 
 ---
 
 ## DEFERRED (Post-Mainnet)
 
-### VM-NEW-009: Wallet Schema Cross-Domain Models
-
-| Field | Value |
-|-------|-------|
-| Severity | P2 |
-| Status | DEFERRED |
-
-المشكلة:
-  tec-wallet-service/prisma/schema.prisma
-  model User, Session, Payment, TwoFactorAuth
-  هذه models تنتمي لـ auth-service + payment-service
-
-Fix (post-Mainnet):
-  Remove cross-domain models من wallet schema
-  Wallet يملك فقط: Wallet + Transaction + ProcessedEvent + AuditLog
+| ID | الوصف |
+|----|--------|
+| VM-NEW-009 | Wallet schema: cross-domain models |
+| VM-NEW-014 | Gateway main.ts 27KB monolith |
+| ISS-010 | Prometheus في payment فقط |
 
 ---
 
-### VM-NEW-014: Gateway Monolith
+## VERIFIED ✅ — كل الـ P1
 
-| Field | Value |
-|-------|-------|
-| Severity | P2 |
-| Status | DEFERRED |
+### Security Audit (June 14, 2026) — 10/10 Closed
 
-المشكلة:
-  tec-api-gateway/src/main.ts = 27KB
-  كل الـ logic في ملف واحد
-  AppModule فارغ
+| # | Fix | PR |
+|---|-----|----|
+| 1 | Railway URL من Swagger (→ relative URL) | #65 Tec-core-backend |
+| 2 | Pi amount z.number() → z.string().regex() | #21 Tec-App |
+| 3 | NEXT_PUBLIC_ fallback removed from Ecommerce | #22 Tec-Ecommerce |
+| 4 | userId removed from request body | #22 Tec-Ecommerce |
+| 5 | Zod validation على approve + complete | #19 Commerce + #22 Ecommerce |
+| 6 | CSRF + timing-safe على payment/create | #21 Tec-App |
+| 7 | /health/detailed guarded with x-internal-key | #65 Tec-core-backend |
+| 8 | HSTS + security headers | #65 Tec-core-backend |
+| 9 | Timing-safe CSRF comparison | #19 + #21 + #22 |
+| 10 | x-internal-key على payment callbacks | #19 + #22 |
 
-Fix (post-Mainnet):
-  Extract middleware لـ modules
-  Use NestJS DI properly
+### باقي P1 Violations
 
----
-
-### ISS-010: Prometheus Not Unified
-
-| Field | Value |
-|-------|-------|
-| Severity | P2 |
-| Status | DEFERRED |
-
-المشكلة:
-  Prometheus في payment-service فقط
-  مفيش unified observability
-
-Fix (post-Mainnet):
-  أضف Prometheus لكل الـ services
-  Centralized Grafana dashboard
-
----
-
-## VERIFIED ✅ (Closed Correctly)
-
-### P1 Violations — All Closed
-
-| ID | Description | Closed |
-|----|-------------|--------|
-| NEW-A | NEXT_PUBLIC_ Gateway Exposure → API_GATEWAY_URL في 48 BFF routes | June 2026 |
-| NEW-B (code) | INTERNAL_SECRET: z.string().min(32) + process.exit(1) | June 2026 |
+| ID | الوصف | تاريخ |
+|----|-------|-------|
+| NEW-A | NEXT_PUBLIC_ removed من 48 BFF routes | June 2026 |
+| NEW-B (code) | INTERNAL_SECRET z.string().min(32) + process.exit(1) | June 2026 |
 | NEW-D | tec-auth 95% coverage — 46 tests | June 2026 |
 | NEW-I | Assets Mode 2 + ADR-007 | June 1, 2026 |
 | NEW-J | Ecommerce Mode 1 + ADR-007 | June 3, 2026 |
-
-### Payment Schema Fixes (June 14, 2026)
-
-| ID | Description | PR | Status |
-|----|-------------|----|---------|
-| ECM-01 | Commerce approve/complete: camelCase→snake_case schema mismatch | PR #20 | ✅ Merged |
-| ECM-02 | Ecommerce approve/complete: GW 503 (missing NEXT_PUBLIC_ fallback) | PR #25 | ⏳ Pending merge |
+| ECM-01 | Commerce schema snake_case fix | PR #20, June 14, 2026 |
 
 ### Security Foundations
 
 ```
-✅ jwt.decode() → jwt.verify() + HS256
-✅ PI_SANDBOX: z.enum() (no default)
-✅ PI_SANDBOX startup warning
+✅ jwt.verify() + HS256 في كل مكان
+✅ timingSafeEqual على INTERNAL_SECRET + CSRF
+✅ Idempotency keys على payments
+✅ CORS explicit whitelist (5 domains)
+✅ Rate limiting على auth + payment
 ✅ DECIMAL(20,8) + balance>=0
-✅ CSRF in middleware
-✅ Redis rate limiting (distributed)
-✅ timingSafeEqual everywhere
-✅ CORS explicit whitelist (all 5 domains)
-✅ Policy CI active (blocks decode/wildcard/localStorage)
-✅ SDK setAuthToken: includes all 7 clients
-✅ TecSdkConfig: single definition
-✅ Docker: .dockerignore + non-root USER
-✅ continue-on-error: removed from build/test/deploy
-✅ Wallet IDOR: authenticate middleware added
-✅ BFF bypasses: all closed
-✅ Dependabot: major bumps disabled
+✅ Pi amount z.string() (مش Number)
+✅ Policy CI active
+✅ HSTS + security headers على gateway
+✅ /health/detailed guarded
+✅ Railway URLs مش في Swagger
+✅ userId من session cookie فقط
 ```
 
 ---
@@ -208,9 +117,10 @@ Fix (post-Mainnet):
 
 ```
 P0 Open:  0
-P1 Open:  0 (NEW-B code done — ops task only)
-P2 Open:  4 (NEW-C, NEW-E, NEW-F, NEW-G)
-Deferred: 3 (post-Mainnet)
+P1 Open:  0  (NEW-B كود OK — Railway ops فقط)
+P2 Open:  4  (NEW-C, NEW-E, NEW-F, NEW-G)
+Pending:  1  (Ecommerce PR #25 — verify Vercel env var first)
+Deferred: 3  (post-Portal)
 
-Next action: merge Ecommerce PR #25 → set INTERNAL_SECRET on Railway
+Next: tec-ui v1.2.0 → External Audit ≥ 9.5 → Portal
 ```
