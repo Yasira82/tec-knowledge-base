@@ -2,9 +2,9 @@
 ## Living Document — Updated End of Every Session
 
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
-> Repo: `yasira82/tec-knowledge-base` | Branch: `claude/gifted-knuth-1yhom3`
+> Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 14 June 2026 (Session 2)
+**Last Updated:** 14 June 2026 (Session 3)
 
 ---
 
@@ -13,7 +13,7 @@
 | المصدر | Score |
 |--------|-------|
 | Self | ~8.5/10 |
-| External (متوقع) | ~7.0–7.5/10 |
+| External (آخر audit) | 7.65/10 |
 | الهدف | **9.5/10** |
 
 ---
@@ -37,7 +37,9 @@
 | NEW-E | tec-ui 75 tests 80% coverage ✅ |
 | NEW-F | Pi App ID: `ecommerce-app-71ca4d3e462eaf54` + `ecommerce.tecosystem.app` — C-01 + CLAUDE.md ✅ |
 | NEW-G | Dual-Mode في ADR-002 (C-64) + C-12 ✅ |
-| **NEW-B** | **INTERNAL_SECRET set على Railway — 4 services ✅** |
+| NEW-B | INTERNAL_SECRET set على Railway — 4 services ✅ |
+| **Audit Fix — Commerce** | Railway URL removed, x-internal-key + Zod (create/resolve-incomplete), ADR-007 في page.tsx — **PR #22 merged** ✅ |
+| **Audit Fix — Assets** | Railway URL removed, x-internal-key + Zod + 503 guard (approve/complete/create/resolve-incomplete) — **main c411fe9** ✅ |
 
 ---
 
@@ -47,13 +49,14 @@
 |------|----------|
 | CLAUDE.md session start → main | Feature branch — محتاج PRs لـ main ليشتغل في production sessions |
 | Commerce + Assets + Hub Pi App IDs | Register على Pi Developer Portal + وثّق في C-01 |
+| Tec-Assets tests | 14 tests فقط — دون 60% (P3) |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. External Audit ≥ 9.5
+1. External Audit ≥ 9.5  ← هيتعمل كل فترة
 2. Portal Submission → Pi Network
 ```
 
@@ -72,6 +75,7 @@ All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
 Ecommerce Pi App ID:  ecommerce-app-71ca4d3e462eaf54
+Last audit score:     7.65/10 (external) — fixes merged, re-audit pending
 ```
 
 ---
