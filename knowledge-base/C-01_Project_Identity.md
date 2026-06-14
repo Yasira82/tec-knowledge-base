@@ -48,18 +48,31 @@ Subscriptions → Connections → Investments → Reputation
 
 ---
 
-## 4. PUBLISHED PACKAGES
+## 4. PI APP IDENTITY
+
+| App | Pi App ID | Domain | PI_SANDBOX |
+|-----|-----------|--------|------------|
+| **Tec-Ecommerce** | `ecommerce-app-71ca4d3e462eaf54` | `https://ecommerce.tecosystem.app` | `false` |
+| Tec-Commerce | (TBD — register on Pi Portal) | `https://commerce.tecosystem.app` | `false` |
+| Tec-Assets | (TBD — register on Pi Portal) | `https://assets.tecosystem.app` | `false` |
+| Tec-App (Hub) | (TBD — register on Pi Portal) | `https://hub.tecosystem.app` | `false` |
+
+> ⚠️ Domain مرتبط بالـ Pi.init() registration. لو اتغيّر الـ domain → لازم update Pi Developer Portal.
+
+---
+
+## 5. PUBLISHED PACKAGES
 
 | Package | Version | الدور | Source |
 |---|---|---|---|
 | @yasser172/tec-sdk | v1.2.2 | BFF → Backend API calls | Yasira82/TEC-SDK |
 | @yasser172/tec-shared | v1.1.0 | Backend middleware + event-bus | shared/ جوه Tec-core-backend ⚠️ |
-| @yasser172/tec-ui | v1.1.0 | Shared UI + types + payment utils | Yasira82/Tec-ui |
+| @yasser172/tec-ui | v1.2.1 | Shared UI + PaymentModal + createU2APayment | Yasira82/Tec-ui |
 | @yasser172/tec-auth | v1.0.0 | Auth middleware + SSO + cookies | Yasira82/tec-auth |
 
 ---
 
-## 5. TECH STACK
+## 6. TECH STACK
 
 ```
 Frontend:  Next.js 15 App Router + TypeScript strict
@@ -75,7 +88,7 @@ Monitor:   Sentry (frontend) + Pino (backend) + Prometheus (payment)
 
 ---
 
-## 6. COOKIE ARCHITECTURE (INTENTIONAL)
+## 7. COOKIE ARCHITECTURE (INTENTIONAL)
 
 | Cookie | httpOnly | السبب |
 |---|---|---|
