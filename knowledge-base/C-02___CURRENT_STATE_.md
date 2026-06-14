@@ -23,30 +23,24 @@
 | Item | التفاصيل |
 |------|----------|
 | P1 violations | كلها closed (NEW-A → NEW-J) |
-| Security audit (10 items) | PRs #22 Ecommerce + #65 Backend + #19 Commerce + #21 Hub |
-| Mode 1 + Mode 2 + ADR-007 | كل 4 apps |
-| CORS | 5 domains في Gateway + Auth + Payment |
-| Hub sub-pages | KYC + Subscription + Notifications + Profile |
-| Session Start protocol | في CLAUDE.md — 4 repos |
-| tec-ui v1.2.1 | PaymentModal + createU2APayment() + 75 tests 80% |
-| Consumer apps on v1.2.1 | Ecommerce + Commerce + Assets ✅ |
 | NEW-B | INTERNAL_SECRET set على Railway — 4 services ✅ |
-| NEW-C | ADR-006 في C-64 — CSRF exclusion موثق ✅ |
-| NEW-E | tec-ui 75 tests 80% coverage ✅ |
-| NEW-F | Pi App ID: `ecommerce-app-71ca4d3e462eaf54` + `ecommerce.tecosystem.app` — C-01 + CLAUDE.md ✅ |
-| NEW-G | Dual-Mode في ADR-002 (C-64) + C-12 ✅ |
+| Security audit (10 items) | PRs #22 Ecommerce + #65 Backend + #19 Commerce + #21 Hub |
+| Mode 1 + Mode 2 + ADR-007 | كل 4 apps ✅ |
+| CORS | 5 domains في Gateway + Auth + Payment ✅ |
+| Hub sub-pages | KYC + Subscription + Notifications + Profile ✅ |
+| tec-ui v1.2.1 | PaymentModal + createU2APayment() + 75 tests 80% ✅ |
+| Consumer apps on v1.2.1 | Ecommerce + Commerce + Assets ✅ |
+| Tests coverage ≥ 60% | كل repos — tec-auth 95%, tec-ui 80% ✅ |
 | **Audit Fix — Commerce** | Railway URL removed, x-internal-key + Zod + ADR-007 — PR #22 merged ✅ |
 | **Audit Fix — Assets** | Railway URL removed, x-internal-key + Zod + 503 guard — main c411fe9 ✅ |
-| **Tests coverage ≥ 60%** | كل repos — tec-auth 95%, tec-ui 80%, Assets + غيرهم ✅ |
+| **Pi App IDs — كل 4 apps** | Ecommerce + Commerce + Assets + Hub — موثقة في C-01 ✅ |
+| **CLAUDE.md session start → main** | كل repos — branch محدّث لـ main ✅ |
 
 ---
 
 ## PENDING ⚠️
 
-| Item | الإجراء |
-|------|----------|
-| CLAUDE.md session start → main | Feature branch — محتاج PRs لـ main |
-| Commerce + Assets + Hub Pi App IDs | Register على Pi Developer Portal + وثّق في C-01 |
+مفيش حاجة pending — كل Phase 0 items تمت ✅
 
 ---
 
@@ -56,6 +50,17 @@
 1. External Audit ≥ 9.5  ← هيتعمل كل فترة
 2. Portal Submission → Pi Network
 ```
+
+---
+
+## PI APP IDENTITY
+
+| App | Pi App ID | Domain |
+|-----|-----------|--------|
+| Tec-Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `https://ecommerce.tecosystem.app` |
+| Tec-Commerce | `commerce-app-68aa99081fc1897a` | `https://tec-commerce-app.vercel.app` |
+| Tec-Assets | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` |
+| Tec-App (Hub) | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` |
 
 ---
 
@@ -72,8 +77,9 @@ All repos coverage:   ≥ 60% ✅
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
-Ecommerce Pi App ID:  ecommerce-app-71ca4d3e462eaf54
+All Pi App IDs:       ✅ كل 4 apps مسجّلة
 Last audit score:     7.65/10 (external) — fixes merged, re-audit pending
+CLAUDE.md:            ✅ session start → main في كل repos
 ```
 
 ---
