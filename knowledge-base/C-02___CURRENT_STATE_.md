@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `claude/gifted-knuth-1yhom3`
 
-**Last Updated:** 14 June 2026 (Session 4)
+**Last Updated:** 14 June 2026 (Session 5)
 
 ---
 
@@ -45,6 +45,9 @@
 | **Comprehensive Audit fixes — Hub** | **PR #24 → pending merge** — حذف console.logs من provision + payment/create / حذف JWT decode without verify / x-internal-key على wallet/balance / حذف NEXT_PUBLIC_ من ci.yml + .env.example ✅ |
 | **Comprehensive Audit fixes — Commerce** | **pushed to main** — حذف legacy /api/payment/ routes (unsecured) + حذف /api/debug endpoint + migrate callers إلى BFF routes + حذف NEXT_PUBLIC_ fallback ✅ |
 | **Comprehensive Audit fixes — Assets** | **pushed to main** — حذف NEXT_PUBLIC_ fallback من 5 files + CSRF على 4 payment BFF routes ✅ |
+| **Hub — JWT decode forbidden fix** | **pushed to main** (SHA: 687247d) — `getUserIdFromToken()` via `jwt.decode()` حُذفت — userId يجي من `tec_user` cookie بدلها (C-47 P6 + Forbidden #2) ✅ |
+| **Hub — CI test fixes** | **pushed to main** (SHAs: 56e57b9c + 275d6fd0) — 8 tests أُضيف لها `tec_user` cookie بعد كسرها بسبب الـ JWT decode fix + `vi.resetAllMocks()` لـ test isolation ✅ |
+| **Hub CI green** | **✅ CONFIRMED** — 2026 tests passing على commit 275d6fd0 (conclusion: success) |
 
 ---
 
@@ -53,16 +56,15 @@
 | Item | الإجراء |
 |------|----------|
 | **Ecommerce PR #27** | Merge to main |
-| **Hub PR #24** | Merge to main |
+| **Hub PR #24** | Merge to main (أو التحقق إذا كانت التغييرات اتعملت على main مباشرة) |
 | Commerce + Assets + Hub Pi App IDs | Register على Pi Developer Portal + وثّق في C-01 |
-| CI/E2E checks على PRs الجديدة | GitHub Actions يشتغل تلقائي على PRs من main — test على أول PR جديد |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Merge PRs #27 (Ecommerce) + #24 (Hub)
+1. Merge PRs #27 (Ecommerce) + #24 (Hub) — تحقق من conflicts مع main
 2. External Audit إعادة — المتوقع 8.5–9.0 بعد الـ fixes
 3. Fix أي findings جديدة
 4. Portal Submission → Pi Network
@@ -79,6 +81,7 @@
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
+Hub CI:               ✅ GREEN — 2026 tests passing (commit 275d6fd0)
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO (post Session 4)
@@ -87,6 +90,17 @@ Comm/Assets/Hub IDs:  ⚠️ محتاجين تسجيل على Pi Developer Porta
 External Audit score: 5.5–7.5 → fixes applied → re-audit مطلوب
 Pending PRs:          #27 Ecommerce + #24 Hub → merge to main
 ```
+
+---
+
+## WHAT WAS FIXED (Session 5 — Hub CI fixes)
+
+### Tec-App (Hub) — pushed directly to main
+| Finding | Fix |
+|---------|-----|
+| FORBIDDEN: `jwt.decode()` بدون verify في `payment/create/route.ts` | حذف `getUserIdFromToken()` — userId يجي من `tec_user` cookie via `getUserIdFromCookie()` |
+| 8 tests كسرت بعد الـ JWT fix | أُضيف `cookies: { tec_user: encodeURIComponent(JSON.stringify({ id: userId })) }` لكل test محتاج يوصل للـ gateway |
+| Test isolation: `vi.clearAllMocks()` مش كافي | غُيّر لـ `vi.resetAllMocks()` في `beforeEach` + `mockResolvedValueOnce` بدل `mockResolvedValue` |
 
 ---
 
