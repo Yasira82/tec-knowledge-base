@@ -3,6 +3,50 @@
 
 ---
 
+## SESSION: 14 June 2026 — External Audit Payment Fix
+
+### الهدف
+إصلاح مشاكل Payment اكتُشفت بعد External Audit PRs اللي أُدخلت على Commerce + Ecommerce.
+
+### ما تم في هذه المرحلة
+
+**Tec-Commerce — PR #20** ✅ Merged (squash)
+- **Root cause:** audit PRs غيّرت schemas لـ camelCase (`paymentId`, `txid`) لكن الـ client بيبعت snake_case (`payment_id`, `pi_payment_id`) وكمان `pi_payment_id` مش `txid`
+- **Fix:** استعادة snake_case Zod schemas في approve + complete routes
+- **Files:** `src/app/api/bff/payment/approve/route.ts` + `complete/route.ts`
+
+**Tec-Ecommerce — PR #25** ✅ Open (pending merge)
+- **Root cause مثبت من Vercel logs:**
+  ```
+  POST 503  /api/bff/payment/approve   ← failing
+  POST 201  /api/bff/payment/complete  ← failing
+  POST 201  /api/bff/payment/create    ← working
+  ```
+- `process.env.API_GATEWAY_URL` = undefined في Vercel لأن الـ env var الموجود هو `NEXT_PUBLIC_API_GATEWAY_URL`
+- الـ create route عنده `?? process.env.NEXT_PUBLIC_API_GATEWAY_URL ?? ''` fallback فاشتغل
+- approve/complete ما عندهومش الـ fallback → 503 → Pi يعرض "Payment Expired"
+- **Fix:** أضاف `?? process.env.NEXT_PUBLIC_API_GATEWAY_URL ?? ''` للـ GW declaration في الاتنين
+- **PR:** https://github.com/Yasira82/Tec-Ecommerce/pull/25
+
+### Key Learnings
+
+1. **لما تشوف "Payment Expired" في Pi Browser:** معناه الـ approve BFF مرجعش response صح لـ Pi Network — ابدأ بـ Vercel function logs على `/api/bff/payment/approve`
+2. **لو create شغال بس approve فاشل:** الفرق هو الـ GW declaration — create عنده NEXT_PUBLIC_ fallback، approve/complete ما عندهومش
+3. **Schema mismatch pattern:** audit PRs بتغير field names بدون تتأكد إن الـ client بيبعت نفس الـ names — دايماً verify مع `pi-payment.ts` الـ client-side
+4. **Merge conflicts في payment routes:** لو فيه conflict في BFF routes → خد snake_case اللي الـ client بيبعته مش camelCase اللي الـ auditor افترضه
+
+### الوضع بعد الـ session
+
+| Item | Status |
+|------|--------|
+| Commerce payment (approve/complete) | ✅ Fixed + Merged |
+| Ecommerce payment 503 | ✅ Fixed — PR #25 ينتظر merge |
+| NEW-B (INTERNAL_SECRET على Railway) | ⚠️ Ops task فقط — كود OK |
+| Tests ≥ 60% | ⏳ Phase 0 gate |
+| tec-ui v1.2.0 | ⏳ Phase 0 deliverable |
+
+---
+
 ## SESSION: June 2026 — P1 Violations Closed + New Contents
 
 ### ما تم في هذه المرحلة
@@ -97,7 +141,7 @@ Contents System:
 
 ---
 
-### Key Learnings (June 2026)
+### Key Learnings (Cumulative)
 
 1. CORS must include ALL 5 app domains في Gateway + Auth + Payment
 2. usePiAuth npm calls /auth/refresh → 401 loop إذا مفيش refresh route
@@ -109,3 +153,6 @@ Contents System:
 8. Over-engineering working code creates new bugs
 9. expired_on_pi ≠ cleared from Pi Browser
 10. Pi payment complete needs real txid, not empty string
+11. "Payment Expired" = approve BFF returned non-2xx to Pi Network (check Vercel logs first)
+12. create 201 + approve 503 = GW declaration missing NEXT_PUBLIC_ fallback in approve route
+13. Audit PRs that change field names (camelCase) break client contracts — always verify against pi-payment.ts
