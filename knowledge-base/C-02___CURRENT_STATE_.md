@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `claude/gifted-knuth-1yhom3`
 
-**Last Updated:** 14 June 2026
+**Last Updated:** 14 June 2026 (Session 2)
 
 ---
 
@@ -26,10 +26,13 @@
 | Security audit (10 items) | PRs #22 Ecommerce + #65 Backend + #19 Commerce + #21 Hub |
 | Tests ≥ 60% | كل repos — tec-auth 95% (46 tests) |
 | Commerce schema fix | PR #20 merged (snake_case في approve/complete) |
+| Ecommerce 503 fix | PR #25 merged — gateway URL fallback في approve + complete routes |
 | Mode 1 + Mode 2 + ADR-007 | كل 4 apps |
 | CORS | 5 domains في Gateway + Auth + Payment |
 | Dependabot major bumps | disabled |
 | Hub sub-pages | KYC + Subscription + Notifications + Profile |
+| Session Start protocol | SESSION START instruction في CLAUDE.md — 4 repos |
+| C-02 living document | Restructured as always-current state doc |
 
 ---
 
@@ -37,8 +40,8 @@
 
 | Item | الإجراء |
 |------|----------|
-| Ecommerce PR #25 | Verify `API_GATEWAY_URL` (server-only) في Vercel — لو set → close PR #25 |
-| NEW-B INTERNAL_SECRET | Set على Railway (4 services) — 30 min ops task |
+| NEW-B INTERNAL_SECRET | Set على Railway (4 services) — 30 min ops task — `tec-api-gateway`, `tec-auth-service`, `tec-payment-service`, `tec-commerce-service` |
+| CLAUDE.md session start → main | Feature branch `claude/gifted-knuth-1yhom3` — needs PR → main for each of 4 repos to activate in production sessions |
 
 ---
 
@@ -56,7 +59,7 @@
 ## P2 OPEN (يؤثر على Score, مش blocking)
 
 | ID | المشكلة |
-|----|---------|
+|----|----------|
 | NEW-C | CSRF exclusion على payment routes غير موثق — محتاج ADR |
 | NEW-E | tec-ui: لا tests |
 | NEW-F | Ecommerce: Pi App ID + domain غير موثقين |
@@ -73,6 +76,7 @@
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
+Ecommerce payment:    ✅ 503 fixed (PR #25 merged)
 ```
 
 ---
