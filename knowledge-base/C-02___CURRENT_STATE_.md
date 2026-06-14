@@ -25,20 +25,19 @@
 | P1 violations | كلها closed (NEW-A → NEW-J) |
 | Security audit (10 items) | PRs #22 Ecommerce + #65 Backend + #19 Commerce + #21 Hub |
 | Tests ≥ 60% | كل repos — tec-auth 95% (46 tests) |
-| Commerce schema fix | PR #20 merged (snake_case في approve/complete) |
-| Ecommerce 503 fix | PR #25 merged — gateway URL fallback في approve + complete routes |
+| Commerce schema fix | PR #20 merged |
+| Ecommerce 503 fix | PR #25 merged |
 | Mode 1 + Mode 2 + ADR-007 | كل 4 apps |
 | CORS | 5 domains في Gateway + Auth + Payment |
-| Dependabot major bumps | disabled |
 | Hub sub-pages | KYC + Subscription + Notifications + Profile |
-| Session Start protocol | SESSION START instruction في CLAUDE.md — 4 repos |
-| C-02 living document | Restructured as always-current state doc |
-| tec-ui v1.2.1 | PaymentModal + createU2APayment() + 75 tests 80% — PR #4 merged |
-| Consumer apps on v1.2.1 | Ecommerce `^1.2.1` + Commerce `^1.2.1` + Assets `^1.2.0` ✅ |
-| **NEW-C** | ADR-006 موجود في C-64 — CSRF exclusion موثق ✅ |
-| **NEW-E** | tec-ui tests done — 75 tests 80% coverage ✅ |
-| **NEW-F** | Ecommerce Pi App ID: `ecommerce-app-71ca4d3e462eaf54` + domain `ecommerce.tecosystem.app` — موثق في C-01 + CLAUDE.md ✅ |
-| **NEW-G** | Dual-Mode Payment موثق في ADR-002 (C-64) + C-12 ✅ |
+| Session Start protocol | في CLAUDE.md — 4 repos |
+| tec-ui v1.2.1 | PaymentModal + createU2APayment() + 75 tests 80% |
+| Consumer apps on v1.2.1 | Ecommerce + Commerce + Assets ✅ |
+| NEW-C | ADR-006 في C-64 — CSRF exclusion موثق ✅ |
+| NEW-E | tec-ui 75 tests 80% coverage ✅ |
+| NEW-F | Pi App ID: `ecommerce-app-71ca4d3e462eaf54` + `ecommerce.tecosystem.app` — C-01 + CLAUDE.md ✅ |
+| NEW-G | Dual-Mode في ADR-002 (C-64) + C-12 ✅ |
+| **NEW-B** | **INTERNAL_SECRET set على Railway — 4 services ✅** |
 
 ---
 
@@ -46,7 +45,6 @@
 
 | Item | الإجراء |
 |------|----------|
-| NEW-B INTERNAL_SECRET | Set على Railway (4 services) — 30 min ops task |
 | CLAUDE.md session start → main | Feature branch — محتاج PRs لـ main ليشتغل في production sessions |
 | Commerce + Assets + Hub Pi App IDs | Register على Pi Developer Portal + وثّق في C-01 |
 
@@ -61,25 +59,19 @@
 
 ---
 
-## P2 OPEN
-
-**✅ ALL P2 CLOSED** — NEW-C, NEW-E, NEW-F, NEW-G كلهم addressed
-
----
-
 ## PLATFORM STATE
 
 ```
-12 Railway services:   Active
+12 Railway services:   Active — INTERNAL_SECRET set ✅
 4 apps (Vercel):      Hub + Commerce + Assets + Ecommerce
 4 npm packages:       tec-auth + tec-ui (v1.2.1) + tec-sdk + tec-shared
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
-Ecommerce payment:    ✅ 503 fixed (PR #25)
+All P1 violations:    ✅ ZERO
+All P2 violations:    ✅ ZERO
 Ecommerce Pi App ID:  ecommerce-app-71ca4d3e462eaf54
-All P2 violations:    ✅ CLOSED
 ```
 
 ---
