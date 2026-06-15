@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 15 June 2026 (Session 6)
+**Last Updated:** 15 June 2026 (Session 8)
 
 ---
 
@@ -16,6 +16,7 @@
 | External (قبل Session 4 fixes) | 7.1/10 avg (Ecom 5.5 / Hub 6.5 / Commerce 7.0 / Assets 7.5) |
 | External (Session 3 audit) | 7.65/10 |
 | External (متوقع بعد الـ fixes) | **~8.5–9.0/10** |
+| Architectural Review (Session 8) | **9.1/10 overall** (Knowledge Architecture: 9.5+/10) |
 | الهدف | **9.5/10** |
 
 ---
@@ -52,6 +53,7 @@
 | **Ecommerce CI fixes** | **✅** — test files aligned to resolve-based pattern (commit 33d2d141) |
 | **Ecommerce payment fix** | **✅** — x-internal-key sent only when INTERNAL_SECRET SET (commit 5d44c501) |
 | **Knowledge Base v3.1.0** | **✅ Phase 1+2+3+4** — Skills + MCP + Commands + CI + C-02 updated |
+| **C-92 Platform Health Model** | **✅** — 5 dimensions × state machine × PHS composite score × dashboard spec × manual checklist |
 
 ---
 
@@ -129,11 +131,44 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 - `evals/validate-skills.sh` — fixed bash `((PASS++))` → `PASS=$((PASS+1))`
 - Root cause: `set -e` + arithmetic 0 = false → premature exit after first valid file
 
+### v3.2.0 Additions
+- `skills/platform/charter-advisor/SKILL.md` — guide to load Charter before any app modification
+- `evals/validate-charters.sh` — CI validator for all 16 charters (16/16 pass)
+- `memory/platform-snapshot.md` — fast-load session-start reference
+- `.claude-plugin/plugin.json` — fixed version 3.1.0→3.2.0, fixed filenames, added 3 skills
+- `.github/workflows/knowledge-ci.yml` — added validate-charters job
+- `templates/new-charter/CHARTER_TEMPLATE.md` — scaffold for new institutional charters
+
 ### C-57 Updated → v3.2.0
 - Added TIER 7 (C-87→C-91: Governance + Execution)
 - Added TIER 8 (C-100→C-115: App Institutional Charters)
 - Updated Quick Lookup with charter references
 - Constitutional Hierarchy extended to C-115
+
+---
+
+## KNOWLEDGE BASE (Session 8) ✅
+
+### C-92 Platform Health Model
+
+Closes the Observability gap identified in architectural review (9.1/10 → target 9.5/10):
+
+| Section | Content |
+|---------|--------|
+| Health Philosophy | Health ≠ Uptime. Health = economic function delivered correctly |
+| 5 Dimensions | Identity × Payment × App × Service × Event Bus |
+| State Machine | GREEN → DEGRADED → CRITICAL → DOWN (formal transitions) |
+| PHS Formula | Composite score: Identity 30% + Payment 30% + Service 20% + App 15% + Events 5% |
+| Propagation Rules | Identity cascade + Gateway cascade + Payment independence |
+| Health Gates | Deployment gate (PHS < 80 = block) + Release chain gate |
+| Dashboard Spec | 5 panels with signal layouts — Phase 1 implementation target |
+| Phase 0 Checklist | Manual health verification before every deployment |
+
+### C-57 Updated
+- C-92 added to TIER 7 (now C-87→C-92)
+- Count updated: 91 → 92 documents
+- Quick Lookup: added "Check platform health → C-92"
+- Content Ranges: C-87→C-92
 
 ---
 
@@ -185,9 +220,10 @@ All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
 All Pi App IDs:       ✅ كل 4 apps مسجّلة
-Last audit score:     7.65/10 (Session 3) → fixes applied → re-audit pending
+Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
+Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.2.0 (11 skills + 16 app charters C-100→C-115 + CI fix)
+Knowledge Base:       ✅ v3.2.0 — 92 docs + 16 skills + 16 charters + C-92 Health Model
 Pending PRs:          #27 Ecommerce + #24 Hub
 ```
 
