@@ -49,14 +49,14 @@ for FILE in $SKILL_FILES; do
   # Report
   if [ ${#ERRORS_IN_FILE[@]} -eq 0 ]; then
     echo "  ✅ $FILE"
-    ((PASS++))
+    PASS=$((PASS+1))
   else
     echo "  ❌ $FILE"
     for ERR in "${ERRORS_IN_FILE[@]}"; do
       echo "     → $ERR"
       ERRORS+=("$FILE: $ERR")
     done
-    ((FAIL++))
+    FAIL=$((FAIL+1))
   fi
 done
 
