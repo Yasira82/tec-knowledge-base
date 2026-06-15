@@ -14,6 +14,7 @@ on:
       - 'skills/**'
       - 'knowledge-base/**'
       - 'governance/**'
+      - 'evals/**'
 
 jobs:
   validate-skills:
@@ -27,6 +28,18 @@ jobs:
 
       - name: Validate SKILL.md files
         run: bash evals/validate-skills.sh
+
+  validate-charters:
+    name: Validate App Institutional Charters
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Validate C-100→C-115 charters
+        run: bash evals/validate-charters.sh
 
   check-knowledge-gaps:
     name: Check Knowledge Gaps
