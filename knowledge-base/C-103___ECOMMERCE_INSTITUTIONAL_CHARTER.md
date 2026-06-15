@@ -1,329 +1,236 @@
 # C-103 — ECOMMERCE INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
-**Truth State:** Current State
-**Governance State:** Draft
-**Verification State:** Documentation Verified + Code Verified
-**Authority Scope:** Application
-**Decision Status:** Approved
+**Truth State:** [Current State]
+**Governance State:** [Draft]
+**Verification State:** [Documentation Verified]
+**Authority Scope:** [Application]
+**Decision Status:** [Approved]
 
 ---
 
 ## 1. MISSION
 
-Ecommerce is the consumer marketplace of the TEC ecosystem — the Pi-native shopping experience where users discover products, build carts, and complete purchases using Pi cryptocurrency.
+Enable Pi-native consumer commerce — product discovery, multi-item shopping cart, merchant stores, and Pi payments — for end consumers on the TEC platform.
 
 ---
 
 ## 2. INSTITUTIONAL ROLE
 
-**System of Production (Consumer Marketplace)** — The demand side of the Pi economy.
-
 ```
-Settlement → Record → Reasoning → Access → Construction → PRODUCTION → Economic Activity → Settlement
-                                                               ↑
-                                                          ECOMMERCE
-                                                      (Consumer Sub-layer)
+System of Production — Consumer Marketplace
 ```
 
-If Commerce (C-101) is the supply side (merchants), Ecommerce is the demand side (consumers). Together they form the complete Pi economic production layer: products created in Commerce are discovered and purchased in Ecommerce.
+Ecommerce is the **consumer-facing marketplace** — the highest transaction volume surface in the ecosystem. It follows payment patterns established in Commerce (reference implementation).
 
 ---
 
 ## 3. ECONOMIC PURPOSE
 
-Ecommerce exists to drive Pi token velocity through consumer purchasing:
+تحويل المستخدمين إلى مشترين نشطين داخل اقتصاد Pi.
 
-- **Product Discovery**: Consumers browse Pi-priced goods from TEC merchants
-- **Cart Experience**: Multi-item shopping with persistent cart state
-- **Pi Checkout**: Streamlined Pi payment flow via CartDrawer or Buy Now
-- **Order History**: Transaction record for consumer confidence
-- **Merchant Discovery**: Every product links to merchant store page — drives merchant reputation
-
-Ecommerce is the primary Pi token sink in the ecosystem — the place where Pi stored in wallets becomes economic activity. Without Ecommerce, Commerce merchants have no marketplace to sell through.
+- بدون Ecommerce: Pi اقتصاد محدود بالـ peer-to-peer
+- بوجود Ecommerce: consumer demand → merchant supply → economic cycle
+- اقتصادياً: أعلى حجم معاملات في النظام → proof of Pi utility at scale
 
 ---
 
 ## 4. AUTHORITY BOUNDARY
 
 ### Owns
-- Consumer shopping UI (product listing, search, filters)
-- Shopping cart state (useCart hook, localStorage persistence: `tec_cart`)
-- CartDrawer component and multi-item checkout UX
-- Store pages (public browsable merchant storefronts)
-- Order history view
-- Pi App ID: `ecommerce-app-71ca4d3e462eaf54`
+- Product listing display and search
+- Shopping cart state (localStorage `tec_cart`)
+- Consumer checkout flow (CartDrawer)
+- Order history display
+- Merchant store pages
 
 ### Does NOT Own
-- Product data (tec-commerce-service owns — Port 4003)
-- Order creation records (tec-commerce-service)
-- Payment creation (tec-payment-service — Port 4002)
-- Merchant identity verification (tec-auth-service)
-- Pi SDK session management (Hub manages via ADR-007)
+- Product inventory truth (tec-commerce-service:4003)
+- Order state machine (tec-commerce-service)
+- Payment processing (tec-payment-service:4002)
+- Merchant identity (tec-auth-service:4001)
 
 ### Interface Points
 ```
-Exposes to ecosystem:
-  - Consumer marketplace (ecommerce.tecosystem.app)
-  - Public product listings (browsable without auth)
-  - Merchant store pages (/store/[id]) — drives merchant reputation
+OUTBOUND:
+  GET  /api/bff/products        → product listing + search
+  GET  /api/bff/store/[id]      → merchant + products
+  GET  /api/bff/orders          → order history
+  POST /api/bff/orders          → create order (items[] or product_id)
+  /hub?pay=1&...                → Mode 1 payment (ADR-007)
+  Pi.createPayment              → Mode 2 payment (only when !isHubNavigation)
 
-Consumed from:
-  - Hub (C-100): SSO cookies, payment modal (/hub?pay=1), subscription tier
-  - tec-commerce-service (4003): products, stores, orders
-  - tec-payment-service (4002): payment initiation via BFF
-  - @yasser172/tec-auth: getStoredUser(), getAccessToken(), ssoRedirect()
-  - @yasser172/tec-ui: TEC_COLORS, GlobalNav, shared components
-  - @yasser172/tec-sdk: BFF Gateway proxy
+INBOUND:
+  POST /api/bff/payment/approve → Pi callback
+  POST /api/bff/payment/complete → Pi callback
+  POST /api/bff/payment/resolve  → orphan recovery
 ```
 
 ---
 
 ## 5. TECHNICAL ARCHITECTURE
 
-### Stack
-- Next.js 15 App Router + TypeScript strict
-- Deployment: Vercel (ecommerce.tecosystem.app)
-- Vitest (unit) + Playwright (e2e)
-- CI: ✅ GREEN — all tests passing
-
-### Feature Map
 ```
-/shop              → Product listing + search (✅)
-/product/[id]      → Product detail + Buy Now (✅)
-/store/[id]        → Merchant store + Buy Now (✅)
-/orders            → Order history (✅)
-CartDrawer         → Multi-item checkout (✅)
-ProductCard        → Merchant store link icon (🏪) (✅)
-ShopHeader         → Cart badge + floating FAB (✅)
-```
+Stack:
+  Next.js 15 App Router + TypeScript strict
+  @yasser172/tec-ui v1.2.1 (CartDrawer, PaymentModal, TEC_COLORS)
+  @yasser172/tec-auth (getStoredUser, getAccessToken, ssoRedirect)
+  @yasser172/tec-sdk (BFF → API Gateway:4000)
+  Vitest (unit) + Playwright (e2e)
+  Deployment: Vercel (ecommerce.tecosystem.app)
 
-### ADR-007 — 4 Guard Locations (DO NOT REMOVE FROM ANY)
-```typescript
-// All 4 files implement this guard:
-const isHubNavigation = () =>
-  document.referrer.toLowerCase().includes('hub.tecosystem.app')
+Pi App ID: ecommerce-app-71ca4d3e462eaf54
+Domain:    https://ecommerce.tecosystem.app
 
-if (isHubNavigation() || !(window as any).Pi || !piReady) {
-  redirectToHubPayment(...)   // Mode 1
-  return
-}
-// Mode 2: Direct Pi Browser payment
-```
+Cart Architecture:
+  useCart hook → localStorage 'tec_cart'
+  CartDrawer → multi-item checkout UI
+  ShopHeader → cart badge + floating FAB
+  Cart total = sum(price × qty) — NEVER modified server-side before order
 
-Files with ADR-007 guard:
-```
-src/app/page.tsx                     → handleBuy
-src/app/product/[id]/page.tsx        → handleBuy
-src/app/store/[id]/page.tsx          → handleBuy
-src/components/shop/CartDrawer.tsx   → handleCheckout
-```
+ADR-007 Guard Files (ALL 4 MUST HAVE guard):
+  src/app/page.tsx                   → handleBuy
+  src/app/product/[id]/page.tsx      → handleBuy
+  src/app/store/[id]/page.tsx        → handleBuy
+  src/components/shop/CartDrawer.tsx → handleCheckout
 
-### Cart State Architecture
-```typescript
-// useCart hook — localStorage persistence
-const CART_KEY = 'tec_cart'
-
-interface CartItem {
-  productId: string
-  name: string
-  price: string // Pi amount as string (DECIMAL precision)
-  qty: number
-  merchantId: string
-}
-
-// Cart total computed from items (never stored, always derived)
-const total = items.reduce((sum, item) =>
-  sum + parseFloat(item.price) * item.qty, 0
-)
-```
-
-### BFF Routes
-```
-GET  /api/bff/products          → tec-commerce-service: product listing + search
-GET  /api/bff/store/[id]        → tec-commerce-service: merchant + products
-GET  /api/bff/orders            → tec-commerce-service: order history
-POST /api/bff/orders            → tec-commerce-service: create order
-                                   Payload: { items: [{productId, qty}], payment_id }
-                                   OR legacy: { product_id, qty, payment_id }
-POST /api/bff/payment/approve   → tec-payment-service: Pi callback
-POST /api/bff/payment/complete  → tec-payment-service: Pi callback
-POST /api/bff/payment/resolve   → incomplete payment resolver
-```
-
-### Order Creation Flow (C-76 Backend-First)
-```
-1. POST /api/.../payment/create  → backend creates payment record FIRST
-2. Pi.createPayment(config, cbs) → Pi Network approval
-3. POST /api/bff/payment/approve → onReadyForServerApproval callback
-4. POST /api/bff/orders          → order created AFTER payment approved
-5. POST /api/bff/payment/complete→ Pi payment finalized
-```
-
-**Test Note (C-76)**: Tests failing with 422 means `payment/create` fetch mock missing.
-Fix: add `mockCreateSuccess()` before each payment test.
-
-### Auth Pattern
-```typescript
-const user  = getStoredUser()   // tec_user cookie
-const token = getAccessToken()  // tec_access_token cookie
-const isAuth = !!(user && token)
-headers: { 'x-csrf-token': getCsrfToken() } // tec_csrf cookie
+CI Status: ✅ GREEN (commit 33d2d141)
+  - All tests passing
+  - x-internal-key sent only when INTERNAL_SECRET SET
+  - getUserId: u?.id ?? u?.sub ?? u?.piId ?? ''
+  - NEXT_PUBLIC fallback for GW URL in all 3 payment routes
 ```
 
 ---
 
 ## 6. SECURITY MODEL
 
-### Authentication
-- SSO via Hub cookies: `tec_access_token`, `tec_csrf`, `tec_user`
-- Missing session on checkout → deny, redirect to Hub login (P6 Fail Closed)
-- CSRF double-submit on all mutations
+```
+Cart Security:
+  Cart = client-side only (localStorage)
+  Order total verified server-side against product prices
+  NEVER trust client-sent prices in order creation
 
-### Authorization
-- Order history: only authenticated user's own orders (never another user's)
-- Cart state: client-side only (localStorage) — no server-side cart auth needed
-- Checkout requires authentication: unauthenticated cart → Hub login redirect
+Payment Security:
+  ADR-007 in ALL 4 payment handlers — DO NOT REMOVE
+  C-76 backend-first: /api/bff/payment/create BEFORE Pi.createPayment
+  x-internal-key: conditional (only when INTERNAL_SECRET SET)
+  CSRF: double-submit on all mutations
 
-### Threat Vectors & Mitigations
-| Threat | Mitigation |
-|--------|------------|
-| Pi foreign session | ADR-007 in 4 files — DO NOT REMOVE |
-| Cart manipulation (price change) | Server validates price from tec-commerce-service — never trusts client price |
-| Order viewing by wrong user | BFF derives user from tec_user cookie — never URL param |
-| CSRF on order creation | x-csrf-token required |
-| Payment double-charge | C-76 backend-first + outbox pattern in tec-payment-service |
-| Cart state poisoning | Cart = display only; server validates all items at checkout |
+Auth:
+  Consumer identity: tec_user cookie (never body.userId)
+  Order ownership: verified from session on every BFF call
+  CSRF: x-csrf-token header required
+
+Infrastructure:
+  API_GATEWAY_URL ?? NEXT_PUBLIC_API_GATEWAY_URL (Vercel fallback)
+  INTERNAL_SECRET: never send empty string — causes Gateway 401
+```
 
 ---
 
 ## 7. REVENUE MODEL
 
-### Direct
-1. **Platform Commission**: % of every Pi purchase through Ecommerce (PRIMARY)
-2. **Featured Listings**: Merchants pay for prominent placement in consumer marketplace
-3. **PRO Consumer Features**: Wish lists, price alerts, order tracking (Phase 2)
+**Transaction-Based (Platform Marketplace)**
 
-### Indirect
-- Ecommerce drives merchant loyalty to Commerce (C-101) — merchants stay where buyers are
-- Consumer purchasing data → platform analytics → better product recommendations (TEC AI)
-- High transaction volume → platform Pi circulation → ecosystem health
-
-### Priority Order
-1. Platform commission (immediate, volume-driven)
-2. Featured merchant placement (ad model, Phase 1)
-3. PRO consumer features (Phase 2)
+| Channel | Mechanism | Target |
+|---------|-----------|--------|
+| Platform Fees | % of each Pi transaction via Ecommerce | Primary |
+| Featured Products | Paid placement in search results | Secondary |
+| Merchant Premium | Enhanced store pages + analytics | Phase 2 |
 
 ---
 
 ## 8. KEY METRICS
 
-### SLOs
-| Metric | Target | Alert Threshold |
-|--------|--------|----------------|
-| Ecommerce app availability | ≥ 99.5% | < 99.0% |
-| Checkout success rate | ≥ 95% | < 90% |
-| Product listing load time | < 1s P95 | > 3s P95 |
-| Cart persistence across sessions | 100% (localStorage) | Any loss event |
-| ADR-007 guard coverage (4 files) | 100% | Any bypass = P0 |
-
-### KPIs
-| Metric | Target | Frequency |
-|--------|--------|----------|
-| Daily active shoppers | Baseline + 10% MoM | Monthly |
-| Cart → checkout conversion | ≥ 40% | Weekly |
-| Payment success rate | ≥ 95% | Daily |
-| Average cart value (Pi) | Increasing trend | Weekly |
-| Test coverage | ≥ 60% (Phase 0 gate) | Per PR |
-| Multi-item checkout usage | ≥ 20% of checkouts | Weekly |
-
-### Health Signals
-- Cart total mismatch (client vs server) → pricing inconsistency alert
-- ADR-007 guard removed from any of the 4 files → P0 incident
-- Payment opens but Pi Wallet doesn't appear → foreign session violation
-- Order stuck in pending > 60min → orphan payment reconciliation
+```
+Payment Success Rate:     ≥ 95% (24h target — /api/bff/metrics)
+Cart-to-Order Rate:       Track (baseline needed after Mainnet)
+ADR-007 Guard Coverage:   100% — all 4 payment handler files
+CI Green:                 ✅ MUST NEVER drop (33d2d141 baseline)
+Order Creation Success:   ≥ 98%
+Gateway 401 Rate:         0% (x-internal-key bug fixed 5d44c501)
+Test Coverage:            ≥ 60% (Phase 0 gate — PENDING)
+Page Load (P95):          < 3s on Pi Browser
+```
 
 ---
 
 ## 9. ECOSYSTEM CONTRIBUTION
 
-1. **Consumer Demand**: Creates the buyer side of the Pi economy — without consumers, merchants have no market
-2. **Pi Token Velocity**: Shopping drives Pi circulation — the primary economic activity driver
-3. **Merchant Discovery**: `/store/[id]` pages let consumers discover merchants → drives Commerce adoption
-4. **Multi-item Checkout**: CartDrawer pattern enables bundled Pi payments — higher average transaction value
-5. **ADR-007 Stress Test**: 4 payment handler files in Ecommerce are the most-tested ADR-007 implementations in the platform
-6. **CI Reference**: Ecommerce CI is GREEN — serves as reference for test configuration patterns
+- **Highest Transaction Volume** — primary proof of Pi utility at scale
+- **Consumer Demand Signal** — drives merchant supply in Commerce
+- **Cart Pattern** — useCart hook usable across all consumer apps
+- **Merchant Discovery** — every product links to merchant store (🏪)
 
 ---
 
 ## 10. FUTURE EVOLUTION
 
-### Phase 1 (Post-Mainnet, Month 1–2)
-- Product search and filters: category, price range, merchant, Pi rating
-- Wishlist: save products for later (server-side persistence)
-- Order tracking: real-time status updates via tec-realtime-service (4009)
-- Reviews and ratings: consumer feedback on products and merchants
+```
+Phase 1:
+  → Test coverage ≥ 60% (Vitest for useCart + BFF routes)
+  → Wishlist / saved items
+  → Order tracking via tec-realtime-service
 
-### Phase 2 (Month 3–4)
-- Personalized recommendations: TEC AI (C-104) powered product suggestions
-- Price history: track Pi price changes over time
-- Group buying: multiple buyers pool Pi for bulk purchase discount
-- Merchant subscription products: recurring Pi payments for subscriptions
+Phase 2:
+  → Personalized recommendations (TEC AI integration)
+  → Multi-currency display (Pi + fiat equivalent)
+  → Subscription purchasing (recurring Pi payments)
 
-### Phase 3 (Month 5–8)
-- Social commerce: Connection (C-107) integration — see what connections are buying
-- Location-aware commerce: Explorer (C-108) integration — products from nearby merchants
-- Loyalty tokens: repeat buyers earn Asset (C-102) tokens from merchants
-- Live commerce: real-time product launches via tec-realtime-service
+Phase 3:
+  → Social commerce (Connection graph → product discovery)
+  → Live commerce (realtime seller sessions)
+```
 
 ---
 
 ## 11. ENGINEERING UPDATES REQUIRED
 
-**P0 — Critical (Pre-Mainnet)**
-1. **PI_SANDBOX=false**: Verify production environment
-2. **ADR-007 audit**: Confirm all 4 files have guard — run automated check in CI
-3. **Server-side price validation**: Verify BFF validates product prices from tec-commerce-service — never trusts client-provided prices
+**P0 — Already Fixed (document for audit):**
+```
+[P0-DONE] x-internal-key empty string bug
+  Fixed: 5d44c501 — conditional header pattern
+  Fixed: getUserId pattern: u?.id ?? u?.sub ?? u?.piId ?? ''
+  Fixed: NEXT_PUBLIC fallback in all 3 payment BFF routes
+```
 
-**P1 — High Priority (Phase 0 completion)**
-4. **Test coverage ≥ 60%**: Priority files:
-   - `src/lib-client/cart/useCart.ts`: addToCart, removeFromCart, updateQty, clearCart, localStorage persist
-   - `src/app/api/bff/orders/route.ts`: single product, multi-item, auth fail
-   - `src/app/api/bff/payment/approve/route.ts`: success, invalid payment_id, gateway error
-   - `src/app/api/bff/payment/complete/route.ts`: success, already completed (409), gateway error
-5. **C-76 test pattern**: Add `mockCreateSuccess()` to all payment tests (mock `/api/.../payment/create` fetch)
-6. **@yasser172/tec-ui v1.2.0**: Upgrade to shared PaymentModal when published
+**P1:**
+```
+[P1-1] Test Coverage ≥ 60%
+  Priority:
+  - useCart: addToCart, removeFromCart, updateQty, clearCart, persist
+  - POST /api/bff/orders: single product, multi-item, auth fail
+  - POST /api/bff/payment/approve: success, invalid, gateway error
+  - POST /api/bff/payment/complete: success, 409 (already done), error
 
-**P2 — Medium Priority (Phase 1)**
-7. **Product search API**: `/api/bff/products?q=...&category=...` with pagination
-8. **Wishlist BFF route**: Server-side wishlist via tec-commerce-service
-9. **Order reconciliation**: Detect orders stuck in pending > 60min → alert
-10. **Pi price display standardization**: All amounts use `parseFloat(amount).toFixed(2) + ' π'` — audit for consistency
+[P1-2] PI_SANDBOX=false Verification
+  Confirm on Vercel for Pi App ID ecommerce-app-71ca4d3e462eaf54.
+```
+
+**P2:**
+```
+[P2-1] PAL Integration
+  Ecommerce currently uses window.Pi indirectly via tec-core-sdk.
+  When PiRuntime is fully built in Hub, Ecommerce should consume
+  the same abstraction.
+
+[P2-2] Product Search Optimization
+  Current: client-side filter on loaded products.
+  Target: server-side search via tec-commerce-service query params.
+```
 
 ---
 
 ## 12. INTEGRATION MAP
 
 ```
-C-103 (ECOMMERCE) depends on:
-← C-100 (HUB)           : SSO identity, payment modal, subscription tier
-← C-101 (COMMERCE)      : Products and merchant data via tec-commerce-service
-← tec-core-backend      : tec-commerce-service (4003), tec-payment-service (4002)
-← @yasser172/tec-auth   : getStoredUser(), getAccessToken()
-← @yasser172/tec-ui     : TEC_COLORS, components
-← @yasser172/tec-sdk    : BFF Gateway proxy
+This charter (C-103) depends on:
+  C-100 HUB       → SSO cookies + /hub?pay=1 routing
+  C-101 COMMERCE  → product truth from tec-commerce-service
+  C-104 TEC AI    → future: personalized recommendations
+  C-107 CONNECTION → future: social commerce
 
-C-103 (ECOMMERCE) contributes to:
-→ C-101 (COMMERCE)     : Consumer demand drives merchant revenue
-→ C-105 (ANALYTICS)    : Purchase events → platform analytics
-→ C-104 (TEC AI)       : Purchase patterns → recommendation engine
-→ C-107 (CONNECTION)   : Social commerce in Phase 3
-
-Follows patterns from:
-→ C-101 (COMMERCE)     : Commerce is reference implementation
+Other charters depend on this one for:
+  C-105 ANALYTICS → consumer behavior + transaction volume data
 ```
-
----
-
-*Charter issued by TEC Economic Infrastructure Design Partnership*
-*Version 1.0 — 2026-06-15*

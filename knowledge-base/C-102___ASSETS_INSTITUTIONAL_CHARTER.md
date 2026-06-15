@@ -1,299 +1,233 @@
 # C-102 — ASSETS INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
-**Truth State:** Current State
-**Governance State:** Draft
-**Verification State:** Documentation Verified + Code Verified
-**Authority Scope:** Application
-**Decision Status:** Approved
+**Truth State:** [Current State]
+**Governance State:** [Draft]
+**Verification State:** [Documentation Verified]
+**Authority Scope:** [Application]
+**Decision Status:** [Approved]
 
 ---
 
 ## 1. MISSION
 
-Assets is the digital ownership layer of the TEC ecosystem — the system through which Pi-native digital assets (NFTs, creator tokens, digital goods) are created, owned, traded, and transferred between identities.
+Enable Pi-native creation, discovery, and peer-to-peer trading of digital assets and NFTs within the TEC ecosystem.
 
 ---
 
 ## 2. INSTITUTIONAL ROLE
 
-**System of Production (Ownership Layer)** — Digital asset creation and peer-to-peer ownership transfer.
-
 ```
-Settlement → Record → Reasoning → Access → Construction → PRODUCTION → Economic Activity → Settlement
-                                                               ↑
-                                                            ASSETS
-                                                      (Ownership Sub-layer)
+System of Production — Digital Asset Infrastructure
+Ownership Layer of the TEC Economic Runtime
 ```
-
-If Commerce handles goods and services, Assets handles ownership claims — NFTs, digital certificates, creator reputation tokens, and any Pi-native asset whose primary value is the proof of ownership itself.
 
 ---
 
 ## 3. ECONOMIC PURPOSE
 
-Assets exists to create a Pi-native ownership economy:
+تحويل الأصول الرقمية إلى نشاط اقتصادي مستمر.
 
-- **Asset Creation**: Pi users mint digital assets tied to their Pi identity
-- **Ownership Proof**: Every asset has a verifiable owner (one principal — Invariant 3)
-- **Peer-to-Peer Trading**: Asset transfers require Pi payment approval, creating a trading market
-- **Creator Economy**: Artists, developers, and creators can monetize digital work in Pi
-- **Portfolio Management**: Users see their digital asset holdings, value, and history
-
-Without Assets, Pi tokens can be transferred but cannot be exchanged for *ownership claims* — Assets creates the institutional layer for Pi-denominated property rights.
+- بدون Assets: Pi الاقتصاد لحظي (buy/sell فقط)
+- بوجود Assets: wealth يتراكم ويُتداول → economic permanence
+- اقتصادياً: كل asset = unit of stored Pi value → longer retention cycles
 
 ---
 
 ## 4. AUTHORITY BOUNDARY
 
 ### Owns
-- Asset portfolio UI and display
-- Asset creation workflow (UI layer only — service layer owns minting)
-- Creator profile design and attribution
-- NFT display and trading flow UI
-- Asset discovery and search UI
-- Pi App ID: `assets-app-af2fb490e7b03db7`
+- Asset discovery and portfolio display UI
+- Asset creation workflow (metadata submission)
+- Peer-to-peer trading UI and negotiation flow
+- Creator identity attribution (from tec_user cookie)
 
 ### Does NOT Own
-- Asset ownership records (tec-asset-service owns — Port 4006)
-- Asset ownership transitions (tec-asset-service is the authority — never derive client-side)
-- Payment creation for asset transfers (tec-payment-service — Port 4002)
-- Creator identity verification (tec-auth-service + tec-kyc-service)
-- NFT metadata storage (tec-storage-service — Port 4010)
+- Asset ownership records (owned by tec-asset-service:4006)
+- Asset ownership transfer (owned by tec-asset-service)
+- Payment processing (owned by tec-payment-service:4002)
+- Asset authenticity verification (owned by tec-kyc-service:4005)
 
 ### Interface Points
 ```
-Exposes to ecosystem:
-  - Public asset pages (browsable by non-authenticated users)
-  - Creator profile pages (public reputation layer)
-  - Asset trading flow (authenticated users)
+OUTBOUND:
+  /api/bff/assets     → tec-asset-service (read portfolio)
+  /api/bff/assets/create → tec-asset-service (mint new asset)
+  /hub?pay=1&...      → Mode 1 payment for asset purchase
+  Pi.createPayment    → Mode 2 payment (only when !isHubNavigation)
 
-Consumed from:
-  - Hub (C-100): SSO cookies, payment modal (/hub?pay=1), KYC status
-  - tec-asset-service (4006): asset records, ownership, metadata
-  - tec-payment-service (4002): payment for asset transfers
-  - tec-storage-service (4010): asset media files
-  - @yasser172/tec-auth: getStoredUser(), ssoRedirect()
-  - @yasser172/tec-ui: TEC_COLORS, GlobalNav
-  - @yasser172/tec-sdk: BFF Gateway proxy
+INBOUND:
+  tec_user cookie     → user identity (creator attribution)
+  /api/bff/payment/approve  → Pi callback
+  /api/bff/payment/complete → Pi callback (triggers ownership transfer)
 ```
 
 ---
 
 ## 5. TECHNICAL ARCHITECTURE
 
-### Stack
-- Next.js 15 App Router + TypeScript strict
-- Deployment: Vercel (assets.tecosystem.app)
-- Vitest (unit) + Playwright (e2e)
-- @yasser172/tec-ui, @yasser172/tec-auth, @yasser172/tec-sdk
-
-### Critical Pattern — Asset Ownership Authority
-```typescript
-// CORRECT: Ownership always from tec-asset-service
-const asset = await TecSdk.assets.getAsset(assetId) // server-side BFF
-const isOwner = asset.ownerId === user.userId
-
-// FORBIDDEN: Never derive ownership client-side
-// const isOwner = localAssetData.owner === username // BANNED
 ```
+Stack:
+  Next.js 15 App Router + TypeScript strict
+  @yasser172/tec-ui v1.2.1 (TEC_COLORS, inline styles only)
+  @yasser172/tec-auth (getStoredUser, getAccessToken, ssoRedirect)
+  @yasser172/tec-sdk (BFF → API Gateway:4000 → asset-service:4006)
+  Vitest (unit) + Playwright (e2e)
+  Deployment: Vercel (assets.tecosystem.app)
 
-### ADR-007 — Pi Foreign Session Guard
-```typescript
-const isHubNavigation = () =>
-  document.referrer.toLowerCase().includes('hub.tecosystem.app')
+Pi App ID: assets-app-af2fb490e7b03db7
+Domain:    https://assets.tecosystem.app
 
-if (isHubNavigation() || !(window as any).Pi || !piReady) {
-  redirectToHubPayment(asset) // Mode 1: Hub modal redirect
-  return
-}
-// Mode 2: Direct Pi Browser payment for asset transfer
-```
+Critical Invariant:
+  Asset ownership = ALWAYS from tec-asset-service
+  NEVER derive ownership client-side
+  NEVER trust client-sent assetId for ownership proof
 
-### Asset Transfer Lifecycle
-```
-Buyer clicks 'Buy Asset'
-  → isHubNavigation() check (ADR-007)
-  → POST /api/bff/asset-transfer/initiate → tec-asset-service (4006)
-    → tec-payment-service (4002) creates payment
-    → Pi Network payment approval
-    → POST /api/bff/payment/complete
-      → tec-asset-service updates ownership
-      → Ownership transfer: seller → buyer (atomic)
-```
+Ownership Transfer Flow:
+  1. Buyer initiates purchase UI
+  2. isHubNavigation() check (ADR-007)
+  3. Mode 1 or Mode 2 payment
+  4. On payment.complete → POST /api/bff/assets/transfer
+  5. tec-asset-service updates ownership record
+  6. Audit trail created (actor context required)
 
-### KYC Gate for Asset Transfers
-```typescript
-// High-value asset transfers require KYC
-const user = getStoredUser()
-if (asset.price > KYC_THRESHOLD && !user.kycVerified) {
-  redirectToHubKyc() // /hub/kyc
-  return
-}
-```
-
-### BFF Routes (Required — currently needs specification)
-```
-GET  /api/bff/assets           → tec-asset-service: portfolio listing
-GET  /api/bff/assets/[id]      → tec-asset-service: asset detail
-POST /api/bff/assets           → tec-asset-service: create/mint asset
-POST /api/bff/asset-transfer   → tec-asset-service: initiate transfer
-POST /api/bff/payment/approve  → tec-payment-service: Pi callback
-POST /api/bff/payment/complete → tec-payment-service: Pi callback + ownership update
-```
-
-### Asset Ownership Invariant
-```
-Invariant: Every asset has exactly ONE owner at any point in time.
-Transfer = atomic swap: payment completion triggers ownership record update.
-Orphan detection: if payment completes but ownership not updated → ALERT to tec-analytics-service
+Creator Attribution:
+  Creator = tec_user.piUsername (from SSO cookie)
+  NEVER from request body
+  Stored permanently in asset metadata
 ```
 
 ---
 
 ## 6. SECURITY MODEL
 
-### Authentication
-- SSO via Hub cookies: `tec_access_token`, `tec_csrf`, `tec_user`
-- Missing session on asset action → deny, redirect to Hub login (P6 Fail Closed)
-- CSRF header required on all POST/PUT/DELETE
+```
+Ownership Security:
+  tec-asset-service = sole authority for ownership state
+  Transfer requires: verified payment completion
+  Transfer requires: actor context (who initiated)
+  Transfer requires: full audit trail
+  Invariant: asset ownership always resolves to ONE principal (P6)
 
-### Authorization
-- Asset owner = identity from `tec_user` cookie (Pi username bound to tec-asset-service record)
-- KYC status from `tec_user` cookie gates high-value transfers
-- Ownership transitions only through tec-asset-service — never from client assertions
+Payment Security:
+  ADR-007 guard: isHubNavigation() in every payment handler
+  Ownership transfer ONLY after payment.approved.v1 event
+  No client-side ownership assumption before service confirms
 
-### Threat Vectors & Mitigations
-| Threat | Mitigation |
-|--------|------------|
-| Pi foreign session (ADR-007) | isHubNavigation() in every payment handler |
-| Ownership derived client-side | tec-asset-service is sole authority |
-| Asset transfer without payment | Ownership update atomic with payment.completed event |
-| CSRF on transfer mutations | x-csrf-token header required |
-| KYC bypass on high-value transfer | Server-side KYC check from tec_user cookie |
-| Orphan asset (payment done, ownership not updated) | Alert + reconciliation cron |
+SSO:
+  Cookies from Hub: tec_access_token, tec_csrf, tec_user
+  Creator identity from tec_user.piUsername ONLY
+  CSRF header on all POST/PUT/DELETE
+
+Infrastructure:
+  API_GATEWAY_URL: server-only (never NEXT_PUBLIC_)
+  INTERNAL_SECRET: conditional (only when SET)
+  503 guard: graceful degradation when tec-asset-service unavailable
+```
 
 ---
 
 ## 7. REVENUE MODEL
 
-### Direct
-1. **Transfer Commission**: Platform takes % of every Pi asset transfer (PRIMARY)
-2. **Minting Fee**: Small Pi fee to mint a new asset (creates demand for Pi utility)
-3. **Creator PRO**: Premium creator features — analytics, custom storefronts, batch minting
+**Direct (Asset Economy)**
 
-### Indirect
-- Creator economy drives user acquisition (creators bring their audience)
-- Asset portfolio value → user retention (users with assets stay in the ecosystem)
-- Asset trading volume → platform Pi circulation → higher ecosystem economic activity
-
-### Priority Order
-1. Transfer commission (immediate, volume-driven)
-2. Minting fees (per creation event)
-3. Creator PRO tier (recurring, Phase 2)
+| Channel | Mechanism | Target |
+|---------|-----------|--------|
+| Minting Fees | Pi fee per new asset created | Primary |
+| Transfer Fees | % of each peer-to-peer trade | Primary |
+| Verification Services | Premium authenticity badges | Secondary |
+| Creator Subscriptions | Enhanced portfolio features | Phase 2 |
 
 ---
 
 ## 8. KEY METRICS
 
-### SLOs
-| Metric | Target | Alert Threshold |
-|--------|--------|----------------|
-| Assets app availability | ≥ 99.5% | < 99.0% |
-| Asset transfer success rate | ≥ 97% | < 95% |
-| Ownership update latency (post-payment) | < 3s P95 | > 10s P95 |
-| Asset portfolio load time | < 1s P95 | > 3s P95 |
-| Orphan asset detection | < 1 per day | > 5 per day |
-
-### KPIs
-| Metric | Target | Frequency |
-|--------|--------|----------|
-| Active creators | Baseline + 10% MoM | Monthly |
-| Assets minted per day | Baseline + 5% WoW | Weekly |
-| Transfer volume (Pi) | Increasing trend | Weekly |
-| Test coverage | ≥ 60% (Phase 0 gate) | Per PR |
-| ADR-007 guard in all payment handlers | 100% | Per PR |
+```
+Asset Service Availability:  ≥ 99.5% (graceful 503 on failure)
+Ownership Transfer Success:  ≥ 98% (after payment completion)
+Payment Success Rate:        ≥ 95% (Mode 1 + Mode 2)
+Ownership Audit Coverage:    100% (every transfer has actor context)
+Creator Attribution Accuracy: 100% (always from tec_user cookie)
+Test Coverage:               ≥ 60% (Phase 0 gate — PENDING)
+Portfolio Load Time (P95):   < 3s on Pi Browser
+```
 
 ---
 
 ## 9. ECOSYSTEM CONTRIBUTION
 
-1. **Ownership Economy**: Creates the infrastructure for Pi-native property rights — assets, certificates, digital goods
-2. **Creator Retention**: Creators who mint assets have economic stake in the ecosystem
-3. **Pi Velocity**: Asset trading increases Pi token velocity — more economic activity per token
-4. **Identity Enrichment**: Creator reputation data enriches the TEC identity layer (C-107 Connection)
-5. **NFT Pioneer**: First Pi-native NFT infrastructure — establishes TEC as the ownership layer for Pi economy
+- **Wealth Accumulation Layer** — converts single transactions into stored value
+- **Creator Economy** — Pi-native creator attribution and reputation
+- **NFT Infrastructure** — digital provenance on Pi Network
+- **Economic Permanence** — assets persist longer than single purchases
 
 ---
 
 ## 10. FUTURE EVOLUTION
 
-### Phase 1 (Post-Mainnet, Month 1–2)
-- Creator dashboard: earnings by asset, transfer history, royalty tracking
-- Asset categories: art, music, software, certificates, game items
-- Public marketplace: discoverable asset listings with search and filters
-- Royalty system: creator earns % on every secondary transfer
+```
+Phase 1 (Post-Mainnet):
+  → Test coverage ≥ 60% (Vitest)
+  → Portfolio analytics (asset value over time)
+  → Creator reputation score integration
 
-### Phase 2 (Month 3–4)
-- Peer-to-peer offers: buyers propose price, seller accepts/counters
-- Asset bundles: multiple assets in one Pi payment
-- Creator reputation score: based on transfer volume, ratings, history
-- Integration with Explorer (C-108) for asset discovery by location
+Phase 2:
+  → Fractionalized asset ownership (multiple owners)
+  → Asset staking / escrow patterns
+  → Secondary marketplace with price discovery
 
-### Phase 3 (Month 5–8)
-- Fractional ownership: multiple owners share a single high-value asset
-- Asset-backed loans via FundX (C-113): assets as collateral
-- Cross-chain bridges: Pi assets ↔ other Pi Network dApps
-- Estate integration (C-114): digital certificates for physical property
+Phase 3:
+  → Pi Digital Asset Layer (standard for all Pi apps)
+  → Cross-ecosystem asset portability
+  → Asset-backed lending (requires FundX integration)
+```
 
 ---
 
 ## 11. ENGINEERING UPDATES REQUIRED
 
-**P0 — Critical (Pre-Mainnet)**
-1. **PI_SANDBOX=false**: Verify production environment
-2. **ADR-007 audit**: Grep all payment handler files for `isHubNavigation()` — zero exceptions
-3. **Ownership never client-side**: Audit all asset ownership checks — must go through tec-asset-service
+**P0:**
+```
+[P0-1] Ownership Transfer Atomicity
+  Payment completion and ownership transfer must be atomic.
+  If tec-asset-service fails after payment completes →
+  orphan recovery path required (similar to payment orphan cron).
+  Current status: UNVERIFIED — needs audit.
+```
 
-**P1 — High Priority (Phase 0 completion)**
-4. **Test coverage ≥ 60%**: Priority areas:
-   - Asset ownership auth guard (missing cookie, valid owner, wrong user)
-   - Payment handler ADR-007 (isHubNavigation true/false, piReady false)
-   - Asset transfer flow (success, payment mismatch, orphan detection)
-   - BFF routes (auth fail, gateway error)
-5. **Orphan detection**: If payment.completed but asset ownership not updated within 30s → alert + manual reconciliation path
-6. **@yasser172/tec-ui v1.2.0**: Upgrade to shared PaymentModal when published
+**P1:**
+```
+[P1-1] Test Coverage ≥ 60%
+  Priority:
+  - Asset service 503 graceful degradation
+  - Ownership transfer: success, service failure, duplicate transfer
+  - Payment handler: ADR-007 Mode 1 vs Mode 2
+  - Creator attribution: verify piUsername from cookie
 
-**P2 — Medium Priority (Phase 1)**
-7. **Asset search/discovery API**: Currently no discovery endpoint — BFF needed
-8. **Royalty system**: Track creator % on secondary transfers — requires tec-asset-service support
-9. **Media optimization**: Asset images via tec-storage-service (4010) — CDN + lazy loading
-10. **Creator analytics**: Connect to tec-analytics-service (4007) for earnings dashboard
+[P1-2] PI_SANDBOX=false Verification
+  Confirm on Vercel for Pi App ID assets-app-af2fb490e7b03db7.
+```
+
+**P2:**
+```
+[P2-1] Asset Search
+  Current: portfolio only. Need: marketplace search across all assets.
+
+[P2-2] Creator Reputation
+  Connect to tec-identity-service (4004) for creator score.
+```
 
 ---
 
 ## 12. INTEGRATION MAP
 
 ```
-C-102 (ASSETS) depends on:
-← C-100 (HUB)           : SSO identity, payment modal, KYC status
-← tec-core-backend      : tec-asset-service (4006), tec-payment-service (4002), tec-storage-service (4010)
-← @yasser172/tec-auth   : getStoredUser(), identity from cookie
-← @yasser172/tec-ui     : TEC_COLORS, components
-← @yasser172/tec-sdk    : BFF Gateway proxy
+This charter (C-102) depends on:
+  C-100 HUB       → SSO cookies + /hub?pay=1 routing
+  C-101 COMMERCE  → follows commerce payment patterns
+  C-113 FUNDX     → future: asset-backed lending
 
-C-102 (ASSETS) contributes to:
-→ C-105 (ANALYTICS)    : Asset transfer events → platform analytics
-→ C-107 (CONNECTION)   : Creator reputation → relationship graph
-→ C-108 (EXPLORER)     : Asset discovery by location/category
-→ C-113 (FUNDX)        : Assets as collateral for lending pools
-→ C-114 (ESTATE)       : Digital certificates for property
-
-Follows patterns from:
-→ C-101 (COMMERCE)     : Commerce is reference implementation — Assets adopts proven patterns
+Other charters depend on this one for:
+  C-107 CONNECTION → creator reputation feeds relationship graph
+  C-105 ANALYTICS  → asset trading volume metrics
 ```
-
----
-
-*Charter issued by TEC Economic Infrastructure Design Partnership*
-*Version 1.0 — 2026-06-15*

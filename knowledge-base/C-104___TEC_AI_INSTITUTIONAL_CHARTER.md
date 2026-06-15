@@ -1,272 +1,246 @@
 # C-104 — TEC AI INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
-**Truth State:** Planned State
-**Governance State:** Draft
-**Verification State:** Unverified
-**Authority Scope:** Platform
-**Decision Status:** Recommended
+**Truth State:** [Planned State]
+**Governance State:** [Draft]
+**Verification State:** [Unverified]
+**Authority Scope:** [Platform]
+**Decision Status:** [Recommended]
 
 ---
 
 ## 1. MISSION
 
-TEC AI is the reasoning infrastructure layer of the TEC ecosystem — the system that transforms raw platform data (transactions, user behavior, economic signals) into actionable intelligence for users, merchants, and platform operators.
+Transform the TEC Economic Runtime's institutional knowledge and real-time economic data into governed, auditable intelligence that assists every actor — user, merchant, investor, builder — in making better economic decisions.
 
 ---
 
 ## 2. INSTITUTIONAL ROLE
 
-**System of Reasoning** — Intelligence layer in the Economic Runtime.
-
 ```
-Settlement → Record → REASONING → Access → Construction → Production → Economic Activity → Settlement
-                          ↑
-                        TEC AI
+System of Reasoning
 ```
 
-TEC AI occupies the reasoning position in the economic lifecycle: it sits between data capture (Record/Analytics) and access (Hub), transforming signals into decisions. It is not a chatbot — it is an economic inference engine.
+TEC AI sits between the Record Layer (Life, Connection, Explorer, Analytics) and the human interface (Hub, Apps). It interprets economic reality — it does NOT create it, govern it, or own it.
+
+```
+Record Layer → TEC AI → Recommendations → Users/Apps
+```
 
 ---
 
 ## 3. ECONOMIC PURPOSE
 
-TEC AI exists to create asymmetric economic advantages for TEC platform participants:
+زيادة جودة القرارات الاقتصادية داخل النظام.
 
-- **Merchants**: AI-driven product pricing recommendations, demand forecasting, inventory insights
-- **Consumers**: Personalized product discovery, spending pattern analysis, Pi budget optimization
-- **Creators (Assets)**: Asset valuation, trending category detection, optimal listing timing
-- **Platform Operators**: Anomaly detection, fraud signals, ecosystem health scoring
-- **FundX Pools**: Risk assessment for lending pool participants, credit scoring in Pi
-
-AI reasoning turns raw economic data into competitive advantage. Merchants using TEC AI price better, sell more. Consumers using TEC AI find what they want faster. Platform operators using TEC AI catch fraud earlier.
+- بدون TEC AI: users يعملوا قرارات على معلومات ناقصة
+- بوجود TEC AI: relevant intelligence في السياق الصح في الوقت الصح
+- اقتصادياً: better decisions → more transactions → more Pi velocity
 
 ---
 
 ## 4. AUTHORITY BOUNDARY
 
 ### Owns
-- AI inference API: `/ai/recommend`, `/ai/analyze`, `/ai/score`
-- Model selection and versioning for inference calls
-- Prompt templates for economic reasoning tasks
-- AI response caching strategy
-- Feedback loop data collection (user ratings on AI outputs)
+- Reasoning and recommendation generation
+- Capability selection and combination (from Governed Capability Registry)
+- Context assembly (from Life, Connection, Analytics, Nexus)
+- Explanation and assistance output
+- AI session context and memory
 
 ### Does NOT Own
-- Raw platform data (tec-analytics-service owns — Port 4007)
-- User identity (tec-auth-service owns)
-- Financial decisions (humans approve — AI only recommends)
-- Payment execution (tec-payment-service owns)
-- Pi amounts, balances, or wallet state
+- Institutional truth (owned by Verification layer — C-93)
+- Governance authority (owned by SYSTEM — C-110)
+- Payment execution (owned by tec-payment-service)
+- Identity verification (owned by tec-auth-service)
+- Capability certification (owned by Governance — C-94)
 
 ### Interface Points
 ```
-Exposes to ecosystem:
-  - Recommendation API: POST /api/ai/recommend (product, asset, merchant)
-  - Analysis API: POST /api/ai/analyze (spending, portfolio, market)
-  - Scoring API: POST /api/ai/score (credit, reputation, risk)
-  - Insight feed: GET /api/ai/insights (user-specific AI digest)
+OUTBOUND:
+  Recommendations    → Hub dashboard + all apps
+  Analysis reports   → Analytics (C-105)
+  Coordination plans → Nexus (C-109)
+  Builder assistance → DX (C-115)
 
-Consumed from:
-  - tec-analytics-service (4007): event streams, aggregated metrics
-  - tec-auth-service (4001): authenticated identity for personalization
-  - tec-commerce-service (4003): product catalog, pricing, order history
-  - tec-asset-service (4006): asset transaction history
-  - External LLM API (Anthropic Claude / configurable): inference backend
+INBOUND:
+  Life context       → goals, skills, preferences (C-106)
+  Connection graph   → relationships, trust signals (C-107)
+  Analytics signals  → trends, anomalies (C-105)
+  Capability registry → governed skills + workflows (C-94)
+  SYSTEM policies    → what AI is allowed to do (C-110)
 ```
 
 ---
 
 ## 5. TECHNICAL ARCHITECTURE
 
-### Stack (Planned)
-- Next.js 15 API Routes (BFF pattern) for AI endpoint exposure
-- Node.js service: `tec-ai-service` (Port 4011 — to be provisioned)
-- Anthropic Claude API (primary inference backend) via `@anthropic-ai/sdk`
-- Redis: response caching for repeated AI queries (TTL: 5min for recommendations)
-- PostgreSQL: AI output audit log (every AI decision is logged — Invariant 4)
-- Deployment: Railway (backend) + Vercel (frontend BFF)
+```
+Planned Stack:
+  Claude API (claude-sonnet-4-6 or higher)
+  Next.js 15 API Routes (BFF pattern — same as all TEC apps)
+  @yasser172/tec-sdk (for all service calls)
+  Governed Capability Registry (C-94 — to be built)
+  Context Engine (C-97 — to be built)
+  Redis (session + context cache)
+  tec-analytics-service (4007) for real-time signals
 
-### Two-SDK Boundary
-```
-Client Components  →  packages/tec-core-sdk (useAiRecommend hook)
-API Routes (BFF)   →  @yasser172/tec-sdk   (TecSdk.ai.* server-side calls)
-```
+Key Architectural Decisions:
+  1. TEC AI consumes capabilities — does NOT create them
+  2. Every AI action traceable to a governed capability
+  3. Context isolation per user session (P6 Fail Closed)
+  4. AI reasoning auditable — all inputs/outputs logged
+  5. TEC AI + DX = future Institutional Construction Runtime
 
-### Inference Architecture
-```
-User action (browse product)
-  → Event captured by tec-analytics-service (4007)
-  → POST /api/bff/ai/recommend
-    → tec-ai-service (4011)
-      → Fetch user history from analytics
-      → Build context prompt
-      → Anthropic Claude API (inference)
-      → Parse structured response
-      → Cache in Redis (5min TTL)
-      → Log to audit table
-    → Return recommendations
-  → Display in UI
-```
+LLM Integration Pattern:
+  Tool Use (function calling) → TEC service calls
+  Context Window = Life + Connection + Analytics signals
+  System Prompt = C-47 Kernel Spec + C-94 Capability Registry
+  No direct DB access — all data via governed BFF routes
 
-### AI Audit Trail (Invariant 4 compliance)
-```typescript
-interface AiAuditRecord {
-  id: string            // UUID
-  userId: string        // actor from tec_user cookie
-  requestType: string   // 'recommend' | 'analyze' | 'score'
-  inputHash: string     // SHA256 of input (not stored raw)
-  modelId: string       // e.g. 'claude-sonnet-4-6'
-  outputSummary: string // first 200 chars of output
-  latencyMs: number
-  timestamp: string     // ISO 8601
-  correlationId: string // traces full request
-}
-```
-
-### Economic Reasoning Tasks (Phase 1 Implementation Targets)
-```
-1. Product recommendations: based on browse history + purchase patterns
-2. Price sensitivity analysis: optimal Pi price point for merchant products
-3. Portfolio insights: asset value trends for Assets users
-4. Spending digest: weekly Pi spending summary for Hub users
-5. Demand forecasting: predict category demand peaks for Commerce merchants
+Constitutional Boundaries (C-94):
+  AI MAY:  Select, combine, recommend, explain capabilities
+  AI MAY NOT: Create certified capabilities, approve capabilities,
+              govern capability execution, bypass audit trail
 ```
 
 ---
 
 ## 6. SECURITY MODEL
 
-### Authentication
-- All AI endpoints require authenticated session (tec_user cookie)
-- AI inference calls are authenticated — no public inference endpoints
-- Anthropic API key stored as Railway secret, never in client bundle
+```
+Context Isolation:
+  Each user session has isolated context — no cross-user leakage
+  Context assembled from authorized sources only
+  Personal data (Life) requires explicit user consent
 
-### Authorization
-- Personalized AI only accesses the requesting user's own data
-- Merchant AI accesses only that merchant's product/order data
-- Platform AI (admin tier) requires AdminActor context + audit trail
+Governance Boundaries:
+  AI recommendations tagged with governing capability
+  All AI actions logged with actor context
+  AI cannot initiate financial transactions without user confirmation
+  AI cannot bypass SYSTEM (C-110) governance policies
 
-### Threat Vectors & Mitigations
-| Threat | Mitigation |
-|--------|------------|
-| Prompt injection via user data | Sanitize all user-provided input before LLM context |
-| Data exfiltration via AI output | Output filter: strip any wallet IDs, payment tokens |
-| API key exposure | Railway secret — never NEXT_PUBLIC_* |
-| AI output as financial advice | Clear disclaimer: "AI recommendations only — not financial advice" |
-| Cost runaway (LLM API) | Per-user rate limit: 100 AI requests/day on FREE, 500 on PRO |
-| Inference data leakage | User A's data never in User B's prompt context |
+P6 Fail Closed:
+  Unknown actor context → AI denies by default
+  Capability not certified → AI does not execute it
+  Missing SYSTEM policy → AI escalates to governance
+
+Auditability:
+  Every AI output → capability_id + version + context_hash
+  Full input/output logging for financial reasoning
+  Reasoning audit trail preserved for 90 days
+```
 
 ---
 
 ## 7. REVENUE MODEL
 
-### Direct
-1. **PRO/ENTERPRISE AI Features**: Advanced analytics, unlimited recommendations, custom insights (PRIMARY)
-2. **Merchant AI Tier**: Demand forecasting, pricing optimizer, inventory AI (premium merchant feature)
-3. **FundX Risk Scoring**: AI credit scoring for lending pool access (Phase 3)
+**Premium Intelligence (Freemium)**
 
-### Indirect
-- Better recommendations → higher purchase conversion → more platform transaction fees
-- Fraud detection → reduced chargebacks → healthier platform economics
-- Merchant success via AI insights → merchant retention → ecosystem growth
+| Tier | Features | Price |
+|------|----------|-------|
+| FREE | Basic recommendations | Included in Hub |
+| PRO | Advanced analytics + planning | Hub PRO subscription |
+| ENTERPRISE | Business agents + custom automation | Enterprise tier |
+| API | AI capabilities for external builders | DX API pricing |
 
 ---
 
 ## 8. KEY METRICS
 
-### SLOs
-| Metric | Target | Alert Threshold |
-|--------|--------|----------------|
-| AI service availability | ≥ 99.0% | < 98.0% |
-| Inference response time | < 3s P95 | > 8s P95 |
-| Recommendation cache hit rate | ≥ 60% | < 40% |
-| AI audit log completeness | 100% of inferences logged | Any gap |
-| LLM API error rate | < 2% | > 5% |
-
-### KPIs
-| Metric | Target | Frequency |
-|--------|--------|----------|
-| Recommendation click-through rate | ≥ 15% | Weekly |
-| AI feature adoption (PRO users) | ≥ 60% using at least 1 AI feature | Monthly |
-| Merchant pricing accuracy (AI vs actual sale) | ±15% | Monthly |
-| FREE → PRO conversion attributed to AI | ≥ 20% of upgrades | Monthly |
+```
+Recommendation Relevance:  Target ≥ 80% user acceptance rate (Phase 2)
+Latency (P95):             < 3s for standard recommendation
+Latency (P99):             < 8s for complex analysis
+Context Assembly Time:     < 500ms
+Hallucination Rate:        < 1% (verified against Capability Registry)
+Audit Coverage:            100% of financial recommendations logged
+Governance Compliance:     100% (no uncertified capabilities executed)
+Availability:              ≥ 99.5% (graceful degradation — not P0 down)
+```
 
 ---
 
 ## 9. ECOSYSTEM CONTRIBUTION
 
-1. **Economic Intelligence**: Transforms raw transaction data into actionable merchant/consumer insights
-2. **Conversion Amplifier**: Better product recommendations → higher purchase rates across Ecommerce
-3. **Fraud Prevention**: Anomaly detection protects payment integrity platform-wide
-4. **PRO Upgrade Driver**: AI features are the primary value proposition for PRO tier subscription
-5. **FundX Enabler**: Risk scoring makes Pi-native lending possible without traditional credit bureaus
+- **Intelligence Multiplier** — makes every app smarter without changing the app
+- **Decision Quality** — reduces poor economic decisions that lead to churn
+- **DX Enabler** — AI + DX = Institutional Construction Runtime (future)
+- **Knowledge Activation** — transforms C-documents from static docs to active reasoning
 
 ---
 
 ## 10. FUTURE EVOLUTION
 
-### Phase 1 (Post-Mainnet, Month 1–2) — Foundation
-- Deploy tec-ai-service (4011) on Railway
-- Product recommendations via Anthropic Claude API
-- Weekly spending digest for Hub PRO users
-- Merchant pricing insights dashboard
+```
+Phase 1 (Post-Mainnet):
+  → Basic Hub recommendations (wallet insights, product suggestions)
+  → Merchant intelligence (revenue optimization hints)
+  → Natural language query for Analytics
 
-### Phase 2 (Month 3–4) — Personalization
-- Real-time recommendations in Ecommerce product listings
-- Asset portfolio AI analysis in Assets app
-- Connection-aware recommendations (what your network is buying)
-- Natural language Pi budget advisor
+Phase 2:
+  → Personal economic advisor (Life + Connection integration)
+  → Business agent (Nexus orchestration via AI)
+  → AI-assisted DX (capability generation support)
 
-### Phase 3 (Month 5–8) — Economic Intelligence
-- FundX credit scoring: Pi-native credit assessment for lending
-- Ecosystem health scoring: real-time platform economic health index
-- Market intelligence: Pi economy trends, category forecasting
-- Autonomous risk alerts: proactive ALERT (C-111) integration
+Phase 3:
+  → Institutional Construction Runtime (TEC AI + DX)
+  → External Pi ecosystem AI services (via DX API)
+  → Economic forecasting and market intelligence
+```
 
 ---
 
 ## 11. ENGINEERING UPDATES REQUIRED
 
-**P0 — Critical (Before any AI deployment)**
-1. **Provision tec-ai-service**: New Railway service (Port 4011) — add to infrastructure map
-2. **Anthropic API key**: Set as Railway secret on tec-ai-service — NEVER expose client-side
-3. **Rate limiting**: Per-user daily AI request quota before any public endpoint goes live
+**P0 — Pre-Launch Requirement:**
+```
+[P0-1] Governed Capability Registry (C-94)
+  Must be built before TEC AI launches.
+  AI cannot operate without certified capabilities to consume.
+  Dependency: C-110 SYSTEM for governance approval flows.
 
-**P1 — High Priority (Phase 1)**
-4. **AI audit log table**: Prisma migration to add `ai_audit_log` table before first inference
-5. **Output sanitizer**: Strip wallet IDs, payment tokens from all LLM outputs
-6. **Prompt injection defense**: Input sanitization for all user-provided data in LLM context
-7. **Cache layer**: Redis caching for repeat recommendations (5min TTL)
+[P0-2] Context Engine (C-97)
+  User context assembly from Life + Connection + Analytics.
+  Required for relevant (non-generic) recommendations.
+  Privacy: explicit consent model before Life data consumed.
+```
 
-**P2 — Medium Priority (Phase 2)**
-8. **Feedback loop**: Thumbs up/down on recommendations → improve model prompts over time
-9. **A/B testing infrastructure**: Test recommendation strategies against conversion metrics
-10. **Cost monitoring**: Daily Anthropic API spend dashboard — alert if > $X/day threshold
+**P1:**
+```
+[P1-1] Constitutional Boundaries Enforcement
+  CI check: AI code cannot call tec-payment-service directly.
+  All financial actions must go through user-confirmed BFF routes.
+
+[P1-2] Audit Logging Schema
+  Define structured log format: capability_id, version, context_hash,
+  user_id, input_summary, output_summary, latency_ms.
+```
+
+**P2:**
+```
+[P2-1] Hallucination Detection
+  Every factual claim cross-referenced against Capability Registry.
+  Flagged claims require human review before surfacing to user.
+```
 
 ---
 
 ## 12. INTEGRATION MAP
 
 ```
-C-104 (TEC AI) depends on:
-← C-100 (HUB)           : Authenticated session for AI personalization
-← C-105 (ANALYTICS)    : Event streams + aggregated data for AI context
-← C-101 (COMMERCE)     : Product catalog, pricing, merchant data
-← C-102 (ASSETS)       : Asset transaction history
-← C-103 (ECOMMERCE)    : Purchase history, browse behavior
-← External: Anthropic Claude API (inference backend)
+This charter (C-104) depends on:
+  C-94  CAPABILITY REGISTRY → governed capabilities to consume
+  C-97  CONTEXT ENGINE      → context assembly (to be built)
+  C-106 LIFE               → personal context
+  C-107 CONNECTION         → relationship context
+  C-105 ANALYTICS          → economic intelligence signals
+  C-110 SYSTEM             → governance policies
+  C-115 DX                 → future: Institutional Construction Runtime
 
-C-104 (TEC AI) contributes to:
-→ C-100 (HUB)           : AI-powered spending digest in Hub dashboard
-→ C-101 (COMMERCE)     : Merchant pricing + demand insights
-→ C-102 (ASSETS)       : Asset portfolio analysis
-→ C-103 (ECOMMERCE)    : Product recommendations in marketplace
-→ C-111 (ALERT)        : Anomaly detection signals
-→ C-113 (FUNDX)        : Credit scoring for pool access
+Other charters depend on this one for:
+  C-100 HUB       → dashboard recommendations
+  C-101 COMMERCE  → merchant intelligence
+  C-103 ECOMMERCE → product recommendations
+  C-115 DX        → AI builder assistance
 ```
-
----
-
-*Charter issued by TEC Economic Infrastructure Design Partnership*
-*Version 1.0 — 2026-06-15*
