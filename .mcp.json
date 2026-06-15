@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      },
+      "description": "GitHub API — CI status, PR reviews, commits, branch management"
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com/",
+      "headers": {
+        "Authorization": "Bearer ${VERCEL_TOKEN}"
+      },
+      "description": "Vercel — deployment status, runtime logs, project health"
+    },
+    "railway": {
+      "type": "http",
+      "url": "https://backboard.railway.app/graphql/v2",
+      "headers": {
+        "Authorization": "Bearer ${RAILWAY_TOKEN}",
+        "Content-Type": "application/json"
+      },
+      "description": "Railway — backend service health, environment variables, deployment logs"
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com",
+      "headers": {
+        "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
+      },
+      "description": "Supabase — database queries, migration status, analytics (if used)"
+    }
+  },
+  "notes": {
+    "GITHUB_TOKEN": "Set in Claude Code MCP settings — needs: repo, actions:read, pull_requests:read",
+    "VERCEL_TOKEN": "Vercel dashboard → Account Settings → Tokens",
+    "RAILWAY_TOKEN": "Railway dashboard → Account → Tokens",
+    "SUPABASE_ACCESS_TOKEN": "Supabase → Account → Access Tokens"
+  }
+}
