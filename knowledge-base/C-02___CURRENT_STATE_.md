@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `claude/gifted-knuth-1yhom3`
 
-**Last Updated:** 14 June 2026 (Session 5)
+**Last Updated:** 15 June 2026 (Session 6)
 
 ---
 
@@ -39,15 +39,65 @@
 | NEW-F | Pi App ID: `ecommerce-app-71ca4d3e462eaf54` + `ecommerce.tecosystem.app` — C-01 + CLAUDE.md ✅ |
 | NEW-G | Dual-Mode في ADR-002 (C-64) + C-12 ✅ |
 | **NEW-B** | **INTERNAL_SECRET set على Railway — 4 services ✅** |
-| External Audit fixes — Commerce | PR #23 → merged main — حذف 12 Railway URL من client bundle + x-internal-key + Zod + 503 + ADR-007 ✅ |
-| External Audit fixes — Assets | PR #12 → merged main — createHandler debug logs + CSRF + x-internal-key + 503 + next.config.js PI_SANDBOX guard ✅ |
-| **Comprehensive Audit fixes — Ecommerce** | **PR #27 → pending merge** — حذف hardcoded Railway URLs (sdk.ts + PiTestClient + ci.yml) + CSRF على كل POST BFF routes + 503 guards + ADR-007 fix (store page) + Zod على payment/create + orders ✅ |
-| **Comprehensive Audit fixes — Hub** | **PR #24 → pending merge** — حذف console.logs من provision + payment/create / حذف JWT decode without verify / x-internal-key على wallet/balance / حذف NEXT_PUBLIC_ من ci.yml + .env.example ✅ |
-| **Comprehensive Audit fixes — Commerce** | **pushed to main** — حذف legacy /api/payment/ routes (unsecured) + حذف /api/debug endpoint + migrate callers إلى BFF routes + حذف NEXT_PUBLIC_ fallback ✅ |
-| **Comprehensive Audit fixes — Assets** | **pushed to main** — حذف NEXT_PUBLIC_ fallback من 5 files + CSRF على 4 payment BFF routes ✅ |
-| **Hub — JWT decode forbidden fix** | **pushed to main** (SHA: 687247d) — `getUserIdFromToken()` via `jwt.decode()` حُذفت — userId يجي من `tec_user` cookie بدلها (C-47 P6 + Forbidden #2) ✅ |
-| **Hub — CI test fixes** | **pushed to main** (SHAs: 56e57b9c + 275d6fd0) — 8 tests أُضيف لها `tec_user` cookie بعد كسرها بسبب الـ JWT decode fix + `vi.resetAllMocks()` لـ test isolation ✅ |
-| **Hub CI green** | **✅ CONFIRMED** — 2026 tests passing على commit 275d6fd0 (conclusion: success) |
+| External Audit fixes — Commerce | PR #23 → merged main |
+| External Audit fixes — Assets | PR #12 → merged main |
+| **Comprehensive Audit fixes — Ecommerce** | **PR #27 → pending merge** |
+| **Comprehensive Audit fixes — Hub** | **PR #24 → pending merge** |
+| **Comprehensive Audit fixes — Commerce** | **pushed to main** |
+| **Comprehensive Audit fixes — Assets** | **pushed to main** |
+| **Hub — JWT decode forbidden fix** | **pushed to main** (SHA: 687247d) |
+| **Hub CI green** | **✅ CONFIRMED** — 2026 tests passing (commit 275d6fd0) |
+| **Ecommerce CI fixes** | **✅** — test files aligned to resolve-based pattern (commit 33d2d141) |
+| **Ecommerce payment fix** | **✅** — x-internal-key sent only when INTERNAL_SECRET SET (commit 5d44c501) |
+| **Knowledge Base v3.1.0** | **✅ Phase 1+2+3** — Skills library + MCP + Commands + CI (branch) |
+
+---
+
+## KNOWLEDGE BASE UPGRADE (Session 6 — v3.1.0) ✅
+
+### Phase 1 — Foundation
+| الملف | الوظيفة |
+|------|----------|
+| `.claude-plugin/plugin.json` | Plugin marketplace manifest |
+| `skills/platform/knowledge-orchestrator` | Meta-skill: تحميل C-docs تلقائياً + توجيه كل task |
+| `skills/platform/platform-architect` | C-47 guardian: تحقق من كل قرار معماري |
+| `skills/platform/payment-expert` | ADR-007 + C-76 + Mode 1/2 decision tree |
+| `skills/platform/security-reviewer` | P6 Fail Closed + 10 Forbidden behaviors checklist |
+| `skills/engineering/bff-patterns` | BFF route template كامل |
+| `skills/engineering/tec-testing` | Vitest + Pi mock + coverage targets |
+| `evals/validate-skills.sh` | CI quality gate للـ skills |
+| `templates/new-skill, new-adr, new-c-document` | Scaffolds |
+| `.github/workflows/knowledge-ci.yml` | CI pipeline |
+
+### Phase 2 — Marketing + Design + Agents
+| المجال | Skills |
+|-------|--------|
+| Marketing | pi-growth, content-strategy, product-launch, community-marketing, seo-aeo |
+| Design | tec-design-system, ui-patterns |
+| Agents | cmo-advisor, growth-advisor, design-system-advisor |
+
+### Phase 3 — MCP + Commands + Observability
+| الملف | الوظيفة |
+|------|----------|
+| `.mcp.json` | GitHub + Vercel + Railway + Supabase connectors |
+| `commands/check-ci` | CI status لكل 8 repos |
+| `commands/check-deployments` | Vercel deployments + runtime logs |
+| `commands/check-violations` | P1 violations audit |
+| `commands/platform-health` | Full health check (CI + Vercel + Railway + payments) |
+| `commands/knowledge-sync` | مزامنة C-02 مع الكود |
+| `commands/new-adr, new-skill` | Scaffolding commands |
+| `skills/platform/mcp-orchestrator` | كيفية استخدام MCP في context الـ TEC |
+| `skills/platform/observability` | SLOs + incident response + circuit breaker |
+
+### إجمالي Knowledge Base v3.1.0
+```
+Skills:   11 skills (4 platform + 2 engineering + 5 marketing + 2 design)
+Agents:    3 agents (cmo-advisor + growth-advisor + design-system-advisor)
+Commands:  7 commands
+Templates: 3 scaffolds (skill, ADR, C-document)
+CI:        1 workflow (knowledge-ci.yml)
+MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
+```
 
 ---
 
@@ -57,17 +107,20 @@
 |------|----------|
 | **Ecommerce PR #27** | Merge to main |
 | **Hub PR #24** | Merge to main (أو التحقق إذا كانت التغييرات اتعملت على main مباشرة) |
+| **Knowledge Base PR** | Merge branch `claude/gifted-knuth-1yhom3` → main (v3.1.0) |
 | Commerce + Assets + Hub Pi App IDs | Register على Pi Developer Portal + وثّق في C-01 |
+| External Re-Audit | بعد merge كل PRs — المتوقع 8.5–9.0/10 |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Merge PRs #27 (Ecommerce) + #24 (Hub) — تحقق من conflicts مع main
-2. External Audit إعادة — المتوقع 8.5–9.0 بعد الـ fixes
-3. Fix أي findings جديدة
-4. Portal Submission → Pi Network
+1. Merge Knowledge Base PR (v3.1.0) → main
+2. Merge PRs #27 (Ecommerce) + #24 (Hub) — تحقق من conflicts مع main
+3. External Audit إعادة — المتوقع 8.5–9.0 بعد الـ fixes
+4. Fix أي findings جديدة
+5. Portal Submission → Pi Network
 ```
 
 ---
@@ -82,66 +135,16 @@ PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
 Hub CI:               ✅ GREEN — 2026 tests passing (commit 275d6fd0)
+Ecommerce CI:         ✅ GREEN — all tests passing (commit 33d2d141)
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO (post Session 4)
 Ecommerce Pi App ID:  ecommerce-app-71ca4d3e462eaf54
 Comm/Assets/Hub IDs:  ⚠️ محتاجين تسجيل على Pi Developer Portal
 External Audit score: 5.5–7.5 → fixes applied → re-audit مطلوب
-Pending PRs:          #27 Ecommerce + #24 Hub → merge to main
+Knowledge Base:       v3.1.0 (11 skills + 3 agents + 7 commands + MCP) — branch ready
+Pending PRs:          #27 Ecommerce + #24 Hub + Knowledge Base v3.1.0
 ```
-
----
-
-## WHAT WAS FIXED (Session 5 — Hub CI fixes)
-
-### Tec-App (Hub) — pushed directly to main
-| Finding | Fix |
-|---------|-----|
-| FORBIDDEN: `jwt.decode()` بدون verify في `payment/create/route.ts` | حذف `getUserIdFromToken()` — userId يجي من `tec_user` cookie via `getUserIdFromCookie()` |
-| 8 tests كسرت بعد الـ JWT fix | أُضيف `cookies: { tec_user: encodeURIComponent(JSON.stringify({ id: userId })) }` لكل test محتاج يوصل للـ gateway |
-| Test isolation: `vi.clearAllMocks()` مش كافي | غُيّر لـ `vi.resetAllMocks()` في `beforeEach` + `mockResolvedValueOnce` بدل `mockResolvedValue` |
-
----
-
-## WHAT WAS FIXED (Session 4 — Comprehensive Audit)
-
-### Tec-Ecommerce — PR #27 (branch → main)
-| Finding | Fix |
-|---------|-----|
-| P1: hardcoded Railway URL في src/lib/sdk.ts | `API_GATEWAY_URL ?? ''` |
-| P1: 12 hardcoded Railway URLs في PiTestClient.tsx client bundle | حذف SERVICES array كاملة |
-| P1: NEXT_PUBLIC_API_GATEWAY_URL في ci.yml | حذف من build step |
-| P1: NEXT_PUBLIC_ fallback في 8 BFF routes | حذف fallback، keep `API_GATEWAY_URL ?? ''` |
-| P1: CSRF missing على كل POST BFF routes | CSRF double-submit على approve + complete + create + orders |
-| P1: Missing 503 guard في payment/create + stores + products | أضفنا على كل route |
-| P1: ADR-007 broken في store/[id]/page.tsx | isHubNavigation() أول check في handleBuy |
-| P1: Missing Zod في payment/create + orders POST | CreateSchema + OrderSchema |
-
-### Tec-App (Hub) — PR #24 (branch → main)
-| Finding | Fix |
-|---------|-----|
-| P1: console.log يسرب token prefix + response في provision/route.ts | حذف كل console.log (keep console.error فقط) |
-| P1: console.log يسرب cookies + body + userId في payment/create/route.ts | حذف كل console.log |
-| P2: JWT decode without verify (FORBIDDEN) في payment/create | حذف getUserIdFromToken() — userId من tec_user cookie بدلها |
-| P2: Missing x-internal-key في wallet/balance/route.ts | أضفنا header |
-| P1: NEXT_PUBLIC_API_GATEWAY_URL في ci.yml + root .env.example | حذف من الاثنين |
-
-### Tec-Commerce — pushed to main
-| Finding | Fix |
-|---------|-----|
-| P1: Legacy /api/payment/approve (no CSRF, 4 console.logs) | حذف الملف — callers migrated إلى /api/bff/payment/approve |
-| P1: Legacy /api/payment/complete (no CSRF, logs) | حذف الملف — callers migrated |
-| P1: Legacy /api/payment/resolve-incomplete | حذف الملف — callers migrated |
-| P1: /api/debug endpoint (zero auth, info disclosure) | حذف الملف |
-| P1: NEXT_PUBLIC_ fallback في payment/create + resolve-incomplete | حذف fallback |
-| P2: handleCancelPending يكلم legacy route | migrated إلى /api/bff/payment/resolve-incomplete |
-
-### Tec-Assets — pushed to main
-| Finding | Fix |
-|---------|-----|
-| P1: NEXT_PUBLIC_ fallback في 5 files (payment routes + nft/upload) | حذف fallback من كل file |
-| P2: CSRF missing على 4 payment POST BFF routes | CSRF double-submit على approve + complete + create + resolve |
 
 ---
 
