@@ -103,6 +103,40 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 
 ---
 
+## KNOWLEDGE BASE UPGRADE (Session 7 — v3.2.0) ✅
+
+### App Institutional Charters — C-100→C-115
+
+16 مستند جديد تم إنشاؤهم كـ Economic Infrastructure Design Partnership:
+
+| Charter | App | System Role |
+|---------|-----|-------------|
+| C-100 | Hub | System of Access (Current State) |
+| C-101 | Commerce | System of Production — Reference Impl (Current State) |
+| C-102 | Assets | Digital Asset Infrastructure (Current State) |
+| C-103 | Ecommerce | Consumer Marketplace (Current State) |
+| C-104 | TEC AI | System of Reasoning (Planned) |
+| C-105 | Analytics | System of Intelligence (Planned) |
+| C-106→C-115 | Life, Connection, Explorer, Nexus, SYSTEM, ALERT, NX, FundX, Estate, DX | Future Vision |
+
+كل charter يشمل:
+- Mission + Authority Boundary
+- Technical Architecture + Security Model
+- Engineering Updates Required (P0/P1/P2)
+- Integration Map (cross-charter dependencies)
+
+### CI Fix
+- `evals/validate-skills.sh` — fixed bash `((PASS++))` → `PASS=$((PASS+1))`
+- Root cause: `set -e` + arithmetic 0 = false → premature exit after first valid file
+
+### C-57 Updated → v3.2.0
+- Added TIER 7 (C-87→C-91: Governance + Execution)
+- Added TIER 8 (C-100→C-115: App Institutional Charters)
+- Updated Quick Lookup with charter references
+- Constitutional Hierarchy extended to C-115
+
+---
+
 ## PENDING ⚠️
 
 | Item | الإجراء |
@@ -153,7 +187,7 @@ All P2 violations:    ✅ ZERO
 All Pi App IDs:       ✅ كل 4 apps مسجّلة
 Last audit score:     7.65/10 (Session 3) → fixes applied → re-audit pending
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.1.0 MERGED (11 skills + 3 agents + 7 commands + MCP)
+Knowledge Base:       ✅ v3.2.0 (11 skills + 16 app charters C-100→C-115 + CI fix)
 Pending PRs:          #27 Ecommerce + #24 Hub
 ```
 

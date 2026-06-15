@@ -1,7 +1,7 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 62 Content (C-00 → C-86)
+## دليل سريع للـ 91 Content (C-00 → C-115)
 
-**Last Updated:** June 2026
+**Last Updated:** June 2026 | Knowledge Base v3.2.0
 
 ---
 
@@ -108,6 +108,44 @@
 
 ---
 
+## TIER 7 — Governance + Execution (C-87→C-91)
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-87** | Execution Governance | Command lifecycle + execution authority |
+| **C-88** | Pi Economic Flow Constitution | Pi transaction lifecycle from SDK → ledger |
+| **C-89** | Developer Platform Governance | DX rules + contribution gates + SDK contracts |
+| **C-90** | Security Trust Model | Zero-trust + identity chain + threat model |
+| **C-91** | Engineering Roadmap to Scale | Scale gates + infrastructure evolution path |
+
+---
+
+## TIER 8 — App Institutional Charters (C-100→C-115)
+
+> Economic Infrastructure Design Partnership — each charter is a constitutional document for one app.
+> Truth State is declared per charter: [Current State] | [Planned State] | [Future Vision]
+
+| Content | App | System Role | Truth State |
+|---------|-----|-------------|-------------|
+| **C-100** | Hub | System of Access | Current State |
+| **C-101** | Commerce | System of Production (Reference Impl) | Current State |
+| **C-102** | Assets | Digital Asset Infrastructure | Current State |
+| **C-103** | Ecommerce | Consumer Marketplace | Current State |
+| **C-104** | TEC AI | System of Reasoning | Planned State |
+| **C-105** | Analytics | System of Intelligence | Planned State |
+| **C-106** | Life | System of Record (Personal) | Future Vision |
+| **C-107** | Connection | Economic Relationship Infrastructure | Future Vision |
+| **C-108** | Explorer | Economic Discovery Infrastructure | Future Vision |
+| **C-109** | Nexus | System of Coordination | Future Vision |
+| **C-110** | SYSTEM | System of Governance | Future Vision |
+| **C-111** | ALERT | System of Risk | Future Vision |
+| **C-112** | NX | System of Security | Future Vision |
+| **C-113** | FundX | Capital Coordination Infrastructure | Future Vision |
+| **C-114** | Estate | Real Estate Coordination | Future Vision |
+| **C-115** | DX | System of Construction | Future Vision |
+
+---
+
 ## DELETED / MERGED
 
 | Content | الحالة | ملاحظة |
@@ -121,18 +159,20 @@
 ## QUICK LOOKUP
 
 ```
-Payment:         C-12 + C-76 (ADR-007) + C-40 + C-63
-Security:        C-15 + C-47 + C-51 + C-64
-Architecture:    C-64 + C-47 + C-67 + C-77
-New app:         C-53 + C-63 + C-12 + C-44 + C-83
-Backend service: C-65 + C-20 + C-56 + C-16
-Package update:  C-54 + C-22 + C-12 (test first)
-Incidents:       C-73 + C-71 + C-78
-Deploy:          C-75 + C-43
-Vision:          C-30 + C-85 (infrastructure) + C-82 (maturity)
-Design:          C-83 + C-84 (runtime gates)
-Strategic:       C-77 + C-85 + C-82
-Conflicts:       C-67 (Source of Truth) — ابدأ هنا دائماً
+Payment:          C-12 + C-76 (ADR-007) + C-40 + C-63
+Security:         C-15 + C-47 + C-51 + C-64 + C-90
+Architecture:     C-64 + C-47 + C-67 + C-77
+New app:          C-53 + C-63 + C-12 + C-44 + C-83 + charter (C-100+)
+Backend service:  C-65 + C-20 + C-56 + C-16
+Package update:   C-54 + C-22 + C-12 (test first)
+Incidents:        C-73 + C-71 + C-78
+Deploy:           C-75 + C-43
+Vision:           C-30 + C-85 (infrastructure) + C-82 (maturity)
+Design:           C-83 + C-84 (runtime gates) + C-89 (DX)
+Strategic:        C-77 + C-85 + C-82 + C-91
+App Charter:      C-100 (Hub) → C-115 (DX) — اقرأ charter الـ app قبل التعديل
+Economic Layer:   C-88 (Pi flow) + C-84 (runtime) + C-85 (infra)
+Conflicts:        C-67 (Source of Truth) — ابدأ هنا دائماً
 ```
 
 ---
@@ -154,7 +194,9 @@ C-78   Platform Operations (merged)
   ↓
 C-82   Platform Maturity
   ↓
-C-83→C-86  Design + Runtime + Infra
+C-83→C-91  Design + Runtime + Infra + Governance
+  ↓
+C-100→C-115  App Institutional Charters
 ```
 
-⚠️ لو حصل conflict: C-00 → C-47 → C-64 → C-67 → Rule Content
+⚠️ لو حصل conflict: C-00 → C-47 → C-64 → C-67 → Rule Content → App Charter

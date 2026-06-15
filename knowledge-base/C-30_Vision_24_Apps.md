@@ -87,3 +87,33 @@ Economic Graph → Identity Graph → Federated Applications → Coordination
 Apps are NOT the product.
 The REAL product = Economic Coordination Infrastructure.
 ```
+
+---
+
+## 10. APP INSTITUTIONAL CHARTERS (C-100→C-115)
+
+كل app عندها Charter رسمي في knowledge-base — اقرأ الـ Charter قبل أي تعديل على الـ app:
+
+| System Role | App | Charter |
+|-------------|-----|---------|
+| System of Access | Hub | C-100 |
+| System of Production | Commerce (Reference Impl) | C-101 |
+| Digital Asset Infrastructure | Assets | C-102 |
+| Consumer Marketplace | Ecommerce | C-103 |
+| System of Reasoning | TEC AI | C-104 |
+| System of Intelligence | Analytics | C-105 |
+| System of Record (Personal) | Life | C-106 |
+| Economic Relationship Infrastructure | Connection | C-107 |
+| Economic Discovery Infrastructure | Explorer | C-108 |
+| System of Coordination | Nexus | C-109 |
+| System of Governance | SYSTEM | C-110 |
+| System of Risk | ALERT | C-111 |
+| System of Security | NX | C-112 |
+| Capital Coordination Infrastructure | FundX | C-113 |
+| Real Estate Coordination | Estate | C-114 |
+| System of Construction | DX | C-115 |
+
+**Economic Runtime Lifecycle (من كل Charter):**
+```
+Settlement → Record → Reasoning → Access → Construction → Production → Economic Activity → Settlement
+```

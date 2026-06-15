@@ -273,7 +273,26 @@ C-60 / C-65 / C-66:
 
 ---
 
-## 12. FINAL CONSTITUTIONAL RULE
+## 12. APP AUTHORITY — INSTITUTIONAL CHARTERS (C-100→C-115)
+
+كل app عندها Charter هو مرجعها الأول:
+
+```
+App Institutional Charter (C-100→C-115)
+  = Engineering Authority for that app's architecture, updates, and evolution
+
+Authority order per app:
+  C-00 → C-47 → C-64 → App Charter (C-100+) → App CLAUDE.md → Code
+
+قبل أي تعديل على Hub    → اقرأ C-100
+قبل أي تعديل على Commerce → اقرأ C-101
+قبل أي تعديل على Assets  → اقرأ C-102
+قبل أي تعديل على Ecommerce → اقرأ C-103
+```
+
+---
+
+## 13. FINAL CONSTITUTIONAL RULE
 
 ```
 إذا تكرر نفس rule في أكثر من content:
@@ -284,6 +303,9 @@ C-60 / C-65 / C-66:
 
 إذا guide تعارض مع Kernel Spec:
   Kernel Spec wins دائماً.
+
+إذا App Charter تعارض مع App CLAUDE.md:
+  App Charter wins — CLAUDE.md يتحدث.
 
 ⚠️ Architectural authority must always be singular.
 ```

@@ -22,7 +22,8 @@ governance/         # Platform governance documents
 | C-50–C-58 | Session + Patterns + Protocols |
 | C-59–C-66 | Templates + Code + Guides |
 | C-67–C-78 | Governance + Integrity + Operations |
-| C-82–C-86 | Future Vision (Draft) |
+| C-82–C-91 | Future Vision + Execution Governance |
+| C-100–C-115 | App Institutional Charters (Economic Infrastructure) |
 
 ## Governance
 
@@ -45,7 +46,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v2.0 | Governance Charter v1.1
+Knowledge Base v3.2.0 | Governance Charter v1.1
 
 
 ---
