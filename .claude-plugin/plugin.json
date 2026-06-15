@@ -1,0 +1,17 @@
+{
+  "name": "tec-knowledge-base",
+  "version": "3.0.0",
+  "description": "TEC Federated Platform — Enterprise Knowledge Base. Platform Constitution, ADR system, architectural decisions, payment invariants, and specialist skills for the TEC ecosystem.",
+  "author": "yasira82",
+  "license": "MIT",
+  "skillsDirectory": "skills",
+  "agentsDirectory": "agents",
+  "tags": ["platform", "architecture", "payment", "knowledge", "tec", "pi-network"],
+  "targetTools": ["claude-code"],
+  "knowledgeBase": {
+    "constitutionFile": "knowledge-base/C-47___KERNEL_SPEC___PLATFORM_CONSTITUTION.md",
+    "currentStateFile": "knowledge-base/C-02___CURRENT_STATE_.md",
+    "masterIndexFile": "knowledge-base/C-57___MASTER_CONTENTS_INDEX.md",
+    "adrSystemFile": "knowledge-base/C-64___ADR_SYSTEM.md"
+  }
+}

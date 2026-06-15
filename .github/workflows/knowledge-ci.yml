@@ -1,0 +1,63 @@
+name: Knowledge Base CI
+
+on:
+  push:
+    branches: [main, 'claude/**']
+    paths:
+      - 'skills/**'
+      - 'knowledge-base/**'
+      - 'governance/**'
+      - 'evals/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'knowledge-base/**'
+      - 'governance/**'
+
+jobs:
+  validate-skills:
+    name: Validate Skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Validate SKILL.md files
+        run: bash evals/validate-skills.sh
+
+  check-knowledge-gaps:
+    name: Check Knowledge Gaps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Detect knowledge gaps
+        run: bash evals/check-knowledge-gaps.sh
+
+  check-truth-framework:
+    name: Check Truth Framework
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify C-documents have Truth State
+        run: |
+          MISSING=0
+          for FILE in knowledge-base/C-*.md; do
+            [ -f "$FILE" ] || continue
+            if ! grep -q "Truth State" "$FILE"; then
+              echo "⚠️  Missing Truth State: $FILE"
+              MISSING=$((MISSING+1))
+            fi
+          done
+          if [ $MISSING -gt 0 ]; then
+            echo "$MISSING documents missing Truth State declaration."
+            echo "Add: **Truth State:** [Current State] | [Planned] | [Future Vision] | [Speculation]"
+          fi
+          echo "Truth Framework check complete: $MISSING missing."
