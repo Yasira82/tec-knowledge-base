@@ -44,8 +44,8 @@
 | Audit Fix — Assets | Railway URL removed, x-internal-key + Zod + 503 guard — main c411fe9 ✅ |
 | **Pi App IDs — كل 4 apps** | Ecommerce + Commerce + Assets + Hub — موثقة في C-01 ✅ |
 | **CLAUDE.md session start → main** | كل repos — branch محدّث لـ main ✅ |
-| Comprehensive Audit fixes — Ecommerce | PR #27 → pending merge |
-| Comprehensive Audit fixes — Hub | PR #24 → pending merge |
+| **Comprehensive Audit fixes — Ecommerce** | **✅ ON MAIN** — pushed directly, PR #27 closed. CI ✅ (5d44c501) |
+| **Comprehensive Audit fixes — Hub** | **✅ ON MAIN** — pushed directly, PR #24 closed. CI ✅ (275d6fd0) |
 | Comprehensive Audit fixes — Commerce | pushed to main |
 | Comprehensive Audit fixes — Assets | pushed to main |
 | Hub — JWT decode forbidden fix | pushed to main (SHA: 687247d) |
@@ -176,19 +176,16 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| **Ecommerce PR #27** | Merge to main |
-| **Hub PR #24** | Merge to main (أو التحقق إذا كانت التغييرات اتعملت على main مباشرة) |
-| External Re-Audit | بعد merge كل PRs — المتوقع 8.5–9.0/10 |
+| External Re-Audit | **UNBLOCKED** — كل fixes على main ✅ — المتوقع 8.5–9.0/10 |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Merge PRs #27 (Ecommerce) + #24 (Hub) — تحقق من conflicts مع main
-2. External Audit إعادة — المتوقع 8.5–9.0 بعد الـ fixes
-3. Fix أي findings جديدة
-4. Portal Submission → Pi Network
+1. External Audit ← NEXT NOW (كل code fixes موجودة على main)
+2. Fix أي findings جديدة
+3. Portal Submission → Pi Network
 ```
 
 ---
@@ -214,17 +211,19 @@ PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
 Hub CI:               ✅ GREEN — 2026 tests passing (commit 275d6fd0)
-Ecommerce CI:         ✅ GREEN — all tests passing (commit 33d2d141)
+Ecommerce CI:         ✅ GREEN — CI + E2E + CodeQL all pass (commit 5d44c501)
 All repos coverage:   ≥ 60% ✅
 All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
 All Pi App IDs:       ✅ كل 4 apps مسجّلة
+All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
 Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
 Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
 Knowledge Base:       ✅ v3.2.0 — 92 docs + 16 skills + 16 charters + C-92 Health Model
-Pending PRs:          #27 Ecommerce + #24 Hub
+Pending PRs:          NONE — all fixes on main ✅
+NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```
 
 ---
