@@ -1,17 +1,35 @@
 {
   "name": "tec-knowledge-base",
-  "version": "3.0.0",
-  "description": "TEC Federated Platform — Enterprise Knowledge Base. Platform Constitution, ADR system, architectural decisions, payment invariants, and specialist skills for the TEC ecosystem.",
+  "version": "3.1.0",
+  "description": "TEC Federated Platform — Enterprise Knowledge Base. Platform Constitution, ADR system, specialist skills (platform, engineering, marketing, design), slash commands, and MCP connectors for the TEC ecosystem.",
   "author": "yasira82",
   "license": "MIT",
   "skillsDirectory": "skills",
   "agentsDirectory": "agents",
-  "tags": ["platform", "architecture", "payment", "knowledge", "tec", "pi-network"],
+  "commandsDirectory": "commands",
+  "tags": ["platform", "architecture", "payment", "knowledge", "tec", "pi-network", "marketing", "design"],
   "targetTools": ["claude-code"],
   "knowledgeBase": {
     "constitutionFile": "knowledge-base/C-47___KERNEL_SPEC___PLATFORM_CONSTITUTION.md",
     "currentStateFile": "knowledge-base/C-02___CURRENT_STATE_.md",
     "masterIndexFile": "knowledge-base/C-57___MASTER_CONTENTS_INDEX.md",
     "adrSystemFile": "knowledge-base/C-64___ADR_SYSTEM.md"
-  }
+  },
+  "mcp": ".mcp.json",
+  "skills": {
+    "platform": ["knowledge-orchestrator", "platform-architect", "payment-expert", "security-reviewer"],
+    "engineering": ["bff-patterns", "tec-testing"],
+    "marketing": ["pi-growth", "content-strategy", "product-launch", "community-marketing", "seo-aeo"],
+    "design": ["tec-design-system", "ui-patterns"]
+  },
+  "agents": ["cmo-advisor", "growth-advisor", "design-system-advisor"],
+  "commands": [
+    "check-ci",
+    "check-deployments",
+    "check-violations",
+    "knowledge-sync",
+    "platform-health",
+    "new-adr",
+    "new-skill"
+  ]
 }
