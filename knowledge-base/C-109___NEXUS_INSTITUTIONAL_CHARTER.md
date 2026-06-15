@@ -1,265 +1,228 @@
 # C-109 — NEXUS INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
-**Truth State:** Future Vision
-**Governance State:** Draft
-**Verification State:** Unverified
-**Authority Scope:** Domain
-**Decision Status:** Exploratory
+**Truth State:** [Future Vision]
+**Governance State:** [Draft]
+**Verification State:** [Unverified]
+**Authority Scope:** [Domain]
+**Decision Status:** [Exploratory]
 
 ---
 
 ## 1. MISSION
 
-Nexus is the ecosystem coordination infrastructure of the TEC platform — the system that orchestrates cross-app workflows, manages inter-service dependencies at the business level, and provides the coordination primitives that enable the TEC federated ecosystem to operate as a unified economic runtime rather than a collection of independent apps.
+Orchestrate economic coordination between TEC actors — users, merchants, services, and AI agents — through governed workflows, execution routing, and asynchronous coordination primitives.
 
 ---
 
 ## 2. INSTITUTIONAL ROLE
 
-**System of Infrastructure (Coordination Layer)** — The connective tissue of the TEC federation.
-
 ```
-Settlement → Record → Reasoning → Access → CONSTRUCTION → Production → Economic Activity → Settlement
-                                               ↑
-                                             NEXUS
-                                     (Coordination Infrastructure)
+System of Coordination — Economic Coordination Infrastructure
 ```
 
-Nexus sits in the Construction position: it builds the cross-app coordination flows that make production possible. Hub orchestrates the user-facing access layer; Nexus orchestrates the background infrastructure layer — cross-app data flows, multi-step workflows, dependency resolution.
+Nexus is the **coordination fabric** of the TEC runtime. When multiple actors need to cooperate on an economic outcome (multi-party deals, conditional workflows, agent orchestration), Nexus is the orchestration layer.
 
 ---
 
 ## 3. ECONOMIC PURPOSE
 
-Nexus solves the federation coordination problem:
+تقليل تكلفة التنسيق بين الأطراف المتعددة.
 
-- **Cross-App Workflows**: Multi-step flows that span apps (e.g., Commerce + Payment + Notification + Life)
-- **Dependency Orchestration**: Manages the "release chain" (backend → SDK → apps) as a runtime concern
-- **Feature Flags**: Platform-level feature gating across all apps simultaneously
-- **App Registry**: Canonical registry of all TEC apps, their versions, health status, and dependencies
-- **Ecosystem Events**: Business-level events that multiple apps subscribe to ("merchant onboarded", "user upgraded to PRO")
-- **Configuration Propagation**: Platform config changes propagated safely to all apps
-
-Without Nexus, the TEC federation is manually coordinated — every cross-app workflow requires ad-hoc engineering. Nexus makes cross-app coordination a platform primitive.
+- بدون Nexus: كل coordination يحتاج manual intervention → friction → deals fall through
+- بوجود Nexus: complex economic workflows execute automatically → scale
+- اقتصادياً: automation of coordination = more economic activity at same headcount
 
 ---
 
 ## 4. AUTHORITY BOUNDARY
 
 ### Owns
-- App registry (canonical list of all TEC apps + versions + health)
-- Platform feature flags (gates across all apps simultaneously)
-- Cross-app workflow definitions and execution
-- Ecosystem event bus (business-level events — not infrastructure events)
-- Configuration distribution (platform config changes)
-- Dependency version matrix (which SDK/auth/UI version each app runs)
+- Workflow definition and execution
+- Execution routing (which service handles which step)
+- Actor coordination (synchronous + asynchronous)
+- Workflow state and history
+- Conditional logic and branching
 
 ### Does NOT Own
-- Business logic within any app (each app is sovereign)
-- Infrastructure events (tec-analytics-service handles those)
-- User identity (tec-auth-service)
-- Payment execution (tec-payment-service)
-- Individual app deployment (Vercel/Railway own deployment)
+- Business rules inside workflows (owned by domain services)
+- Governance authority (owned by SYSTEM — C-110)
+- Payment processing (owned by tec-payment-service)
+- Truth of any entity (each service owns its own entity truth)
+- AI reasoning (owned by TEC AI — C-104)
 
 ### Interface Points
 ```
-Exposes to ecosystem:
-  - App registry API: GET /api/nexus/apps (all TEC apps + health)
-  - Feature flags API: GET /api/nexus/flags/{appId} (per-app feature gates)
-  - Ecosystem events: POST /api/nexus/events/emit (publish cross-app event)
-  - Config API: GET /api/nexus/config/{appId} (app-specific platform config)
-  - Dependency matrix: GET /api/nexus/dependencies (SDK/auth/ui versions per app)
+OUTBOUND:
+  Workflow execution  → any TEC service via API Gateway
+  Execution events    → Redis Streams (workflow.step.completed.v1)
+  Coordination state  → TEC AI (C-104) for intelligent routing
 
-Consumed from:
-  - Analytics (C-105): ecosystem health signals
-  - Hub (C-100): subscription tier changes (triggers PRO feature unlock across apps)
-  - All apps: health pings for registry
-  - SYSTEM (C-110): governance decisions that change platform config
-  - ALERT (C-111): risk signals that may trigger emergency feature flags
+INBOUND:
+  Workflow triggers   → users, merchants, services, AI agents
+  Governance policies → SYSTEM (C-110) — what workflows are allowed
+  Capability registry → C-94 — what Nexus can orchestrate
+  Service responses   → all 12 tec-core-backend services
 ```
 
 ---
 
 ## 5. TECHNICAL ARCHITECTURE
 
-### Planned Stack
-- NestJS backend service: `tec-nexus-service` (Port 4015 — to be provisioned)
-- PostgreSQL: workflow state, app registry, feature flags
-- Redis: feature flag cache (TTL: 60s — flags must propagate quickly)
-- RabbitMQ or Redis Streams: ecosystem event bus
-- Internal-only service (no public-facing frontend)
-- Admin UI: embedded in Hub admin panel (not a standalone app)
-
-### App Registry Schema
-```typescript
-interface TecApp {
-  id: string                // e.g. 'hub', 'commerce', 'ecommerce'
-  name: string
-  url: string               // production URL
-  currentVersion: string    // semver
-  sdkVersion: string        // @yasser172/tec-sdk version
-  authVersion: string       // @yasser172/tec-auth version
-  uiVersion: string         // @yasser172/tec-ui version
-  healthStatus: 'healthy' | 'degraded' | 'down'
-  lastHealthCheck: string   // ISO 8601
-  piSandbox: boolean        // false in production
-  piAppId: string
-}
 ```
+Planned Stack:
+  Workflow Engine: Temporal.io (or custom Redis-based state machine)
+    Recommendation: Temporal.io for durability and retry guarantees
+  State Storage: PostgreSQL (workflow history) + Redis (active state)
+  tec-core-backend integration: via API Gateway (4000) + INTERNAL_SECRET
+  Event Bus: Redis Streams (XADD/XREADGROUP)
 
-### Feature Flag Architecture
-```typescript
-interface FeatureFlag {
-  id: string
-  key: string               // e.g. 'tec_ai_recommendations'
-  description: string
-  enabledFor: {
-    appIds: string[]        // which apps
-    tiers: string[]         // 'FREE' | 'PRO' | 'ENTERPRISE'
-    rolloutPercentage: number // 0-100 gradual rollout
-  }
-  createdBy: string         // admin actor
-  createdAt: string
-  expiresAt?: string        // auto-disable after date
-}
+Workflow Patterns:
+  Sequential:  Step A → Step B → Step C
+  Parallel:    [Step A, Step B] → wait for both → Step C
+  Conditional: if condition → Step A else Step B
+  Saga:        distributed transaction with compensating actions
 
-// Apps query flags at startup and cache locally (60s TTL)
-// Flag changes propagate within 60s to all apps
-```
+Saga Pattern (Critical for financial workflows):
+  Payment Saga:
+    1. Reserve inventory (commerce-service)
+    2. Create payment (payment-service)
+    3. Confirm inventory (commerce-service)
+    4. Complete payment (payment-service)
+    Compensating: if step 3 fails → cancel payment, release inventory
 
-### Cross-App Workflow Example
-```
-Workflow: 'user_upgrade_to_pro'
-  Trigger: Hub subscription updated to PRO
-    Step 1: Nexus emits 'user.upgraded.pro.v1' ecosystem event
-    Step 2: Ecommerce receives event → unlock PRO features (wishlist, price alerts)
-    Step 3: Commerce receives event → unlock PRO merchant features (analytics)
-    Step 4: Analytics receives event → start tracking PRO usage metrics
-    Step 5: TEC AI receives event → enable advanced recommendations
-    Step 6: Life receives event → unlock advanced budget categories
-  All steps: async, idempotent, individually retryable
+Consistency:
+  Workflow state: strong consistency (single workflow owner)
+  Cross-service coordination: saga pattern (compensating transactions)
+  At-least-once execution: workflows are idempotent by design
+
+Actor Context:
+  Every workflow execution carries ActorContext (C-47 §4)
+  Nexus is a ServiceActor when calling other services
+  Audit trail: every workflow step logged with correlationId
 ```
 
 ---
 
 ## 6. SECURITY MODEL
 
-### Authentication
-- All Nexus APIs are internal-only (`x-internal-key: ${INTERNAL_SECRET}` required)
-- No public Nexus endpoints — apps communicate server-to-server only
-- Admin operations require AdminActor context
+```
+Workflow Authorization:
+  Only SYSTEM-approved workflow types can be registered
+  Workflow execution requires valid ActorContext
+  Cross-service calls: ServiceActor + INTERNAL_SECRET required
 
-### Authorization
-- Feature flag mutations: AdminActor only
-- App registry updates: ServiceActor + matching app ID
-- Workflow execution: authenticated by originating app's ServiceActor
+Governance Boundary:
+  Nexus cannot execute workflows that bypass governance
+  SYSTEM policies evaluated before workflow start
+  Forbidden: workflow that bypasses payment-service for Pi transfers
 
-### Threat Vectors
-| Threat | Mitigation |
-|--------|------------|
-| Rogue app claiming feature flag update | ServiceActor validates app ID matches |
-| Feature flag cascade failure | Flags default to OFF on Nexus unavailability (fail closed) |
-| Workflow replay attack | Idempotency key on all workflow executions |
-| Config injection | All config values validated with Zod before distribution |
+Audit Requirements:
+  Every workflow step: actorId, timestamp, input_hash, output_hash
+  Workflow history retained for 2 years (financial workflows)
+  Failed workflows: preserved for diagnosis (not deleted)
+
+P6 Fail Closed:
+  Missing actor context on workflow trigger → REJECT
+  Unknown workflow type → REJECT
+  SYSTEM policy violation → REJECT with audit log
+```
 
 ---
 
 ## 7. REVENUE MODEL
 
-### Direct
-Nexus is pure infrastructure — no direct revenue.
+**Indirect (Economic Efficiency)**
 
-### Indirect
-- Enables faster feature rollouts → faster PRO feature delivery → higher conversion
-- Emergency flag kill switch → faster incident response → less revenue loss during outages
-- App registry → partner app onboarding → ecosystem expansion revenue
-- Reliable cross-app coordination → higher platform trust → more users
+| Channel | Mechanism | Value |
+|---------|-----------|-------|
+| Automation | More transactions at same headcount | Platform-level |
+| Enterprise Workflows | Custom workflow templates | Enterprise tier |
+| Agent Orchestration | AI agent coordination (TEC AI + DX) | Phase 3 |
+
+Nexus value is measured in transactions enabled, not direct revenue.
 
 ---
 
 ## 8. KEY METRICS
 
-### SLOs
-| Metric | Target | Alert Threshold |
-|--------|--------|----------------|
-| Nexus service availability | ≥ 99.9% | < 99.5% |
-| Feature flag propagation latency | < 60s P95 | > 5min P95 |
-| Ecosystem event delivery | ≥ 99.9% (at-least-once) | < 99.5% |
-| App registry accuracy | 100% of apps registered | Any unregistered app |
-
-### KPIs
-| Metric | Target | Frequency |
-|--------|--------|----------|
-| Cross-app workflow success rate | ≥ 99.5% | Daily |
-| Feature flag active count | < 20 (keep minimal) | Monthly |
-| Dependency matrix drift | 0 apps more than 1 major version behind | Per release |
+```
+Workflow Success Rate:   ≥ 99% (end-to-end completion)
+Saga Compensation Rate:  < 1% (% of workflows requiring rollback)
+Execution Latency (P95): < 2s per workflow step
+Workflow Durability:     100% (no lost workflow state on service restart)
+Actor Context Coverage:  100% (every step has valid ActorContext)
+Audit Trail Completeness: 100%
+```
 
 ---
 
 ## 9. ECOSYSTEM CONTRIBUTION
 
-1. **Federation Coherence**: Makes TEC a coordinated ecosystem rather than isolated apps
-2. **Safe Rollouts**: Feature flags enable gradual rollout — no big-bang releases
-3. **Emergency Response**: Kill switch for any feature across all apps in < 60s
-4. **Dependency Visibility**: Real-time view of which app runs which SDK version
-5. **Partner Onboarding**: App registry is the foundation for external partner app integration
+- **Transaction Complexity Enabler** — multi-party deals that would otherwise be manual
+- **Agent Orchestration Foundation** — TEC AI agents operate through Nexus
+- **Saga Infrastructure** — reliable distributed transactions across 12 services
+- **Economic Automation** — reduces operational cost of complex economic activity
 
 ---
 
 ## 10. FUTURE EVOLUTION
 
-### Phase 1 (Initial — Month 3–4 post-Mainnet)
-- App registry: all 5 current apps registered with health checks
-- Basic feature flags: ON/OFF per app and tier
-- Ecosystem events: user.upgraded.pro, merchant.onboarded events
+```
+Phase 1 (MVP):
+  → Basic sequential workflows (checkout saga, asset transfer saga)
+  → Compensation/rollback for payment failures
+  → Workflow history and status API
 
-### Phase 2 (Month 5–6)
-- Gradual rollout flags: percentage-based feature exposure
-- Cross-app workflow engine: multi-step workflow definitions
-- Config distribution: platform-level config propagated to all apps
+Phase 2:
+  → Parallel workflows (multi-party deals)
+  → TEC AI integration (intelligent routing)
+  → Custom workflow templates for merchants
 
-### Phase 3 (Month 7–8)
-- External partner registry: third-party apps join TEC ecosystem via Nexus
-- A/B test orchestration: cross-app experiment coordination
-- Dependency enforcement: CI gate if app uses incompatible SDK version
+Phase 3:
+  → Economic Coordination Runtime
+  → AI agent workflows (autonomous economic actors)
+  → Cross-ecosystem coordination (beyond TEC)
+```
 
 ---
 
 ## 11. ENGINEERING UPDATES REQUIRED
 
-**P0 — Critical (Before Nexus MVP)**
-1. **Provision tec-nexus-service** (Port 4015) on Railway
-2. **App registry seed data**: Register all 5 current apps with Pi App IDs and versions
-3. **Event bus decision**: Redis Streams vs RabbitMQ — ADR required before implementation
+**P0:**
+```
+[P0-1] Workflow Engine Decision
+  Temporal.io vs Redis-based state machine.
+  Key criteria: durability, replay guarantees, Railway compatibility.
+  Recommendation: Temporal.io Cloud (avoid self-hosting).
 
-**P1 — High Priority**
-4. **Feature flag client**: Library function for all apps to query Nexus flags at startup
-5. **Health check endpoints**: All apps must implement `/health` for registry pings
-6. **Internal-only enforcement**: Nexus must reject any non-internal-key requests
+[P0-2] Saga Pattern Definition
+  Define compensating actions for each critical workflow type before launch.
+  Especially: payment saga + asset transfer saga.
+```
 
-**P2 — Medium Priority**
-7. **Workflow idempotency**: Redis NX idempotency keys for all workflow steps
-8. **Admin UI**: Nexus feature flags and app registry visible in Hub admin panel
-9. **Slack/alert integration**: Notify on app health degradation or flag change failure
+**P1:**
+```
+[P1-1] ActorContext Propagation
+  Nexus must propagate the ORIGINAL actor's context (not replace with
+  ServiceActor context) through all workflow steps.
+  This ensures audit trail traces back to human actor.
+```
 
 ---
 
 ## 12. INTEGRATION MAP
 
 ```
-C-109 (NEXUS) coordinates:
-← C-100 (HUB)        : Subscription changes trigger cross-app feature unlocks
-← C-105 (ANALYTICS)  : Ecosystem health feeds Nexus app registry health
-← C-110 (SYSTEM)     : Governance decisions update feature flags via Nexus
-← C-111 (ALERT)      : Risk signals can trigger emergency flag disable
+This charter (C-109) depends on:
+  C-110 SYSTEM    → workflow type governance + approval
+  C-94  CAPABILITY REGISTRY → what can be orchestrated
+  C-104 TEC AI    → intelligent routing for complex decisions
+  All 12 tec-core-backend services → execution targets
 
-C-109 (NEXUS) serves:
-→ ALL APPS            : Feature flags, app registry, ecosystem events
-→ C-115 (DX)          : Dependency matrix for developer tooling
+Other charters depend on this one for:
+  C-104 TEC AI    → agent orchestration
+  C-113 FUNDX     → investment pool workflows
+  C-114 ESTATE    → property transaction workflows
+  C-115 DX        → automated deployment workflows
 ```
-
----
-
-*Charter issued by TEC Economic Infrastructure Design Partnership*
-*Version 1.0 — 2026-06-15*
