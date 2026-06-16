@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 93 Content (C-00 → C-115)
+## دليل سريع للـ 94 Content (C-00 → C-115)
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -91,7 +91,7 @@
 | **C-54** | Package Management | npm Publish Sequence + update protocol |
 | **C-55** | Scoring & Audit Strategy | الـ Score الحقيقي + كيف توصل لـ 9.5 |
 | **C-56** | Redis Streams Events Map | Event bus architecture — من الكود الفعلي |
-| **C-57** | Master Contents Index (this file) | Complete index of all 93 contents — corrected in Session 9 |
+| **C-57** | Master Contents Index (this file) | Complete index of all 94 contents — corrected in Session 9 |
 | **C-58** | Hub Completion Plan | KYC + Subscription + Notifications — ما تبقى للـ Mainnet |
 
 ---
@@ -130,7 +130,7 @@
 
 ---
 
-## TIER 7 — Governance + Execution (C-87→C-93)
+## TIER 7 — Governance + Execution + Institutional Constitutions (C-87→C-94)
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
@@ -140,7 +140,8 @@
 | **C-90** | Security Trust Model | Zero-trust + identity chain + threat model |
 | **C-91** | Engineering Roadmap to Scale | Scale gates + infrastructure evolution path |
 | **C-92** | Platform Health Model | Health dimensions × state machine × dashboard spec |
-| **C-93** | Engineering Assessment Report | Knowledge Base gap analysis + remediation plan (June 2026) |
+| **C-93** | Institutional Verification Constitution | How reality becomes verified institutional state — Tier-1 Constitutional |
+| **C-94** | Engineering Assessment Report | Knowledge Base gap analysis + remediation plan (June 2026) |
 
 ---
 
@@ -193,7 +194,8 @@
 | Check all repo map | **C-11** |
 | Environment variables | **C-44** |
 | Check observability/SLOs | **C-45** + **C-62** |
-| Engineering gap report | **C-93** |
+| Institutional verification model | **C-93** |
+| Engineering gap report | **C-94** |
 
 ---
 
@@ -207,6 +209,8 @@ C-47  Kernel Spec (Architecture Binding)
 C-67  Source of Truth Matrix
   ↓
 ADRs  (C-64: ADR-001 → ADR-007)
+  ↓
+C-93  Institutional Verification Constitution  [Tier-1 Constitutional Layer]
   ↓
 C-77  Strategic Analysis + Risk
   ↓
@@ -238,9 +242,9 @@ C-40→C-49  Engineering + Roadmap + CI + Violations
 C-50→C-58  Session + Patterns + Protocols
 C-59→C-66  Templates + Code + Guides
 C-67→C-78  Governance + Integrity + Operations
-C-82→C-93  Future Vision + Execution + Health + Assessment
+C-82→C-94  Future Vision + Execution + Institutional Constitutions + Assessment
 C-100→C-115  App Institutional Charters
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
-   عناوين الملفات الفعلية. للتفاصيل → C-93
+   عناوين الملفات الفعلية. للتفاصيل → C-94
 ```

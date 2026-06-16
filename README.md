@@ -40,11 +40,11 @@ tec-knowledge-base/
 ├── README.md                          ← You are here
 ├── CLAUDE.md                          ← AI assistant navigation index (v3.2.0)
 │
-├── knowledge-base/                    ← 93 platform knowledge contents (C-00 → C-115)
+├── knowledge-base/                    ← 94 platform knowledge contents (C-00 → C-115)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
-│   ├── C-01 → C-93                   ← Architecture, Engineering, Governance, Assessment
+│   ├── C-01 → C-94                   ← Architecture, Engineering, Governance, Institutional Constitutions
 │   ├── C-100 → C-115                 ← App Institutional Charters
-│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 93 contents
+│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 94 contents
 │
 ├── skills/                            ← 16 Claude Code skills
 │   ├── platform/                      ← payment-expert, platform-architect, security-reviewer…
@@ -73,8 +73,9 @@ tec-knowledge-base/
 | [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Live platform state — score, violations, checklist |
 | [C-77 Strategic Analysis](knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md) | Risk register, execution roadmap |
 | [C-78 Operations](knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md) | SLOs, incidents, reliability |
-| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 93 contents indexed with quick lookup |
-| [C-93 Engineering Assessment](knowledge-base/C-93___ENGINEERING_ASSESSMENT_REPORT.md) | Gap analysis + remediation plan (June 2026) |
+| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 94 contents indexed with quick lookup |
+| [C-93 Institutional Verification Constitution](knowledge-base/C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md) | How reality becomes verified institutional state (Tier-1) |
+| [C-94 Engineering Assessment](knowledge-base/C-94___ENGINEERING_ASSESSMENT_REPORT.md) | Gap analysis + remediation plan (June 2026) |
 
 ### Architecture & Decisions
 | Document | Description |
