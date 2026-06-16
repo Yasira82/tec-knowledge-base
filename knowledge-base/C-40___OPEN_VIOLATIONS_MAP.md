@@ -68,7 +68,16 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | ID | المشكلة | المصدر | الحل | الحالة |
 |----|---------|--------|------|--------|
 | **NEW-K** | **Duplicate Health Polling** — BackendOfflineBanner + BackendStatus كلاهما يعمل `checkGatewayHealth()` / `checkBackendHealth()` كل 30 ثانية بشكل مستقل. 2 HTTP calls كل 30s للـ endpoint نفسه، وstate مشتتة بين شجرتين | `Tec-App/tec-frontend/src/components/BackendOfflineBanner.tsx` + `BackendStatus.tsx` | إنشاء `src/context/PlatformHealthContext.tsx` — Single Poller + Single Cache + Single Status Store | **OPEN** |
-| **NEW-L** | **Gateway Timeout Mismatch** — Frontend يلغي الطلب بعد 5s (`AbortSignal.timeout(5000)`) لكن Gateway ينتظر 30s (`timeout: 30000`). النتيجة: Railway يسجل 499 (client cancellation) وليس 500/502/503 | `Tec-App/tec-frontend/src/lib/health-check.ts` + `tec-api-gateway/src/modules/proxy/proxy.service.ts` | خفض Gateway من `30000` إلى `10000` — تنسيق: Frontend 5s / Gateway 10s / Upstream 8s | **OPEN** |
+| **NEW-L** | **Gateway Timeout Mismatch** — Frontend يلغي الطلب بعد 5s (`AbortSignal.timeout(5000)`) لكن Gateway ينتظر 30s (`timeout: 30000`). النتيجة: Railway يسجل 499 (client cancellation) وليس 500/502/503. ملاحظة: الـ499 بـ 595ms duration يُرجَّح أنه browser cancellation / health-check race وليس gateway timeout. | `Tec-App/tec-frontend/src/lib/health-check.ts` + `tec-api-gateway/src/modules/proxy/proxy.service.ts` | خفض Gateway من `30000` إلى `10000` — تنسيق: Frontend 5s / Gateway 10s / Upstream 8s | **OPEN** |
+| **NEW-N** | **Redis Silent Failure** — `client.on('error', () => {})` يكتم كل أخطاء Redis بالكامل. Redis failure = Invisible failure. خرق مباشر لمبدأ "No Runtime Without Events" من C-00. | `tec-api-gateway/src/modules/redis/` (أو أي service يستخدم Redis) | إضافة: `client.on('connect', ...)` + `client.on('ready', ...)` + `client.on('error', log)` + `client.on('reconnecting', ...)` + `client.on('end', ...)` — تحويل Silent Runtime إلى Observable Runtime | **OPEN** |
+
+---
+
+## P1-C — OPEN (Code Verified)
+
+| ID | المشكلة | المصدر | الحل | الحالة |
+|----|---------|--------|------|--------|
+| **NEW-O** | **Health Endpoint Missing Detail** — `/api/health` يُعيد `{ "status": "ok" }` فقط. لا Redis state، لا upstream services state، لا memory، لا uptime. عند وقوع incident لا توجد runtime evidence. | `tec-api-gateway/src/modules/health/` | إنشاء `/api/health/details` (guarded by `x-internal-key`) يُعيد gateway + redis + uptime + memory + services map | **OPEN** |
 
 ---
 
@@ -141,7 +150,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ```
 P0 Open:  0
-P1 Open:  2  ⚠️  (NEW-K: Duplicate Health Polling, NEW-L: Gateway Timeout Mismatch)
+P1 Open:  4  ⚠️  (NEW-K: Duplicate Health Polling, NEW-L: Timeout Mismatch, NEW-N: Redis Silent, NEW-O: Health Endpoint Missing Detail)
 P2 Open:  1  ⚠️  (NEW-M: Hardcoded Service Map)
 Deferred: 3  (post-Portal — VM-NEW-009, VM-NEW-014, ISS-010)
 
@@ -153,8 +162,10 @@ Score Impact:
   Gateway:        8.3/10
 
 Next:
-  1. Fix NEW-K (PlatformHealthContext.tsx)
-  2. Fix NEW-L (Gateway timeout 30s → 10s)
-  3. Fix NEW-M (service-registry.ts)
+  1. Fix NEW-K  (PlatformHealthContext.tsx — Centralized Health Runtime)
+  2. Fix NEW-N  (Redis Diagnostics — 5 event listeners)
+  3. Fix NEW-O  (/api/health/details — Runtime Evidence endpoint)
+  4. Fix NEW-L  (Gateway timeout 30s → 10s)
+  5. Fix NEW-M  (service-registry.ts)
   4. External Re-Audit → target 9.0–9.5/10 → Portal Submission
 ```

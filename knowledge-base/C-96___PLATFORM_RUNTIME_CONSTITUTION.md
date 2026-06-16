@@ -1,6 +1,6 @@
-# C-96 — Platform Runtime Constitution
+# C-96 — Platform Runtime & Observability Constitution
 
-> **Version:** v1.0
+> **Version:** v1.1
 > **Truth State:** `[Current State]` → `[Planned State]`
 > **Governance State:** `[Draft]`
 > **Verification State:** `[Code Verified]`
@@ -12,7 +12,7 @@
 
 ## Purpose
 
-Define Health, Observability, Availability, Resilience, and Runtime Ownership as constitutional obligations of the TEC platform.
+Define Health, Observability, Availability, Resilience, Runtime Ownership, and **Runtime Evidence** as constitutional obligations of the TEC platform.
 
 **C-84 defines:** How systems operate (runtime gates).
 **C-92 defines:** Platform health model (dimensions × state machine × PHS).
@@ -75,21 +75,63 @@ Adding a new service (Life, Connection, Explorer, SYSTEM, Nexus, DX) requires ed
 
 ---
 
-## Core Constitutional Principle
+## Core Constitutional Principles
 
+### Reliability Principle
 ```
 A platform is not reliable because it works.
 A platform is reliable because reliability is constitutionally required.
 
 Health is not a feature.
 Health is a constitutional obligation.
+```
 
+### Observability Principle
+```
 Observability is not optional instrumentation.
-Observability is the right of every service to be seen and the right of
-every operator to see.
+Observability is the right of every service to be seen
+and the right of every operator to see.
 
 Availability is not a best-effort goal.
 Availability is a governed contract.
+```
+
+### Runtime Evidence Principle
+```
+Operational runtimes must emit evidence before emitting conclusions.
+
+Evidence precedes diagnosis.
+Diagnosis precedes resolution.
+Resolution without evidence is guesswork.
+```
+
+### Runtime Visibility Principle
+```
+Invisible failures cannot become institutional truth.
+
+A failure that produces no evidence
+cannot be verified (C-93).
+A failure that cannot be verified
+cannot be governed (C-99).
+A silent runtime is an ungoverned runtime.
+```
+
+### Health Ownership Principle
+```
+Every runtime health signal must have an owner.
+
+Unowned signals become noise.
+Noise prevents diagnosis.
+Diagnosis without ownership has no resolution path.
+```
+
+### Incident Evidence Principle
+```
+Every incident must produce verifiable evidence.
+
+Evidence must be collectable at incident time.
+Evidence must be attributable to a source.
+Evidence must be available to the Verification Engine (C-93).
 ```
 
 ---
@@ -105,6 +147,9 @@ Timeout without Alignment            = Ghost Failures (499)
 Service Map without Registry         = Ungoverned Topology
 Incident without Flow                = Uncoordinated Response
 Runtime Ownership without Assignment = Orphaned Infrastructure
+Silent Error Handler                 = Invisible Failure (violates C-00 §No Runtime Without Events)
+Missing Health Details               = Undiagnosable Incidents
+Evidence not collected at Runtime    = Unverifiable Institutional State
 ```
 
 ---
@@ -290,9 +335,103 @@ Every service must expose:
 
 | ID | Severity | Finding | Remediation | Status |
 |----|---------|---------|-------------|--------|
-| NEW-K | P1 | Duplicate health polling in Frontend — 2 independent pollers | Create `PlatformHealthContext.tsx` | OPEN |
-| NEW-L | P1 | Gateway timeout 30s vs Frontend 5s — causes ghost 499s | Set `timeout: 10000` in proxy.service.ts | OPEN |
+| NEW-K | P1 | Duplicate health polling — 2 independent pollers, split runtime view | `PlatformHealthContext.tsx` — single poller + cache + store | OPEN |
+| NEW-N | P1 | Redis `client.on('error', () => {})` — silent failure, violates C-00 | Add 5 Redis lifecycle event listeners with structured logging | OPEN |
+| NEW-O | P1 | `/api/health` returns `{ "status": "ok" }` only — zero evidence at incident time | `/api/health/details` (x-internal-key) with full runtime state | OPEN |
+| NEW-L | P1 | Gateway timeout 30s vs Frontend 5s — timeout contract misaligned | Set `timeout: 10000` in proxy.service.ts | OPEN |
 | NEW-M | P2 | Hardcoded service map in Gateway — blocks extensibility | Externalize to `service-registry.ts` | OPEN |
+
+---
+
+## Redis Diagnostics Mandate (NEW-N)
+
+### Current State (Code Verified — June 2026)
+
+```typescript
+// Redis client — SILENT FAILURE
+client.on('error', () => {});  // swallowed completely
+```
+
+**Constitutional violation:** `client.on('error', () => {})` is a direct violation of C-00's "No Runtime Without Events" invariant. Redis failure becomes invisible. Invisible failures cannot be verified (C-93), cannot be governed (C-99), cannot be resolved.
+
+### Required State
+
+```typescript
+// Redis client — Observable Runtime
+client.on('connect',      () => logger.info('Redis connecting'));
+client.on('ready',        () => logger.info('Redis ready'));
+client.on('error',        (err) => logger.error({ err }, 'Redis error'));
+client.on('reconnecting', () => logger.warn('Redis reconnecting'));
+client.on('end',          () => logger.warn('Redis connection ended'));
+```
+
+**Result:** Every Redis lifecycle event becomes a log entry → becomes evidence (C-93) → can be correlated with incidents.
+
+---
+
+## Health Details Endpoint Mandate (NEW-O)
+
+### Current State (Code Verified — June 2026)
+
+```json
+GET /api/health → { "status": "ok" }
+```
+
+**Constitutional violation:** `{ "status": "ok" }` is a conclusion, not evidence. At incident time (e.g. the 499 at 595ms), this endpoint provides zero diagnostic value. The Runtime Evidence Principle requires runtimes to emit evidence, not just conclusions.
+
+### Required State
+
+```
+GET /api/health           → { "status": "ok" | "degraded" | "down" }  (public)
+GET /api/health/details   → full runtime evidence (guarded by x-internal-key)
+```
+
+```json
+{
+  "gateway": "up",
+  "redis": "up | down | reconnecting",
+  "uptime": 123456,
+  "memory": { "used": "...", "heap": "..." },
+  "services": {
+    "auth":         { "reachable": true,  "latency": 12 },
+    "wallet":       { "reachable": true,  "latency": 8  },
+    "payment":      { "reachable": true,  "latency": 15 },
+    "asset":        { "reachable": true,  "latency": 10 },
+    "notification": { "reachable": false, "latency": null }
+  }
+}
+```
+
+**Result:** When a 499 occurs, an operator can immediately see Redis state, upstream service state, and memory pressure at the time of the incident.
+
+---
+
+## 499 Incident Analysis (Verified — June 2026)
+
+### Evidence
+
+```
+18:39 → 200  (success)
+18:40 → 499  (cancellation) — duration: ~595ms
+```
+
+### Interpretation
+
+A 595ms duration rules out gateway proxy timeout (10,000ms) and frontend AbortSignal timeout (5,000ms). The most probable cause:
+
+| Hypothesis | Evidence | Verdict |
+|-----------|---------|---------|
+| Gateway proxyTimeout (30,000ms) | Duration 595ms ≠ 30,000ms | ❌ Ruled out |
+| Frontend AbortSignal (5,000ms) | Duration 595ms ≠ 5,000ms | ❌ Ruled out |
+| Browser navigation / tab change | Possible at 595ms | ✅ Plausible |
+| Health-check race condition | Two pollers (NEW-K) creating race | ✅ Plausible |
+| Redis transient failure → gateway stall at ~600ms | Invisible (NEW-N) | ✅ Plausible |
+
+### Root Cause Gap
+
+Without `/api/health/details` (NEW-O) and Redis diagnostics (NEW-N), the exact cause **cannot be determined from available evidence**. This is a **Runtime Visibility failure**, not a timeout failure.
+
+**This is why NEW-K + NEW-N + NEW-O are constitutionally P1:** they close the gap between "something failed" and "we can verify what failed."
 
 ---
 

@@ -162,11 +162,13 @@ tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [4 apps simulta
 ## Next Actions (from C-02 Session 9 — Code Verified)
 
 ```
-1. Fix NEW-K  ← PlatformHealthContext.tsx in Tec-App [P1 Code Verified]
-2. Fix NEW-L  ← Gateway timeout 30s → 10s in tec-api-gateway [P1 Code Verified]
-3. Fix NEW-M  ← service-registry.ts in tec-api-gateway [P2 Code Verified]
-4. External Re-Audit → target 9.0–9.5/10
-5. Pi Developer Portal submission
+1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [P1]
+2. Fix NEW-N  ← Redis Diagnostics: 5 event listeners (tec-api-gateway) [P1]
+3. Fix NEW-O  ← /api/health/details endpoint (tec-api-gateway) [P1]
+4. Fix NEW-L  ← Gateway timeout 30s → 10s (tec-api-gateway) [P1]
+5. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
+6. External Re-Audit → target 9.0–9.5/10
+7. Pi Developer Portal submission
 ```
 
 ## Code Verified Scores (June 2026)
@@ -174,9 +176,9 @@ tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [4 apps simulta
 ```
 Architecture:             8.7/10
 Security:                 8.9/10
-Gateway:                  8.3/10
-Health Runtime:           6.5/10  ← NEW-K/L (open violations)
-Observability:            7.0/10
+Gateway:                  8.6/10
+Runtime Visibility:       7.8/10  ← NEW-K/N/O (open violations)
+Observability:            8.2/10
 Knowledge Base:           9.1/10
 Constitutional Governance: 9.6/10
 Overall:                  9.3/10

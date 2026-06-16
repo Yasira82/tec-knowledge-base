@@ -152,7 +152,7 @@
 | **C-93** | Institutional Verification Constitution | Reality → Evidence → Institutional State → Authority |
 | **C-94** | Governed Capability Constitution | Knowledge → Executable Capability |
 | **C-95** | Institutional Knowledge Constitution | Institutional State → Knowledge |
-| **C-96** | Platform Runtime Constitution | Health · Observability · Availability · Resilience · Runtime Ownership |
+| **C-96** | Platform Runtime & Observability Constitution | Health · Observability · Runtime Evidence · 499 Incident Analysis |
 | **C-97** | Context Constitution | Capability → Appropriate Action (applicability bridge) |
 | **C-99** | Institutional Governance Constitution | Authority → Governance → Enforcement |
 
@@ -226,7 +226,7 @@
 | Governed capability model | **C-94** |
 | Institutional knowledge model | **C-95** |
 | Institutional memory + continuity | **C-79** |
-| Platform runtime constitution (Health/Observability) | **C-96** |
+| Platform runtime + observability + incident evidence | **C-96** |
 | Context + applicability model | **C-97** |
 | Construction + DX constitution | **C-98** |
 | Governance + authority model | **C-99** |
@@ -251,7 +251,7 @@ C-95  Institutional Knowledge Constitution     [Tier-1 — State → Knowledge]
   ↓
 C-94  Governed Capability Constitution         [Tier-1 — Knowledge → Capability]
   ↓
-C-96  Platform Runtime Constitution            [Tier-1 — Health · Observability · Runtime Obligations]
+C-96  Platform Runtime & Observability Constitution  [Tier-1 — Health · Evidence · Visibility · Resilience]
   ↓
 C-97  Context Constitution                     [Tier-1 — Capability → Applicable Action]
   ↓

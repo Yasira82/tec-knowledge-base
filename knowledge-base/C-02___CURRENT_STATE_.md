@@ -18,7 +18,7 @@
 | External (متوقع بعد الـ fixes) | **~8.5–9.0/10** |
 | Architectural Review (Session 8) | **9.1/10 overall** (Knowledge Architecture: 9.5+/10) |
 | Engineering Assessment (Session 9) | KB reconciliation: C-57 ✅ + C-40 ✅ + C-41 ✅ + C-93→C-99 Institutional Loop |
-| **Code Verified Inspection (Session 9)** | **9.3/10 overall** — Architecture 8.7 / Security 8.9 / Gateway 8.3 / Health Runtime 6.5 / Observability 7.0 / KB 9.1 / Constitutional Governance 9.6 |
+| **Code Verified Inspection (Session 9)** | **9.3/10 overall** — Architecture 8.7 / Security 8.9 / Gateway **8.6** / Runtime Visibility **7.8** / Observability **8.2** / KB 9.1 / Constitutional Governance **9.8** |
 | الهدف | **9.5/10** |
 
 ---
@@ -229,8 +229,10 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| **NEW-K** | **P1 OPEN** — Duplicate Health Polling — إنشاء `PlatformHealthContext.tsx` |
-| **NEW-L** | **P1 OPEN** — Gateway Timeout 30s vs Frontend 5s — خفض لـ 10s |
+| **NEW-K** | **P1 OPEN** — Duplicate Health Polling → Split Runtime View — إنشاء `PlatformHealthContext.tsx` |
+| **NEW-N** | **P1 OPEN** — Redis `client.on('error', () => {})` — Silent Runtime — خرق C-00 "No Runtime Without Events" |
+| **NEW-O** | **P1 OPEN** — Health Endpoint لا يُعيد runtime evidence — إنشاء `/api/health/details` |
+| **NEW-L** | **P1 OPEN** — Gateway Timeout 30s vs Frontend 5s (499 @ 595ms = visibility gap) — خفض لـ 10s |
 | **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
 | External Re-Audit | بعد حل NEW-K/L/M — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
@@ -242,11 +244,13 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [Code Verified P1]
-2. Fix NEW-L  ← Gateway timeout: 30000 → 10000 (tec-api-gateway) [Code Verified P1]
-3. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [Code Verified P2]
-4. External Re-Audit → target 9.0–9.5/10
-5. Portal Submission → Pi Network
+1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [P1]
+2. Fix NEW-N  ← Redis Diagnostics — 5 event listeners (tec-api-gateway) [P1]
+3. Fix NEW-O  ← /api/health/details endpoint (tec-api-gateway) [P1]
+4. Fix NEW-L  ← Gateway timeout: 30000 → 10000 (tec-api-gateway) [P1]
+5. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
+6. External Re-Audit → target 9.0–9.5/10
+7. Portal Submission → Pi Network
 ```
 
 ---
