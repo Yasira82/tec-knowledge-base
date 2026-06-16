@@ -40,13 +40,13 @@ tec-knowledge-base/
 ├── README.md                          ← You are here
 ├── CLAUDE.md                          ← AI assistant navigation index (v3.2.0)
 │
-├── knowledge-base/                    ← 91 platform knowledge contents (C-00 → C-115)
+├── knowledge-base/                    ← 93 platform knowledge contents (C-00 → C-115)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
-│   ├── C-01 → C-91                   ← Architecture, Engineering, Governance
+│   ├── C-01 → C-93                   ← Architecture, Engineering, Governance, Assessment
 │   ├── C-100 → C-115                 ← App Institutional Charters
-│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 91 contents
+│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 93 contents
 │
-├── skills/                            ← 15 Claude Code skills
+├── skills/                            ← 16 Claude Code skills
 │   ├── platform/                      ← payment-expert, platform-architect, security-reviewer…
 │   ├── engineering/                   ← bff-patterns, tec-testing
 │   ├── design/                        ← tec-design-system, ui-patterns
@@ -73,7 +73,8 @@ tec-knowledge-base/
 | [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Live platform state — score, violations, checklist |
 | [C-77 Strategic Analysis](knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md) | Risk register, execution roadmap |
 | [C-78 Operations](knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md) | SLOs, incidents, reliability |
-| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 91 contents indexed with quick lookup |
+| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 93 contents indexed with quick lookup |
+| [C-93 Engineering Assessment](knowledge-base/C-93___ENGINEERING_ASSESSMENT_REPORT.md) | Gap analysis + remediation plan (June 2026) |
 
 ### Architecture & Decisions
 | Document | Description |

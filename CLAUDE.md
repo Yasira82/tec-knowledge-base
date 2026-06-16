@@ -5,7 +5,7 @@ Centralized knowledge base for the TEC Federated Platform Ecosystem.
 ## Structure
 
 ```
-knowledge-base/     # Platform knowledge (C-00 → C-86)
+knowledge-base/     # Platform knowledge (C-00 → C-93)
 governance/         # Platform governance documents
 ```
 
@@ -22,12 +22,12 @@ governance/         # Platform governance documents
 | C-50–C-58 | Session + Patterns + Protocols |
 | C-59–C-66 | Templates + Code + Guides |
 | C-67–C-78 | Governance + Integrity + Operations |
-| C-82–C-91 | Future Vision + Execution Governance |
+| C-82–C-93 | Future Vision + Execution + Assessment |
 | C-100–C-115 | App Institutional Charters (Economic Infrastructure) |
 
 ## Governance
 
-- `governance/TEC_GOVERNANCE_CHARTER_v1.1.md` — Platform governance charter
+- `governance/TEC_GOVERNANCE_CHARTER_v1.2.md` — Platform governance charter
 
 ## Navigation
 
@@ -46,7 +46,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.2.0 | Governance Charter v1.1
+Knowledge Base v3.3.0 | Governance Charter v1.2
 
 
 ---

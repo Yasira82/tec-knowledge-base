@@ -4,7 +4,7 @@
 > Load this file at session start for instant platform context.
 > For full details → C-02___CURRENT_STATE_.md
 
-**Snapshot Version:** v3.2.0 | **Last Updated:** 15 June 2026
+**Snapshot Version:** v3.3.0 | **Last Updated:** 16 June 2026
 
 ---
 
@@ -159,13 +159,14 @@ tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [4 apps simulta
 
 ---
 
-## Next Actions (from C-02)
+## Next Actions (from C-02 Session 9)
 
 ```
-1. Merge PRs #27 (Ecommerce) + #24 (Hub)
-2. External Re-Audit → target 8.5–9.0/10
-3. Fix any new audit findings
-4. Pi Developer Portal submission
+1. External Re-Audit → target 8.5–9.0/10 (كل fixes على main ✅)
+2. Fix port conflict: C-10/C-20 (5001) vs README/Charters (4001)
+3. Fix Commerce domain: tec-commerce-app.vercel.app vs commerce.tecosystem.app
+4. Add Truth State headers to C-00→C-23 (~35% coverage now)
+5. Pi Developer Portal submission
 ```
 
 ---

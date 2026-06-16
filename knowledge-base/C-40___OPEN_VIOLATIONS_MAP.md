@@ -1,7 +1,11 @@
 # C-40 — OPEN VIOLATIONS MAP
 ## Current Issues + Priority + Fix
 
-**Last Updated:** 14 June 2026
+> **Truth State:** `[Current State]`
+> **Governance State:** `[ADR Approved]`
+> **Verification:** `[Documentation Verified]`
+
+**Last Updated:** 16 June 2026 (Session 9 — synced with C-02)
 
 ---
 
@@ -31,28 +35,29 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## P2 — يؤثر على Score
+## P2 — ALL CLOSED ✅ (synced with C-02 Session 8)
 
-| ID | المشكلة | الحالة |
-|----|---------|--------|
-| NEW-C | CSRF exclusion للـ payment routes غير موثق — محتاج ADR | OPEN |
-| NEW-E | tec-ui: لا tests | OPEN |
-| NEW-F | Tec-Ecommerce: Pi App ID + domain غير موثقين | OPEN |
-| NEW-G | Dual-Mode Payment مش في Architecture Binding | OPEN |
+| ID | المشكلة | الحالة | التحقق |
+|----|---------|--------|--------|
+| NEW-C | CSRF exclusion للـ payment routes غير موثق | ✅ **VERIFIED** | ADR-006 في C-64 — CSRF exclusion موثق |
+| NEW-E | tec-ui: لا tests | ✅ **VERIFIED** | tec-ui v1.2.1 — 75 tests + 80% coverage |
+| NEW-F | Tec-Ecommerce: Pi App ID + domain غير موثقين | ✅ **VERIFIED** | C-01 + CLAUDE.md — Pi App ID: `ecommerce-app-71ca4d3e462eaf54` |
+| NEW-G | Dual-Mode Payment مش في Architecture Binding | ✅ **VERIFIED** | ADR-002 (C-64) + C-12 |
+
+> ⚠️ **ملاحظة من Session 9:** هذه الـ violations كانت لا تزال مُعلَنة OPEN في هذا الملف
+> بينما C-02 Session 8 أكد إغلاقها. تم التصحيح الآن لمطابقة C-67 Source of Truth.
 
 ---
 
 ## OPEN — يحتاج قرار
 
-### Ecommerce PR #25
+### Ecommerce PR #25 — RESOLVED
 
 | Field | Value |
 |-------|-------|
 | PR | https://github.com/Yasira82/Tec-Ecommerce/pull/25 |
-| المشكلة | 503 على approve/complete في Vercel |
-| السبب | `API_GATEWAY_URL` undefined في Vercel runtime |
-| PR #25 | أضاف NEXT_PUBLIC_ fallback — لكن PR #22 شاله (security) |
-| الحل الصح | تحقق إن `API_GATEWAY_URL` (server-only) set في Vercel → لو صح close PR #25 |
+| الحالة | ✅ **CLOSED** — PR #27 على main (commit 5d44c501) |
+| التفاصيل | `API_GATEWAY_URL` (server-only) + Comprehensive Audit fixes — يتحقق CI |
 
 ---
 
@@ -113,14 +118,15 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## SUMMARY
+## SUMMARY (Updated Session 9 — 16 June 2026)
 
 ```
 P0 Open:  0
-P1 Open:  0  (NEW-B كود OK — Railway ops فقط)
-P2 Open:  4  (NEW-C, NEW-E, NEW-F, NEW-G)
-Pending:  1  (Ecommerce PR #25 — verify Vercel env var first)
-Deferred: 3  (post-Portal)
+P1 Open:  0  ✅ (كل P1 violations مغلقة + VERIFIED)
+P2 Open:  0  ✅ (NEW-C/E/F/G — كلها VERIFIED بعد Session 8)
+Pending:  0  ✅ (Ecommerce PR #25 — closed)
+Deferred: 3  (post-Portal — VM-NEW-009, VM-NEW-014, ISS-010)
 
-Next: tec-ui v1.2.0 → External Audit ≥ 9.5 → Portal
+OVERALL: ZERO OPEN VIOLATIONS ✅
+Next: External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```
