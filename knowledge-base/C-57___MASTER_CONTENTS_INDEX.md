@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 95 Content (C-00 → C-115)
+## دليل سريع للـ 101 Content (C-00 → C-115)
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -91,7 +91,7 @@
 | **C-54** | Package Management | npm Publish Sequence + update protocol |
 | **C-55** | Scoring & Audit Strategy | الـ Score الحقيقي + كيف توصل لـ 9.5 |
 | **C-56** | Redis Streams Events Map | Event bus architecture — من الكود الفعلي |
-| **C-57** | Master Contents Index (this file) | Complete index of all 95 contents — corrected in Session 9 |
+| **C-57** | Master Contents Index (this file) | Complete index of all 101 contents — corrected in Session 9 |
 | **C-58** | Hub Completion Plan | KYC + Subscription + Notifications — ما تبقى للـ Mainnet |
 
 ---
@@ -130,7 +130,7 @@
 
 ---
 
-## TIER 7 — Governance + Execution + Institutional Constitutions (C-87→C-95)
+## TIER 7A — Governance + Execution (C-87→C-92)
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
@@ -139,10 +139,36 @@
 | **C-89** | Developer Platform Governance | DX rules + contribution gates + SDK contracts |
 | **C-90** | Security Trust Model | Zero-trust + identity chain + threat model |
 | **C-91** | Engineering Roadmap to Scale | Scale gates + infrastructure evolution path |
-| **C-92** | Platform Health Model | Health dimensions × state machine × dashboard spec |
-| **C-93** | Institutional Verification Constitution | How reality becomes verified institutional state — Tier-1 Constitutional |
-| **C-94** | Governed Capability Constitution | How institutional knowledge becomes executable capability — Tier-1 Constitutional |
-| **C-95** | Engineering Assessment Report | Knowledge Base gap analysis + remediation plan (June 2026) |
+| **C-92** | Platform Health Model / Institutional Intelligence Constitution | Health model × Tier-1: How institutions reason |
+
+---
+
+## TIER 7B — Institutional Operating Loop (C-93→C-99)
+
+### Tier-1 Constitutional Layer (Operating Loop)
+
+| Content | العنوان | الدور في الحلقة |
+|---------|---------|-----------------|
+| **C-93** | Institutional Verification Constitution | Reality → Evidence → Institutional State → Authority |
+| **C-94** | Governed Capability Constitution | Knowledge → Executable Capability |
+| **C-95** | Institutional Knowledge Constitution | Institutional State → Knowledge |
+| **C-97** | Context Constitution | Capability → Appropriate Action (applicability bridge) |
+| **C-99** | Institutional Governance Constitution | Authority → Governance → Enforcement |
+
+### Tier-2 Constitutional Assets (Continuity)
+
+| Content | العنوان | الدور |
+|---------|---------|-------|
+| **C-96** | Institutional Memory Constitution | Decision History + ADR Lineage + Continuity |
+| **C-98** | Institutional Construction Constitution | DX Runtime + SDKs + Templates + Governed Assembly |
+
+---
+
+## TIER 7C — Engineering Assessment
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-80** | Engineering Assessment Report | Knowledge Base gap analysis + remediation plan (June 2026) |
 
 ---
 
@@ -197,7 +223,12 @@
 | Check observability/SLOs | **C-45** + **C-62** |
 | Institutional verification model | **C-93** |
 | Governed capability model | **C-94** |
-| Engineering gap report | **C-95** |
+| Institutional knowledge model | **C-95** |
+| Institutional memory + continuity | **C-96** |
+| Context + applicability model | **C-97** |
+| Construction + DX constitution | **C-98** |
+| Governance + authority model | **C-99** |
+| Engineering gap report | **C-80** |
 
 ---
 
@@ -212,9 +243,15 @@ C-67  Source of Truth Matrix
   ↓
 ADRs  (C-64: ADR-001 → ADR-007)
   ↓
-C-93  Institutional Verification Constitution  [Tier-1 Constitutional Layer]
+C-93  Institutional Verification Constitution  [Tier-1 — Verification → State → Authority]
   ↓
-C-94  Governed Capability Constitution          [Tier-1 Constitutional Layer]
+C-95  Institutional Knowledge Constitution     [Tier-1 — State → Knowledge]
+  ↓
+C-94  Governed Capability Constitution         [Tier-1 — Knowledge → Capability]
+  ↓
+C-97  Context Constitution                     [Tier-1 — Capability → Applicable Action]
+  ↓
+C-99  Institutional Governance Constitution    [Tier-1 — Authority → Governance → Enforcement]
   ↓
 C-77  Strategic Analysis + Risk
   ↓
@@ -246,9 +283,10 @@ C-40→C-49  Engineering + Roadmap + CI + Violations
 C-50→C-58  Session + Patterns + Protocols
 C-59→C-66  Templates + Code + Guides
 C-67→C-78  Governance + Integrity + Operations
-C-82→C-95  Future Vision + Execution + Institutional Constitutions + Assessment
+C-82→C-99  Future Vision + Execution + Institutional Operating Loop Constitutions
+C-80       Engineering Assessment Report (KB audit)
 C-100→C-115  App Institutional Charters
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
-   عناوين الملفات الفعلية. للتفاصيل → C-95
+   عناوين الملفات الفعلية. للتفاصيل → C-80
 ```

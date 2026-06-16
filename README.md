@@ -40,11 +40,11 @@ tec-knowledge-base/
 ├── README.md                          ← You are here
 ├── CLAUDE.md                          ← AI assistant navigation index (v3.2.0)
 │
-├── knowledge-base/                    ← 95 platform knowledge contents (C-00 → C-115)
+├── knowledge-base/                    ← 101 platform knowledge contents (C-00 → C-115)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
-│   ├── C-01 → C-95                   ← Architecture, Engineering, Governance, Institutional Constitutions
+│   ├── C-01 → C-99                   ← Architecture, Engineering, Governance, Institutional Operating Loop
 │   ├── C-100 → C-115                 ← App Institutional Charters
-│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 94 contents
+│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 101 contents
 │
 ├── skills/                            ← 16 Claude Code skills
 │   ├── platform/                      ← payment-expert, platform-architect, security-reviewer…
@@ -73,10 +73,13 @@ tec-knowledge-base/
 | [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Live platform state — score, violations, checklist |
 | [C-77 Strategic Analysis](knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md) | Risk register, execution roadmap |
 | [C-78 Operations](knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md) | SLOs, incidents, reliability |
-| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 95 contents indexed with quick lookup |
+| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 101 contents indexed with quick lookup |
 | [C-93 Institutional Verification Constitution](knowledge-base/C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md) | How reality becomes verified institutional state (Tier-1) |
-| [C-94 Governed Capability Constitution](knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md) | How institutional knowledge becomes executable capability (Tier-1) |
-| [C-95 Engineering Assessment](knowledge-base/C-95___ENGINEERING_ASSESSMENT_REPORT.md) | Gap analysis + remediation plan (June 2026) |
+| [C-94 Governed Capability Constitution](knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md) | How knowledge becomes executable capability (Tier-1) |
+| [C-95 Institutional Knowledge Constitution](knowledge-base/C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md) | How institutional state becomes knowledge (Tier-1) |
+| [C-97 Context Constitution](knowledge-base/C-97___CONTEXT_CONSTITUTION.md) | How capability becomes applicable action (Tier-1) |
+| [C-99 Institutional Governance Constitution](knowledge-base/C-99___INSTITUTIONAL_GOVERNANCE_CONSTITUTION.md) | How authority becomes governance — closes the loop (Tier-1) |
+| [C-80 Engineering Assessment](knowledge-base/C-80___ENGINEERING_ASSESSMENT_REPORT.md) | Gap analysis + remediation plan (June 2026) |
 
 ### Architecture & Decisions
 | Document | Description |

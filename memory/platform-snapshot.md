@@ -4,7 +4,7 @@
 > Load this file at session start for instant platform context.
 > For full details → C-02___CURRENT_STATE_.md
 
-**Snapshot Version:** v3.3.2 | **Last Updated:** 16 June 2026
+**Snapshot Version:** v3.4.0 | **Last Updated:** 16 June 2026
 
 ---
 

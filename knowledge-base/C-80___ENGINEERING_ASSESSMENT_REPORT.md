@@ -1,4 +1,4 @@
-# C-95 — ENGINEERING ASSESSMENT REPORT
+# C-80 — ENGINEERING ASSESSMENT REPORT
 ## Knowledge Base v3.2.0 — Comprehensive Gap Analysis & Remediation Plan
 
 > **Truth State:** `[Current State]`
@@ -351,7 +351,7 @@ Commerce domain يظهر بصيغتين مختلفتين عبر المستندا
 | `C-57___MASTER_CONTENTS_INDEX.md` | تصحيح 31+ وصف مغلوط في TIER 2→6B |
 | `C-40___OPEN_VIOLATIONS_MAP.md` | إغلاق NEW-C/E/F/G كـ VERIFIED + مزامنة مع C-02 |
 | `C-41_Engineering_Roadmap.md` | tec-ui v1.2.1 ✅ + تحديث Phase 1 Current State |
-| `C-95___ENGINEERING_ASSESSMENT_REPORT.md` | هذا الملف — تقرير المراجعة الشاملة |
+| `C-80___ENGINEERING_ASSESSMENT_REPORT.md` | هذا الملف — تقرير المراجعة الشاملة |
 | `C-02___CURRENT_STATE_.md` | إضافة Session 9 entry |
 
 ---
