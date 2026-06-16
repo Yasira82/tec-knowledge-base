@@ -1,6 +1,10 @@
 # C-64 — ARCHITECTURE DECISION RECORDS
 
-## ADR Index + 7 Core Decisions
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+## ADR Index + 8 Core Decisions
 
 ليه ADRs موجودة?
 كل قرار معماري غير تقليدي لازم يكون مبرر رسمي مكتوب.
@@ -26,6 +30,7 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-005 | Redis Streams over Kafka/RabbitMQ | ACCEPTED |
 | ADR-006 | CSRF Exclusion على Payment BFF Routes | ACCEPTED |
 | ADR-007 | Pi Payment Ownership Authority | ACCEPTED (تفاصيل في C-76) |
+| ADR-008 | Runtime Observability Architecture | ACCEPTED (June 2026) |
 
 ---
 
@@ -117,6 +122,91 @@ const GW = process.env.NEXT_PUBLIC_API_GATEWAY_URL;  // ❌ violation NEW-A
 **التبرير:** JWT verification في كل route + Idempotency-Key يمنع replay + HTTPS only
 
 **قاعدة ثابتة:** ✅ كل BFF payment route لازم JWT verify — إلزامي
+
+---
+
+## ADR-008 — Runtime Observability Architecture
+
+**Status:** ACCEPTED | **Date:** June 2026 | **Verification:** `[Code Verified]`
+
+**السياق:**
+فحص Code Verified لـ Tec-App و tec-api-gateway (يونيو 2026) كشف 3 مشاكل بنيوية:
+
+1. `BackendOfflineBanner` و `BackendStatus` كلاهما يعمل health polling مستقل كل 30s → Split Runtime View
+2. `client.on('error', () => {})` في Redis Client → Silent Failures، خرق مباشر لـ C-00 "No Runtime Without Events"
+3. `GET /api/health` يُعيد `{ "status": "ok" }` فقط → لا runtime evidence عند وقوع incidents
+
+**القرارات:**
+
+### ADR-008a — Centralized Health Runtime
+
+```typescript
+// REJECTED: distributed polling
+BackendOfflineBanner polls independently   ❌
+BackendStatus polls independently          ❌
+
+// ACCEPTED: centralized context
+src/context/PlatformHealthContext.tsx      ✅
+  Single Poller (30s) → Single Cache → Single Status Store
+  BackendOfflineBanner reads from context  ✅
+  BackendStatus reads from context         ✅
+```
+
+**التبرير:** Distributed pollers يخلقون Split Runtime View — جزء من الـ UI يعتقد Backend Online والجزء الآخر Offline في نفس اللحظة.
+
+### ADR-008b — Redis Observable Lifecycle
+
+```typescript
+// REJECTED: silent error handler
+client.on('error', () => {});  ❌
+
+// ACCEPTED: observable lifecycle
+client.on('connect',      () => logger.info('Redis connecting'));   ✅
+client.on('ready',        () => logger.info('Redis ready'));        ✅
+client.on('error',        (err) => logger.error({ err }, '...'));  ✅
+client.on('reconnecting', () => logger.warn('Redis reconnecting')); ✅
+client.on('end',          () => logger.warn('Redis ended'));        ✅
+```
+
+**التبرير:** Silent error handlers يمنعون verification (C-93). Invisible failure = ungoverned runtime (C-96).
+
+### ADR-008c — Runtime Evidence Endpoint
+
+```
+// REJECTED: conclusion-only
+GET /api/health → { "status": "ok" }  ❌
+
+// ACCEPTED: evidence-first
+GET /api/health          → { status }                    ✅ (public)
+GET /api/health/details  → full runtime state            ✅ (x-internal-key)
+  { gateway, redis, uptime, memory, services: { auth, wallet, payment... } }
+```
+
+**التبرير:** `{ "status": "ok" }` is a conclusion, not evidence. C-93 requires evidence to establish institutional state. Without `/health/details`, incidents cannot be diagnosed or verified.
+
+### ADR-008d — Timeout Contract
+
+```
+// REJECTED: misaligned
+Frontend: AbortSignal.timeout(5000)   →  Gateway: timeout: 30000  ❌
+
+// ACCEPTED: aligned stack
+Frontend:  5,000 ms (user experience boundary — unchanged)
+Gateway:  10,000 ms (2× frontend — upstream has enough time)
+Upstream:  8,000 ms (within gateway window)
+```
+
+**التبرير:** 25,000ms gap causes Railway to log 499 (client cancellation) instead of 500/502/503. The 499 at 595ms during incidents is a Runtime Visibility failure caused by missing observability — not a timeout failure.
+
+**قواعد دستورية (تُطبَّق بـ Policy CI):**
+- ❌ FORBIDDEN: `client.on('error', () => {})` — empty error handlers on critical clients
+- ❌ FORBIDDEN: Health endpoints that return conclusions without evidence
+- ✅ REQUIRED: Centralized health runtime — no distributed polling of the same signal
+- ✅ REQUIRED: Timeout alignment across frontend → gateway → upstream
+
+**الـ violations المفتوحة:** NEW-K, NEW-N, NEW-O, NEW-L في C-40
+
+**References:** C-96 Platform Runtime & Observability Constitution
 
 ---
 

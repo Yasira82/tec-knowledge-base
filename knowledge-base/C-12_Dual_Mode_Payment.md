@@ -1,6 +1,10 @@
 # C-12 — DUAL-MODE PAYMENT ARCHITECTURE
 ## أهم قاعدة معمارية في الـ Ecosystem
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[ADR Approved]` — ADR-002 + ADR-007 (C-76)
+> **Verification:** `[Code Verified]`
+
 ---
 
 ## ⚠️ READ THIS BEFORE ANY PAYMENT CODE

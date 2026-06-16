@@ -165,8 +165,8 @@ TOTAL: ~43/72 صحيح = ~40% دقة في الـ Tiers المتأثرة
 
 | Port Scheme | مصادر | Gateway | Services |
 |-------------|--------|---------|---------|
-| **Scheme A** | C-10, C-20, C-11 | `:3000` | `:5001`–`:5011` |
-| **Scheme B** | README, architecture/PLATFORM_ARCHITECTURE.md, C-100→C-115, memory/platform-snapshot.md | `:4000` | `:4001`–`:4011` |
+| **Scheme A** ✅ **CANONICAL** | C-10, C-20, C-11 (Code Verified) | `:3000` | `:5001`–`:5011` |
+| ~~Scheme B~~ **CORRECTED** | README + memory snapshot → updated to Scheme A | ~~:4000~~ | ~~:4001–:4011~~ |
 
 ### 3.2 الأثر
 
@@ -296,7 +296,7 @@ Commerce domain يظهر بصيغتين مختلفتين عبر المستندا
 | 1 | ✅ **تحديث C-57** — تصحيح 31 وصف خاطئ ليطابق الملفات الفعلية | C-57 | فُعِّل |
 | 2 | ✅ **تحديث C-40** — إغلاق NEW-C/E/F/G كـ VERIFIED | C-40 | فُعِّل |
 | 3 | ✅ **تحديث C-41** — tec-ui v1.2.1 ✅ + تحديث Phase 1 | C-41 | فُعِّل |
-| 4 | تثبيت Port Authority — اختر Scheme A أو B وحدّث C-10 أو README | C-10/README | مطلوب |
+| 4 | ~~تثبيت Port Authority~~ | ✅ **RESOLVED** — Scheme A (C-20 Code Verified) هو الـ canonical. README + memory snapshot محدَّثين. | |
 | 5 | تصحيح Commerce domain — `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` | C-01/C-68 | مطلوب |
 
 ### P1 — يُنفَّذ في Session القادمة

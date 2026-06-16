@@ -45,10 +45,11 @@ Pi SDK Mode: PI_SANDBOX=false (Mainnet)
 ## Backend Services (Railway — 12 Active)
 
 ```
-Gateway  :4000  │  Auth    :4001  │  Payment :4002  │  Commerce :4003
-Identity :4004  │  KYC     :4005  │  Asset   :4006  │  Analytics:4007
-Notify   :4008  │  Realtime:4009  │  Storage :4010  │  Wallet   :4011
+Gateway :3000  │  Auth    :5001  │  Wallet   :5002  │  Payment :5003
+Identity:5004  │  Commerce:5005  │  Storage  :5006  │  Notify  :5007
+KYC     :5008  │  Asset   :5009  │  Realtime :5010  │  Analytics:5011
 ```
+Port Authority: C-20 Backend Services Map (Code Verified)
 
 INTERNAL_SECRET: ✅ Set on all 4 critical services (Railway)
 

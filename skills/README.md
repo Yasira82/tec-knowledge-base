@@ -10,6 +10,9 @@ All skills in this library follow the [SKILL.md standard](templates/new-skill/SK
 | [platform-architect](platform/platform-architect/SKILL.md) | CRITICAL | Any architectural decision — validates against C-47 |
 | [payment-expert](platform/payment-expert/SKILL.md) | CRITICAL | Any payment, ADR-007 guard, BFF payment route |
 | [security-reviewer](platform/security-reviewer/SKILL.md) | CRITICAL | Any PR review, auth change, sensitive operation |
+| [charter-advisor](platform/charter-advisor/SKILL.md) | HIGH | Any app modification — load charter before touching app code |
+| [mcp-orchestrator](platform/mcp-orchestrator/SKILL.md) | HIGH | Using GitHub/Vercel/Railway/Supabase MCPs in TEC context |
+| [observability](platform/observability/SKILL.md) | HIGH | SLOs, incident response, circuit breaker, health monitoring |
 
 ## Engineering Skills
 
