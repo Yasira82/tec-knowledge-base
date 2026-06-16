@@ -123,7 +123,7 @@ Decision lineage, postmortems, superseded patterns — lives in C-96.
 | 3 | **Approved** | Verified + governance-approved |
 | 4 | **Active** | In use — informing capabilities |
 | 5 | **Superseded** | Replaced by newer knowledge — kept for lineage |
-| 6 | **Archived** | Retired — moved to Institutional Memory (C-96) |
+| 6 | **Archived** | Retired — moved to Institutional Memory (C-79) |
 
 > Unverified claims may not enter Active state.
 
@@ -148,7 +148,7 @@ Decision lineage, postmortems, superseded patterns — lives in C-96.
 |---------|---------|---------|
 | Institutional State | What is currently verified? | C-93 Institutional State Registry |
 | Knowledge | What is true, classified, and usable? | C-95 Knowledge Registry (KB) |
-| Memory | Why is it true? What led here? | C-96 Institutional Memory |
+| Memory | Why is it true? What led here? | C-79 Institutional Memory |
 
 > These three are distinct. Conflating them causes governance drift.
 
@@ -160,7 +160,7 @@ When knowledge is superseded:
 
 1. New knowledge must be verified (C-93)
 2. Old knowledge is marked `Superseded` with a pointer to the replacement
-3. Lineage is preserved in Institutional Memory (C-96)
+3. Lineage is preserved in Institutional Memory (C-79)
 4. Capabilities built on superseded knowledge enter **Review Mode**
 5. Governance Owner must ratify supersession of constitutional-level knowledge
 
@@ -200,7 +200,7 @@ DX **may NOT:**
 | Knowledge Base (C-Series, ADRs, Governance docs) | System of Knowledge |
 | C-93 Institutional State Registry | Feeds verified state into knowledge |
 | C-94 Governed Capability Registry | Consumes knowledge as capability input |
-| C-96 Institutional Memory Registry | Archives superseded knowledge |
+| C-79 Institutional Memory Registry | Archives superseded knowledge |
 
 ---
 
@@ -237,7 +237,7 @@ C-47  Kernel Spec & Architecture Binding
 C-67  Source of Truth Matrix
 C-93  Institutional Verification Constitution (upstream)
 C-94  Governed Capability Constitution (downstream)
-C-96  Institutional Memory Constitution (archival layer)
+C-79  Institutional Memory Constitution (archival layer)
 C-64  Architecture Decision Records (primary Knowledge Registry entries)
 ```
 

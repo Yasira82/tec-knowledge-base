@@ -86,7 +86,7 @@ Governance Policy Defined
 Governance Decision Made
 (ratified by appropriate authority)
   ↓
-Decision Recorded in Institutional Memory (C-96)
+Decision Recorded in Institutional Memory (C-79)
   ↓
 Policy Activated
   ↓
@@ -111,7 +111,7 @@ Enforcement via Runtime (C-84)
 - ADRs (C-64)
 - C-93 Institutional Verification Constitution
 - C-94 Governed Capability Constitution
-- C-95/C-96/C-97/C-98
+- C-95/C-97/C-98/C-79
 
 *Requires governance review. Changes logged as ADRs.*
 
@@ -150,7 +150,7 @@ When governance cannot resolve a decision:
 1. Domain Owner attempts resolution
 2. If unresolved → Architecture Authority
 3. If unresolved → Constitutional Authority (C-00 / C-47 / C-67)
-4. If unresolved → Founder Decision (logged in Institutional Memory C-96)
+4. If unresolved → Founder Decision (logged in Institutional Memory C-79)
 ```
 
 No governance decision may remain unresolved indefinitely.
@@ -247,7 +247,7 @@ C-99 is a **required Tier-1 component** of the Institutional Operating Loop:
 
 | Layer | Constitution | Role |
 |-------|-------------|------|
-| **Memory** | C-96 | How institutions preserve continuity |
+| **Memory** | C-79 | How institutions preserve continuity |
 | **Construction** | C-98 | How governed systems are built |
 
 ---

@@ -17,7 +17,8 @@
 | External (Session 3 audit) | 7.65/10 |
 | External (متوقع بعد الـ fixes) | **~8.5–9.0/10** |
 | Architectural Review (Session 8) | **9.1/10 overall** (Knowledge Architecture: 9.5+/10) |
-| Engineering Assessment (Session 9) | KB reconciliation: C-57 ✅ + C-40 ✅ + C-41 ✅ + C-93 created |
+| Engineering Assessment (Session 9) | KB reconciliation: C-57 ✅ + C-40 ✅ + C-41 ✅ + C-93→C-99 Institutional Loop |
+| **Code Verified Inspection (Session 9)** | **9.3/10 overall** — Architecture 8.7 / Security 8.9 / Gateway 8.3 / Health Runtime 6.5 / Observability 7.0 / KB 9.1 / Constitutional Governance 9.6 |
 | الهدف | **9.5/10** |
 
 ---
@@ -59,10 +60,13 @@
 | **C-93 Institutional Verification Constitution** | **✅** — v1.2 [Future Vision][Draft] — Tier-1 Constitutional Layer |
 | **C-94 Governed Capability Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
 | **C-95 Institutional Knowledge Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
-| **C-96 Institutional Memory Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.0 [Current State→Planned][Draft] — Health/Observability/Resilience + NEW-K/L/M violations |
 | **C-97 Context Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
 | **C-98 Institutional Construction Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset |
 | **C-99 Institutional Governance Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 — closes Institutional Operating Loop |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.0 [Current State→Planned][Draft] — Health/Observability/Availability/Resilience + NEW-K/L/M |
+| **C-79 Institutional Memory Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset (moved from C-96) |
+| **Code Verified Inspection (Session 9)** | **✅** — NEW-K/L/M documented — Tec-App + tec-api-gateway — 9.3/10 |
 
 ---
 
@@ -167,7 +171,7 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 | **C-93 — Institutional Verification Constitution** | v1.2 [Speculation][Draft] — Reality → Evidence → Institutional State → Authority |
 | **C-94 — Governed Capability Constitution** | v1.0 [Speculation][Draft] — Knowledge → Executable Capability |
 | **C-95 — Institutional Knowledge Constitution** | v1.0 [Speculation][Draft] — Institutional State → Knowledge |
-| **C-96 — Institutional Memory Constitution** | v1.0 [Speculation][Draft] — Tier-2: Decision History + Continuity |
+| **C-96 — Platform Runtime Constitution** | v1.0 [Current State→Planned][Draft] — Health · Observability · Availability · Resilience · NEW-K/L/M |
 | **C-97 — Context Constitution** | v1.0 [Speculation][Draft] — Capability → Applicable Action (applicability bridge) |
 | **C-98 — Institutional Construction Constitution** | v1.0 [Speculation][Draft] — Tier-2: DX Runtime + SDKs + Governed Assembly |
 | **C-99 — Institutional Governance Constitution** | v1.0 [Speculation][Draft] — Authority → Governance → Enforcement — closes the loop |
@@ -225,7 +229,10 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| External Re-Audit | **UNBLOCKED** — كل fixes على main ✅ — المتوقع 8.5–9.0/10 |
+| **NEW-K** | **P1 OPEN** — Duplicate Health Polling — إنشاء `PlatformHealthContext.tsx` |
+| **NEW-L** | **P1 OPEN** — Gateway Timeout 30s vs Frontend 5s — خفض لـ 10s |
+| **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
+| External Re-Audit | بعد حل NEW-K/L/M — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
 | Commerce Domain | `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` — يحتاج قرار |
 | Truth Framework | C-00→C-23 تحتاج Truth State headers — ~35% adoption فقط |
@@ -235,9 +242,11 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 ## NEXT 🔴 (Portal path)
 
 ```
-1. External Audit ← NEXT NOW (كل code fixes موجودة على main)
-2. Fix أي findings جديدة
-3. Portal Submission → Pi Network
+1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [Code Verified P1]
+2. Fix NEW-L  ← Gateway timeout: 30000 → 10000 (tec-api-gateway) [Code Verified P1]
+3. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [Code Verified P2]
+4. External Re-Audit → target 9.0–9.5/10
+5. Portal Submission → Pi Network
 ```
 
 ---
@@ -273,7 +282,7 @@ All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
 Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
 Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.4.0 — 101 docs + 16 skills + 16 charters + C-93→C-99 Institutional Operating Loop complete
+Knowledge Base:       ✅ v3.4.0 — 102 docs + 16 skills + 16 charters + C-93→C-99 + C-96 Platform Runtime Constitution
 Pending PRs:          NONE — all fixes on main ✅
 NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```

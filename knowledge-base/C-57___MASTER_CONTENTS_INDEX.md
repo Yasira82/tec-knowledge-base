@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 101 Content (C-00 → C-115)
+## دليل سريع للـ 102 Content (C-00 → C-115)
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -91,7 +91,7 @@
 | **C-54** | Package Management | npm Publish Sequence + update protocol |
 | **C-55** | Scoring & Audit Strategy | الـ Score الحقيقي + كيف توصل لـ 9.5 |
 | **C-56** | Redis Streams Events Map | Event bus architecture — من الكود الفعلي |
-| **C-57** | Master Contents Index (this file) | Complete index of all 101 contents — corrected in Session 9 |
+| **C-57** | Master Contents Index (this file) | Complete index of all 102 contents — corrected in Session 9 |
 | **C-58** | Hub Completion Plan | KYC + Subscription + Notifications — ما تبقى للـ Mainnet |
 
 ---
@@ -152,14 +152,15 @@
 | **C-93** | Institutional Verification Constitution | Reality → Evidence → Institutional State → Authority |
 | **C-94** | Governed Capability Constitution | Knowledge → Executable Capability |
 | **C-95** | Institutional Knowledge Constitution | Institutional State → Knowledge |
+| **C-96** | Platform Runtime Constitution | Health · Observability · Availability · Resilience · Runtime Ownership |
 | **C-97** | Context Constitution | Capability → Appropriate Action (applicability bridge) |
 | **C-99** | Institutional Governance Constitution | Authority → Governance → Enforcement |
 
-### Tier-2 Constitutional Assets (Continuity)
+### Tier-2 Constitutional Assets (Continuity + Construction)
 
 | Content | العنوان | الدور |
 |---------|---------|-------|
-| **C-96** | Institutional Memory Constitution | Decision History + ADR Lineage + Continuity |
+| **C-79** | Institutional Memory Constitution | Decision History + ADR Lineage + Continuity |
 | **C-98** | Institutional Construction Constitution | DX Runtime + SDKs + Templates + Governed Assembly |
 
 ---
@@ -224,7 +225,8 @@
 | Institutional verification model | **C-93** |
 | Governed capability model | **C-94** |
 | Institutional knowledge model | **C-95** |
-| Institutional memory + continuity | **C-96** |
+| Institutional memory + continuity | **C-79** |
+| Platform runtime constitution (Health/Observability) | **C-96** |
 | Context + applicability model | **C-97** |
 | Construction + DX constitution | **C-98** |
 | Governance + authority model | **C-99** |
@@ -248,6 +250,8 @@ C-93  Institutional Verification Constitution  [Tier-1 — Verification → Stat
 C-95  Institutional Knowledge Constitution     [Tier-1 — State → Knowledge]
   ↓
 C-94  Governed Capability Constitution         [Tier-1 — Knowledge → Capability]
+  ↓
+C-96  Platform Runtime Constitution            [Tier-1 — Health · Observability · Runtime Obligations]
   ↓
 C-97  Context Constitution                     [Tier-1 — Capability → Applicable Action]
   ↓

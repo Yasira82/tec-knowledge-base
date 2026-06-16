@@ -1,4 +1,4 @@
-# C-96 — Institutional Memory Constitution
+# C-79 — Institutional Memory Constitution
 
 > **Version:** v1.0
 > **Truth State:** `[Speculation]`
@@ -74,7 +74,7 @@ Memory without Provenance          = Untrustworthy History
 | Concept | Question | Lifecycle |
 |---------|----------|-----------|
 | **Knowledge** (C-95) | What is true now? | Active → Superseded |
-| **Memory** (C-96) | Why is/was it true? | Permanent — never deleted |
+| **Memory** (C-79) | Why is/was it true? | Permanent — never deleted |
 
 > Memory is append-only. History cannot be revised.
 > Memory is not operational. Memory is contextual.

@@ -4,7 +4,7 @@
 > Load this file at session start for instant platform context.
 > For full details → C-02___CURRENT_STATE_.md
 
-**Snapshot Version:** v3.4.0 | **Last Updated:** 16 June 2026
+**Snapshot Version:** v3.4.1 | **Last Updated:** 16 June 2026
 
 ---
 
@@ -159,14 +159,27 @@ tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [4 apps simulta
 
 ---
 
-## Next Actions (from C-02 Session 9)
+## Next Actions (from C-02 Session 9 — Code Verified)
 
 ```
-1. External Re-Audit → target 8.5–9.0/10 (كل fixes على main ✅)
-2. Fix port conflict: C-10/C-20 (5001) vs README/Charters (4001)
-3. Fix Commerce domain: tec-commerce-app.vercel.app vs commerce.tecosystem.app
-4. Add Truth State headers to C-00→C-23 (~35% coverage now)
+1. Fix NEW-K  ← PlatformHealthContext.tsx in Tec-App [P1 Code Verified]
+2. Fix NEW-L  ← Gateway timeout 30s → 10s in tec-api-gateway [P1 Code Verified]
+3. Fix NEW-M  ← service-registry.ts in tec-api-gateway [P2 Code Verified]
+4. External Re-Audit → target 9.0–9.5/10
 5. Pi Developer Portal submission
+```
+
+## Code Verified Scores (June 2026)
+
+```
+Architecture:             8.7/10
+Security:                 8.9/10
+Gateway:                  8.3/10
+Health Runtime:           6.5/10  ← NEW-K/L (open violations)
+Observability:            7.0/10
+Knowledge Base:           9.1/10
+Constitutional Governance: 9.6/10
+Overall:                  9.3/10
 ```
 
 ---
