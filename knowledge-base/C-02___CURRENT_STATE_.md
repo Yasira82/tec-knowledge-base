@@ -55,8 +55,9 @@
 | **Ecommerce payment fix** | **✅** — x-internal-key sent only when INTERNAL_SECRET SET (commit 5d44c501) |
 | **Knowledge Base v3.1.0** | **✅ Phase 1+2+3+4** — Skills + MCP + Commands + CI + C-02 updated |
 | **C-92 Platform Health Model** | **✅** — 5 dimensions × state machine × PHS composite score × dashboard spec × manual checklist |
-| **Engineering Assessment (Session 9)** | **✅** — C-94 (Assessment) + C-57 reconciled (31 fixes) + C-40/C-41 synced + governance renamed |
+| **Engineering Assessment (Session 9)** | **✅** — C-95 (Assessment) + C-57 reconciled (31 fixes) + C-40/C-41 synced + governance renamed |
 | **C-93 Institutional Verification Constitution** | **✅** — v1.2 [Future Vision][Draft] — Tier-1 Constitutional Layer |
+| **C-94 Governed Capability Constitution** | **✅** — v1.0 [Future Vision][Draft] — Tier-1 Constitutional Layer |
 
 ---
 
@@ -152,12 +153,13 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 
 ## KNOWLEDGE BASE (Session 9) ✅
 
-### C-93 Institutional Verification Constitution + C-94 Engineering Assessment + Knowledge Base Reconciliation
+### C-93 + C-94 Institutional Constitutions + C-95 Engineering Assessment + Knowledge Base Reconciliation
 
 | التغيير | التفاصيل |
 |---------|----------|
-| **C-93 — Institutional Verification Constitution** | v1.2 [Future Vision][Draft] — Tier-1 Constitutional Layer: How reality becomes verified institutional state |
-| **C-94 — Engineering Assessment Report** | تقرير مراجعة هندسية شامل: 94 ملف تم مراجعتهم، 10 أقسام تحليلية |
+| **C-93 — Institutional Verification Constitution** | v1.2 [Future Vision][Draft] — Tier-1: How reality becomes verified institutional state |
+| **C-94 — Governed Capability Constitution** | v1.0 [Future Vision][Draft] — Tier-1: How institutional knowledge becomes executable capability |
+| **C-95 — Engineering Assessment Report** | تقرير مراجعة هندسية شامل: 95 ملف تم مراجعتهم، 10 أقسام تحليلية |
 | **C-57 — RECONCILED** | تم تصحيح 31+ وصف مغلوط في TIER 2→6B ليطابق الملفات الفعلية |
 | **C-40 — SYNCED** | إغلاق NEW-C/E/F/G كـ VERIFIED + Ecommerce PR #25 closed |
 | **C-41 — UPDATED** | tec-ui v1.2.1 ✅ + Phase 1 P2 violations ✅ + External Audit ← NEXT |
@@ -259,7 +261,7 @@ All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
 Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
 Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.3.0 — 94 docs + 16 skills + 16 charters + C-93 Verification Constitution + C-94 Assessment
+Knowledge Base:       ✅ v3.3.0 — 95 docs + 16 skills + 16 charters + C-93 Verification + C-94 Capability + C-95 Assessment
 Pending PRs:          NONE — all fixes on main ✅
 NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```
