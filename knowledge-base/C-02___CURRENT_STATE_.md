@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 15 June 2026 (Session 8)
+**Last Updated:** 16 June 2026 (Session 9)
 
 ---
 
@@ -17,6 +17,12 @@
 | External (Session 3 audit) | 7.65/10 |
 | External (متوقع بعد الـ fixes) | **~8.5–9.0/10** |
 | Architectural Review (Session 8) | **9.1/10 overall** (Knowledge Architecture: 9.5+/10) |
+| Engineering Assessment (Session 9) | KB reconciliation: C-57 ✅ + C-40 ✅ + C-41 ✅ + C-93→C-99 Institutional Loop |
+| **Code Verified Inspection (Session 9)** | **9.3/10 overall** — Architecture 8.7 / Security 8.9 / Gateway **8.6** / Runtime Visibility **7.8** / Observability **8.2** / KB 9.1 / Constitutional Governance **9.8** |
+| **ADR-008 — Runtime Observability Architecture** | **✅** — ACCEPTED · June 2026 · ADR-008a/b/c/d: Health Runtime + Redis + Evidence Endpoint + Timeout |
+| **Port Conflict Resolved** | **✅** — Canonical: Gateway `:3000` / Services `:5001–5011` (C-20 Code Verified) — README + memory updated |
+| **Truth State Rollout** | **✅** — Added to C-00, C-10, C-12, C-20, C-64 (5 core docs) |
+| **Skills README** | **✅** — Updated 13→16 (added charter-advisor, mcp-orchestrator, observability) |
 | الهدف | **9.5/10** |
 
 ---
@@ -54,6 +60,17 @@
 | **Ecommerce payment fix** | **✅** — x-internal-key sent only when INTERNAL_SECRET SET (commit 5d44c501) |
 | **Knowledge Base v3.1.0** | **✅ Phase 1+2+3+4** — Skills + MCP + Commands + CI + C-02 updated |
 | **C-92 Platform Health Model** | **✅** — 5 dimensions × state machine × PHS composite score × dashboard spec × manual checklist |
+| **Engineering Assessment (Session 9)** | **✅** — C-95 (Assessment) + C-57 reconciled (31 fixes) + C-40/C-41 synced + governance renamed |
+| **C-93 Institutional Verification Constitution** | **✅** — v1.2 [Future Vision][Draft] — Tier-1 Constitutional Layer |
+| **C-94 Governed Capability Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
+| **C-95 Institutional Knowledge Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.0 [Current State→Planned][Draft] — Health/Observability/Resilience + NEW-K/L/M violations |
+| **C-97 Context Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
+| **C-98 Institutional Construction Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset |
+| **C-99 Institutional Governance Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 — closes Institutional Operating Loop |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.0 [Current State→Planned][Draft] — Health/Observability/Availability/Resilience + NEW-K/L/M |
+| **C-79 Institutional Memory Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset (moved from C-96) |
+| **Code Verified Inspection (Session 9)** | **✅** — NEW-K/L/M documented — Tec-App + tec-api-gateway — 9.3/10 |
 
 ---
 
@@ -147,6 +164,46 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 
 ---
 
+## KNOWLEDGE BASE (Session 9) ✅
+
+### Institutional Operating Loop Constitutions (C-93→C-99) + C-80 Assessment
+
+**Tier-1 Constitutional Layer — Institutional Operating Loop:**
+
+| التغيير | التفاصيل |
+|---------|----------|
+| **C-93 — Institutional Verification Constitution** | v1.2 [Speculation][Draft] — Reality → Evidence → Institutional State → Authority |
+| **C-94 — Governed Capability Constitution** | v1.0 [Speculation][Draft] — Knowledge → Executable Capability |
+| **C-95 — Institutional Knowledge Constitution** | v1.0 [Speculation][Draft] — Institutional State → Knowledge |
+| **C-96 — Platform Runtime Constitution** | v1.0 [Current State→Planned][Draft] — Health · Observability · Availability · Resilience · NEW-K/L/M |
+| **C-97 — Context Constitution** | v1.0 [Speculation][Draft] — Capability → Applicable Action (applicability bridge) |
+| **C-98 — Institutional Construction Constitution** | v1.0 [Speculation][Draft] — Tier-2: DX Runtime + SDKs + Governed Assembly |
+| **C-99 — Institutional Governance Constitution** | v1.0 [Speculation][Draft] — Authority → Governance → Enforcement — closes the loop |
+| **C-80 — Engineering Assessment Report** | تقرير مراجعة هندسية شامل (نُقل من C-95) |
+| **C-57 — RECONCILED** | تم تصحيح 31+ وصف مغلوط في TIER 2→6B ليطابق الملفات الفعلية |
+| **C-40 — SYNCED** | إغلاق NEW-C/E/F/G كـ VERIFIED + Ecommerce PR #25 closed |
+| **C-41 — UPDATED** | tec-ui v1.2.1 ✅ + Phase 1 P2 violations ✅ + External Audit ← NEXT |
+| **governance/ file** | إعادة تسمية إلى `TEC_GOVERNANCE_CHARTER_v1.2.md` لتطابق المحتوى |
+| **README.md** | Skills count 15→16 + KB count 91→93 + C-93 في Quick Navigation |
+
+### Gap Findings Summary (→ C-93 for full detail)
+
+```
+Critical (P0) — تم إصلاحه:
+✅ C-57 index: 31 وصف مغلوط → تم التصحيح
+✅ C-40 stale: 4 violations مفتوحة بعد إغلاقها → تم التزامن
+✅ C-41 stale: tec-ui blocker بعد نشره → تم التحديث
+✅ governance filename مش مطابق للـ content version → تم التصحيح
+
+Remaining (P1) — مطلوب في Session القادمة:
+⚠️ Port conflict: C-10/C-20 (port 3000/5001) vs README/charters (4000/4001)
+⚠️ Commerce domain split: tec-commerce-app.vercel.app vs commerce.tecosystem.app
+⚠️ Truth Framework adoption: ~35% only — C-00→C-23 تحتاج Truth State headers
+⚠️ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ — يحتاج دمج أو أرشفة
+```
+
+---
+
 ## KNOWLEDGE BASE (Session 8) ✅
 
 ### C-92 Platform Health Model
@@ -176,16 +233,28 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| External Re-Audit | **UNBLOCKED** — كل fixes على main ✅ — المتوقع 8.5–9.0/10 |
+| **NEW-K** | **P1 OPEN** — Duplicate Health Polling → Split Runtime View — إنشاء `PlatformHealthContext.tsx` |
+| **NEW-N** | **P1 OPEN** — Redis `client.on('error', () => {})` — Silent Runtime — خرق C-00 "No Runtime Without Events" |
+| **NEW-O** | **P1 OPEN** — Health Endpoint لا يُعيد runtime evidence — إنشاء `/api/health/details` |
+| **NEW-L** | **P1 OPEN** — Gateway Timeout 30s vs Frontend 5s (499 @ 595ms = visibility gap) — خفض لـ 10s |
+| **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
+| External Re-Audit | بعد حل NEW-K/L/M — المتوقع 9.0–9.5/10 |
+| Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
+| Commerce Domain | `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` — يحتاج قرار |
+| Truth Framework | C-00→C-23 تحتاج Truth State headers — ~35% adoption فقط |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. External Audit ← NEXT NOW (كل code fixes موجودة على main)
-2. Fix أي findings جديدة
-3. Portal Submission → Pi Network
+1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [P1]
+2. Fix NEW-N  ← Redis Diagnostics — 5 event listeners (tec-api-gateway) [P1]
+3. Fix NEW-O  ← /api/health/details endpoint (tec-api-gateway) [P1]
+4. Fix NEW-L  ← Gateway timeout: 30000 → 10000 (tec-api-gateway) [P1]
+5. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
+6. External Re-Audit → target 9.0–9.5/10
+7. Portal Submission → Pi Network
 ```
 
 ---
@@ -221,7 +290,7 @@ All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
 Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
 Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.2.0 — 92 docs + 16 skills + 16 charters + C-92 Health Model
+Knowledge Base:       ✅ v3.4.0 — 102 docs + 16 skills + 16 charters + C-93→C-99 + C-96 Platform Runtime Constitution
 Pending PRs:          NONE — all fixes on main ✅
 NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```

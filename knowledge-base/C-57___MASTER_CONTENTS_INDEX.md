@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 92 Content (C-00 → C-115)
+## دليل سريع للـ 102 Content (C-00 → C-115)
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -32,13 +32,13 @@
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-10** | Architecture Overview | Monorepo + layer structure |
-| **C-11** | Two-SDK Boundary Rules | Client vs Server SDK separation |
+| **C-10** | System Architecture | 3-Layer Architecture + Services Map |
+| **C-11** | Repository Map | 9 repos — roles + key files + patterns |
 | **C-12** | Dual-Mode Payment | Mode 1 (Hub) + Mode 2 (Direct) |
-| **C-13** | App Routing & Navigation | Inter-app URL contracts |
-| **C-14** | CORS & Security Headers | Allowed origins + header policy |
-| **C-15** | BFF Pattern Spec | /api/bff/* pattern — server-only |
-| **C-16** | Cookie Contract | tec_access_token + tec_csrf + tec_user |
+| **C-13** | Auth & SSO Architecture | Pi Login → JWT → Cookies → Cross-App SSO |
+| **C-14** | Shared Packages | @yasser172/* — tec-auth + tec-ui + tec-sdk + tec-shared |
+| **C-15** | Security Rules | Non-Negotiable rules — Policy CI enforces |
+| **C-16** | Database Rules | Financial Integrity + Isolation + Patterns |
 
 ---
 
@@ -46,10 +46,10 @@
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-20** | Core Backend Architecture | 12 Railway services + ports + ownership |
-| **C-21** | App Architecture (4 Apps) | Hub + Commerce + Assets + Ecommerce |
-| **C-22** | SDK Architecture (tec-sdk) | BFF SDK contracts + Zod validation |
-| **C-23** | Auth Package (tec-auth) | SSO hooks + cookie parsing + middleware |
+| **C-20** | Backend Services Map | 12 Railway microservices + ports + URLs + patterns |
+| **C-21** | Hub App | hub.tecosystem.app — Core Identity + Payment Hub |
+| **C-22** | Commerce + Assets + Ecommerce Apps | الـ 3 apps الجاهزة — patterns + status |
+| **C-23** | TEC-SDK | @yasser172/tec-sdk v1.2.2 — internals + BFF SDK contracts |
 
 ---
 
@@ -67,15 +67,16 @@
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-41** | Engineering Roadmap | Phase 0→3 milestones + app-level targets |
-| **C-42** | P1 Violations Register | Active + closed violations with status |
-| **C-43** | CI/CD & DevOps | Pipeline spec + deploy gates |
-| **C-44** | Testing Strategy | Coverage targets + patterns per layer |
-| **C-45** | API Design Rules | RESTful contracts + versioning |
-| **C-46** | Database Governance | Schema rules + migration protocol |
+| **C-40** | Open Violations Map | P0→P2 violations — lifecycle + status + remediation |
+| **C-41** | Engineering Roadmap | Phase 0→3 milestones + Portal readiness |
+| **C-42** | Testing Strategy | Jest + Vitest + Playwright + k6 — coverage targets |
+| **C-43** | CI/CD & DevOps | GitHub Actions + Railway + Vercel pipelines |
+| **C-44** | Environment Variables Reference | كل الـ env vars في الـ 9 repos |
+| **C-45** | Observability & Monitoring | Sentry + Pino + Prometheus + Redis |
+| **C-46** | Commercial Growth Strategy | Revenue model + growth phases + competitive advantage |
 | **C-47** | Kernel Spec (Architecture Binding) | P6 Fail Closed + 10 Forbidden + enforcement map |
-| **C-48** | Performance Budget | SLA targets per service + frontend |
-| **C-49** | Dependency Policy | npm + semver + upgrade rules |
+| **C-48** | Engineering Audit Report (May 2026) | Full code audit — 9 repos — findings + fixes |
+| **C-49** | Engineering Work Map | خريطة العمل الهندسية الشاملة |
 
 ---
 
@@ -83,15 +84,15 @@
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-50** | Session Protocol | Session start + working rules |
-| **C-51** | Commit Convention | feat/fix/test/chore + scope rules |
-| **C-52** | PR Protocol | PR structure + review gates |
-| **C-53** | Incident Protocol | P0→P3 response + rollback |
-| **C-54** | Migration Protocol | Expand-contract pattern |
-| **C-55** | Decision Log | Key architectural decisions |
-| **C-56** | Glossary | Platform terminology |
-| **C-57** | Master Contents Index (this file) | Complete index of all 92 contents |
-| **C-58** | Knowledge Base Governance | How the KB is maintained |
+| **C-50** | Session Log | Latest updates + decisions per session |
+| **C-51** | Cookie Architecture | Pi Browser WebView requirements + intentional decisions |
+| **C-52** | Protected Files Map | ملفات لا تُعدَّل بدون طلب صريح |
+| **C-53** | New App Creation Protocol | الخطوات الكاملة لبناء أي app جديدة |
+| **C-54** | Package Management | npm Publish Sequence + update protocol |
+| **C-55** | Scoring & Audit Strategy | الـ Score الحقيقي + كيف توصل لـ 9.5 |
+| **C-56** | Redis Streams Events Map | Event bus architecture — من الكود الفعلي |
+| **C-57** | Master Contents Index (this file) | Complete index of all 102 contents — corrected in Session 9 |
+| **C-58** | Hub Completion Plan | KYC + Subscription + Notifications — ما تبقى للـ Mainnet |
 
 ---
 
@@ -99,14 +100,14 @@
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-59** | Component Template | Standard React component pattern |
-| **C-60** | BFF Route Template | Standard /api/bff/* route pattern |
-| **C-61** | Service Template | Standard Railway service pattern |
-| **C-62** | Test Template | Vitest + Pi mock patterns |
+| **C-59** | Unified Error Response Format | Enterprise error standard — كل services + BFF routes |
+| **C-60** | Code Templates | Copy-paste patterns — كل template جاهز للـ paste |
+| **C-61** | TypeScript Shared Types Strategy | منع Type Drift بين الـ 9 repos |
+| **C-62** | SLO Definitions & Performance Standards | Service Level Objectives — Enterprise Grade |
 | **C-63** | Pi Network Integration Rules | Pi SDK patterns + known behaviors |
 | **C-64** | Architecture Decision Records | ADR-001→ADR-007 + ADR system |
-| **C-65** | Code Quality Standards | TypeScript strict + linting rules |
-| **C-66** | Security Checklist | Pre-deploy security verification |
+| **C-65** | New Backend Service Template | NestJS service scaffold — نسخ ولصق جاهز |
+| **C-66** | Hub Features Code Guide | KYC + Subscription + Notifications — كود جاهز للتنفيذ |
 
 ---
 
@@ -129,7 +130,7 @@
 
 ---
 
-## TIER 7 — Governance + Execution (C-87→C-92)
+## TIER 7A — Governance + Execution (C-87→C-92)
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
@@ -138,7 +139,37 @@
 | **C-89** | Developer Platform Governance | DX rules + contribution gates + SDK contracts |
 | **C-90** | Security Trust Model | Zero-trust + identity chain + threat model |
 | **C-91** | Engineering Roadmap to Scale | Scale gates + infrastructure evolution path |
-| **C-92** | Platform Health Model | Health dimensions × state machine × dashboard spec |
+| **C-92** | Platform Health Model / Institutional Intelligence Constitution | Health model × Tier-1: How institutions reason |
+
+---
+
+## TIER 7B — Institutional Operating Loop (C-93→C-99)
+
+### Tier-1 Constitutional Layer (Operating Loop)
+
+| Content | العنوان | الدور في الحلقة |
+|---------|---------|-----------------|
+| **C-93** | Institutional Verification Constitution | Reality → Evidence → Institutional State → Authority |
+| **C-94** | Governed Capability Constitution | Knowledge → Executable Capability |
+| **C-95** | Institutional Knowledge Constitution | Institutional State → Knowledge |
+| **C-96** | Platform Runtime & Observability Constitution | Health · Observability · Runtime Evidence · 499 Incident Analysis |
+| **C-97** | Context Constitution | Capability → Appropriate Action (applicability bridge) |
+| **C-99** | Institutional Governance Constitution | Authority → Governance → Enforcement |
+
+### Tier-2 Constitutional Assets (Continuity + Construction)
+
+| Content | العنوان | الدور |
+|---------|---------|-------|
+| **C-79** | Institutional Memory Constitution | Decision History + ADR Lineage + Continuity |
+| **C-98** | Institutional Construction Constitution | DX Runtime + SDKs + Templates + Governed Assembly |
+
+---
+
+## TIER 7C — Engineering Assessment
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-80** | Engineering Assessment Report | Knowledge Base gap analysis + remediation plan (June 2026) |
 
 ---
 
@@ -174,18 +205,32 @@
 | Find an ADR | **C-64** |
 | Understand kernel rules | **C-47** |
 | Check domain ownership | **C-68** |
-| Find violation status | **C-42** |
+| Find violation status | **C-40** |
 | Check release process | **C-75** |
 | Understand event contracts | **C-70** |
 | Find financial rules | **C-71** |
-| Check auth/SSO pattern | **C-16** + **C-23** |
-| Plan a new app | **C-31** + App Charter |
-| Check security rules | **C-90** + **C-66** |
+| Check auth/SSO pattern | **C-13** + **C-51** |
+| Find shared package docs | **C-14** |
+| Find SDK docs | **C-23** |
+| Plan a new app | **C-53** + App Charter |
+| Check security rules | **C-15** + **C-90** |
 | Check platform health | **C-92** |
 | Understand operations | **C-78** |
 | Find App Charter | **C-100→C-115** |
 | Check risk register | **C-77** |
 | Economic Layer mapping | **C-30** + App Charter |
+| Check all repo map | **C-11** |
+| Environment variables | **C-44** |
+| Check observability/SLOs | **C-45** + **C-62** |
+| Institutional verification model | **C-93** |
+| Governed capability model | **C-94** |
+| Institutional knowledge model | **C-95** |
+| Institutional memory + continuity | **C-79** |
+| Platform runtime + observability + incident evidence | **C-96** |
+| Context + applicability model | **C-97** |
+| Construction + DX constitution | **C-98** |
+| Governance + authority model | **C-99** |
+| Engineering gap report | **C-80** |
 
 ---
 
@@ -199,6 +244,18 @@ C-47  Kernel Spec (Architecture Binding)
 C-67  Source of Truth Matrix
   ↓
 ADRs  (C-64: ADR-001 → ADR-007)
+  ↓
+C-93  Institutional Verification Constitution  [Tier-1 — Verification → State → Authority]
+  ↓
+C-95  Institutional Knowledge Constitution     [Tier-1 — State → Knowledge]
+  ↓
+C-94  Governed Capability Constitution         [Tier-1 — Knowledge → Capability]
+  ↓
+C-96  Platform Runtime & Observability Constitution  [Tier-1 — Health · Evidence · Visibility · Resilience]
+  ↓
+C-97  Context Constitution                     [Tier-1 — Capability → Applicable Action]
+  ↓
+C-99  Institutional Governance Constitution    [Tier-1 — Authority → Governance → Enforcement]
   ↓
 C-77  Strategic Analysis + Risk
   ↓
@@ -224,12 +281,16 @@ Assumptions  ← lowest
 ```
 C-00→C-02  Constitution + Identity + Current State
 C-10→C-16  Architecture + Core Rules
-C-20→C-23  Backend + Apps + SDK + Auth
-C-30→C-32  Vision + Blueprints + Design
+C-20→C-23  Backend + Apps + SDK
+C-30→C-32  Vision + Blueprints
 C-40→C-49  Engineering + Roadmap + CI + Violations
 C-50→C-58  Session + Patterns + Protocols
 C-59→C-66  Templates + Code + Guides
 C-67→C-78  Governance + Integrity + Operations
-C-87→C-92  Future Vision + Execution + Health
+C-82→C-99  Future Vision + Execution + Institutional Operating Loop Constitutions
+C-80       Engineering Assessment Report (KB audit)
 C-100→C-115  App Institutional Charters
+
+⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
+   عناوين الملفات الفعلية. للتفاصيل → C-80
 ```

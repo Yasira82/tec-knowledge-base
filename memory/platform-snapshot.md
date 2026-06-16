@@ -4,7 +4,7 @@
 > Load this file at session start for instant platform context.
 > For full details → C-02___CURRENT_STATE_.md
 
-**Snapshot Version:** v3.2.0 | **Last Updated:** 15 June 2026
+**Snapshot Version:** v3.4.1 | **Last Updated:** 16 June 2026
 
 ---
 
@@ -45,10 +45,11 @@ Pi SDK Mode: PI_SANDBOX=false (Mainnet)
 ## Backend Services (Railway — 12 Active)
 
 ```
-Gateway  :4000  │  Auth    :4001  │  Payment :4002  │  Commerce :4003
-Identity :4004  │  KYC     :4005  │  Asset   :4006  │  Analytics:4007
-Notify   :4008  │  Realtime:4009  │  Storage :4010  │  Wallet   :4011
+Gateway :3000  │  Auth    :5001  │  Wallet   :5002  │  Payment :5003
+Identity:5004  │  Commerce:5005  │  Storage  :5006  │  Notify  :5007
+KYC     :5008  │  Asset   :5009  │  Realtime :5010  │  Analytics:5011
 ```
+Port Authority: C-20 Backend Services Map (Code Verified)
 
 INTERNAL_SECRET: ✅ Set on all 4 critical services (Railway)
 
@@ -159,13 +160,29 @@ tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [4 apps simulta
 
 ---
 
-## Next Actions (from C-02)
+## Next Actions (from C-02 Session 9 — Code Verified)
 
 ```
-1. Merge PRs #27 (Ecommerce) + #24 (Hub)
-2. External Re-Audit → target 8.5–9.0/10
-3. Fix any new audit findings
-4. Pi Developer Portal submission
+1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [P1]
+2. Fix NEW-N  ← Redis Diagnostics: 5 event listeners (tec-api-gateway) [P1]
+3. Fix NEW-O  ← /api/health/details endpoint (tec-api-gateway) [P1]
+4. Fix NEW-L  ← Gateway timeout 30s → 10s (tec-api-gateway) [P1]
+5. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
+6. External Re-Audit → target 9.0–9.5/10
+7. Pi Developer Portal submission
+```
+
+## Code Verified Scores (June 2026)
+
+```
+Architecture:             8.7/10
+Security:                 8.9/10
+Gateway:                  8.6/10
+Runtime Visibility:       7.8/10  ← NEW-K/N/O (open violations)
+Observability:            8.2/10
+Knowledge Base:           9.1/10
+Constitutional Governance: 9.6/10
+Overall:                  9.3/10
 ```
 
 ---

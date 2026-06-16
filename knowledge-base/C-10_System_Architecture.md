@@ -1,6 +1,11 @@
 # C-10 — SYSTEM ARCHITECTURE
 ## 3-Layer Architecture + Services Map
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+> **Port Authority:** C-20 — Gateway `:3000` / Services `:5001`–`:5011`
+
 ---
 
 ## 1. THE 3 LAYERS

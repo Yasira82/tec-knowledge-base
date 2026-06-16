@@ -1,6 +1,11 @@
 # C-20 — BACKEND SERVICES MAP
 ## 12 Microservices — Ports + URLs + Patterns
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]` — Canonical Port Authority for the platform
+> **Port Scheme:** Gateway `:3000` · Services `:5001`–`:5011` (supersedes any other reference)
+
 ---
 
 ## 1. SERVICE REGISTRY
