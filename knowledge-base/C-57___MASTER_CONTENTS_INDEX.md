@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 103 Content (C-00 → C-115)
+## دليل سريع للـ 96 Content (C-00 → C-115)
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -28,7 +28,7 @@
 
 ---
 
-## TIER 2 — Architecture + Rules (C-10→C-16)
+## TIER 2 — Architecture + Rules (C-10→C-19)
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
@@ -39,6 +39,9 @@
 | **C-14** | Shared Packages | @yasser172/* — tec-auth + tec-ui + tec-sdk + tec-shared |
 | **C-15** | Security Rules | Non-Negotiable rules — Policy CI enforces |
 | **C-16** | Database Rules | Financial Integrity + Isolation + Patterns |
+| **C-17** | Data Privacy, Retention & Compliance | Data classification + PII/KYC lifecycle + retention + data-subject rights |
+| **C-18** | Disaster Recovery & Backup | RPO/RTO targets + backup policy + restore drills + recovery ordering |
+| **C-19** | Fraud, Abuse & AML / Sanctions | Economic abuse controls + KYC-tiered limits + AML/SAR + sanctions screening |
 
 ---
 
@@ -215,6 +218,9 @@
 | Find SDK docs | **C-23** |
 | Plan a new app | **C-53** + App Charter |
 | Check security rules | **C-15** + **C-90** |
+| Handle privacy / KYC data / retention | **C-17** |
+| Plan disaster recovery / backups (RPO/RTO) | **C-18** |
+| Check fraud / AML / sanctions controls | **C-19** + **C-76** |
 | Check platform health | **C-92** |
 | Understand operations | **C-78** |
 | Find App Charter | **C-100→C-115** |
