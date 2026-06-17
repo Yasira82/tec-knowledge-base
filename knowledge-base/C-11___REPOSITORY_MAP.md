@@ -2,6 +2,10 @@
 
 9 Repos — Roles + Key Files + Patterns
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
 ## 1. Tec-core-backend (Backend Monorepo)
 
 GitHub: Yasira82/Tec-core-backend → Railway

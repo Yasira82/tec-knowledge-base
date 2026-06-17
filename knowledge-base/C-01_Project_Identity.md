@@ -1,6 +1,10 @@
 # C-01 — PROJECT IDENTITY
 ## TEC Ecosystem — من هو + الـ Vision + الـ Repos
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
 ---
 
 ## 1. WHO

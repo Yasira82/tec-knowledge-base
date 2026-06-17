@@ -1,6 +1,10 @@
 # C-21 — HUB APP
 ## hub.tecosystem.app — Core Identity + Payment Hub
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
 ---
 
 ## 1. ROLE

@@ -199,7 +199,7 @@ Critical (P0) — تم إصلاحه:
 
 Remaining (P1) — مطلوب في Session القادمة:
 ⚠️ Port conflict: C-10/C-20 (port 3000/5001) vs README/charters (4000/4001)
-⚠️ Commerce domain split: tec-commerce-app.vercel.app vs commerce.tecosystem.app
+✅ Commerce domain: محسوم — current=tec-commerce-app.vercel.app · target=commerce.tecosystem.app (C-101 canonical)
 ⚠️ Truth Framework adoption: ~35% only — C-00→C-23 تحتاج Truth State headers
 ⚠️ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ — يحتاج دمج أو أرشفة
 ```
@@ -248,8 +248,8 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 | **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
 | External Re-Audit | بعد NEW-K/L/N/O — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
-| Commerce Domain | `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` — يحتاج قرار |
-| Truth Framework | C-00→C-23 تحتاج Truth State headers — ~35% adoption فقط |
+| Commerce Domain | ✅ محسوم — Current live: `tec-commerce-app.vercel.app` · Target: `commerce.tecosystem.app` (custom domain pending) — canonical في C-101 |
+| Truth Framework | ✅ Tier الأساسي (C-00→C-23) مكتمل Truth+Governance State — الباقي قيد التبنّي التدريجي |
 
 ---
 

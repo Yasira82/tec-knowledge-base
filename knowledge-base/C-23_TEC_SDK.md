@@ -1,6 +1,10 @@
 # C-23 — TEC-SDK
 ## @yasser172/tec-sdk v1.2.2 — Internals + Usage
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
 ---
 
 ## 1. ARCHITECTURE
