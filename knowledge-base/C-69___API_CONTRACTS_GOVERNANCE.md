@@ -1,5 +1,10 @@
 # C-69 — API CONTRACTS GOVERNANCE
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 HTTP Contracts + Versioning + Compatibility Rules
 
 ⚠️ أي breaking API change بدون versioning = P1 violation

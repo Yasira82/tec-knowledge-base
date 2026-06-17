@@ -2,6 +2,11 @@
 
 ## TEC Ecosystem — Unified Operations Constitution
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 > Status: ACTIVE
 > Authority: Platform Governance Layer
 > Scope: Reliability, incidents, ownership, operations, degradation

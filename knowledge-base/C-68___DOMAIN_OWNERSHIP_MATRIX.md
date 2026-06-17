@@ -1,5 +1,10 @@
 # C-68 — DOMAIN OWNERSHIP MATRIX
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 Authority + Write Ownership + Read Rules
 
 ⚠️ هذا الـ content دستوري

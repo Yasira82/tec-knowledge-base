@@ -1,6 +1,11 @@
 # C-60 — CODE TEMPLATES
 ## Copy-Paste Patterns — كل template جاهز للـ paste
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 ---
 
 ## ⚠️ كيفية الاستخدام

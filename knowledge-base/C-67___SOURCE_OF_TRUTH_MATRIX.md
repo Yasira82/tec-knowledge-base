@@ -1,5 +1,10 @@
 # C-67 — SOURCE OF TRUTH MATRIX
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 Architecture Authority Map + Cross-Reference Constitution
 
 ## ⚠️ PURPOSE

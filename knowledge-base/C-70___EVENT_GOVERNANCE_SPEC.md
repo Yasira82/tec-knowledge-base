@@ -1,5 +1,10 @@
 # C-70 — EVENT GOVERNANCE SPEC
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 Redis Streams + Event Ownership + Payload Standards
 
 ⚠️ اقرأ C-56 أولاً للـ implementation details

@@ -1,5 +1,10 @@
 # C-63 — PI NETWORK INTEGRATION RULES
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
+
 Pi Browser + Pi SDK + Mainnet — القواعد الموحدة
 
 ⚠️ READ THIS BEFORE ANY Pi SDK CODE

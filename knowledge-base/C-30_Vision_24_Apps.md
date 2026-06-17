@@ -1,6 +1,11 @@
 # C-30 — PLATFORM VISION & 24 APPS ROADMAP
 ## Digital Economic Operating System for Pi Network
 
+> **Truth State:** `[Future Vision]`
+> **Governance State:** `[Draft]`
+> **Verification:** `[Documentation Verified]`
+
+
 ---
 
 ## 1. THE VISION

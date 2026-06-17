@@ -1,6 +1,11 @@
 # C-51 — COOKIE ARCHITECTURE
 ## Pi Browser WebView Requirements + Intentional Decisions
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
+
 ---
 
 ## ⚠️ القاعدة الأولى: لا تفلاج httpOnly:false كـ bug

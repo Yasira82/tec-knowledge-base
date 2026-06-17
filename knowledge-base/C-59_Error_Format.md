@@ -1,6 +1,11 @@
 # C-59 — UNIFIED ERROR RESPONSE FORMAT
 ## Enterprise Standard — كل الـ Services + BFF Routes
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+
 ---
 
 ## 1. THE STANDARD FORMAT

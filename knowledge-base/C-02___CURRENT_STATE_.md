@@ -249,7 +249,7 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 | External Re-Audit | بعد NEW-K/L/N/O — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
 | Commerce Domain | ✅ محسوم — Current live: `tec-commerce-app.vercel.app` · Target: `commerce.tecosystem.app` (custom domain pending) — canonical في C-101 |
-| Truth Framework | ✅ Tier الأساسي (C-00→C-23) مكتمل Truth+Governance State — الباقي قيد التبنّي التدريجي |
+| Truth Framework | ✅ مكتمل 100% — كل الـ 93 مستند C تحمل Truth State + Governance State |
 
 ---
 
