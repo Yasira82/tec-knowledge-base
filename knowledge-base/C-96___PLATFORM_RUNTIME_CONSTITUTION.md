@@ -331,14 +331,14 @@ Every service must expose:
 
 ---
 
-## Violation Register (Code Verified)
+## Violation Register (Code Verified + Applied)
 
 | ID | Severity | Finding | Remediation | Status |
 |----|---------|---------|-------------|--------|
-| NEW-K | P1 | Duplicate health polling — 2 independent pollers, split runtime view | `PlatformHealthContext.tsx` — single poller + cache + store | OPEN |
-| NEW-N | P1 | Redis `client.on('error', () => {})` — silent failure, violates C-00 | Add 5 Redis lifecycle event listeners with structured logging | OPEN |
-| NEW-O | P1 | `/api/health` returns `{ "status": "ok" }` only — zero evidence at incident time | `/api/health/details` (x-internal-key) with full runtime state | OPEN |
-| NEW-L | P1 | Gateway timeout 30s vs Frontend 5s — timeout contract misaligned | Set `timeout: 10000` in proxy.service.ts | OPEN |
+| NEW-K | P1 | Duplicate health polling — 2 independent pollers, split runtime view | `PlatformHealthContext.tsx` — single poller + cache + store | ✅ VERIFIED |
+| NEW-N | P1 | Redis `client.on('error', () => {})` — silent failure, violates C-00 | 5 Redis lifecycle event listeners with structured logging | ✅ VERIFIED |
+| NEW-O | P1 | `/api/health` returns `{ "status": "ok" }` only — zero evidence at incident time | `/api/health/details` (x-internal-key) with full runtime state | ✅ VERIFIED |
+| NEW-L | P1 | Gateway timeout 30s vs Frontend 5s — timeout contract misaligned | `timeout: 10000, proxyTimeout: 10000` in proxy.service.ts | ✅ VERIFIED |
 | NEW-M | P2 | Hardcoded service map in Gateway — blocks extensibility | Externalize to `service-registry.ts` | OPEN |
 
 ---
