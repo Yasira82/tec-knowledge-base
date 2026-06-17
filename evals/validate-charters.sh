@@ -67,12 +67,12 @@ for CHARTER in "${CHARTERS[@]}"; do
   fi
 
   # Check Authority Boundary section present
-  if ! grep -qi "Authority Boundary\|## Authority\|## 2\." "$FILE"; then
+  if ! grep -qi "Authority Boundary\|## Authority" "$FILE"; then
     ERRORS_IN_FILE+=("Missing Authority Boundary section")
   fi
 
   # Check Technical Architecture section present
-  if ! grep -qi "Technical Architecture\|## Architecture\|## Tech" "$FILE"; then
+  if ! grep -qi "Technical Architecture\|## Architecture" "$FILE"; then
     ERRORS_IN_FILE+=("Missing Technical Architecture section")
   fi
 
@@ -81,8 +81,8 @@ for CHARTER in "${CHARTERS[@]}"; do
     ERRORS_IN_FILE+=("Missing Security Model section")
   fi
 
-  # Check Engineering Updates present (P0/P1/P2 gap tracking)
-  if ! grep -qi "Engineering\|P0\|P1\|P2\|## Updates Required" "$FILE"; then
+  # Check Engineering Updates present (gap tracking)
+  if ! grep -qi "Engineering\|## Updates Required" "$FILE"; then
     ERRORS_IN_FILE+=("Missing Engineering Updates / gap tracking")
   fi
 

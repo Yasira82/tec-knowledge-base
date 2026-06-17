@@ -22,20 +22,26 @@ fi
 for FILE in $SKILL_FILES; do
   ERRORS_IN_FILE=()
 
-  # Check frontmatter exists
+  # Check frontmatter exists (must start on line 1)
   if ! head -1 "$FILE" | grep -q "^---"; then
     ERRORS_IN_FILE+=("Missing YAML frontmatter")
+    FRONTMATTER=""
+  else
+    # Extract only the YAML frontmatter block (between the first two '---' lines)
+    # so field checks cannot be satisfied by prose in the skill body.
+    FRONTMATTER=$(awk 'NR==1 && /^---[[:space:]]*$/ {infm=1; next} infm && /^---[[:space:]]*$/ {exit} infm {print}' "$FILE")
   fi
 
-  # Check required frontmatter fields
+  # Check required frontmatter fields (scoped to the frontmatter block).
+  # 'version:' may be nested under 'metadata:' so we allow leading whitespace.
   for FIELD in "name:" "description:" "version:"; do
-    if ! grep -q "$FIELD" "$FILE"; then
+    if ! printf '%s\n' "$FRONTMATTER" | grep -Eq "^[[:space:]]*$FIELD"; then
       ERRORS_IN_FILE+=("Missing frontmatter field: $FIELD")
     fi
   done
 
   # Check description is not empty
-  DESC=$(grep "^description:" "$FILE" | head -1 | sed 's/description: //;s/"//g')
+  DESC=$(printf '%s\n' "$FRONTMATTER" | grep -E "^[[:space:]]*description:" | head -1 | sed 's/.*description:[[:space:]]*//;s/"//g')
   if [ -z "$DESC" ]; then
     ERRORS_IN_FILE+=("Empty description")
   fi

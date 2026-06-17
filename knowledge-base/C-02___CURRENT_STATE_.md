@@ -201,7 +201,7 @@ Remaining (P1) — مطلوب في Session القادمة:
 ⚠️ Port conflict: C-10/C-20 (port 3000/5001) vs README/charters (4000/4001)
 ⚠️ Commerce domain split: tec-commerce-app.vercel.app vs commerce.tecosystem.app
 ⚠️ Truth Framework adoption: ~35% only — C-00→C-23 تحتاج Truth State headers
-⚠️ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ — يحتاج دمج أو أرشفة
+✅ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ → تمت أرشفته في knowledge-base/archive/ (C-47 هو الـ canonical)
 ```
 
 ---

@@ -8,7 +8,7 @@
 [![Apps](https://img.shields.io/badge/Live%20Apps-4-22c55e?style=flat-square)](#)
 [![Services](https://img.shields.io/badge/Railway%20Services-12-3b82f6?style=flat-square)](#)
 [![KB](https://img.shields.io/badge/KB%20Contents-C--00%20→%20C--115-8b5cf6?style=flat-square)](#)
-[![Version](https://img.shields.io/badge/KB%20Version-v3.2.0-10b981?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/KB%20Version-v3.4.0-10b981?style=flat-square)](#)
 
 ---
 
@@ -40,11 +40,11 @@ tec-knowledge-base/
 ├── README.md                          ← You are here
 ├── CLAUDE.md                          ← AI assistant navigation index (v3.2.0)
 │
-├── knowledge-base/                    ← 101 platform knowledge contents (C-00 → C-115)
+├── knowledge-base/                    ← 93 platform knowledge contents (C-00 → C-115)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
 │   ├── C-01 → C-99                   ← Architecture, Engineering, Governance, Institutional Operating Loop
 │   ├── C-100 → C-115                 ← App Institutional Charters
-│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 101 contents
+│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 93 contents
 │
 ├── skills/                            ← 16 Claude Code skills
 │   ├── platform/                      ← payment-expert, platform-architect, security-reviewer…
@@ -73,7 +73,7 @@ tec-knowledge-base/
 | [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Live platform state — score, violations, checklist |
 | [C-77 Strategic Analysis](knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md) | Risk register, execution roadmap |
 | [C-78 Operations](knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md) | SLOs, incidents, reliability |
-| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 102 contents indexed with quick lookup |
+| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 93 contents indexed with quick lookup |
 | [C-93 Institutional Verification Constitution](knowledge-base/C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md) | How reality becomes verified institutional state (Tier-1) |
 | [C-94 Governed Capability Constitution](knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md) | How knowledge becomes executable capability (Tier-1) |
 | [C-95 Institutional Knowledge Constitution](knowledge-base/C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md) | How institutional state becomes knowledge (Tier-1) |
@@ -247,5 +247,5 @@ Phase 1 — After Mainnet:
 
 ---
 
-*Knowledge Base v3.2.0 — June 2026*
+*Knowledge Base v3.4.0 — June 2026*
 *Authority: Yasser (CEO/Founder) | GitHub: Yasira82 | npm: @yasser172*

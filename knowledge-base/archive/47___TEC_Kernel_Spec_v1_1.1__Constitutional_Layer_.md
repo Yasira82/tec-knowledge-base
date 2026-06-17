@@ -1,3 +1,13 @@
+> **⚠️ ARCHIVED — Historical Reference Only**
+> **Truth State:** `[Future Vision]`
+> **Governance State:** `[Draft]`
+> **Status:** Superseded — the canonical, system-bound Kernel Spec is
+> [`C-47_Kernel_Spec_Architecture_Binding.md`](../C-47_Kernel_Spec_Architecture_Binding.md).
+> This file is the fuller "Authoritative Draft v1.1.1" retained for history.
+> Do not cite as current state. Resolves the orphan flagged in C-02 / C-80.
+
+---
+
 # 🟦 TEC Kernel Spec v1.1.1
 
 ## 🧠 Platform Constitutional Layer
