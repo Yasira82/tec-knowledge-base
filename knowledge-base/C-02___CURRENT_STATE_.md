@@ -233,11 +233,12 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| **NEW-K** | **P1 OPEN** — Duplicate Health Polling → Split Runtime View — إنشاء `PlatformHealthContext.tsx` |
-| **NEW-N** | **P1 OPEN** — Redis `client.on('error', () => {})` — Silent Runtime — خرق C-00 "No Runtime Without Events" |
-| **NEW-O** | **P1 OPEN** — Health Endpoint لا يُعيد runtime evidence — إنشاء `/api/health/details` |
-| **NEW-L** | **P1 OPEN** — Gateway Timeout 30s vs Frontend 5s (499 @ 595ms = visibility gap) — خفض لـ 10s |
+| **NEW-K** | **📋 DOCUMENTED** — Duplicate Health Polling — `PlatformHealthContext.tsx` كامل في C-81 |
+| **NEW-N** | **📋 DOCUMENTED** — Redis Silent Failure — 5 event listeners كاملة في C-81 |
+| **NEW-O** | **📋 DOCUMENTED** — Health Endpoint — `GET /api/health/details` NestJS كامل في C-81 |
+| **NEW-L** | **📋 DOCUMENTED** — Gateway Timeout 30s → 10s — في C-81 |
 | **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
+| **C-81 Implementation Guide** | **✅ CREATED** — كود كامل لـ 4 fixes جاهز للتطبيق على Tec-App + Tec-core-backend |
 | External Re-Audit | بعد حل NEW-K/L/M — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
 | Commerce Domain | `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` — يحتاج قرار |
@@ -248,13 +249,11 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [P1]
-2. Fix NEW-N  ← Redis Diagnostics — 5 event listeners (tec-api-gateway) [P1]
-3. Fix NEW-O  ← /api/health/details endpoint (tec-api-gateway) [P1]
-4. Fix NEW-L  ← Gateway timeout: 30000 → 10000 (tec-api-gateway) [P1]
-5. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
-6. External Re-Audit → target 9.0–9.5/10
-7. Portal Submission → Pi Network
+1. Apply C-81 to tec-api-gateway: NEW-L + NEW-N + NEW-O  ← كود جاهز في C-81
+2. Apply C-81 to Tec-App: NEW-K (PlatformHealthContext)  ← كود جاهز في C-81
+3. Run tests → Push PRs → Mark violations VERIFIED in C-40
+4. External Re-Audit → target 9.0–9.5/10
+5. Portal Submission → Pi Network
 ```
 
 ---
