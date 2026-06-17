@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 16 June 2026 (Session 9)
+**Last Updated:** 17 June 2026 (Session 10)
 
 ---
 
@@ -20,6 +20,7 @@
 | Engineering Assessment (Session 9) | KB reconciliation: C-57 ✅ + C-40 ✅ + C-41 ✅ + C-93→C-99 Institutional Loop |
 | **Code Verified Inspection (Session 9)** | **9.3/10 overall** — Architecture 8.7 / Security 8.9 / Gateway **8.6** / Runtime Visibility **7.8** / Observability **8.2** / KB 9.1 / Constitutional Governance **9.8** |
 | **ADR-008 — Runtime Observability Architecture** | **✅** — ACCEPTED · June 2026 · ADR-008a/b/c/d: Health Runtime + Redis + Evidence Endpoint + Timeout |
+| **P1 Fixes Applied (Session 10)** | **✅** — NEW-K/L/N/O all VERIFIED · C-81 Implementation Guide applied · PRI 8.22 → 8.8+/10 |
 | **Port Conflict Resolved** | **✅** — Canonical: Gateway `:3000` / Services `:5001–5011` (C-20 Code Verified) — README + memory updated |
 | **Truth State Rollout** | **✅** — Added to C-00, C-10, C-12, C-20, C-64 (5 core docs) |
 | **Skills README** | **✅** — Updated 13→16 (added charter-advisor, mcp-orchestrator, observability) |
@@ -64,13 +65,14 @@
 | **C-93 Institutional Verification Constitution** | **✅** — v1.2 [Future Vision][Draft] — Tier-1 Constitutional Layer |
 | **C-94 Governed Capability Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
 | **C-95 Institutional Knowledge Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
-| **C-96 Platform Runtime Constitution** | **✅** — v1.0 [Current State→Planned][Draft] — Health/Observability/Resilience + NEW-K/L/M violations |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.1 [Current State][Draft] — Health/Observability/Resilience — NEW-K/L/N/O ✅ VERIFIED |
 | **C-97 Context Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
 | **C-98 Institutional Construction Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset |
 | **C-99 Institutional Governance Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 — closes Institutional Operating Loop |
-| **C-96 Platform Runtime Constitution** | **✅** — v1.0 [Current State→Planned][Draft] — Health/Observability/Availability/Resilience + NEW-K/L/M |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.1 [Current State][Draft] — Health/Observability/Availability/Resilience — NEW-K/L/N/O ✅ VERIFIED |
 | **C-79 Institutional Memory Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset (moved from C-96) |
 | **Code Verified Inspection (Session 9)** | **✅** — NEW-K/L/M documented — Tec-App + tec-api-gateway — 9.3/10 |
+| **P1 Fixes Applied (Session 10)** | **✅** — NEW-K/L/N/O VERIFIED — C-81 implementation guide applied — PRI 8.22 → 8.8+ |
 
 ---
 
@@ -175,7 +177,7 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 | **C-93 — Institutional Verification Constitution** | v1.2 [Speculation][Draft] — Reality → Evidence → Institutional State → Authority |
 | **C-94 — Governed Capability Constitution** | v1.0 [Speculation][Draft] — Knowledge → Executable Capability |
 | **C-95 — Institutional Knowledge Constitution** | v1.0 [Speculation][Draft] — Institutional State → Knowledge |
-| **C-96 — Platform Runtime Constitution** | v1.0 [Current State→Planned][Draft] — Health · Observability · Availability · Resilience · NEW-K/L/M |
+| **C-96 — Platform Runtime Constitution** | v1.1 [Current State][Draft] — Health · Observability · Availability · Resilience — NEW-K/L/N/O ✅ VERIFIED |
 | **C-97 — Context Constitution** | v1.0 [Speculation][Draft] — Capability → Applicable Action (applicability bridge) |
 | **C-98 — Institutional Construction Constitution** | v1.0 [Speculation][Draft] — Tier-2: DX Runtime + SDKs + Governed Assembly |
 | **C-99 — Institutional Governance Constitution** | v1.0 [Speculation][Draft] — Authority → Governance → Enforcement — closes the loop |
@@ -229,16 +231,22 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 ---
 
+## VERIFIED ✅ (Session 10 — 17 June 2026)
+
+| Item | الحالة |
+|------|--------|
+| **NEW-K** | **✅ VERIFIED** — `PlatformHealthContext.tsx` — Single Poller + context — يغني عن polling مزدوج |
+| **NEW-N** | **✅ VERIFIED** — Redis: 5 event listeners (connect/ready/error/reconnecting/end) — Observable Runtime |
+| **NEW-O** | **✅ VERIFIED** — `GET /api/health/details` (x-internal-key) — gateway + redis + uptime + memory + services |
+| **NEW-L** | **✅ VERIFIED** — Gateway timeout: 30000 → 10000 — تنسيق: Frontend 5s / Gateway 10s / Upstream 8s |
+| **C-81 Implementation Guide** | **✅ CREATED** — كود كامل لـ 4 fixes — مطبّق على Tec-App + Tec-core-backend |
+
 ## PENDING ⚠️
 
 | Item | الإجراء |
 |------|----------|
-| **NEW-K** | **P1 OPEN** — Duplicate Health Polling → Split Runtime View — إنشاء `PlatformHealthContext.tsx` |
-| **NEW-N** | **P1 OPEN** — Redis `client.on('error', () => {})` — Silent Runtime — خرق C-00 "No Runtime Without Events" |
-| **NEW-O** | **P1 OPEN** — Health Endpoint لا يُعيد runtime evidence — إنشاء `/api/health/details` |
-| **NEW-L** | **P1 OPEN** — Gateway Timeout 30s vs Frontend 5s (499 @ 595ms = visibility gap) — خفض لـ 10s |
 | **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
-| External Re-Audit | بعد حل NEW-K/L/M — المتوقع 9.0–9.5/10 |
+| External Re-Audit | بعد NEW-K/L/N/O — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
 | Commerce Domain | `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` — يحتاج قرار |
 | Truth Framework | C-00→C-23 تحتاج Truth State headers — ~35% adoption فقط |
@@ -248,13 +256,9 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Fix NEW-K  ← PlatformHealthContext.tsx (Tec-App) [P1]
-2. Fix NEW-N  ← Redis Diagnostics — 5 event listeners (tec-api-gateway) [P1]
-3. Fix NEW-O  ← /api/health/details endpoint (tec-api-gateway) [P1]
-4. Fix NEW-L  ← Gateway timeout: 30000 → 10000 (tec-api-gateway) [P1]
-5. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
-6. External Re-Audit → target 9.0–9.5/10
-7. Portal Submission → Pi Network
+1. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
+2. External Re-Audit → target 9.0–9.5/10
+3. Portal Submission → Pi Network
 ```
 
 ---
