@@ -36,22 +36,22 @@ Code
 
 | Charter | App | System Role | Truth State | Phase |
 |---------|-----|-------------|-------------|-------|
-| [C-100](knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md) | Hub | System of Access — Control Plane | `[Current State]` | Phase 0 ✅ |
-| [C-101](knowledge-base/C-101___COMMERCE_INSTITUTIONAL_CHARTER.md) | Commerce | System of Production (Reference Impl) | `[Current State]` | Phase 0 ✅ |
-| [C-102](knowledge-base/C-102___ASSETS_INSTITUTIONAL_CHARTER.md) | Assets | Digital Asset Infrastructure | `[Current State]` | Phase 0 ✅ |
-| [C-103](knowledge-base/C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md) | Ecommerce | Consumer Marketplace | `[Current State]` | Phase 0 ✅ |
-| [C-104](knowledge-base/C-104___TEC_AI_INSTITUTIONAL_CHARTER.md) | TEC AI | System of Reasoning | `[Planned State]` | Phase 1 |
-| [C-105](knowledge-base/C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md) | Analytics | System of Intelligence | `[Planned State]` | Phase 1 |
-| [C-106](knowledge-base/C-106___LIFE_INSTITUTIONAL_CHARTER.md) | Life | System of Record (Personal) | `[Future Vision]` | Phase 2 |
-| [C-107](knowledge-base/C-107___CONNECTION_INSTITUTIONAL_CHARTER.md) | Connection | Economic Relationship Infrastructure | `[Future Vision]` | Phase 2 |
-| [C-108](knowledge-base/C-108___EXPLORER_INSTITUTIONAL_CHARTER.md) | Explorer | Economic Discovery Infrastructure | `[Future Vision]` | Phase 2 |
-| [C-109](knowledge-base/C-109___NEXUS_INSTITUTIONAL_CHARTER.md) | Nexus | System of Coordination | `[Future Vision]` | Phase 3 |
-| [C-110](knowledge-base/C-110___SYSTEM_INSTITUTIONAL_CHARTER.md) | SYSTEM | System of Governance | `[Future Vision]` | Phase 3 |
-| [C-111](knowledge-base/C-111___ALERT_INSTITUTIONAL_CHARTER.md) | ALERT | System of Risk | `[Future Vision]` | Phase 3 |
-| [C-112](knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md) | NX | System of Security | `[Future Vision]` | Phase 3 |
-| [C-113](knowledge-base/C-113___FUNDX_INSTITUTIONAL_CHARTER.md) | FundX | Capital Coordination Infrastructure | `[Future Vision]` | Phase 3 |
-| [C-114](knowledge-base/C-114___ESTATE_INSTITUTIONAL_CHARTER.md) | Estate | Real Estate Coordination | `[Future Vision]` | Phase 3 |
-| [C-115](knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md) | DX | System of Construction | `[Future Vision]` | Phase 3 |
+| [C-100](../../../knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md) | Hub | System of Access — Control Plane | `[Current State]` | Phase 0 ✅ |
+| [C-101](../../../knowledge-base/C-101___COMMERCE_INSTITUTIONAL_CHARTER.md) | Commerce | System of Production (Reference Impl) | `[Current State]` | Phase 0 ✅ |
+| [C-102](../../../knowledge-base/C-102___ASSETS_INSTITUTIONAL_CHARTER.md) | Assets | Digital Asset Infrastructure | `[Current State]` | Phase 0 ✅ |
+| [C-103](../../../knowledge-base/C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md) | Ecommerce | Consumer Marketplace | `[Current State]` | Phase 0 ✅ |
+| [C-104](../../../knowledge-base/C-104___TEC_AI_INSTITUTIONAL_CHARTER.md) | TEC AI | System of Reasoning | `[Planned State]` | Phase 1 |
+| [C-105](../../../knowledge-base/C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md) | Analytics | System of Intelligence | `[Planned State]` | Phase 1 |
+| [C-106](../../../knowledge-base/C-106___LIFE_INSTITUTIONAL_CHARTER.md) | Life | System of Record (Personal) | `[Future Vision]` | Phase 2 |
+| [C-107](../../../knowledge-base/C-107___CONNECTION_INSTITUTIONAL_CHARTER.md) | Connection | Economic Relationship Infrastructure | `[Future Vision]` | Phase 2 |
+| [C-108](../../../knowledge-base/C-108___EXPLORER_INSTITUTIONAL_CHARTER.md) | Explorer | Economic Discovery Infrastructure | `[Future Vision]` | Phase 2 |
+| [C-109](../../../knowledge-base/C-109___NEXUS_INSTITUTIONAL_CHARTER.md) | Nexus | System of Coordination | `[Future Vision]` | Phase 3 |
+| [C-110](../../../knowledge-base/C-110___SYSTEM_INSTITUTIONAL_CHARTER.md) | SYSTEM | System of Governance | `[Future Vision]` | Phase 3 |
+| [C-111](../../../knowledge-base/C-111___ALERT_INSTITUTIONAL_CHARTER.md) | ALERT | System of Risk | `[Future Vision]` | Phase 3 |
+| [C-112](../../../knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md) | NX | System of Security | `[Future Vision]` | Phase 3 |
+| [C-113](../../../knowledge-base/C-113___FUNDX_INSTITUTIONAL_CHARTER.md) | FundX | Capital Coordination Infrastructure | `[Future Vision]` | Phase 3 |
+| [C-114](../../../knowledge-base/C-114___ESTATE_INSTITUTIONAL_CHARTER.md) | Estate | Real Estate Coordination | `[Future Vision]` | Phase 3 |
+| [C-115](../../../knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md) | DX | System of Construction | `[Future Vision]` | Phase 3 |
 
 ---
 

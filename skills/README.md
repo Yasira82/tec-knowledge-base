@@ -1,6 +1,6 @@
 # TEC Knowledge Base — Skills Directory
 
-All skills in this library follow the [SKILL.md standard](templates/new-skill/SKILL.md).
+All skills in this library follow the [SKILL.md standard](../templates/new-skill/SKILL.md).
 
 ## Platform Skills (auto-activate on any TEC task)
 

@@ -1,6 +1,6 @@
 {
   "name": "tec-knowledge-base",
-  "version": "3.2.0",
+  "version": "3.4.0",
   "description": "TEC Federated Platform — Enterprise Knowledge Base. Platform Constitution, ADR system, 16 App Institutional Charters (C-100→C-115), specialist skills (platform, engineering, marketing, design), slash commands, and MCP connectors for the TEC ecosystem.",
   "author": "yasira82",
   "license": "MIT",

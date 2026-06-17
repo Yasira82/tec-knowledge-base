@@ -107,8 +107,8 @@ INTERNAL_SECRET: ✅ Set on all 4 critical services (Railway)
 ## Knowledge Base
 
 ```
-Version:    v3.2.0
-Documents:  91 (C-00 → C-115)
+Version:    v3.4.0
+Documents:  93 (C-00 → C-115)
 Skills:     16 (platform:7, engineering:2, design:2, marketing:5)
 Agents:     3 (cmo-advisor, growth-advisor, design-system-advisor)
 Commands:   7
