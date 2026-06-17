@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # This repository has no application package manifest (it is docs + bash validators).
+  # The only managed dependency surface is GitHub Actions used by the Knowledge Base CI.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+      - "ci"
