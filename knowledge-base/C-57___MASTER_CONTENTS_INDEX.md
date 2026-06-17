@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ 102 Content (C-00 → C-115)
+## دليل سريع للـ 103 Content (C-00 → C-115)
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -91,7 +91,7 @@
 | **C-54** | Package Management | npm Publish Sequence + update protocol |
 | **C-55** | Scoring & Audit Strategy | الـ Score الحقيقي + كيف توصل لـ 9.5 |
 | **C-56** | Redis Streams Events Map | Event bus architecture — من الكود الفعلي |
-| **C-57** | Master Contents Index (this file) | Complete index of all 102 contents — corrected in Session 9 |
+| **C-57** | Master Contents Index (this file) | Complete index of all 103 contents — corrected in Session 9 |
 | **C-58** | Hub Completion Plan | KYC + Subscription + Notifications — ما تبقى للـ Mainnet |
 
 ---
@@ -165,11 +165,12 @@
 
 ---
 
-## TIER 7C — Engineering Assessment
+## TIER 7C — Engineering Assessment + Implementation
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
 | **C-80** | Engineering Assessment Report | Knowledge Base gap analysis + remediation plan (June 2026) |
+| **C-81** | P1 Runtime Fixes Implementation Guide | Complete code for NEW-K/N/O/L — ready to apply to repos |
 
 ---
 
@@ -231,6 +232,7 @@
 | Construction + DX constitution | **C-98** |
 | Governance + authority model | **C-99** |
 | Engineering gap report | **C-80** |
+| P1 fixes implementation guide (code) | **C-81** |
 
 ---
 
