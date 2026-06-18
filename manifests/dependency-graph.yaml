@@ -1,0 +1,1253 @@
+# =============================================================================
+# TEC Constitutional Dependency Graph (CDG) v1.1 — AUTO-GENERATED
+# =============================================================================
+# Derived from architecture/asset-registry.yaml (single source of truth).
+# Do NOT edit manually — regenerate with: python3 scripts/regenerate-cdg.py
+#
+# v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
+# This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
+#
+# Generated: 2026-06-18T10:49:33.696101
+
+documents:
+
+  - id: "C-00"
+    title: "Platform Constitution & Engineering Governance"
+    filename: "C-00_v3.0___PLATFORM_CONSTITUTION___ENGINEERING_GOVERNANCE.md"
+    tier: "tier-0-foundational"
+    authority_rank: 100
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "constitutional"
+    depends_on: []
+    informs: []
+
+  - id: "C-47"
+    title: "Kernel Spec & Architecture Binding"
+    filename: "C-47_Kernel_Spec_Architecture_Binding.md"
+    tier: "tier-0-foundational"
+    authority_rank: 100
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "constitutional"
+    depends_on: []
+    informs: []
+
+  - id: "C-64"
+    title: "Architecture Decision Records"
+    filename: "C-64___ARCHITECTURE_DECISION_RECORDS.md"
+    tier: "tier-0-foundational"
+    authority_rank: 100
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "constitutional"
+    depends_on: []
+    informs: []
+
+  - id: "C-67"
+    title: "Source Of Truth Matrix"
+    filename: "C-67___SOURCE_OF_TRUTH_MATRIX.md"
+    tier: "tier-0-foundational"
+    authority_rank: 100
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "constitutional"
+    depends_on: []
+    informs: []
+
+  - id: "C-01"
+    title: "Project Identity"
+    filename: "C-01_Project_Identity.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-02"
+    title: "Current State"
+    filename: "C-02___CURRENT_STATE_.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-47", "C-64"]
+    informs: []
+
+  - id: "C-10"
+    title: "System Architecture"
+    filename: "C-10_System_Architecture.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-11"
+    title: "Repository Map"
+    filename: "C-11___REPOSITORY_MAP.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-116"
+    title: "Authority Automation Constitution"
+    filename: "C-116___AUTHORITY_AUTOMATION_CONSTITUTION.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "planned-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47", "C-64", "C-67"]
+    informs: []
+
+  - id: "C-117"
+    title: "Registry Integrity Constitution"
+    filename: "C-117___REGISTRY_INTEGRITY_CONSTITUTION.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47", "C-64", "C-67"]
+    informs: []
+
+  - id: "C-118"
+    title: "Dependency Propagation Constitution"
+    filename: "C-118___DEPENDENCY_PROPAGATION_CONSTITUTION.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-67"]
+    informs: []
+
+  - id: "C-12"
+    title: "Dual-mode Payment Architecture"
+    filename: "C-12_Dual_Mode_Payment.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "adr-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-13"
+    title: "Auth & SSO Architecture"
+    filename: "C-13_Auth_SSO.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-14"
+    title: "Shared Packages"
+    filename: "C-14___SHARED_PACKAGES.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-15"
+    title: "Security Rules"
+    filename: "C-15_Security_Rules.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-16"
+    title: "Database Rules"
+    filename: "C-16_Database_Rules.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-17"
+    title: "Data Privacy, Retention & Compliance Spec"
+    filename: "C-17___DATA_PRIVACY_RETENTION_COMPLIANCE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47", "C-64"]
+    informs: []
+
+  - id: "C-18"
+    title: "Disaster Recovery & Backup Constitution"
+    filename: "C-18___DISASTER_RECOVERY_BACKUP_CONSTITUTION.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47", "C-64"]
+    informs: []
+
+  - id: "C-19"
+    title: "Fraud, Abuse & AML / Sanctions Controls"
+    filename: "C-19___FRAUD_ABUSE_AML_CONTROLS.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47"]
+    informs: []
+
+  - id: "C-20"
+    title: "Backend Services Map"
+    filename: "C-20_Backend_Services.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "service"
+    depends_on: []
+    informs: []
+
+  - id: "C-21"
+    title: "Hub App"
+    filename: "C-21_Hub_App.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "service"
+    depends_on: []
+    informs: []
+
+  - id: "C-22"
+    title: "Commerce + Assets + Ecommerce Apps"
+    filename: "C-22_Apps_Commerce_Assets_Ecommerce.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "service"
+    depends_on: []
+    informs: []
+
+  - id: "C-23"
+    title: "TEC SDK Shared Client"
+    filename: "C-23_TEC_SDK.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
+    authority_scope: "service"
+    depends_on: []
+    informs: []
+
+  - id: "C-40"
+    title: "Open Violations Map"
+    filename: "C-40___OPEN_VIOLATIONS_MAP.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "adr-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-64", "C-67"]
+    informs: []
+
+  - id: "C-41"
+    title: "Engineering Roadmap"
+    filename: "C-41_Engineering_Roadmap.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "adr-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-64"]
+    informs: []
+
+  - id: "C-42"
+    title: "Testing Strategy"
+    filename: "C-42_Testing_Strategy.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-43"
+    title: "CI/CD DevOps Pipeline"
+    filename: "C-43_CI_CD_DevOps.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-44"
+    title: "Environment Variables Reference"
+    filename: "C-44_Environment_Variables.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-45"
+    title: "Observability & Monitoring"
+    filename: "C-45_Observability.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-46"
+    title: "Commercial Growth Strategy"
+    filename: "C-46_Commercial_Strategy.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "planned-state"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-48"
+    title: "Engineering Audit Report"
+    filename: "C-48_Engineering_Audit_May2026.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-49"
+    title: "Engineering Work Map"
+    filename: "C-49_Engineering_Work_Map.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-50"
+    title: "Session Log"
+    filename: "C-50___SESSION_LOG.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-64", "C-67"]
+    informs: []
+
+  - id: "C-51"
+    title: "Cookie Architecture"
+    filename: "C-51_Cookie_Architecture.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-52"
+    title: "Protected Files Map"
+    filename: "C-52_Protected_Files_Map.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-53"
+    title: "New App Creation Protocol"
+    filename: "C-53_New_App_Protocol.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-54"
+    title: "Package Management"
+    filename: "C-54_Package_Management.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-55"
+    title: "Scoring & Audit Strategy"
+    filename: "C-55_Scoring_Audit_Strategy.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-56"
+    title: "Redis Streams Events Map"
+    filename: "C-56_Redis_Streams_Events_Map.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-57"
+    title: "Master Contents Index"
+    filename: "C-57___MASTER_CONTENTS_INDEX.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-47", "C-64", "C-67"]
+    informs: []
+
+  - id: "C-58"
+    title: "Hub Completion Plan"
+    filename: "C-58_Hub_Completion_Plan.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "planned-state"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-59"
+    title: "Unified Error Response Format"
+    filename: "C-59_Error_Format.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-60"
+    title: "Code Templates"
+    filename: "C-60_Code_Templates.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-61"
+    title: "Typescript Shared Types Strategy"
+    filename: "C-61_Typescript_Types.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-62"
+    title: "SLO Definitions & Performance Standards"
+    filename: "C-62_SLO_Definitions.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-63"
+    title: "Pi Network Integration Rules"
+    filename: "C-63___PI_NETWORK_INTEGRATION_RULES.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-65"
+    title: "New Backend Service Template"
+    filename: "C-65___NEW_BACKEND_SERVICE_TEMPLATE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-66"
+    title: "Hub Features Code Guide"
+    filename: "C-66___HUB_FEATURES_CODE_GUIDE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-68"
+    title: "Domain Ownership Matrix"
+    filename: "C-68___DOMAIN_OWNERSHIP_MATRIX.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-69"
+    title: "API Contracts Governance"
+    filename: "C-69___API_CONTRACTS_GOVERNANCE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-70"
+    title: "Event Governance Spec"
+    filename: "C-70___EVENT_GOVERNANCE_SPEC.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-71"
+    title: "Financial Integrity Spec"
+    filename: "C-71___FINANCIAL_INTEGRITY_SPEC.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-72"
+    title: "Frontend State Governance"
+    filename: "C-72___FRONTEND_STATE_GOVERNANCE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-73"
+    title: "Incident Response Runbook"
+    filename: "C-73___INCIDENT_RESPONSE_RUNBOOK.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-74"
+    title: "Platform Scalability Spec"
+    filename: "C-74___PLATFORM_SCALABILITY_SPEC.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "planned-state"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-75"
+    title: "Release Governance Spec"
+    filename: "C-75___RELEASE_GOVERNANCE_SPEC.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-76"
+    title: "Pi Payment Ownership Authority"
+    filename: "C-76___ADR-007.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "adr-approved"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-77"
+    title: "Strategic Analysis & Risk Assessment"
+    filename: "C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-78"
+    title: "Platform Operations & Reliability Governance"
+    filename: "C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-80"
+    title: "Engineering Assessment Report"
+    filename: "C-80___ENGINEERING_ASSESSMENT_REPORT.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "adr-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-47", "C-64", "C-67"]
+    informs: []
+
+  - id: "C-81"
+    title: "P1 Runtime Fixes"
+    filename: "C-81___P1_FIXES_IMPLEMENTATION.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "planned-state"
+    governance_state: "adr-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-82"
+    title: "Platform Maturity & Evolution Governance"
+    filename: "C-82___PLATFORM_MATURITY_EVOLUTION.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-100"
+    title: "TEC Hub Institutional Charter"
+    filename: "C-100___HUB_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-76"]
+    informs: []
+
+  - id: "C-101"
+    title: "Commerce Institutional Charter"
+    filename: "C-101___COMMERCE_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-76"]
+    informs: []
+
+  - id: "C-102"
+    title: "Assets Institutional Charter"
+    filename: "C-102___ASSETS_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-103"
+    title: "Ecommerce Institutional Charter"
+    filename: "C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-76"]
+    informs: []
+
+  - id: "C-104"
+    title: "TEC AI Intelligence Reasoning CHARTER"
+    filename: "C-104___TEC_AI_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-105"
+    title: "Analytics Institutional Charter"
+    filename: "C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47", "C-70"]
+    informs: []
+
+  - id: "C-106"
+    title: "Life Institutional Charter"
+    filename: "C-106___LIFE_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-107"
+    title: "Connection Institutional Charter"
+    filename: "C-107___CONNECTION_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-108"
+    title: "Explorer Institutional Charter"
+    filename: "C-108___EXPLORER_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-109"
+    title: "Nexus Institutional Charter"
+    filename: "C-109___NEXUS_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-110"
+    title: "System Institutional Charter"
+    filename: "C-110___SYSTEM_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-111"
+    title: "Alert Institutional Charter"
+    filename: "C-111___ALERT_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47", "C-62", "C-78"]
+    informs: []
+
+  - id: "C-112"
+    title: "NX Security INSTITUTIONAL CHARTER"
+    filename: "C-112___NX_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-113"
+    title: "Fundx Institutional Charter"
+    filename: "C-113___FUNDX_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-114"
+    title: "Estate Institutional Charter"
+    filename: "C-114___ESTATE_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-115"
+    title: "DX Developer INSTITUTIONAL CHARTER"
+    filename: "C-115___DX_INSTITUTIONAL_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-83"
+    title: "Economic Visual Language (evl) & Economic State Language (esl)"
+    filename: "C-83___EVL_ESL.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-84"
+    title: "Economic Runtime Constitution"
+    filename: "C-84___RUNTIME_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-70"]
+    informs: []
+
+  - id: "C-85"
+    title: "Economic Infrastructure Stack"
+    filename: "C-85___INFRASTRUCTURE_STACK.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-86"
+    title: "Temporal Governance & Economic Consistency Constitution"
+    filename: "C-86___TEMPORAL_GOVERNANCE.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-87"
+    title: "Execution Governance & Ownership Constitution"
+    filename: "C-87___EXECUTION_GOVERNANCE.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-88"
+    title: "Pi Economic Flow Constitution"
+    filename: "C-88___PI_ECONOMIC_FLOW_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47", "C-76"]
+    informs: []
+
+  - id: "C-89"
+    title: "Developer Platform Governance"
+    filename: "C-89___DEVELOPER_PLATFORM_GOVERNANCE.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-90"
+    title: "Security & Trust Model"
+    filename: "C-90___SECURITY_TRUST_MODEL.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-47", "C-67"]
+    informs: []
+
+  - id: "C-91"
+    title: "Engineering Roadmap To Scale"
+    filename: "C-91___ENGINEERING_ROADMAP_TO_SCALE.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00"]
+    informs: []
+
+  - id: "C-92"
+    title: "Platform Health Model"
+    filename: "C-92___PLATFORM_HEALTH_MODEL.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "planned-state"
+    governance_state: "draft"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-78"]
+    informs: []
+
+  - id: "C-93"
+    title: "Institutional Verification Constitution"
+    filename: "C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-94"
+    title: "Governed Capability Constitution"
+    filename: "C-94___GOVERNED_CAPABILITY_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-95"
+    title: "Institutional Knowledge Constitution"
+    filename: "C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "speculation"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-96"
+    title: "Platform Runtime & Observability Constitution"
+    filename: "C-96___PLATFORM_RUNTIME_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "current-state"
+    governance_state: "draft"
+    verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: ["C-00"]
+    informs: []
+
+  - id: "C-97"
+    title: "Context Engine Constitution"
+    filename: "C-97___CONTEXT_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "speculation"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: ["C-12", "C-13", "C-63", "C-64", "C-68", "C-71", "C-73"]
+    informs: []
+
+  - id: "C-98"
+    title: "Institutional Construction Constitution"
+    filename: "C-98___INSTITUTIONAL_CONSTRUCTION_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "speculation"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: ["C-21", "C-22", "C-47", "C-53", "C-60", "C-61", "C-63", "C-65", "C-66"]
+    informs: []
+
+  - id: "C-99"
+    title: "Institutional Governance Constitution"
+    filename: "C-99___INSTITUTIONAL_GOVERNANCE_CONSTITUTION.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "speculation"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "platform"
+    depends_on: ["C-00", "C-02", "C-40", "C-47", "C-64", "C-67", "C-68", "C-78"]
+    informs: []
+
+  - id: "C-30"
+    title: "Platform Vision & 24 Apps Roadmap"
+    filename: "C-30_Vision_24_Apps.md"
+    tier: "tier-2-experimental"
+    authority_rank: 10
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "experimental"
+    depends_on: ["C-100", "C-101", "C-102", "C-103", "C-104", "C-105", "C-106", "C-107", "C-108", "C-109", "C-110", "C-111", "C-112", "C-113", "C-114", "C-115", "C-77"]
+    informs: []
+
+  - id: "C-31"
+    title: "App Blueprints"
+    filename: "C-31_App_Blueprints_Life_Connection_Fundx_Estate.md"
+    tier: "tier-2-experimental"
+    authority_rank: 10
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "experimental"
+    depends_on: []
+    informs: []
+
+  - id: "C-32"
+    title: "App Blueprints"
+    filename: "C-32_App_Blueprints_Nexus_Titan_DX.md"
+    tier: "tier-2-experimental"
+    authority_rank: 10
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "experimental"
+    depends_on: []
+    informs: []
+
+  - id: "C-79"
+    title: "Institutional Memory Constitution"
+    filename: "C-79___INSTITUTIONAL_MEMORY_CONSTITUTION.md"
+    tier: "tier-2-experimental"
+    authority_rank: 10
+    truth_state: "speculation"
+    governance_state: "draft"
+    verification_state: "unverified"
+    authority_scope: "experimental"
+    depends_on: ["C-50", "C-64", "C-84", "C-85", "C-92", "C-93", "C-94", "C-95", "C-96", "C-97", "C-98", "C-99"]
+    informs: []
+
+# ADR Registry (extracted from C-64)
+adrs:
+  - id: "ADR-001"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-002"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-003"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-004"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-005"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-006"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-007"
+    authority_rank: 85
+    parent: "C-64"
+
+  - id: "ADR-008"
+    authority_rank: 85
+    parent: "C-64"
+
+# =============================================================================
+# STATISTICS
+# =============================================================================
+# Total documents: 99
+# Total cross-references (depends_on): 108
+#
+# Tier distribution:
+#   tier-1-constitutional-runtime: 58
+#   tier-1-institutional-intelligence: 33
+#   tier-0-foundational: 4
+#   tier-2-experimental: 4
+#
+# Truth State distribution:
+#   current-state: 83
+#   planned-state: 6
+#   future-vision: 5
+#   speculation: 5
+

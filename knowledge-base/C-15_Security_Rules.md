@@ -1,6 +1,10 @@
 # C-15 — SECURITY RULES
 ## Non-Negotiable — Policy CI Enforces
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
 ---
 
 ## 1. JWT RULES

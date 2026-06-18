@@ -1,0 +1,17 @@
+# Code owners for the TEC Knowledge Base.
+# These owners are requested for review automatically on matching PRs.
+# Authority: repository owner (see README — Yasser / GitHub: Yasira82).
+
+# Default owner for everything in the repo
+*                       @Yasira82
+
+# Governance & constitutional layer (highest authority — review carefully)
+/governance/            @Yasira82
+/knowledge-base/C-00*   @Yasira82
+/knowledge-base/C-47*   @Yasira82
+/knowledge-base/C-64*   @Yasira82
+/knowledge-base/C-67*   @Yasira82
+
+# CI / validation tooling
+/evals/                 @Yasira82
+/.github/               @Yasira82

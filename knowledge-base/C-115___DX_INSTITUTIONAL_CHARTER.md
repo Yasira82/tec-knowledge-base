@@ -1,4 +1,4 @@
-# C-115 — DX INSTITUTIONAL CHARTER
+# C-115 — DX Developer INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
 **Truth State:** [Future Vision]

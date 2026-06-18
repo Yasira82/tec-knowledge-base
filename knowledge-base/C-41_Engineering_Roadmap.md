@@ -1,18 +1,22 @@
 # C-41 — ENGINEERING ROADMAP
 ## Path to 9.5/10 + Portal Submission
 
-**Last Updated:** June 2026
+> **Truth State:** `[Current State]`
+> **Governance State:** `[ADR Approved]`
+> **Verification:** `[Documentation Verified]`
+
+**Last Updated:** 16 June 2026 (Session 9)
 
 ---
 
 ## 1. SCORE PROJECTION
 
 ```
-Now (Self):              ~8.5/10
-Now (External expected): ~7.0–7.5/10
-────────────────────────────────
-After tec-ui v1.2.0:    ~8.5+ external
-After external audit:    9.5/10 ✅ → Submit
+Session 3 (External):    7.65/10
+Session 8 (Architectural Review): 9.1/10
+                          Knowledge Architecture: 9.5+/10
+────────────────────────────────────────────────────────
+Target (External Audit): ≥ 9.5/10 → Portal Submission
 ```
 
 ---
@@ -35,31 +39,42 @@ After external audit:    9.5/10 ✅ → Submit
 
 ## 3. PHASE 1 — Portal Readiness (CURRENT)
 
-### tec-ui v1.2.0 (BLOCKER)
+### tec-ui v1.2.1 ✅ DONE
 
 ```
-□ createU2APayment() في @yasser172/tec-ui/payment
-□ PaymentModal component
-□ C-83 Phase 1: CSS tokens
-□ SemanticDomain TypeScript type
-□ Publish @yasser172/tec-ui v1.2.0
-□ Test على Commerce أولاً
-□ Update Assets + Ecommerce
+✅ createU2APayment() في @yasser172/tec-ui/payment
+✅ PaymentModal component
+✅ C-83 Phase 1: CSS tokens
+✅ SemanticDomain TypeScript type
+✅ Published @yasser172/tec-ui v1.2.1
+✅ Tested على Commerce
+✅ Updated Assets + Ecommerce → v1.2.1
+✅ 75 tests + 80% coverage
 ```
 
-### External Audit (BLOCKER)
+### P2 Violations ✅ ALL CLOSED
 
 ```
-□ Submit for external audit
-□ Fix all findings
+✅ NEW-C: ADR-006 موثق في C-64
+✅ NEW-E: tec-ui 75 tests + 80% coverage
+✅ NEW-F: Pi App IDs في C-01 + CLAUDE.md
+✅ NEW-G: Dual-Mode في ADR-002 + C-12
+```
+
+### External Audit ← NEXT NOW
+
+```
+□ Submit for external audit (كل fixes على main ✅)
+□ Fix any new findings
 □ Target: ≥ 9.5/10
 ```
 
 ### Final Gate
 
 ```
-□ PI_SANDBOX=false verified everywhere
-□ Zero P1 violations (already ✅)
+✅ PI_SANDBOX=false verified everywhere
+✅ Zero P1 violations
+✅ Zero P2 violations
 □ External audit ≥ 9.5
 → Pi Network Developer Portal submission
 ```

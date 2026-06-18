@@ -1,6 +1,13 @@
 # C-58 — HUB COMPLETION PLAN
 ## KYC + Subscription + Notifications — ما تبقى للـ Mainnet
 
+> **Truth State:** `[Planned State]`
+> **Governance State:** `[Draft]`
+> **Verification:** `[Unverified]`
+
+---
+
+
 ---
 
 ## ⚠️ الاكتشاف المهم

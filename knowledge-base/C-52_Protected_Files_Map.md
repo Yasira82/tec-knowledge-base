@@ -1,6 +1,13 @@
 # C-52 — PROTECTED FILES MAP
 ## ملفات لا تُعدَّل بدون طلب صريح
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
 ---
 
 ## القاعدة

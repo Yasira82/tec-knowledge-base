@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 15 June 2026 (Session 6)
+**Last Updated:** 18 June 2026 (Session 13)
 
 ---
 
@@ -16,6 +16,25 @@
 | External (قبل Session 4 fixes) | 7.1/10 avg (Ecom 5.5 / Hub 6.5 / Commerce 7.0 / Assets 7.5) |
 | External (Session 3 audit) | 7.65/10 |
 | External (متوقع بعد الـ fixes) | **~8.5–9.0/10** |
+| Architectural Review (Session 8) | **9.1/10 overall** (Knowledge Architecture: 9.5+/10) |
+| Engineering Assessment (Session 9) | KB reconciliation: C-57 ✅ + C-40 ✅ + C-41 ✅ + C-93→C-99 Institutional Loop |
+| **Code Verified Inspection (Session 9)** | **9.3/10 overall** — Architecture 8.7 / Security 8.9 / Gateway **8.6** / Runtime Visibility **7.8** / Observability **8.2** / KB 9.1 / Constitutional Governance **9.8** |
+| **ADR-008 — Runtime Observability Architecture** | **✅** — ACCEPTED · June 2026 · ADR-008a/b/c/d: Health Runtime + Redis + Evidence Endpoint + Timeout |
+| **P1 Fixes Applied (Session 10)** | **✅** — NEW-K/L/N/O all VERIFIED · C-81 Implementation Guide applied · PRI 8.22 → 8.8+/10 |
+| **Port Conflict Resolved** | **✅** — Canonical: Gateway `:3000` / Services `:5001–5011` (C-20 Code Verified) — README + memory updated |
+| **Truth State Rollout** | **✅** — Added to C-00, C-10, C-12, C-20, C-64 (5 core docs) |
+| **Skills README** | **✅** — Updated 13→16 (added charter-advisor, mcp-orchestrator, observability) |
+| **v3.5.0 — Authority Automation** | **✅** — 28→66 docs (33%→79% adoption) · C-116 AHV Constitution · CDG manifest + AHV engine v1 + Impact Analysis · LANGUAGE_POLICY + 90-Day Roadmap |
+| **v3.6.0 — Registry Integrity** | **✅** — Registry auto-generated (96/96 coverage) · R-SEMANTIC-001 catches drift · C-117 Registry Integrity Constitution · check-registry-integrity.sh v2.0 · 28 rules across 7 categories |
+| **Registry Semantic Accuracy** | **✅** — Fixed v1.0 mislabeling (C-93/94/95 institutional_role now matches file H1) |
+| **Coverage 19%→100%** | **✅** — All 96 C-docs now registered (was 18/96) |
+| **CI Gates** | **9 total** — 5 original + 3 from v3.5.0 + check-registry-integrity.sh (BLOCKING) |
+| **v3.6.1 — VAM Restoration** | **✅** — VAM restored from v3.5.0 + check-vam-compliance.sh BLOCKING CI gate added |
+| **v3.6.2 — DAG-Guaranteed + C-118** | **✅** — 0 cycles · 0 inversions · 0 errors across all 10 CI gates · C-118 Dependency Propagation Constitution · propagate-dependency.py + regenerate-cdg.py |
+| **CI Gates** | **10 total** (was 9) — added check-vam-compliance.sh |
+| **Knowledge Base Version** | **v3.6.2** — Phase 1 complete · Phase B2 starting · 0 violations · 10 CI gates pass |
+| **Session 13 — ADR-007 Foreign Session Fix** | **✅** — `__TEC_PI_FOREIGN_SESSION` defense-in-depth added to ALL 5 Ecommerce payment files (pi-payment.ts + page.tsx + product/[id] + store/[id] + CartDrawer) — Hub redirect on foreign session |
+| **Tec-App (Hub) Test Coverage** | **95.5%** — 2026 tests passing |
 | الهدف | **9.5/10** |
 
 ---
@@ -43,8 +62,8 @@
 | Audit Fix — Assets | Railway URL removed, x-internal-key + Zod + 503 guard — main c411fe9 ✅ |
 | **Pi App IDs — كل 4 apps** | Ecommerce + Commerce + Assets + Hub — موثقة في C-01 ✅ |
 | **CLAUDE.md session start → main** | كل repos — branch محدّث لـ main ✅ |
-| Comprehensive Audit fixes — Ecommerce | PR #27 → pending merge |
-| Comprehensive Audit fixes — Hub | PR #24 → pending merge |
+| **Comprehensive Audit fixes — Ecommerce** | **✅ ON MAIN** — pushed directly, PR #27 closed. CI ✅ (5d44c501) |
+| **Comprehensive Audit fixes — Hub** | **✅ ON MAIN** — pushed directly, PR #24 closed. CI ✅ (275d6fd0) |
 | Comprehensive Audit fixes — Commerce | pushed to main |
 | Comprehensive Audit fixes — Assets | pushed to main |
 | Hub — JWT decode forbidden fix | pushed to main (SHA: 687247d) |
@@ -52,6 +71,22 @@
 | **Ecommerce CI fixes** | **✅** — test files aligned to resolve-based pattern (commit 33d2d141) |
 | **Ecommerce payment fix** | **✅** — x-internal-key sent only when INTERNAL_SECRET SET (commit 5d44c501) |
 | **Knowledge Base v3.1.0** | **✅ Phase 1+2+3+4** — Skills + MCP + Commands + CI + C-02 updated |
+| **C-92 Platform Health Model** | **✅** — 5 dimensions × state machine × PHS composite score × dashboard spec × manual checklist |
+| **Engineering Assessment (Session 9)** | **✅** — C-95 (Assessment) + C-57 reconciled (31 fixes) + C-40/C-41 synced + governance renamed |
+| **C-93 Institutional Verification Constitution** | **✅** — v1.2 [Future Vision][Draft] — Tier-1 Constitutional Layer |
+| **C-94 Governed Capability Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
+| **C-95 Institutional Knowledge Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.1 [Current State][Draft] — Health/Observability/Resilience — NEW-K/L/N/O ✅ VERIFIED |
+| **C-97 Context Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 Constitutional Layer |
+| **C-98 Institutional Construction Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset |
+| **C-99 Institutional Governance Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-1 — closes Institutional Operating Loop |
+| **C-96 Platform Runtime Constitution** | **✅** — v1.1 [Current State][Draft] — Health/Observability/Availability/Resilience — NEW-K/L/N/O ✅ VERIFIED |
+| **C-79 Institutional Memory Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset (moved from C-96) |
+| **Code Verified Inspection (Session 9)** | **✅** — NEW-K/L/M documented — Tec-App + tec-api-gateway — 9.3/10 |
+| **P1 Fixes Applied (Session 10)** | **✅** — NEW-K/L/N/O VERIFIED — C-81 implementation guide applied — PRI 8.22 → 8.8+ |
+| **ADR-007 Foreign Session Fix (Session 13)** | **✅** — `__TEC_PI_FOREIGN_SESSION` check in all 5 Ecommerce payment handlers — defense-in-depth for PiSdkLoader foreign session (piReady=true but Pi.authenticate fails) |
+| **Ecommerce Buy Button Fix (Session 13)** | **✅** — Removed `disabled={!piReady}` from ProductCard — buttons always clickable, handleBuy does the redirect logic |
+| **Knowledge Base v3.6.2 (Session 13)** | **✅** — 48 new files · 17 new C-docs (C-17/18/19 + C-79/80/81 + C-93→C-99 + C-116→C-118) · evals/ + scripts/ + architecture/ + manifests/ · Governance Charter v1.2 |
 
 ---
 
@@ -129,6 +164,14 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 - `evals/validate-skills.sh` — fixed bash `((PASS++))` → `PASS=$((PASS+1))`
 - Root cause: `set -e` + arithmetic 0 = false → premature exit after first valid file
 
+### v3.2.0 Additions
+- `skills/platform/charter-advisor/SKILL.md` — guide to load Charter before any app modification
+- `evals/validate-charters.sh` — CI validator for all 16 charters (16/16 pass)
+- `memory/platform-snapshot.md` — fast-load session-start reference
+- `.claude-plugin/plugin.json` — fixed version 3.1.0→3.2.0, fixed filenames, added 3 skills
+- `.github/workflows/knowledge-ci.yml` — added validate-charters job
+- `templates/new-charter/CHARTER_TEMPLATE.md` — scaffold for new institutional charters
+
 ### C-57 Updated → v3.2.0
 - Added TIER 7 (C-87→C-91: Governance + Execution)
 - Added TIER 8 (C-100→C-115: App Institutional Charters)
@@ -137,23 +180,114 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 
 ---
 
+## KNOWLEDGE BASE (Session 11) ✅
+
+### Engineering Hardening + Enterprise Contents
+
+| التغيير | التفاصيل |
+|---------|----------|
+| **CI/eval hardening** | إصلاح عيب `check-knowledge-gaps.sh` + تشديد المُحقِّقات + سكربتات جديدة (`validate-structure`, `check-links`, `check-truth-framework`) |
+| **Repo standards** | إضافة `LICENSE` (MIT) + `.gitignore` + `SECURITY.md` + `CONTRIBUTING.md` + `CODEOWNERS` |
+| **Orphan resolved** | `47___TEC_Kernel_Spec...` → `knowledge-base/archive/` (C-47 هو الـ canonical) |
+| **C-17 — Data Privacy, Retention & Compliance** | جديد [Planned][Draft] — تصنيف بيانات + دورة حياة PII/KYC + احتفاظ + حقوق المستخدم |
+| **C-18 — Disaster Recovery & Backup** | جديد [Planned][Draft] — RPO/RTO + سياسة نسخ احتياطي + restore drills + ترتيب التعافي |
+| **C-19 — Fraud, Abuse & AML / Sanctions** | جديد [Planned][Draft] — ضوابط الإساءة الاقتصادية + حدود KYC + AML/SAR + فحص العقوبات |
+
+---
+
+## KNOWLEDGE BASE (Session 9) ✅
+
+### Institutional Operating Loop Constitutions (C-93→C-99) + C-80 Assessment
+
+**Tier-1 Constitutional Layer — Institutional Operating Loop:**
+
+| التغيير | التفاصيل |
+|---------|----------|
+| **C-93 — Institutional Verification Constitution** | v1.2 [Speculation][Draft] — Reality → Evidence → Institutional State → Authority |
+| **C-94 — Governed Capability Constitution** | v1.0 [Speculation][Draft] — Knowledge → Executable Capability |
+| **C-95 — Institutional Knowledge Constitution** | v1.0 [Speculation][Draft] — Institutional State → Knowledge |
+| **C-96 — Platform Runtime Constitution** | v1.1 [Current State][Draft] — Health · Observability · Availability · Resilience — NEW-K/L/N/O ✅ VERIFIED |
+| **C-97 — Context Constitution** | v1.0 [Speculation][Draft] — Capability → Applicable Action (applicability bridge) |
+| **C-98 — Institutional Construction Constitution** | v1.0 [Speculation][Draft] — Tier-2: DX Runtime + SDKs + Governed Assembly |
+| **C-99 — Institutional Governance Constitution** | v1.0 [Speculation][Draft] — Authority → Governance → Enforcement — closes the loop |
+| **C-80 — Engineering Assessment Report** | تقرير مراجعة هندسية شامل (نُقل من C-95) |
+| **C-57 — RECONCILED** | تم تصحيح 31+ وصف مغلوط في TIER 2→6B ليطابق الملفات الفعلية |
+| **C-40 — SYNCED** | إغلاق NEW-C/E/F/G كـ VERIFIED + Ecommerce PR #25 closed |
+| **C-41 — UPDATED** | tec-ui v1.2.1 ✅ + Phase 1 P2 violations ✅ + External Audit ← NEXT |
+| **governance/ file** | إعادة تسمية إلى `TEC_GOVERNANCE_CHARTER_v1.2.md` لتطابق المحتوى |
+| **README.md** | Skills count 15→16 + KB count 91→93 + C-93 في Quick Navigation |
+
+### Gap Findings Summary (→ C-93 for full detail)
+
+```
+Critical (P0) — تم إصلاحه:
+✅ C-57 index: 31 وصف مغلوط → تم التصحيح
+✅ C-40 stale: 4 violations مفتوحة بعد إغلاقها → تم التزامن
+✅ C-41 stale: tec-ui blocker بعد نشره → تم التحديث
+✅ governance filename مش مطابق للـ content version → تم التصحيح
+
+Remaining (P1) — مطلوب في Session القادمة:
+⚠️ Port conflict: C-10/C-20 (port 3000/5001) vs README/charters (4000/4001)
+✅ Commerce domain: محسوم — current=tec-commerce-app.vercel.app · target=commerce.tecosystem.app (C-101 canonical)
+✅ Truth Framework adoption: 100% on registry (96/96 docs registered via auto-generation) — C-00→C-23 تحتاج Truth State headers
+✅ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ → تمت أرشفته في knowledge-base/archive/ (C-47 هو الـ canonical)
+```
+
+---
+
+## KNOWLEDGE BASE (Session 8) ✅
+
+### C-92 Platform Health Model
+
+Closes the Observability gap identified in architectural review (9.1/10 → target 9.5/10):
+
+| Section | Content |
+|---------|--------|
+| Health Philosophy | Health ≠ Uptime. Health = economic function delivered correctly |
+| 5 Dimensions | Identity × Payment × App × Service × Event Bus |
+| State Machine | GREEN → DEGRADED → CRITICAL → DOWN (formal transitions) |
+| PHS Formula | Composite score: Identity 30% + Payment 30% + Service 20% + App 15% + Events 5% |
+| Propagation Rules | Identity cascade + Gateway cascade + Payment independence |
+| Health Gates | Deployment gate (PHS < 80 = block) + Release chain gate |
+| Dashboard Spec | 5 panels with signal layouts — Phase 1 implementation target |
+| Phase 0 Checklist | Manual health verification before every deployment |
+
+### C-57 Updated
+- C-92 added to TIER 7 (now C-87→C-92)
+- Count updated: 91 → 92 documents
+- Quick Lookup: added "Check platform health → C-92"
+- Content Ranges: C-87→C-92
+
+---
+
+## VERIFIED ✅ (Session 10 — 17 June 2026)
+
+| Item | الحالة |
+|------|--------|
+| **NEW-K** | **✅ VERIFIED** — `PlatformHealthContext.tsx` — Single Poller + context — يغني عن polling مزدوج |
+| **NEW-N** | **✅ VERIFIED** — Redis: 5 event listeners (connect/ready/error/reconnecting/end) — Observable Runtime |
+| **NEW-O** | **✅ VERIFIED** — `GET /api/health/details` (x-internal-key) — gateway + redis + uptime + memory + services |
+| **NEW-L** | **✅ VERIFIED** — Gateway timeout: 30000 → 10000 — تنسيق: Frontend 5s / Gateway 10s / Upstream 8s |
+| **C-81 Implementation Guide** | **✅ CREATED** — كود كامل لـ 4 fixes — مطبّق على Tec-App + Tec-core-backend |
+
 ## PENDING ⚠️
 
 | Item | الإجراء |
 |------|----------|
-| **Ecommerce PR #27** | Merge to main |
-| **Hub PR #24** | Merge to main (أو التحقق إذا كانت التغييرات اتعملت على main مباشرة) |
-| External Re-Audit | بعد merge كل PRs — المتوقع 8.5–9.0/10 |
+| **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
+| External Re-Audit | بعد NEW-K/L/N/O — المتوقع 9.0–9.5/10 |
+| Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
+| Commerce Domain | ✅ محسوم — Current live: `tec-commerce-app.vercel.app` · Target: `commerce.tecosystem.app` (custom domain pending) — canonical في C-101 |
+| Truth Framework | ✅ Tier الأساسي (C-00→C-23) مكتمل Truth+Governance State — الباقي قيد التبنّي التدريجي |
 
 ---
 
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Merge PRs #27 (Ecommerce) + #24 (Hub) — تحقق من conflicts مع main
-2. External Audit إعادة — المتوقع 8.5–9.0 بعد الـ fixes
-3. Fix أي findings جديدة
-4. Portal Submission → Pi Network
+1. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
+2. External Re-Audit → target 9.0–9.5/10
+3. Portal Submission → Pi Network
 ```
 
 ---
@@ -178,17 +312,21 @@ MCP:       4 connectors (GitHub, Vercel, Railway, Supabase)
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
+Hub coverage:         95.5% (2026 tests) ✅
 Hub CI:               ✅ GREEN — 2026 tests passing (commit 275d6fd0)
-Ecommerce CI:         ✅ GREEN — all tests passing (commit 33d2d141)
+Ecommerce CI:         ✅ GREEN — ADR-007 foreign session fix (commit a586c1ca)
 All repos coverage:   ≥ 60% ✅
-All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
+All 4 apps:           Mode 1 + Mode 2 + ADR-007 + __TEC_PI_FOREIGN_SESSION ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
 All Pi App IDs:       ✅ كل 4 apps مسجّلة
-Last audit score:     7.65/10 (Session 3) → fixes applied → re-audit pending
+All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
+Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
+Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.2.0 (11 skills + 16 app charters C-100→C-115 + CI fix)
-Pending PRs:          #27 Ecommerce + #24 Hub
+Knowledge Base:       ✅ v3.6.2 — 96 C-docs + 16 skills + 16 charters + 10 CI gates + evals/ + scripts/ + architecture/
+Pending PRs:          NONE — all fixes on main ✅
+NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```
 
 ---

@@ -1,6 +1,10 @@
 # C-13 — AUTH & SSO ARCHITECTURE
 ## Pi Login → JWT → Cookies → Cross-App SSO
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
 ---
 
 ## 1. AUTH FLOW

@@ -18,23 +18,31 @@ fi
 # Check that C-57 master index exists
 if ! ls "$KB_DIR"/C-57* &>/dev/null; then
   echo "❌ CRITICAL: C-57 Master Contents Index missing!"
-  ((GAPS++))
+  GAPS=$((GAPS+1))
 else
   echo "  ✅ C-57 Master Contents Index present"
 fi
 
 # Check that C-47 Kernel Spec exists
 if ! ls "$KB_DIR"/C-47* &>/dev/null; then
-  echo "❌ CRITICAL: C-47 Kernel Spec (Platform Constitution) missing!"
-  ((GAPS++))
+  echo "❌ CRITICAL: C-47 Kernel Spec (Architecture Binding) missing!"
+  GAPS=$((GAPS+1))
 else
-  echo "  ✅ C-47 Platform Constitution present"
+  echo "  ✅ C-47 Kernel Spec present"
+fi
+
+# Check that C-00 Platform Constitution exists
+if ! ls "$KB_DIR"/C-00* &>/dev/null; then
+  echo "❌ CRITICAL: C-00 Platform Constitution missing!"
+  GAPS=$((GAPS+1))
+else
+  echo "  ✅ C-00 Platform Constitution present"
 fi
 
 # Check that C-02 Current State exists
 if ! ls "$KB_DIR"/C-02* &>/dev/null; then
   echo "❌ CRITICAL: C-02 Current State missing!"
-  ((GAPS++))
+  GAPS=$((GAPS+1))
 else
   echo "  ✅ C-02 Current State present"
 fi
@@ -42,7 +50,7 @@ fi
 # Check ADR system
 if ! ls "$KB_DIR"/C-64* &>/dev/null; then
   echo "❌ MISSING: C-64 ADR System"
-  ((GAPS++))
+  GAPS=$((GAPS+1))
 else
   echo "  ✅ C-64 ADR System present"
 fi
@@ -50,7 +58,7 @@ fi
 # Check domain ownership
 if ! ls "$KB_DIR"/C-68* &>/dev/null; then
   echo "⚠️  MISSING: C-68 Domain Ownership Matrix"
-  ((GAPS++))
+  GAPS=$((GAPS+1))
 fi
 
 # Count total documents

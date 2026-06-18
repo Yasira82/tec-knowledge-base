@@ -1,6 +1,11 @@
 # C-10 — SYSTEM ARCHITECTURE
 ## 3-Layer Architecture + Services Map
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+> **Port Authority:** C-20 — Gateway `:3000` / Services `:5001`–`:5011`
+
 ---
 
 ## 1. THE 3 LAYERS
@@ -9,7 +14,7 @@
 Pi Browser (WebView)
     │
     ├── hub.tecosystem.app     (Next.js 15 — Vercel)
-    ├── commerce.tecosystem.app (Next.js 15 — Vercel)
+    ├── commerce.tecosystem.app (Next.js 15 — Vercel) [target; current live: tec-commerce-app.vercel.app]
     ├── assets.tecosystem.app  (Next.js 15 — Vercel)
     └── ecommerce.tecosystem.app (Next.js 15 — Vercel)
          │

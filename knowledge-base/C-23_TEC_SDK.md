@@ -1,5 +1,9 @@
-# C-23 — TEC-SDK
+# C-23 — TEC SDK Shared Client
 ## @yasser172/tec-sdk v1.2.2 — Internals + Usage
+
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
 
 ---
 

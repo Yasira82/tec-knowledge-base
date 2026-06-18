@@ -1,6 +1,6 @@
 # TEC Platform Architecture
 
-> Version: 2.0 — June 2026
+> Version: 3.2.0 — June 2026
 > Truth State: [Current State] — verified against live platform (June 2026)
 > Future Vision sections explicitly labeled
 > Authority: C-00 Platform Constitution + C-67 Source of Truth Matrix
@@ -350,7 +350,7 @@ Consumer groups (idempotent)
 | ADR-006 | SSO redirect to Hub for all apps | ACCEPTED |
 | ADR-007 | Pi Payment Ownership Authority (isHubNavigation) | ACCEPTED |
 
-Full ADR details → [`knowledge-base/C-64___ADR_SYSTEM.md`](../knowledge-base/C-64___ADR_SYSTEM.md)
+Full ADR details → [`knowledge-base/C-64___ADR_SYSTEM.md`](../knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md)
 
 ---
 
@@ -408,20 +408,6 @@ Constitutional Rules (same as C-84):
   ✅ Human override always available
 ```
 
-### VAPI — Natural Language Coordination Interface
-
-> Truth State: [Future Vision] | Gate: E | Commitment: [Exploratory]
-
-```
-VAPI is an Interaction Runtime — NOT a Domain
-VAPI is a Channel — like Hub (web), Mobile (native), Email
-
-VAPI answers: "How does a user speak to TEC's economic infrastructure?"
-
-VAPI routes user intent → TEC Infrastructure
-VAPI does NOT define economic reality — it accesses it
-```
-
 ---
 
 ## 15. FAILURE DOMAINS
@@ -464,6 +450,58 @@ SOVEREIGN (each app decides independently):
 
 ---
 
-*Architecture Reference — TEC Platform v2.0 — June 2026*
+## 17. APP INSTITUTIONAL CHARTERS (C-100→C-115)
+
+Each app has a constitutional document defining its engineering authority, security model, and evolution path. Read the charter before modifying any app.
+
+### Economic System Classification
+
+| System Role | App | Charter | Truth State |
+|-------------|-----|---------|-------------|
+| System of Access | Hub | C-100 | Current State |
+| System of Production | Commerce (Reference Impl) | C-101 | Current State |
+| Digital Asset Infrastructure | Assets | C-102 | Current State |
+| Consumer Marketplace | Ecommerce | C-103 | Current State |
+| System of Reasoning | TEC AI | C-104 | Planned State |
+| System of Intelligence | Analytics | C-105 | Planned State |
+| System of Record (Personal) | Life | C-106 | Future Vision |
+| Economic Relationship Infrastructure | Connection | C-107 | Future Vision |
+| Economic Discovery Infrastructure | Explorer | C-108 | Future Vision |
+| System of Coordination | Nexus | C-109 | Future Vision |
+| System of Governance | SYSTEM | C-110 | Future Vision |
+| System of Risk | ALERT | C-111 | Future Vision |
+| System of Security | NX | C-112 | Future Vision |
+| Capital Coordination Infrastructure | FundX | C-113 | Future Vision |
+| Real Estate Coordination | Estate | C-114 | Future Vision |
+| System of Construction | DX | C-115 | Future Vision |
+
+### Charter Authority Rule
+
+```
+Before modifying any app:
+  1. Read the App Institutional Charter (C-100+)
+  2. Verify change complies with charter's Authority Boundary
+  3. Check P0/P1/P2 engineering gaps — don't duplicate solved patterns
+  4. Update charter if new engineering decisions are made
+
+Charter > App CLAUDE.md > Code  (authority order)
+```
+
+### Economic Runtime Lifecycle
+
+```
+Settlement (Hub/Wallet)
+  → Record (Life/Analytics)
+    → Reasoning (TEC AI)
+      → Access (Hub)
+        → Construction (DX)
+          → Production (Commerce/Assets/Ecommerce)
+            → Economic Activity (Connection/Explorer/FundX/Estate)
+              → Settlement (closed loop)
+```
+
+---
+
+*Architecture Reference — TEC Platform v3.2.0 — June 2026*
 *Owner: Yasser | Yasira82 | @yasser172*
-*Authority: C-00 → C-67 → ADRs → This Document*
+*Authority: C-00 → C-67 → ADRs → App Charters (C-100→C-115) → This Document*

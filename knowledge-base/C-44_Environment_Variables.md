@@ -1,6 +1,13 @@
 # C-44 — ENVIRONMENT VARIABLES REFERENCE
 ## كل الـ env vars في الـ 9 repos
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
 ---
 
 ## 1. SHARED (كل الـ apps)

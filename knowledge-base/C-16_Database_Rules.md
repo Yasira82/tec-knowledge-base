@@ -1,6 +1,10 @@
 # C-16 — DATABASE RULES
 ## Financial Integrity + Isolation + Patterns
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
 ---
 
 ## 1. DATABASE-PER-SERVICE (LOCKED)

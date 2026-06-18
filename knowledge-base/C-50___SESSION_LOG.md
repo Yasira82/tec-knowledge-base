@@ -1,6 +1,48 @@
 # C-50 — SESSION LOG
 ## Latest Updates + Decisions
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Draft]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
+---
+
+## SESSION 10: 17 June 2026 — P1 Runtime Violations Applied + VERIFIED
+
+### ما تم
+
+| Item | التفاصيل |
+|------|----------|
+| **NEW-K** ✅ | `PlatformHealthContext.tsx` — أُنشئ في **Tec-App** — Single Poller يغني عن polling مزدوج في BackendOfflineBanner + BackendStatus |
+| **NEW-L** ✅ | `proxy.service.ts` — تعديل في **Tec-core-backend** — `timeout: 10000, proxyTimeout: 10000` (كان 30000) |
+| **NEW-N** ✅ | `redis.service.ts` — تعديل في **Tec-core-backend** — 5 event listeners (connect/ready/error/reconnecting/end) |
+| **NEW-O** ✅ | `health.controller.ts + health.service.ts` — إضافة في **Tec-core-backend** — `GET /health/details` guarded by x-internal-key |
+| **C-81** ✅ | دليل التنفيذ الكامل — أُضيف للـ knowledge base |
+| **C-40** ✅ | P1 violations: OPEN → VERIFIED |
+| **C-96** ✅ | Violation Register: OPEN → VERIFIED |
+| **C-02** ✅ | Session 10 documented — VERIFIED section مضاف |
+
+### الوضع بعد Session 10
+
+| Item | Status |
+|------|--------|
+| P1 Violations (NEW-K/L/N/O) | ✅ ALL VERIFIED — Applied to repos |
+| P2 Violations (NEW-M) | ⚠️ OPEN — Hardcoded service map |
+| PRI Score | 8.22/10 → 8.8+/10 (مقدّر بعد Re-Audit) |
+| Health Runtime | 6.5 → 9.0/10 |
+| Gateway | 8.3 → 9.2/10 |
+
+### NEXT
+
+```
+1. Fix NEW-M ← service-registry.ts (tec-api-gateway) [P2]
+2. External Re-Audit → target 9.0–9.5/10
+3. Portal Submission → Pi Network
+```
+
 ---
 
 ## SESSION 2: 14 June 2026 — Session Start Protocol + 503 Fix Confirmed

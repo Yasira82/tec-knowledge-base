@@ -1,4 +1,4 @@
-# C-104 — TEC AI INSTITUTIONAL CHARTER
+# C-104 — TEC AI Intelligence Reasoning CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
 **Truth State:** [Planned State]

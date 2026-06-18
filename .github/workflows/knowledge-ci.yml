@@ -2,18 +2,33 @@ name: Knowledge Base CI
 
 on:
   push:
-    branches: [main, 'claude/**']
+    branches: [main, 'claude/**', 'cursor/**']
     paths:
       - 'skills/**'
       - 'knowledge-base/**'
       - 'governance/**'
+      - 'architecture/**'
+      - 'agents/**'
+      - 'commands/**'
+      - 'templates/**'
       - 'evals/**'
+      - '.claude-plugin/**'
+      - 'README.md'
+      - 'CLAUDE.md'
   pull_request:
     branches: [main]
     paths:
       - 'skills/**'
       - 'knowledge-base/**'
       - 'governance/**'
+      - 'architecture/**'
+      - 'agents/**'
+      - 'commands/**'
+      - 'templates/**'
+      - 'evals/**'
+      - '.claude-plugin/**'
+      - 'README.md'
+      - 'CLAUDE.md'
 
 jobs:
   validate-skills:
@@ -28,6 +43,30 @@ jobs:
       - name: Validate SKILL.md files
         run: bash evals/validate-skills.sh
 
+  validate-charters:
+    name: Validate App Institutional Charters
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Validate C-100→C-115 charters
+        run: bash evals/validate-charters.sh
+
+  validate-structure:
+    name: Validate Structure & Manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Validate repo structure + plugin.json
+        run: bash evals/validate-structure.sh
+
   check-knowledge-gaps:
     name: Check Knowledge Gaps
     runs-on: ubuntu-latest
@@ -40,24 +79,110 @@ jobs:
       - name: Detect knowledge gaps
         run: bash evals/check-knowledge-gaps.sh
 
+  check-links:
+    name: Check Markdown Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Verify relative Markdown links resolve
+        run: bash evals/check-links.sh
+
   check-truth-framework:
     name: Check Truth Framework
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify C-documents have Truth State
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+
+      - name: Report Truth State / Governance State adoption (informational)
+        run: bash evals/check-truth-framework.sh
+
+  check-registry-integrity:
+    name: Registry Integrity Check (v2.0)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh scripts/*.py
+
+      - name: Regenerate Asset Registry
+        run: python3 scripts/build-asset-registry.py
+
+      - name: Verify No Manual Edits to Registry
         run: |
-          MISSING=0
-          for FILE in knowledge-base/C-*.md; do
-            [ -f "$FILE" ] || continue
-            if ! grep -q "Truth State" "$FILE"; then
-              echo "⚠️  Missing Truth State: $FILE"
-              MISSING=$((MISSING+1))
-            fi
-          done
-          if [ $MISSING -gt 0 ]; then
-            echo "$MISSING documents missing Truth State declaration."
-            echo "Add: **Truth State:** [Current State] | [Planned] | [Future Vision] | [Speculation]"
+          if ! git diff --exit-code architecture/asset-registry.yaml; then
+            echo "❌ FAIL: asset-registry.yaml has manual edits that conflict with auto-generation."
+            echo "   Either revert your manual edits OR commit the regenerated version."
+            echo "   Run: python3 scripts/build-asset-registry.py"
+            exit 1
           fi
-          echo "Truth Framework check complete: $MISSING missing."
+
+      - name: Run Registry Integrity Engine v2.0
+        run: bash evals/check-registry-integrity.sh
+
+
+  check-authority-consistency:
+    name: Authority Hierarchy Consistency (v3.5.0+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh scripts/*.py
+      - name: Run AHV Engine
+        run: bash evals/check-authority-consistency.sh
+
+  check-c57-index:
+    name: C-57 Index Drift Check (v3.5.0+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run C-57 Index Check
+        run: bash evals/check-c57-index.sh
+
+  check-truth-framework:
+    name: Truth Framework Adoption (v3.5.0+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run Truth Framework Check
+        run: bash evals/check-truth-framework.sh
+
+
+  check-vam-compliance:
+    name: VAM Compliance Check (v3.6.1+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run VAM Compliance Engine
+        run: bash evals/check-vam-compliance.sh

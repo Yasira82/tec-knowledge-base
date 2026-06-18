@@ -1,7 +1,11 @@
 # C-40 — OPEN VIOLATIONS MAP
 ## Current Issues + Priority + Fix
 
-**Last Updated:** 14 June 2026
+> **Truth State:** `[Current State]`
+> **Governance State:** `[ADR Approved]`
+> **Verification:** `[Documentation Verified]`
+
+**Last Updated:** 16 June 2026 (Session 9 — Code Verified inspection)
 
 ---
 
@@ -31,28 +35,58 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## P2 — يؤثر على Score
+## P2 — ALL CLOSED ✅ (synced with C-02 Session 8)
 
-| ID | المشكلة | الحالة |
-|----|---------|--------|
-| NEW-C | CSRF exclusion للـ payment routes غير موثق — محتاج ADR | OPEN |
-| NEW-E | tec-ui: لا tests | OPEN |
-| NEW-F | Tec-Ecommerce: Pi App ID + domain غير موثقين | OPEN |
-| NEW-G | Dual-Mode Payment مش في Architecture Binding | OPEN |
+| ID | المشكلة | الحالة | التحقق |
+|----|---------|--------|--------|
+| NEW-C | CSRF exclusion للـ payment routes غير موثق | ✅ **VERIFIED** | ADR-006 في C-64 — CSRF exclusion موثق |
+| NEW-E | tec-ui: لا tests | ✅ **VERIFIED** | tec-ui v1.2.1 — 75 tests + 80% coverage |
+| NEW-F | Tec-Ecommerce: Pi App ID + domain غير موثقين | ✅ **VERIFIED** | C-01 + CLAUDE.md — Pi App ID: `ecommerce-app-71ca4d3e462eaf54` |
+| NEW-G | Dual-Mode Payment مش في Architecture Binding | ✅ **VERIFIED** | ADR-002 (C-64) + C-12 |
+
+> ⚠️ **ملاحظة من Session 9:** هذه الـ violations كانت لا تزال مُعلَنة OPEN في هذا الملف
+> بينما C-02 Session 8 أكد إغلاقها. تم التصحيح الآن لمطابقة C-67 Source of Truth.
 
 ---
 
 ## OPEN — يحتاج قرار
 
-### Ecommerce PR #25
+### Ecommerce PR #25 — RESOLVED
 
 | Field | Value |
 |-------|-------|
 | PR | https://github.com/Yasira82/Tec-Ecommerce/pull/25 |
-| المشكلة | 503 على approve/complete في Vercel |
-| السبب | `API_GATEWAY_URL` undefined في Vercel runtime |
-| PR #25 | أضاف NEXT_PUBLIC_ fallback — لكن PR #22 شاله (security) |
-| الحل الصح | تحقق إن `API_GATEWAY_URL` (server-only) set في Vercel → لو صح close PR #25 |
+| الحالة | ✅ **CLOSED** — PR #27 على main (commit 5d44c501) |
+| التفاصيل | `API_GATEWAY_URL` (server-only) + Comprehensive Audit fixes — يتحقق CI |
+
+---
+
+## P1 — ✅ VERIFIED (Code Implemented — June 2026)
+
+> **Truth State:** `[Current State]` | **Verification:** `[Code Verified]`
+> **Implementation Guide:** C-81___P1_FIXES_IMPLEMENTATION.md — complete code applied to repos
+
+| ID | المشكلة | المصدر | الحل | الحالة |
+|----|---------|--------|------|--------|
+| **NEW-K** | **Duplicate Health Polling** — BackendOfflineBanner + BackendStatus كلاهما يعمل polling مستقل كل 30s | `Tec-App/src/components/` | `PlatformHealthContext.tsx` — Single Poller + context — كود كامل في C-81 | **✅ VERIFIED** |
+| **NEW-L** | **Gateway Timeout Mismatch** — Gateway 30s vs Frontend 5s → 499 ghost failures | `tec-api-gateway/src/modules/proxy/proxy.service.ts` | `timeout: 10000, proxyTimeout: 10000` — applied | **✅ VERIFIED** |
+| **NEW-N** | **Redis Silent Failure** — `client.on('error', () => {})` يكتم كل الأخطاء | `tec-api-gateway/src/modules/redis/` | 5 event listeners (connect/ready/error/reconnecting/end) — applied | **✅ VERIFIED** |
+
+---
+
+## P1-C — ✅ VERIFIED (Code Implemented)
+
+| ID | المشكلة | المصدر | الحل | الحالة |
+|----|---------|--------|------|--------|
+| **NEW-O** | **Health Endpoint Missing Detail** — `/api/health` يُعيد `{ "status": "ok" }` فقط — zero evidence at incident time | `tec-api-gateway/src/modules/health/` | `GET /api/health/details` (x-internal-key) — NestJS controller + service — applied | **✅ VERIFIED** |
+
+---
+
+## P2 — OPEN (Code Verified — June 2026)
+
+| ID | المشكلة | المصدر | الحل | الحالة |
+|----|---------|--------|------|--------|
+| **NEW-M** | **Hardcoded Service Map** — `private readonly services = {}` داخل `proxy.service.ts`. إضافة Life/Connection/Explorer/SYSTEM تحتاج تعديل كود Gateway + redeploy | `tec-api-gateway/src/modules/proxy/proxy.service.ts` | إنشاء `src/config/service-registry.ts` — Gateway يقرأه وقت التشغيل بدل hardcoding | **OPEN** |
 
 ---
 
@@ -113,14 +147,23 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## SUMMARY
+## SUMMARY (Updated Session 10 — 17 June 2026, Code Verified + Applied)
 
 ```
 P0 Open:  0
-P1 Open:  0  (NEW-B كود OK — Railway ops فقط)
-P2 Open:  4  (NEW-C, NEW-E, NEW-F, NEW-G)
-Pending:  1  (Ecommerce PR #25 — verify Vercel env var first)
-Deferred: 3  (post-Portal)
+P1 Open:  0  ✅  (NEW-K + NEW-L + NEW-N + NEW-O — all VERIFIED — C-81 applied to repos)
+P2 Open:  1  ⚠️  (NEW-M: Hardcoded Service Map)
+Deferred: 3  (post-Portal — VM-NEW-009, VM-NEW-014, ISS-010)
 
-Next: tec-ui v1.2.0 → External Audit ≥ 9.5 → Portal
+Source: C-81 Implementation Guide applied to Tec-App + tec-api-gateway (June 2026)
+Authority: C-96 Platform Runtime Constitution + ADR-008
+
+Score Impact:
+  Health Runtime: 6.5 → 9.0/10  (PlatformHealthContext + health/details)
+  Gateway:        8.3 → 9.2/10  (timeout aligned + Redis observable)
+  PRI:            8.22 → 8.8+/10 (estimated post-audit)
+
+Next:
+  1. Fix NEW-M  (service-registry.ts) [P2]
+  2. External Re-Audit → target 9.0–9.5/10 → Portal Submission
 ```

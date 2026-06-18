@@ -1,4 +1,4 @@
-# C-112 — NX INSTITUTIONAL CHARTER
+# C-112 — NX Security INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
 **Truth State:** [Future Vision]
