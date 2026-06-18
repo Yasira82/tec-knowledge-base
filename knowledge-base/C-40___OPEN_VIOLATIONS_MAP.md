@@ -86,7 +86,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 | ID | المشكلة | المصدر | الحل | الحالة |
 |----|---------|--------|------|--------|
-| **NEW-M** | **Hardcoded Service Map** — `private readonly services = {}` داخل `proxy.service.ts`. إضافة Life/Connection/Explorer/SYSTEM تحتاج تعديل كود Gateway + redeploy | `tec-api-gateway/src/modules/proxy/proxy.service.ts` | إنشاء `src/config/service-registry.ts` — Gateway يقرأه وقت التشغيل بدل hardcoding | **OPEN** |
+| **NEW-M** | **Hardcoded Service Map** — `private readonly services = {}` داخل `proxy.service.ts`. إضافة Life/Connection/Explorer/SYSTEM تحتاج تعديل كود Gateway + redeploy | `tec-api-gateway/src/modules/proxy/proxy.service.ts` | `src/config/service-registry.ts` — Gateway يقرأه وقت التشغيل بدل hardcoding | **✅ CLOSED** (commit 2714c2f) |
 
 ---
 
@@ -152,7 +152,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 P0 Open:  0
 P1 Open:  0  ✅  (NEW-K + NEW-L + NEW-N + NEW-O — all VERIFIED — C-81 applied to repos)
-P2 Open:  1  ⚠️  (NEW-M: Hardcoded Service Map)
+P2 Open:  0  ✅  (NEW-M: CLOSED — service-registry.ts extracted)
 Deferred: 3  (post-Portal — VM-NEW-009, VM-NEW-014, ISS-010)
 
 Source: C-81 Implementation Guide applied to Tec-App + tec-api-gateway (June 2026)

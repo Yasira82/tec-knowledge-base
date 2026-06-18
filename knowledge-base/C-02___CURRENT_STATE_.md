@@ -87,6 +87,7 @@
 | **ADR-007 Foreign Session Fix (Session 13)** | **✅** — `__TEC_PI_FOREIGN_SESSION` check in all 5 Ecommerce payment handlers — defense-in-depth for PiSdkLoader foreign session (piReady=true but Pi.authenticate fails) |
 | **Ecommerce Buy Button Fix (Session 13)** | **✅** — Removed `disabled={!piReady}` from ProductCard — buttons always clickable, handleBuy does the redirect logic |
 | **Knowledge Base v3.6.2 (Session 13)** | **✅** — 48 new files · 17 new C-docs (C-17/18/19 + C-79/80/81 + C-93→C-99 + C-116→C-118) · evals/ + scripts/ + architecture/ + manifests/ · Governance Charter v1.2 |
+| **NEW-M — Service Registry (Session 14)** | **✅** — `service-registry.ts` extracted — hardcoded map removed from `proxy.service.ts` — health checks use registry — 26 tests pass |
 
 ---
 
@@ -274,7 +275,7 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
+| **NEW-M** | **✅ CLOSED** — `service-registry.ts` extracted from hardcoded map (commit 2714c2f) |
 | External Re-Audit | بعد NEW-K/L/N/O — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
 | Commerce Domain | ✅ محسوم — Current live: `tec-commerce-app.vercel.app` · Target: `commerce.tecosystem.app` (custom domain pending) — canonical في C-101 |
@@ -285,9 +286,8 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
-2. External Re-Audit → target 9.0–9.5/10
-3. Portal Submission → Pi Network
+1. External Re-Audit → target 9.0–9.5/10
+2. Portal Submission → Pi Network
 ```
 
 ---
