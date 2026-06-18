@@ -317,5 +317,5 @@ C-116→C-118  Constitutional Automation (Authority + Registry + Dependency)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80
-   تم إصلاح table formatting في Session 13 (يونيو 2026)
+   تم إصلاح table formatting + TIER 8 charter descriptions في Session 13 (يونيو 2026)
 ```
