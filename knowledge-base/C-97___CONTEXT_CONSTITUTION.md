@@ -1,4 +1,4 @@
-# C-97 — Context Constitution
+# C-97 — Context Engine Constitution
 
 > **Version:** v1.0
 > **Truth State:** `[Speculation]`

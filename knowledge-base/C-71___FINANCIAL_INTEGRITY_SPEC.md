@@ -1,5 +1,12 @@
 # C-71 — FINANCIAL INTEGRITY SPEC
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
 Balances + Ledger + Settlement + Anti-Corruption Rules
 
 ⚠️ أي violation هنا = P0 مباشرة

@@ -1,5 +1,12 @@
 # C-66 — HUB FEATURES CODE GUIDE
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
 KYC + Subscription + Notifications — كود جاهز للتنفيذ
 
 ⚠️ اقرأ C-58 أولاً (Hub Completion Plan)

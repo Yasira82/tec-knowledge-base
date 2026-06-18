@@ -1,5 +1,12 @@
 # C-75 — RELEASE GOVERNANCE SPEC
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
 Deployments + Production Gates + Package Releases
 
 ⚠️ راجع C-43 للـ CI/CD implementation details

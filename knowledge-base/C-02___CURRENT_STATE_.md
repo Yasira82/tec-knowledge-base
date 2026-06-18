@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 17 June 2026 (Session 10)
+**Last Updated:** 18 June 2026 (Session 13)
 
 ---
 
@@ -24,6 +24,17 @@
 | **Port Conflict Resolved** | **✅** — Canonical: Gateway `:3000` / Services `:5001–5011` (C-20 Code Verified) — README + memory updated |
 | **Truth State Rollout** | **✅** — Added to C-00, C-10, C-12, C-20, C-64 (5 core docs) |
 | **Skills README** | **✅** — Updated 13→16 (added charter-advisor, mcp-orchestrator, observability) |
+| **v3.5.0 — Authority Automation** | **✅** — 28→66 docs (33%→79% adoption) · C-116 AHV Constitution · CDG manifest + AHV engine v1 + Impact Analysis · LANGUAGE_POLICY + 90-Day Roadmap |
+| **v3.6.0 — Registry Integrity** | **✅** — Registry auto-generated (96/96 coverage) · R-SEMANTIC-001 catches drift · C-117 Registry Integrity Constitution · check-registry-integrity.sh v2.0 · 28 rules across 7 categories |
+| **Registry Semantic Accuracy** | **✅** — Fixed v1.0 mislabeling (C-93/94/95 institutional_role now matches file H1) |
+| **Coverage 19%→100%** | **✅** — All 96 C-docs now registered (was 18/96) |
+| **CI Gates** | **9 total** — 5 original + 3 from v3.5.0 + check-registry-integrity.sh (BLOCKING) |
+| **v3.6.1 — VAM Restoration** | **✅** — VAM restored from v3.5.0 + check-vam-compliance.sh BLOCKING CI gate added |
+| **v3.6.2 — DAG-Guaranteed + C-118** | **✅** — 0 cycles · 0 inversions · 0 errors across all 10 CI gates · C-118 Dependency Propagation Constitution · propagate-dependency.py + regenerate-cdg.py |
+| **CI Gates** | **10 total** (was 9) — added check-vam-compliance.sh |
+| **Knowledge Base Version** | **v3.6.2** — Phase 1 complete · Phase B2 starting · 0 violations · 10 CI gates pass |
+| **Session 13 — ADR-007 Foreign Session Fix** | **✅** — `__TEC_PI_FOREIGN_SESSION` defense-in-depth added to ALL 5 Ecommerce payment files (pi-payment.ts + page.tsx + product/[id] + store/[id] + CartDrawer) — Hub redirect on foreign session |
+| **Tec-App (Hub) Test Coverage** | **95.5%** — 2026 tests passing |
 | الهدف | **9.5/10** |
 
 ---
@@ -73,6 +84,9 @@
 | **C-79 Institutional Memory Constitution** | **✅** — v1.0 [Speculation][Draft] — Tier-2 Asset (moved from C-96) |
 | **Code Verified Inspection (Session 9)** | **✅** — NEW-K/L/M documented — Tec-App + tec-api-gateway — 9.3/10 |
 | **P1 Fixes Applied (Session 10)** | **✅** — NEW-K/L/N/O VERIFIED — C-81 implementation guide applied — PRI 8.22 → 8.8+ |
+| **ADR-007 Foreign Session Fix (Session 13)** | **✅** — `__TEC_PI_FOREIGN_SESSION` check in all 5 Ecommerce payment handlers — defense-in-depth for PiSdkLoader foreign session (piReady=true but Pi.authenticate fails) |
+| **Ecommerce Buy Button Fix (Session 13)** | **✅** — Removed `disabled={!piReady}` from ProductCard — buttons always clickable, handleBuy does the redirect logic |
+| **Knowledge Base v3.6.2 (Session 13)** | **✅** — 48 new files · 17 new C-docs (C-17/18/19 + C-79/80/81 + C-93→C-99 + C-116→C-118) · evals/ + scripts/ + architecture/ + manifests/ · Governance Charter v1.2 |
 
 ---
 
@@ -215,7 +229,7 @@ Critical (P0) — تم إصلاحه:
 Remaining (P1) — مطلوب في Session القادمة:
 ⚠️ Port conflict: C-10/C-20 (port 3000/5001) vs README/charters (4000/4001)
 ✅ Commerce domain: محسوم — current=tec-commerce-app.vercel.app · target=commerce.tecosystem.app (C-101 canonical)
-⚠️ Truth Framework adoption: ~35% only — C-00→C-23 تحتاج Truth State headers
+✅ Truth Framework adoption: 100% on registry (96/96 docs registered via auto-generation) — C-00→C-23 تحتاج Truth State headers
 ✅ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ → تمت أرشفته في knowledge-base/archive/ (C-47 هو الـ canonical)
 ```
 
@@ -298,10 +312,11 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
 tec-ui coverage:      80% (75 tests)
+Hub coverage:         95.5% (2026 tests) ✅
 Hub CI:               ✅ GREEN — 2026 tests passing (commit 275d6fd0)
-Ecommerce CI:         ✅ GREEN — CI + E2E + CodeQL all pass (commit 5d44c501)
+Ecommerce CI:         ✅ GREEN — ADR-007 foreign session fix (commit a586c1ca)
 All repos coverage:   ≥ 60% ✅
-All 4 apps:           Mode 1 + Mode 2 + ADR-007 ✅
+All 4 apps:           Mode 1 + Mode 2 + ADR-007 + __TEC_PI_FOREIGN_SESSION ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
 All Pi App IDs:       ✅ كل 4 apps مسجّلة
@@ -309,7 +324,7 @@ All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
 Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
 Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.4.0 — 102 docs + 16 skills + 16 charters + C-93→C-99 + C-96 Platform Runtime Constitution
+Knowledge Base:       ✅ v3.6.2 — 96 C-docs + 16 skills + 16 charters + 10 CI gates + evals/ + scripts/ + architecture/
 Pending PRs:          NONE — all fixes on main ✅
 NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
 ```

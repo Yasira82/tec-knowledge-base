@@ -1,6 +1,13 @@
 # C-32 — APP BLUEPRINTS
 ## Nexus · Titan · DX · Explorer · Epic · Zone
 
+> **Truth State:** `[Future Vision]`
+> **Governance State:** `[Draft]`
+> **Verification:** `[Unverified]`
+
+---
+
+
 ---
 
 ## 1. NEXUS — Ecosystem Aggregator

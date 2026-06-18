@@ -1,6 +1,11 @@
 # C-47 — KERNEL SPEC & ARCHITECTURE BINDING
 ## TEC Constitutional Layer v1.1.1
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Code Verified]`
+
+
 ---
 
 ## 1. PURPOSE

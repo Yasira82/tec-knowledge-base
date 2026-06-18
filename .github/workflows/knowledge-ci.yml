@@ -13,6 +13,9 @@ on:
       - 'templates/**'
       - 'evals/**'
       - '.claude-plugin/**'
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'manifests/**'
       - 'README.md'
       - 'CLAUDE.md'
   pull_request:
@@ -27,6 +30,9 @@ on:
       - 'templates/**'
       - 'evals/**'
       - '.claude-plugin/**'
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'manifests/**'
       - 'README.md'
       - 'CLAUDE.md'
 
@@ -91,14 +97,86 @@ jobs:
       - name: Verify relative Markdown links resolve
         run: bash evals/check-links.sh
 
-  check-truth-framework:
-    name: Check Truth Framework
+  check-registry-integrity:
+    name: Registry Integrity Check (v2.0)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh scripts/*.py
+
+      - name: Regenerate Asset Registry
+        run: python3 scripts/build-asset-registry.py
+
+      - name: Verify No Manual Edits to Registry
+        run: |
+          if ! git diff --exit-code -I '^# Generated:' architecture/asset-registry.yaml; then
+            echo "❌ FAIL: asset-registry.yaml has manual edits that conflict with auto-generation."
+            echo "   Either revert your manual edits OR commit the regenerated version."
+            echo "   Run: python3 scripts/build-asset-registry.py"
+            exit 1
+          fi
+
+      - name: Run Registry Integrity Engine v2.0
+        run: bash evals/check-registry-integrity.sh
+
+
+  check-authority-consistency:
+    name: Authority Hierarchy Consistency (v3.5.0+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh scripts/*.py
+      - name: Run AHV Engine
+        run: bash evals/check-authority-consistency.sh
+
+  check-c57-index:
+    name: C-57 Index Drift Check (v3.5.0+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Make scripts executable
         run: chmod +x evals/*.sh
+      - name: Run C-57 Index Check
+        run: bash evals/check-c57-index.sh
 
-      - name: Report Truth State / Governance State adoption (informational)
+  check-truth-framework:
+    name: Truth Framework Adoption (v3.5.0+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run Truth Framework Check
         run: bash evals/check-truth-framework.sh
+
+
+  check-vam-compliance:
+    name: VAM Compliance Check (v3.6.1+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run VAM Compliance Engine
+        run: bash evals/check-vam-compliance.sh

@@ -1,0 +1,330 @@
+# =============================================================================
+# TEC REGISTRY INTEGRITY RULES v2.0
+# =============================================================================
+# The Institutional Linter — defines what "valid" means for the asset registry.
+# Enforced by evals/check-registry-integrity.sh
+#
+# Version: 2.0.0  (v1.0.0 + R-SEMANTIC-001/002 + lifecycle auto-detection)
+# Authority: C-117 Registry Integrity Constitution
+# Severity levels:
+#   - error:   blocks CI, must be fixed
+#   - warning: visible but does not block
+#   - info:    advisory only
+# =============================================================================
+
+version: 2.0.0
+ruleset_name: tec-registry-integrity
+
+# =============================================================================
+# SCHEMA RULES — structural validation
+# =============================================================================
+schema_rules:
+
+  - id: R-SCHEMA-001
+    severity: error
+    name: "Required fields present"
+    description: "Every asset MUST have all required fields defined in the schema."
+    check: "all required fields non-null"
+
+  - id: R-SCHEMA-002
+    severity: error
+    name: "Constitutional block integrity (truth_state)"
+    description: "constitutional.truth_state MUST be one of the allowed values."
+    check: "constitutional.truth_state in [idea, speculation, future-vision, planned-state, current-state, deprecated]"
+
+  - id: R-SCHEMA-003
+    severity: error
+    name: "Constitutional block integrity (governance)"
+    check: "constitutional.governance_state in [draft, governance-approved, adr-approved, rejected]"
+
+  - id: R-SCHEMA-004
+    severity: error
+    name: "Constitutional block integrity (verification)"
+    check: "constitutional.verification_state in [unverified, documentation-verified, code-verified, runtime-verified, assumed]"
+
+  - id: R-SCHEMA-005
+    severity: error
+    name: "Tier validity"
+    check: "tier in [tier-0-foundational, tier-1-constitutional-runtime, tier-1-institutional-intelligence, tier-2-experimental]"
+
+  - id: R-SCHEMA-006
+    severity: error
+    name: "Path must exist"
+    description: "Every asset's `path` field MUST point to a real file in the repo."
+    check: "file exists at path"
+
+  - id: R-SCHEMA-007
+    severity: error
+    name: "Authority scope validity"
+    description: "Every asset's authority_scope MUST be one of the canonical values."
+    check: "authority_scope in [platform, domain, app, service, constitutional, experimental]"
+    canonical_values:
+      - platform
+      - domain
+      - app
+      - service
+      - constitutional
+      - experimental
+
+# =============================================================================
+# SEMANTIC RULES — institutional_role vs actual file (NEW in v2.0)
+# =============================================================================
+# These rules prevent the exact drift problem the v3.4.0 audit caught:
+# the original asset-registry.yaml (v1.0) had 3 of 18 entries (17%) with
+# institutional_role that did NOT match the actual file's H1 title.
+#
+# v2.0 fixes this by:
+#   1. Auto-generating asset-registry.yaml from file headers
+#      (scripts/build-asset-registry.py)
+#   2. Adding R-SEMANTIC-001 to catch any future drift
+#
+# Authority: C-117 § 3 (Semantic Integrity)
+
+semantic_rules:
+
+  - id: R-SEMANTIC-001
+    severity: error
+    name: "institutional_role matches file H1 title"
+    description: |
+      The institutional_role field MUST contain at least 2 significant words
+      that appear in the actual file's first H1 heading. This prevents the
+      "Privacy, Legal & Regulatory Compliance" mislabeling of C-93 (which is
+      actually "Institutional Verification Constitution") that occurred in
+      registry v1.0.
+    check: |
+      fuzzy_word_overlap(institutional_role, file_h1_title) >= 2
+    minimum_word_overlap: 2
+    stop_words: [the, a, an, of, and, or, to, in, for, on, with, tec, c-, platform, v1, v2, v3]
+
+  - id: R-SEMANTIC-002
+    severity: warning
+    name: "authoritative_for claims match file content"
+    description: |
+      Every value in authoritative_for SHOULD appear (or have a synonym appear)
+      in the first 100 lines of the actual file. This prevents claiming
+      authority over topics the document doesn't actually cover.
+    check: |
+      for each claim in authoritative_for:
+        claim appears in file (case-insensitive substring match on first 100 lines)
+    minimum_match_ratio: 0.5
+
+# =============================================================================
+# STRUCTURAL RULES — graph-level integrity
+# =============================================================================
+structural_rules:
+
+  - id: R-STRUCT-001
+    severity: error
+    name: "No orphan assets"
+    description: "Every asset (except C-00) MUST be reachable from C-00 via `depends_on` chain."
+    check: "asset in transitive_closure(C-00.depends_on + C-00.invalidates)"
+
+  - id: R-STRUCT-002
+    severity: error
+    name: "No circular dependency chains"
+    description: "depends_on graph MUST be a DAG (directed acyclic graph)."
+    check: "no cycles in depends_on graph"
+
+  - id: R-STRUCT-003
+    severity: error
+    name: "Tier-2 isolation"
+    description: "tier-2-experimental assets MUST NOT appear in depends_on of tier-0 or tier-1 current-state assets."
+    check: "no tier-2 in depends_on of (tier-0 ∪ tier-1) where constitutional.verification_state != unverified"
+
+  - id: R-STRUCT-004
+    severity: error
+    name: "superseded_by consistency"
+    description: "If superseded_by is set, the other asset MUST list this asset in its supersedes array (bidirectional)."
+    check: "for all A: A.superseded_by == B ⟹ A in B.supersedes"
+
+  - id: R-STRUCT-005
+    severity: error
+    name: "No self-supersession"
+    check: "asset.id not in asset.supersedes AND asset.id != asset.superseded_by"
+
+  - id: R-STRUCT-006
+    severity: error
+    name: "Invalidates-depends_on symmetry"
+    description: "If asset A invalidates asset B (directly or transitively), then B MUST depend on A (transitively). This prevents dangling invalidation links."
+    check: "for all (A, B): B in closure(A.invalidates) ⟹ A in closure(B.depends_on)"
+
+# =============================================================================
+# GOVERNANCE RULES — constitutional consistency
+# =============================================================================
+governance_rules:
+
+  - id: R-GOV-001
+    severity: error
+    name: "Owner required"
+    description: "Every asset MUST have a non-null owner."
+    check: "owner is non-null and non-empty"
+
+  - id: R-GOV-002
+    severity: error
+    name: "No authority vacuum in authoritative_for"
+    description: "Every value in `authoritative_for` SHOULD be claimed by exactly one asset (no duplicates across assets)."
+    check: "no overlap in authoritative_for across all assets"
+
+  - id: R-GOV-003
+    severity: error
+    name: "Current-state requires verification"
+    description: "If truth_state = current-state, verification_state MUST be in [code-verified, runtime-verified, documentation-verified]."
+    check: "truth_state==current-state ⟹ verification_state != unverified AND verification_state != assumed"
+
+  - id: R-GOV-004
+    severity: error
+    name: "Tier-0 cannot be deprecated"
+    description: "tier-0-foundational assets MUST NOT have truth_state = deprecated."
+    check: "tier==tier-0-foundational ⟹ truth_state != deprecated"
+
+  - id: R-GOV-005
+    severity: warning
+    name: "Stale verification"
+    description: "If last_verified is more than 180 days ago AND truth_state is current-state, flag as stale."
+    check: "current-state AND days_since(last_verified) > 180"
+
+  - id: R-GOV-006
+    severity: error
+    name: "authoritative_for required for non-experimental"
+    description: "tier-0 and tier-1 assets MUST have non-empty authoritative_for."
+    check: "(tier-0 ∪ tier-1) ⟹ len(authoritative_for) > 0"
+
+  - id: R-GOV-007
+    severity: error
+    name: "Experimental has no authority"
+    description: "tier-2-experimental assets MUST have empty authoritative_for."
+    check: "tier==tier-2-experimental ⟹ len(authoritative_for) == 0"
+
+  - id: R-GOV-008
+    severity: error
+    name: "Tier-truth state invariant"
+    description: "Constitutional tier MUST be in current-state. Lower tiers may be in earlier states."
+    check: "tier-truth_state compatibility"
+    compatibility:
+      tier-0-foundational:
+        allowed: [current-state]
+        forbidden: [idea, speculation, future-vision, planned-state, deprecated]
+      tier-1-constitutional-runtime:
+        allowed: [current-state, future-vision, planned-state]
+        forbidden: [idea, speculation, deprecated]
+      tier-1-institutional-intelligence:
+        allowed: [current-state, future-vision, planned-state, speculation]
+        forbidden: [idea, deprecated]
+      tier-2-experimental:
+        allowed: [speculation, future-vision, idea]
+        forbidden: [current-state, planned-state]
+
+  - id: R-GOV-009
+    severity: error
+    name: "Experimental authority_scope"
+    description: "tier-2-experimental assets MUST have authority_scope = experimental."
+    check: "tier==tier-2-experimental ⟹ authority_scope==experimental"
+
+  - id: R-GOV-010
+    severity: error
+    name: "Constitutional authority_scope"
+    description: "Tier-0 and Tier-1 constitutional assets MUST have authority_scope in [platform, constitutional]."
+    check: "tier in [tier-0-foundational, tier-1-constitutional-runtime, tier-1-institutional-intelligence] ⟹ authority_scope in [platform, constitutional, app, service, domain]"
+
+# =============================================================================
+# LIFECYCLE RULES — Truth State transitions
+# =============================================================================
+lifecycle_rules:
+
+  - id: R-LIFE-001
+    severity: error
+    name: "Valid truth_state transitions"
+    description: "Updates that change truth_state MUST follow the lifecycle: idea → speculation → future-vision → planned-state → current-state → deprecated"
+    check: "transition in allowed_transitions"
+    allowed_transitions:
+      idea: [speculation, deprecated]
+      speculation: [idea, future-vision, deprecated]
+      future-vision: [speculation, planned-state, deprecated]
+      planned-state: [future-vision, current-state, deprecated]
+      current-state: [planned-state, deprecated]
+      deprecated: []
+
+  - id: R-LIFE-002
+    severity: warning
+    name: "Long-running speculation"
+    description: "If asset has been in speculation/future-vision for more than 365 days without promotion, flag for review."
+    check: "truth_state in [speculation, future-vision] AND days_since(last_verified OR created) > 365"
+
+  - id: R-LIFE-003
+    severity: error
+    name: "Future-vision requires review date"
+    description: "Assets in future-vision or speculation MUST have next_review set."
+    check: "truth_state in [speculation, future-vision] ⟹ next_review is non-null"
+
+# =============================================================================
+# AUDIT TRAIL RULES
+# =============================================================================
+audit_rules:
+
+  - id: R-AUDIT-001
+    severity: error
+    name: "last_verified required for current-state"
+    check: "truth_state==current-state ⟹ last_verified is non-null"
+
+  - id: R-AUDIT-002
+    severity: warning
+    name: "next_review required for current-state"
+    description: "Every current-state asset SHOULD have next_review set to enable proactive review."
+    check: "truth_state==current-state ⟹ next_review is non-null (warning if null)"
+
+  - id: R-AUDIT-003
+    severity: error
+    name: "Expired review"
+    description: "If today > next_review and truth_state is current-state or planned-state, the asset has an expired review and MUST be flagged."
+    check: "current-state/planned-state AND days_past(next_review) > 0"
+    severity_escalation:
+      overdue_warning_days: 0
+      overdue_error_days: 30
+
+# =============================================================================
+# COVERAGE RULES (NEW in v2.0)
+# =============================================================================
+# v1.0 only validated 18 of 96 C-docs (19% coverage). v2.0 requires 100%
+# coverage — every C-doc in knowledge-base/ MUST have an entry in the registry.
+# Authority: C-117 § 4 (Coverage)
+
+coverage_rules:
+
+  - id: R-COVERAGE-001
+    severity: error
+    name: "All C-docs registered"
+    description: |
+      Every C-NN.md file in knowledge-base/ MUST have a corresponding entry
+      in asset-registry.yaml. v1.0 covered 18/96 (19%); v2.0 requires 100%.
+    check: |
+      for each file C-NN.md in knowledge-base/:
+        exists asset in registry where asset.id == C-NN
+    minimum_coverage: 1.0
+
+  - id: R-COVERAGE-002
+    severity: warning
+    name: "No orphan registry entries"
+    description: |
+      Every entry in asset-registry.yaml SHOULD have a corresponding file
+      in knowledge-base/. (Caught by R-SCHEMA-006 path-exists, but this
+      is a separate concern — registry hygiene.)
+    check: |
+      for each asset in registry:
+        asset.id corresponds to a file C-NN.md in knowledge-base/
+
+# =============================================================================
+# REPORTING
+# =============================================================================
+reporting:
+  output_format: "markdown"
+  output_path: "architecture/registry-integrity-report.md"
+  sections:
+    - summary
+    - errors
+    - warnings
+    - info
+    - per_tier_breakdown
+    - stale_assets
+    - semantic_drift  # NEW in v2.0
+    - coverage_report  # NEW in v2.0
+    - recommended_actions

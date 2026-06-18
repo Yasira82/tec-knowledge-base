@@ -1,0 +1,1833 @@
+# =============================================================================
+# TEC ASSET REGISTRY (AUTO-GENERATED)
+# =============================================================================
+# The Institutional Asset Registry — single source of truth for all
+# constitutional assets in the TEC Knowledge Base.
+#
+# Generated: 2026-06-18T10:49:33.574971
+# Generator: scripts/build-asset-registry.py
+# Authority: C-117 Registry Integrity Constitution
+#
+# ⚠️  DO NOT EDIT MANUALLY — this file is auto-generated.
+#     To update: edit the source C-NN.md file, then re-run:
+#       python3 scripts/build-asset-registry.py
+#
+# Total assets: 99
+# Coverage: 100% (all C-docs in knowledge-base/)
+
+version: 1.2.0
+
+assets:
+
+  # ===========================================================================
+  # TIER 0 FOUNDATIONAL
+  # ===========================================================================
+
+  - id: C-00
+    type: constitution
+    tier: tier-0-foundational
+    institutional_role: "Platform Constitution & Engineering Governance"
+    path: knowledge-base/C-00_v3.0___PLATFORM_CONSTITUTION___ENGINEERING_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: constitutional
+    owner: yasser
+    authoritative_for: ["platform-constitution", "governing-principles", "authority-hierarchy"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-47
+    type: architecture
+    tier: tier-0-foundational
+    institutional_role: "Kernel Spec & Architecture Binding"
+    path: knowledge-base/C-47_Kernel_Spec_Architecture_Binding.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: constitutional
+    owner: yasser
+    authoritative_for: ["kernel-spec", "architecture-binding", "forbidden-behaviors"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-64
+    type: adr
+    tier: tier-0-foundational
+    institutional_role: "Architecture Decision Records"
+    path: knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: constitutional
+    owner: yasser
+    authoritative_for: ["architecture-decisions", "adr-registry", "adr-system"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-67
+    type: governance
+    tier: tier-0-foundational
+    institutional_role: "Source Of Truth Matrix"
+    path: knowledge-base/C-67___SOURCE_OF_TRUTH_MATRIX.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: constitutional
+    owner: yasser
+    authoritative_for: ["source-of-truth", "conflict-resolution", "authority-matrix"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  # ===========================================================================
+  # TIER 1 CONSTITUTIONAL RUNTIME
+  # ===========================================================================
+
+  - id: C-01
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Project Identity"
+    path: knowledge-base/C-01_Project_Identity.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-01-project-identity"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-02
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Current State"
+    path: knowledge-base/C-02___CURRENT_STATE_.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["current-state", "platform-score", "session-log"]
+    depends_on: [C-47, C-64]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-10
+    type: architecture
+    tier: tier-1-constitutional-runtime
+    institutional_role: "System Architecture"
+    path: knowledge-base/C-10_System_Architecture.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-10-system-architecture"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-116
+    type: constitution
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Authority Automation Constitution"
+    path: knowledge-base/C-116___AUTHORITY_AUTOMATION_CONSTITUTION.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-116-authority-automation-constitution", "c-116-constitutional-question", "c-116-core-constitutional-principle"]
+    depends_on: [C-00, C-47, C-64, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-117
+    type: constitution
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Registry Integrity Constitution"
+    path: knowledge-base/C-117___REGISTRY_INTEGRITY_CONSTITUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-117-registry-integrity-constitution", "c-117-constitutional-question", "c-117-core-constitutional-principle"]
+    depends_on: [C-00, C-47, C-64, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-118
+    type: constitution
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Dependency Propagation Constitution"
+    path: knowledge-base/C-118___DEPENDENCY_PROPAGATION_CONSTITUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-118-dependency-propagation-constitution", "c-118-constitutional-question", "c-118-core-constitutional-principle"]
+    depends_on: [C-00, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-11
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Repository Map"
+    path: knowledge-base/C-11___REPOSITORY_MAP.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-11-repository-map"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-12
+    type: architecture
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Dual-mode Payment Architecture"
+    path: knowledge-base/C-12_Dual_Mode_Payment.md
+    constitutional:
+      truth_state: current-state
+      governance_state: adr-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-12-ecosystem", "c-12-read-this-before"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-13
+    type: architecture
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Auth & SSO Architecture"
+    path: knowledge-base/C-13_Auth_SSO.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-13-auth--sso-architecture"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-14
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Shared Packages"
+    path: knowledge-base/C-14___SHARED_PACKAGES.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-14-shared-packages"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-15
+    type: security
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Security Rules"
+    path: knowledge-base/C-15_Security_Rules.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-15-security-rules"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-16
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Database Rules"
+    path: knowledge-base/C-16_Database_Rules.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-16-database-rules"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-17
+    type: compliance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Data Privacy, Retention & Compliance Spec"
+    path: knowledge-base/C-17___DATA_PRIVACY_RETENTION_COMPLIANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-17-implementation-status"]
+    depends_on: [C-00, C-47, C-64]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-18
+    type: constitution
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Disaster Recovery & Backup Constitution"
+    path: knowledge-base/C-18___DISASTER_RECOVERY_BACKUP_CONSTITUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-18-disaster-recovery--backup-constitution"]
+    depends_on: [C-00, C-47, C-64]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-19
+    type: compliance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Fraud, Abuse & AML / Sanctions Controls"
+    path: knowledge-base/C-19___FRAUD_ABUSE_AML_CONTROLS.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-19-fraud-abuse--aml--sanctions-controls"]
+    depends_on: [C-00, C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-20
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Backend Services Map"
+    path: knowledge-base/C-20_Backend_Services.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: service
+    owner: yasser
+    authoritative_for: ["c-20-backend-services-map", "c-20-health-check-urls"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-21
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Hub App"
+    path: knowledge-base/C-21_Hub_App.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: service
+    owner: yasser
+    authoritative_for: ["c-21-hub-app"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-22
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Commerce + Assets + Ecommerce Apps"
+    path: knowledge-base/C-22_Apps_Commerce_Assets_Ecommerce.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: service
+    owner: yasser
+    authoritative_for: ["c-22-payment-status-summary"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-23
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "TEC SDK Shared Client"
+    path: knowledge-base/C-23_TEC_SDK.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: code-verified
+      authority_scope: service
+    owner: yasser
+    authoritative_for: ["c-23-tec-sdk-shared-client"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-40
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Open Violations Map"
+    path: knowledge-base/C-40___OPEN_VIOLATIONS_MAP.md
+    constitutional:
+      truth_state: current-state
+      governance_state: adr-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-40-open-violations-map", "c-40-lifecycle", "c-40-open"]
+    depends_on: [C-64, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-41
+    type: roadmap
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Engineering Roadmap"
+    path: knowledge-base/C-41_Engineering_Roadmap.md
+    constitutional:
+      truth_state: current-state
+      governance_state: adr-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-41-engineering-roadmap"]
+    depends_on: [C-64]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-42
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Testing Strategy"
+    path: knowledge-base/C-42_Testing_Strategy.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-42-testing-strategy"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-43
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "CI/CD DevOps Pipeline"
+    path: knowledge-base/C-43_CI_CD_DevOps.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-43-cicd-devops-pipeline"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-44
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Environment Variables Reference"
+    path: knowledge-base/C-44_Environment_Variables.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-44-environment-variables-reference"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-45
+    type: metrics
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Observability & Monitoring"
+    path: knowledge-base/C-45_Observability.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-45-observability--monitoring"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-46
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Commercial Growth Strategy"
+    path: knowledge-base/C-46_Commercial_Strategy.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-46-commercial-growth-strategy"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-48
+    type: audit
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Engineering Audit Report"
+    path: knowledge-base/C-48_Engineering_Audit_May2026.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-48-engineering-audit-report"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-49
+    type: roadmap
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Engineering Work Map"
+    path: knowledge-base/C-49_Engineering_Work_Map.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-49-engineering-work-map"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-50
+    type: session-log
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Session Log"
+    path: knowledge-base/C-50___SESSION_LOG.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-50-session-log"]
+    depends_on: [C-64, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-51
+    type: architecture
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Cookie Architecture"
+    path: knowledge-base/C-51_Cookie_Architecture.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-51-cookie-architecture"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-52
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Protected Files Map"
+    path: knowledge-base/C-52_Protected_Files_Map.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-52-protected-files-map"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-53
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "New App Creation Protocol"
+    path: knowledge-base/C-53_New_App_Protocol.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-53-new-app-creation-protocol", "c-53-app"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-54
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Package Management"
+    path: knowledge-base/C-54_Package_Management.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-54-package-management", "c-54-npm-publish-sequence"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-55
+    type: audit
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Scoring & Audit Strategy"
+    path: knowledge-base/C-55_Scoring_Audit_Strategy.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-55-scoring--audit-strategy"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-56
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Redis Streams Events Map"
+    path: knowledge-base/C-56_Redis_Streams_Events_Map.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-56-redis-streams-events-map", "c-56-event-bus-architecture"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-57
+    type: index
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Master Contents Index"
+    path: knowledge-base/C-57___MASTER_CONTENTS_INDEX.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["master-index", "contents-index", "navigation-gateway"]
+    depends_on: [C-47, C-64, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-58
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Hub Completion Plan"
+    path: knowledge-base/C-58_Hub_Completion_Plan.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-58-hub-completion-plan"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-59
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Unified Error Response Format"
+    path: knowledge-base/C-59_Error_Format.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-59-unified-error-response-format"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-60
+    type: specification
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Code Templates"
+    path: knowledge-base/C-60_Code_Templates.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-60-code-templates"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-61
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Typescript Shared Types Strategy"
+    path: knowledge-base/C-61_Typescript_Types.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-61-typescript-shared-types-strategy"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-62
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "SLO Definitions & Performance Standards"
+    path: knowledge-base/C-62_SLO_Definitions.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-62-service-level-objectives"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-63
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Pi Network Integration Rules"
+    path: knowledge-base/C-63___PI_NETWORK_INTEGRATION_RULES.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-63-pi-network-integration-rules"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-65
+    type: specification
+    tier: tier-1-constitutional-runtime
+    institutional_role: "New Backend Service Template"
+    path: knowledge-base/C-65___NEW_BACKEND_SERVICE_TEMPLATE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-65-new-backend-service-template", "c-65-service-creation-gate", "c-65-service"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-66
+    type: specification
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Hub Features Code Guide"
+    path: knowledge-base/C-66___HUB_FEATURES_CODE_GUIDE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-66-hub-features-code-guide"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-68
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Domain Ownership Matrix"
+    path: knowledge-base/C-68___DOMAIN_OWNERSHIP_MATRIX.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-68-domain-ownership-matrix"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-69
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "API Contracts Governance"
+    path: knowledge-base/C-69___API_CONTRACTS_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-69-api-contracts-governance"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-70
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Event Governance Spec"
+    path: knowledge-base/C-70___EVENT_GOVERNANCE_SPEC.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-70-event-governance-spec"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-71
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Financial Integrity Spec"
+    path: knowledge-base/C-71___FINANCIAL_INTEGRITY_SPEC.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-71-financial-integrity-spec"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-72
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Frontend State Governance"
+    path: knowledge-base/C-72___FRONTEND_STATE_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-72-frontend-state-governance"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-73
+    type: operations
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Incident Response Runbook"
+    path: knowledge-base/C-73___INCIDENT_RESPONSE_RUNBOOK.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-73-incident-response-runbook"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-74
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Platform Scalability Spec"
+    path: knowledge-base/C-74___PLATFORM_SCALABILITY_SPEC.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-74-platform-scalability-spec"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-75
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Release Governance Spec"
+    path: knowledge-base/C-75___RELEASE_GOVERNANCE_SPEC.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-75-release-governance-spec"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-76
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Pi Payment Ownership Authority"
+    path: knowledge-base/C-76___ADR-007.md
+    constitutional:
+      truth_state: current-state
+      governance_state: adr-approved
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-76-pi-payment-ownership-authority", "c-76-why-this-content", "c-76-implementation-reference"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-77
+    type: audit
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Strategic Analysis & Risk Assessment"
+    path: knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-77-current-reality", "c-77-maturity-assessment", "c-77-competitive-positioning"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-78
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Platform Operations & Reliability Governance"
+    path: knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-78-incident-summary", "c-78-timeline", "c-78-root-cause"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-80
+    type: audit
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Engineering Assessment Report"
+    path: knowledge-base/C-80___ENGINEERING_ASSESSMENT_REPORT.md
+    constitutional:
+      truth_state: current-state
+      governance_state: adr-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-80-engineering-assessment-report", "c-80-executive-summary"]
+    depends_on: [C-47, C-64, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-81
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "P1 Runtime Fixes"
+    path: knowledge-base/C-81___P1_FIXES_IMPLEMENTATION.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: adr-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-81-p1-runtime-fixes", "c-81-application-order"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-82
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Platform Maturity & Evolution Governance"
+    path: knowledge-base/C-82___PLATFORM_MATURITY_EVOLUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-82-final-statement"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  # ===========================================================================
+  # TIER 1 INSTITUTIONAL INTELLIGENCE
+  # ===========================================================================
+
+  - id: C-100
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "TEC Hub Institutional Charter"
+    path: knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-100-tec-hub-institutional-charter"]
+    depends_on: [C-76]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-101
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Commerce Institutional Charter"
+    path: knowledge-base/C-101___COMMERCE_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-101-commerce-institutional-charter"]
+    depends_on: [C-76]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-102
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Assets Institutional Charter"
+    path: knowledge-base/C-102___ASSETS_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-102-assets-institutional-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-103
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Ecommerce Institutional Charter"
+    path: knowledge-base/C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-103-ecommerce-institutional-charter"]
+    depends_on: [C-76]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-104
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "TEC AI Intelligence Reasoning CHARTER"
+    path: knowledge-base/C-104___TEC_AI_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-104-tec-ai-intelligence-reasoning-charter"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-105
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Analytics Institutional Charter"
+    path: knowledge-base/C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-105-analytics-institutional-charter"]
+    depends_on: [C-47, C-70]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-106
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Life Institutional Charter"
+    path: knowledge-base/C-106___LIFE_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-106-life-institutional-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-107
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Connection Institutional Charter"
+    path: knowledge-base/C-107___CONNECTION_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-107-connection-institutional-charter"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-108
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Explorer Institutional Charter"
+    path: knowledge-base/C-108___EXPLORER_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-108-explorer-institutional-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-109
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Nexus Institutional Charter"
+    path: knowledge-base/C-109___NEXUS_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-109-nexus-institutional-charter"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-110
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "System Institutional Charter"
+    path: knowledge-base/C-110___SYSTEM_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-110-system-institutional-charter"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-111
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Alert Institutional Charter"
+    path: knowledge-base/C-111___ALERT_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-111-alert-institutional-charter"]
+    depends_on: [C-47, C-62, C-78]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-112
+    type: security
+    tier: tier-1-institutional-intelligence
+    institutional_role: "NX Security INSTITUTIONAL CHARTER"
+    path: knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-112-nx-security-institutional-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-113
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Fundx Institutional Charter"
+    path: knowledge-base/C-113___FUNDX_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-113-fundx-institutional-charter"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-114
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Estate Institutional Charter"
+    path: knowledge-base/C-114___ESTATE_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-114-estate-institutional-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-115
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "DX Developer INSTITUTIONAL CHARTER"
+    path: knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-115-dx-developer-institutional-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-83
+    type: document
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Economic Visual Language (evl) & Economic State Language (esl)"
+    path: knowledge-base/C-83___EVL_ESL.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-83-core-distinction"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-84
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Economic Runtime Constitution"
+    path: knowledge-base/C-84___RUNTIME_CONSTITUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-84-economic-runtime-constitution", "c-84-the-runtime-may", "c-84-the-runtime-must"]
+    depends_on: [C-70]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-85
+    type: document
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Economic Infrastructure Stack"
+    path: knowledge-base/C-85___INFRASTRUCTURE_STACK.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-85-economic-infrastructure-stack"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-86
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Temporal Governance & Economic Consistency Constitution"
+    path: knowledge-base/C-86___TEMPORAL_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-86-operational-truth", "c-86-forensic-truth", "c-86-constitutional-rule"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-87
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Execution Governance & Ownership Constitution"
+    path: knowledge-base/C-87___EXECUTION_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-87-constitutional-rules", "c-87-authority-in-decision"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-88
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Pi Economic Flow Constitution"
+    path: knowledge-base/C-88___PI_ECONOMIC_FLOW_CONSTITUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-88-pi-economic-flow-constitution", "c-88-actor-invariants", "c-88-constitutional-rule"]
+    depends_on: [C-00, C-47, C-76]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-89
+    type: governance
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Developer Platform Governance"
+    path: knowledge-base/C-89___DEVELOPER_PLATFORM_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-89-developer-platform-governance", "c-89-who-may-build", "c-89-what-external-developers"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-90
+    type: security
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Security & Trust Model"
+    path: knowledge-base/C-90___SECURITY_TRUST_MODEL.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-90-constitutional-trust-rules"]
+    depends_on: [C-00, C-47, C-67]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-91
+    type: roadmap
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Engineering Roadmap To Scale"
+    path: knowledge-base/C-91___ENGINEERING_ROADMAP_TO_SCALE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-91-engineering-roadmap-to-scale", "c-91-critical-path", "c-91-priority-order"]
+    depends_on: [C-00]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-92
+    type: metrics
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Platform Health Model"
+    path: knowledge-base/C-92___PLATFORM_HEALTH_MODEL.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: draft
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-92-platform-health-model"]
+    depends_on: [C-78]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-93
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Institutional Verification Constitution"
+    path: knowledge-base/C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-93-institutional-verification-constitution", "c-93-constitutional-question", "c-93-core-constitutional-principle"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-94
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Governed Capability Constitution"
+    path: knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-94-governed-capability-constitution", "c-94-constitutional-question", "c-94-core-constitutional-principle"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-95
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Institutional Knowledge Constitution"
+    path: knowledge-base/C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-95-institutional-knowledge-constitution", "c-95-constitutional-question", "c-95-core-constitutional-principle"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-96
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Platform Runtime & Observability Constitution"
+    path: knowledge-base/C-96___PLATFORM_RUNTIME_CONSTITUTION.md
+    constitutional:
+      truth_state: current-state
+      governance_state: draft
+      verification_state: code-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-96-constitutional-question", "c-96-why-this-document", "c-96-core-constitutional-principles"]
+    depends_on: [C-00]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-06-18"
+    next_review: "2026-12-01"
+
+  - id: C-97
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Context Engine Constitution"
+    path: knowledge-base/C-97___CONTEXT_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-97-context-engine-constitution", "c-97-constitutional-question", "c-97-core-constitutional-principle"]
+    depends_on: [C-12, C-13, C-63, C-64, C-68, C-71, C-73]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-98
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Institutional Construction Constitution"
+    path: knowledge-base/C-98___INSTITUTIONAL_CONSTRUCTION_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-98-institutional-construction-constitution", "c-98-constitutional-question", "c-98-core-constitutional-principle"]
+    depends_on: [C-21, C-22, C-47, C-53, C-60, C-61, C-63, C-65, C-66]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-99
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Institutional Governance Constitution"
+    path: knowledge-base/C-99___INSTITUTIONAL_GOVERNANCE_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-99-institutional-governance-constitution", "c-99-constitutional-question", "c-99-core-constitutional-principle"]
+    depends_on: [C-00, C-02, C-40, C-47, C-64, C-67, C-68, C-78]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  # ===========================================================================
+  # TIER 2 EXPERIMENTAL
+  # ===========================================================================
+
+  - id: C-30
+    type: roadmap
+    tier: tier-2-experimental
+    institutional_role: "Platform Vision & 24 Apps Roadmap"
+    path: knowledge-base/C-30_Vision_24_Apps.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: [C-100, C-101, C-102, C-103, C-104, C-105, C-106, C-107, C-108, C-109, C-110, C-111, C-112, C-113, C-114, C-115, C-77]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-31
+    type: document
+    tier: tier-2-experimental
+    institutional_role: "App Blueprints"
+    path: knowledge-base/C-31_App_Blueprints_Life_Connection_Fundx_Estate.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-32
+    type: document
+    tier: tier-2-experimental
+    institutional_role: "App Blueprints"
+    path: knowledge-base/C-32_App_Blueprints_Nexus_Titan_DX.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-79
+    type: constitution
+    tier: tier-2-experimental
+    institutional_role: "Institutional Memory Constitution"
+    path: knowledge-base/C-79___INSTITUTIONAL_MEMORY_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: unverified
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: [C-50, C-64, C-84, C-85, C-92, C-93, C-94, C-95, C-96, C-97, C-98, C-99]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+# =============================================================================
+# STATISTICS
+# =============================================================================
+# Total assets: 99
+#   tier-1-constitutional-runtime: 58
+#   tier-1-institutional-intelligence: 33
+#   tier-0-foundational: 4
+#   tier-2-experimental: 4
+#
+# Truth State distribution:
+#   current-state: 83
+#   planned-state: 6
+#   future-vision: 5
+#   speculation: 5

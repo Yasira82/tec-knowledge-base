@@ -1,5 +1,12 @@
 # C-65 — NEW BACKEND SERVICE TEMPLATE
 
+> **Truth State:** `[Current State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+
+---
+
+
 NestJS Service Scaffold — نسخ ولصق جاهز
 
 ## SERVICE CREATION GATE — اقرأ أولاً

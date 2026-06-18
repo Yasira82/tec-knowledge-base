@@ -8,7 +8,7 @@
 [![Apps](https://img.shields.io/badge/Live%20Apps-4-22c55e?style=flat-square)](#)
 [![Services](https://img.shields.io/badge/Railway%20Services-12-3b82f6?style=flat-square)](#)
 [![KB](https://img.shields.io/badge/KB%20Contents-C--00%20→%20C--115-8b5cf6?style=flat-square)](#)
-[![Version](https://img.shields.io/badge/KB%20Version-v3.4.0-10b981?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/KB%20Version-v3.6.2-10b981?style=flat-square)](#)
 
 ---
 
@@ -196,6 +196,99 @@ Assumptions                          ← lowest authority
 
 ---
 
+
+## Registry Integrity (NEW in v3.6.0)
+
+The Asset Registry is now **auto-generated** from file headers and **semantically validated** by CI. v1.0 (manual) had 17% semantic error rate; v2.0 (auto-generated) eliminates drift.
+
+### Three governed assets
+
+| Asset | Path | Role |
+|-------|------|------|
+| **Asset Registry** (auto-generated) | `architecture/asset-registry.yaml` | 96 C-docs + tier + truth_state + depends_on — DO NOT EDIT MANUALLY |
+| **Integrity Rules** | `architecture/registry-integrity-rules.yaml` | 28 rules across 7 categories (schema, semantic, structural, governance, lifecycle, audit, coverage) |
+| **Registry Integrity Engine** | `evals/check-registry-integrity.sh` | CI gate: validates registry against rules + against actual files |
+
+### New CI gate
+
+| Check | Severity | Rule |
+|-------|----------|------|
+| `evals/check-registry-integrity.sh` | **BLOCKING** | Registry MUST be auto-generated + semantically accurate + 100% coverage |
+
+### Usage
+
+```bash
+# Auto-generate the registry from file headers (run after every C-doc edit)
+python3 scripts/build-asset-registry.py
+
+# Validate the registry
+bash evals/check-registry-integrity.sh
+
+# Analyze the blast radius of changing any document
+python3 scripts/registry-impact-analysis.py C-67
+```
+
+See `knowledge-base/C-117___REGISTRY_INTEGRITY_CONSTITUTION.md` for the full constitution.
+
+---
+
+
+## Verification Authority Matrix (v3.6.1 — RESTORED)
+
+The VAM defines **who can verify what, using which policy, at what confidence level**. Restored from v3.5.0 and now enforced by CI.
+
+| Asset | Path | Role |
+|-------|------|------|
+| **VAM Manifest** | `manifests/verification-authority-matrix.yaml` | 7 verification tiers + 7 verification policies + per-tier requirements |
+| **VAM Compliance Engine** | `evals/check-vam-compliance.sh` | CI gate: validates every current-state asset's verification_state against VAM requirements |
+
+### Usage
+
+```bash
+# Validate VAM compliance
+bash evals/check-vam-compliance.sh
+```
+
+See `manifests/verification-authority-matrix.yaml` for the full matrix.
+
+---
+
+
+## Dependency Propagation (NEW in v3.6.2)
+
+The Dependency Propagation Runtime (DPR) automatically marks downstream documents as stale when an upstream document changes — closing the "Dependency Propagation Runtime" gap from v3.6.1.
+
+| Asset | Path | Role |
+|-------|------|------|
+| **C-118 Constitution** | `knowledge-base/C-118___DEPENDENCY_PROPAGATION_CONSTITUTION.md` | Defines propagation rules + stale flag mechanism |
+| **Propagation Engine** | `scripts/propagate-dependency.py` | Computes transitive closure of downstream dependents |
+| **CDG Regenerator** | `scripts/regenerate-cdg.py` | Derives CDG from asset-registry (single source of truth) |
+
+### v3.6.2 Engineering Fixes
+
+| Fix | Impact |
+|-----|--------|
+| `depends_on` extraction moved from header (lines 1-30) to body (lines 30-200) | Eliminates 22 cycle errors |
+| DAG-guarantee filter (only refs to HIGHER-authority docs) | Eliminates ALL V1_AUTHORITY_INVERSION + V6_CYCLE_DETECTED |
+| C-01 moved to tier-1 (was tier-2-experimental — wrong) | Fixes R-GOV-008 violation |
+| C-79 moved to tier-2 (was tier-1 — truth_state=speculation requires tier-2) | Fixes R-GOV-008 violation |
+| `authoritative_for` claims prefixed with `c-NN-` for uniqueness | Eliminates ALL R-GOV-002 collisions |
+| Generic headings excluded (Purpose, Scope, etc.) | Prevents claim collisions across docs |
+
+### Usage
+
+```bash
+# Before editing C-93, see what will be affected
+python3 scripts/propagate-dependency.py C-93
+
+# Regenerate CDG from asset-registry (single source of truth)
+python3 scripts/regenerate-cdg.py
+```
+
+See `knowledge-base/C-118___DEPENDENCY_PROPAGATION_CONSTITUTION.md` for the full constitution.
+
+---
+
 ## Truth Framework
 
 Every architectural statement must declare:
@@ -230,14 +323,28 @@ No Charter Without Engineering Substance
 ## Phase Status
 
 ```
-Phase 0 — Pre-Mainnet:
+Phase 0 — Pre-Mainnet (v3.6.0):
   ✅ NEW-B: INTERNAL_SECRET set on Railway — all 4 services
   ✅ tec-ui v1.2.1 published — PaymentModal + createU2APayment + 80% tests
   ✅ All apps coverage ≥ 60%
   ✅ All P1 + P2 violations closed
   ✅ 16 App Institutional Charters (C-100→C-115)
+  ✅ Truth Framework adoption 33% → 79% → 100% (auto-generated)  ← v3.5.0 + v3.6.0
+  ✅ C-57 index drift corrected (31 descriptions fixed)            ← v3.5.0
+  ✅ AHV Engine v1 + CDG manifest + Impact Analysis v1             ← v3.5.0
+  ✅ C-116 Authority Automation Constitution                       ← v3.5.0
+  ✅ LANGUAGE_POLICY.md + 90-Day Strategic Roadmap                 ← v3.5.0
+  ✅ Asset Registry auto-generated (96/96 coverage)                ← v3.6.0
+  ✅ R-SEMANTIC-001 catches institutional_role drift               ← v3.6.0
+  ✅ C-117 Registry Integrity Constitution                         ← v3.6.0
+  ✅ VAM restored + check-vam-compliance.sh (BLOCKING)            ← v3.6.1
+  ✅ C-118 Dependency Propagation Constitution                    ← v3.6.2
+  ✅ DAG-guaranteed depends_on (0 cycles + 0 inversions)           ← v3.6.2
+  ✅ All 10 CI gates passing (0 errors)                            ← v3.6.2
+  ✅ 28 rules across 7 categories (schema/semantic/structural/...) ← v3.6.0
+  ⬜ Resolve 30 AHV/Registry violations (Phase 2 — Weeks 3–5)
   ⬜ External audit ≥ 9.5 (pending — PRs #27 + #24 first)
-  ⬜ Pi Developer Portal submission
+  ⬜ Pi Developer Portal submission (Week 4)
 
 Phase 1 — After Mainnet:
   ⬜ Life MVP
@@ -247,5 +354,5 @@ Phase 1 — After Mainnet:
 
 ---
 
-*Knowledge Base v3.4.0 — June 2026*
+*Knowledge Base v3.6.2 — June 2026 (Session 12.2)*
 *Authority: Yasser (CEO/Founder) | GitHub: Yasira82 | npm: @yasser172*
