@@ -185,24 +185,24 @@
 
 ## TIER 8 — App Institutional Charters (C-100→C-115)
 
-| Charter | App | System Role | Truth State |
-|---------|-----|-------------|-------------|
-| **C-100** | Hub | System of Access — Control Plane |
-| **C-101** | Commerce | System of Production (Reference Impl) |
-| **C-102** | Assets | Digital Asset Infrastructure |
-| **C-103** | Ecommerce | Consumer Marketplace |
-| **C-104** | TEC AI | System of Reasoning |
-| **C-105** | Analytics | System of Intelligence |
-| **C-106** | Life | System of Record (Personal) |
-| **C-107** | Connection | Economic Relationship Infrastructure |
-| **C-108** | Explorer | Economic Discovery Infrastructure |
-| **C-109** | Nexus | System of Coordination |
-| **C-110** | SYSTEM | System of Governance |
-| **C-111** | ALERT | System of Risk |
-| **C-112** | NX | System of Security |
-| **C-113** | FundX | Capital Coordination Infrastructure |
-| **C-114** | Estate | Real Estate Coordination |
-| **C-115** | DX | System of Construction |
+| Charter | App | System Role | جملة واحدة |
+|---------|-----|-------------|----------|
+| **C-100** | Hub | System of Access — Control Plane | Hub Institutional Charter |
+| **C-101** | Commerce | System of Production (Reference Impl) | Commerce Institutional Charter |
+| **C-102** | Assets | Digital Asset Infrastructure | Assets Institutional Charter |
+| **C-103** | Ecommerce | Consumer Marketplace | Ecommerce Institutional Charter |
+| **C-104** | TEC AI | System of Reasoning | TEC AI Intelligence Reasoning Charter |
+| **C-105** | Analytics | System of Intelligence | Analytics Institutional Charter |
+| **C-106** | Life | System of Record (Personal) | Life Institutional Charter |
+| **C-107** | Connection | Economic Relationship Infrastructure | Connection Institutional Charter |
+| **C-108** | Explorer | Economic Discovery Infrastructure | Explorer Institutional Charter |
+| **C-109** | Nexus | System of Coordination | Nexus Institutional Charter |
+| **C-110** | SYSTEM | System of Governance | System Institutional Charter |
+| **C-111** | ALERT | System of Risk | Alert Institutional Charter |
+| **C-112** | NX | System of Security | NX Institutional Charter |
+| **C-113** | FundX | Capital Coordination Infrastructure | FundX Institutional Charter |
+| **C-114** | Estate | Real Estate Coordination | Estate Institutional Charter |
+| **C-115** | DX | System of Construction | DX Developer Institutional Charter |
 
 ---
 
