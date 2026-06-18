@@ -3,7 +3,7 @@
 
 > **Truth State:** `[Future Vision]`
 > **Governance State:** `[Draft]`
-> **Verification:** `[Unverified]`
+> **Verification:** `[Assumed]`
 
 ---
 
