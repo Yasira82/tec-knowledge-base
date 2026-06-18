@@ -13,6 +13,9 @@ on:
       - 'templates/**'
       - 'evals/**'
       - '.claude-plugin/**'
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'manifests/**'
       - 'README.md'
       - 'CLAUDE.md'
   pull_request:
@@ -27,6 +30,9 @@ on:
       - 'templates/**'
       - 'evals/**'
       - '.claude-plugin/**'
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'manifests/**'
       - 'README.md'
       - 'CLAUDE.md'
 
