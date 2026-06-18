@@ -91,18 +91,6 @@ jobs:
       - name: Verify relative Markdown links resolve
         run: bash evals/check-links.sh
 
-  check-truth-framework:
-    name: Check Truth Framework
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Make scripts executable
-        run: chmod +x evals/*.sh
-
-      - name: Report Truth State / Governance State adoption (informational)
-        run: bash evals/check-truth-framework.sh
-
   check-registry-integrity:
     name: Registry Integrity Check (v2.0)
     runs-on: ubuntu-latest
