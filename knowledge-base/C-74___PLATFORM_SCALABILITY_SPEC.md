@@ -2,7 +2,7 @@
 
 > **Truth State:** `[Planned State]`
 > **Governance State:** `[Draft]`
-> **Verification:** `[Unverified]`
+> **Verification:** `[Assumed]`
 
 ---
 
