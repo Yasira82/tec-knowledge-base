@@ -2,7 +2,7 @@
 ## Latest Updates + Decisions
 
 > **Truth State:** `[Current State]`
-> **Governance State:** `[Draft]`
+> **Governance State:** `[Documentation Verified]`
 > **Verification:** `[Documentation Verified]`
 
 ---
