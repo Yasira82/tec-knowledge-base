@@ -335,8 +335,33 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
      · npm audit advisory (non-blocking) في CI لكل 4 apps ✅
      · Assets Zod "v4 drift" = stale — Assets أصلاً على zod ^3.23.8 (3.25.76) ✅
      · متبقي مؤجّل (مش hygiene): Sentry major drift (Assets v10 vs v8) → change متحقَّق منه لوحده · REALTIME_URL = ops env
-5. External Re-Audit → 9.0+ (current ~9.0)
-6. Portal Submission → Pi Network
+4b. ✅ Re-audit fix (Session 14.1): payment-service bootstrap INTERNAL_SECRET guard
+     made unconditional (PR #85) — last NODE_ENV-gated guard on the platform
+5. ✅ Code-Verified Re-Audit (Session 14.1) → ~9.0–9.2 — كل البنود grep-verified
+     (مراجعة ذاتية موثّقة بالكود — مش external مستقل؛ الخيار: self-review موثّق + Portal)
+6. Portal Submission → Pi Network  ← الخطوة الجاية
+```
+
+### Portal-readiness checklist (Phase-0 gate)
+```
+ENGINEERING (code) — ✅ all closed/verified:
+  □✅ Payment Mode 1 (Hub) + Mode 2 (standalone) — both working, prod-verified
+  □✅ Outbox event durability (ADR-004) + reconciliation (Pi source-of-truth)
+  □✅ Security invariants: no jwt.decode · no localStorage tokens · no CORS *
+       · INTERNAL_SECRET unconditional (12/12) · x-internal-key on gateway calls
+  □✅ CSRF robust (double-submit OR first-party Origin) across SSO + Pi Browser
+  □✅ .dockerignore 12/12 · DECIMAL(20,8) + balance>=0 · non-root Docker
+
+OPS / ENV (user — Railway/Vercel/Pi Portal) — ⚠️ to confirm before submit:
+  □ INTERNAL_SECRET set on ALL 12 Railway services (user-confirmed ✅)
+  □ PI_SANDBOX=false verified in production (each Pi-paying app)
+  □ REALTIME_URL set on Hub (closes /api/bff/realtime 500s)
+  □ Pi Developer Portal: domains + App IDs registered & match production
+  □ Privacy Policy + Terms URLs live on each app domain
+
+DEFERRED (non-blocking for Portal):
+  □ Sentry major align (Assets v10 vs v8) — build-verified change
+  □ tec-realtime-service tests · move vite/vitest to devDeps
 ```
 
 ---
