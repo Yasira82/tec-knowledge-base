@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-06-20T15:08:42.192197
+> **Generated:** 2026-06-20T15:29:21.082289
 > **Registry:** `/workspace/architecture/asset-registry.yaml`
 > **Rules:** `/workspace/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
