@@ -1,10 +1,34 @@
 # TEC Platform — External Re-Audit Report (Session 14)
 
 > **Date:** 2026-06-20 · **Auditor:** Simulated External Review (post Payment-Unification)
+> ⚠️ **Independence note:** this is a **code-verified self-review** by the implementing agent — NOT an independent third-party audit. A genuine external security audit by an independent firm is recommended before mainnet for a financial platform. Labelled honestly per the Truth Framework.
 > **Supersedes:** 2026-06-19 audit (~6.5–7.0/10 — now largely stale)
 > **Method:** Code-verified inspection across all repos + full test-suite run
-> **Estimated Score:** **~9.0/10** (was ~6.5–7.0) · all P0 closed — remaining is P1/P2 hygiene
+> **Estimated Score:** **~9.0–9.2/10** (was ~6.5–7.0) · all P0 closed — remaining is non-payment P1/P2 hygiene
 > **Update:** Outbox (P0-1) wired + **payment verified working in production** (PR #84 merged)
+
+---
+
+## 0. Session 14.1 — Code-Verified Re-Audit (evidence)
+
+Re-ran direct code inspection across all repos. Every check below is grep/file-verified, not asserted:
+
+| Check | Method | Result |
+|-------|--------|--------|
+| `jwt.decode()` in backend | grep `*.ts` (excl. node_modules/test) | ✅ none |
+| Tokens in localStorage/sessionStorage | grep all 4 apps `src` | ✅ none |
+| CORS wildcard `*` | grep backend | ✅ none |
+| `INTERNAL_SECRET` startup guards unconditional | grep `NODE_ENV==='production' &&` guards | ✅ **0 remain** — `wallet` + `payment-service` were the last two; now unconditional (others already so) |
+| `.dockerignore` coverage | `ls */.dockerignore` | ✅ **12/12** services |
+| ADR-009 unified contract | `tec-sdk/src/contracts/payment.ts` | ✅ present (`INTERNAL_KEY_HEADER`, gateway paths, schemas) |
+| Original bug — Hub sends `amount` as number | `hub/page.tsx` | ✅ `amount: pendingPayment.amount` (number) |
+| Outbox wired in approve + complete (ADR-004) | `payment.controller.ts` | ✅ `saveOutboxEvent(tx,…)` inside `$transaction` (2 sites) |
+| Reconciliation = Pi source of truth | `reconciliation.service.ts` | ✅ actions `completed/cancelled/skipped` — never blind-fails |
+| CSRF double-submit **OR** first-party Origin | all 4 `middleware.ts` | ✅ Origin-aware in all 4 apps |
+| `tec-sdk` http-client sends `x-internal-key` | `core/http-client.ts` | ✅ when secret set |
+| ADR-007 `isHubNavigation` in app handlers | grep apps `src` | ✅ Ecom 6 · Assets 2 · Commerce 1 · Hub N/A (Hub *is* the modal host) |
+
+**Delivery PRs (Session 14.1 hygiene):** backend #85 (`.dockerignore` ×12 + wallet & payment-service guards) · tec-app #38 · tec-ecommerce #37 · tec-assets #25 · tec-commerce #34 (advisory npm audit).
 
 ---
 
