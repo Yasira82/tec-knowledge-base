@@ -192,7 +192,7 @@ for asset in assets:
         add_error(aid, "R-SCHEMA-002", f"Invalid truth_state: {ts}")
 
     gs = asset.get("constitutional", {}).get("governance_state")
-    if gs and gs not in ["draft", "governance-approved", "adr-approved", "rejected"]:
+    if gs and gs not in ["draft", "governance-approved", "adr-approved", "documentation-verified", "rejected"]:
         add_error(aid, "R-SCHEMA-003", f"Invalid governance_state: {gs}")
 
     vs = asset.get("constitutional", {}).get("verification_state")

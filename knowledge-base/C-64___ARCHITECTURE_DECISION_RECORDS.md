@@ -31,6 +31,7 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-006 | CSRF Exclusion على Payment BFF Routes | ACCEPTED |
 | ADR-007 | Pi Payment Ownership Authority | ACCEPTED (تفاصيل في C-76) |
 | ADR-008 | Runtime Observability Architecture | ACCEPTED (June 2026) |
+| ADR-009 | Unified Payment Contract (Single Source of Truth) | ACCEPTED (June 2026) |
 
 ---
 
@@ -213,3 +214,49 @@ Upstream:  8,000 ms (within gateway window)
 ## ADR-007 — Pi Payment Ownership Authority
 
 **Status:** ACCEPTED — تفاصيل كاملة في C-76
+
+---
+
+## ADR-009 — Unified Payment Contract (Single Source of Truth)
+
+**Status:** ACCEPTED | **Date:** June 2026
+**Repos:** tec-sdk (owner) · tec-app · tec-ecommerce · tec-assets · tec-commerce · tec-core-backend (reference)
+**Severity:** P1 | **Extends:** ADR-002 (Dual-Mode Payment), ADR-004 (BFF-Only)
+
+**السياق (السبب الجذري):**
+بعد الـ hardening audit، اتولد **stack دفع متوازي** مختلف عن الـ legacy. كل تطبيق
+عرّف عقد الدفع بنفسه، فحصل drift في ٣ محاور أدّى لفشل دفع متكرر (إصلاح تطبيق
+واحد ما بيصلّحش الباقي):
+
+| المحور | الانحراف المرصود | الصح (مصدر الحقيقة = tec-payment-service) |
+|--------|------------------|------------------------------------------|
+| `amount` | بعضهم `string` (Zod `z.string()`) وبعضهم `number` | **`number`** — DECIMAL في الـ DB |
+| Internal header | `x-service-secret` / `SERVICE_SECRET` في `bffFetch` | **`x-internal-key` / `INTERNAL_SECRET`** فقط |
+| Gateway path | `/api/v1/payments/*` · bare `/payments` (404 على host خام) | **`/api/payment/*`** (rewrite نظيف `^/api/payment → /payments`) |
+
+ده انتهاك مباشر لـ **C-47**: P1 (Single Source of Truth) · P2 (No Rule Duplication)
+· Forbidden #5 (Divergent SDK contracts vs backend).
+
+**القرار:**
+عقد الدفع يُعرَّف **مرة واحدة** في `@yasser172/tec-sdk` ويُستورد في كل BFF route:
+- `src/contracts/payment.ts` → `CreatePaymentRequestSchema` · `ApprovePaymentRequestSchema`
+  · `CompletePaymentRequestSchema` · `PAYMENT_GATEWAY_PATHS` · `INTERNAL_KEY_HEADER`
+  · حُرّاس صيغة Pi id/txid.
+- `amount` = `z.coerce.number()` — يتحوّل من string **مرة واحدة عند حدود الـ BFF**؛
+  رقم في كل طبقة تحته (P5).
+
+**قواعد ثابتة (تُطبَّق بـ Policy CI لاحقًا):**
+- ❌ FORBIDDEN: تعريف Zod schema للدفع محليًا داخل أي app (لازم import من tec-sdk).
+- ❌ FORBIDDEN: `x-service-secret` / `SERVICE_SECRET` في أي gateway call.
+- ❌ FORBIDDEN: إرسال `amount` كـ string لأي payment endpoint.
+- ✅ REQUIRED: مسارات `/api/payment/*` (مفرد) لكل نداء على الـ gateway.
+
+**التبرير:** عقد واحد = إصلاح واحد. يقفل فئة الـ bug كلها بدل ترقيع نسخة في كل repo،
+ويتوافق مع P5 (SDK = طبقة العقود) و C-41 (tec-ui v1.2.0 PaymentModal/createU2APayment
+المشتركين فوق نفس العقد).
+
+**خطة الانتشار (release chain):**
+`tec-core-backend → tec-sdk@1.3.0 (نُشر العقد) → tec-ui v1.2.0 → الـ4 apps (نشر متزامن)`.
+التطبيقات تستبدل الـ Zod المحلي بـ import من tec-sdk عند نشر 1.3.0 على npm.
+
+**References:** C-12 Dual-Mode Payment · C-76 ADR-007 · C-47 §14 SDK Contract Rules

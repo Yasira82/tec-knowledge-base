@@ -162,6 +162,7 @@ def extract_metadata(text, lines):
             gs_map = {
                 'governance approved': 'governance-approved',
                 'adr approved': 'adr-approved',
+                'documentation verified': 'documentation-verified',
                 'draft': 'draft',
                 'rejected': 'rejected',
             }
@@ -376,11 +377,35 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
     return prefixed_claims[:3]
 
 
+# ─── Existing registry loader ────────────────────────────────────────
+def load_existing_last_verified(output_path):
+    """Load last_verified dates from existing registry to preserve stable dates.
+
+    The CI 'no manual edits' check diffs the committed registry against the
+    freshly generated one. If last_verified always uses today's date the check
+    fails on every day after the initial commit.  By preserving existing dates
+    for already-registered assets we keep the diff empty unless something
+    structurally changed.
+    """
+    try:
+        import yaml
+        with open(output_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+        if not data or 'assets' not in data:
+            return {}
+        return {a['id']: a.get('last_verified') for a in data['assets'] if 'id' in a}
+    except Exception:
+        return {}
+
+
 # ─── Main builder ────────────────────────────────────────────────────
-def build_registry(verbose=False):
+def build_registry(verbose=False, output_path=None):
     assets = []
     today = date.today().isoformat()
     next_review_default = '2026-12-01'
+
+    # Preserve existing last_verified dates so CI diff stays clean
+    existing_lv = load_existing_last_verified(output_path) if output_path else {}
 
     for fpath in sorted(KB_DIR.glob('C-*.md')):
         text = fpath.read_text(encoding='utf-8', errors='ignore')
@@ -446,7 +471,7 @@ def build_registry(verbose=False):
             'depends_on': depends_on,
             'supersedes': [],
             'superseded_by': None,
-            'last_verified': today if truth_state == 'current-state' else None,
+            'last_verified': existing_lv.get(cid_str) or (today if truth_state == 'current-state' else None),
             'next_review': next_review_default,
         }
         assets.append(asset)
@@ -566,9 +591,9 @@ def main():
         sys.exit(2)
 
     print('Building asset registry from file headers...')
-    assets = build_registry(verbose=args.verbose)
-
     output_path = Path(args.output)
+    assets = build_registry(verbose=args.verbose, output_path=output_path)
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     count = write_yaml(assets, output_path)
 
