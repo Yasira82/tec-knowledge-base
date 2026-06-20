@@ -135,3 +135,50 @@ ALTER TABLE wallets
   ADD CONSTRAINT wallets_balance_non_negative
   CHECK (balance >= 0);  -- ✅ مطبق في production
 ```
+
+---
+
+## 11. Payment System Operations & Anti-Regression Guide (ADR-009)
+
+> 📘 **Full runbook (source of truth for implementation):** `docs/PAYMENT_SYSTEM.md`
+> in `yasira82/tec-app`. This section is the KB summary so anyone — especially
+> when building a **new app** or running **tests / hardening audits** — knows the
+> rules that keep payments from breaking.
+
+### How a payment works (recap)
+Two modes (§1–§9 above): **Mode 1** (app → `/hub?pay=1` → Hub modal) and
+**Mode 2** (app standalone in Pi Browser). Both run the same 4-call lifecycle:
+`create → Pi.createPayment → approve → complete` (+ `resolve-incomplete` / `cancel`
+for recovery). The frontend never touches the payment DB or Pi server API — it
+drives the browser SDK and calls its own BFF, which proxies to the gateway →
+`tec-payment-service` (the only owner of payment state).
+
+### The contract every BFF route MUST follow (ADR-009)
+| Rule | Value | Why |
+|------|-------|-----|
+| `amount` | **number** (`z.coerce.number()`) | payment-service stores DECIMAL; a string fails. Coerce from string ONCE at the BFF boundary. |
+| gateway path | **`/api/payment/*`** (singular) | gateway rewrites `^/api/payment → /payments`; plural/bare paths 404. |
+| internal header | **`x-internal-key`** + `INTERNAL_SECRET` | the ONLY header the gateway validates. `x-service-secret` is ignored. |
+| contract source | `@yasser172/tec-sdk` `contracts/payment.ts` | one place — never re-declare payment Zod inside an app. |
+| gateway calls | one helper w/ token-refresh + `x-internal-key` | expired token must auto-refresh, else resolve/cancel leave payments stuck. |
+
+### What broke before (do not repeat — these came from a "hardening audit")
+| Symptom | Root cause | Lesson |
+|---------|-----------|--------|
+| Hub modal payment fails / flashes | create sent `amount` as **string** | amount is a number at the BFF |
+| All apps 403 on payment POST | CSRF double-submit gate added on payment routes; cookie unavailable in Pi Browser (drops `sameSite=None`) | CSRF must accept first-party **Origin**, not cookie-only |
+| Assets mint recorded 1π not real price | a divergent client → legacy approve hardcoded `amount:1` | one payment client per app |
+| `x-service-secret` / `/payments` 404 | a parallel BFF stack | canonical `/api/payment/*` + `x-internal-key` only |
+| "Pending Payment Found" never clears | resolve/cancel didn't refresh expired token | auto-refresh; cron reconciles via Pi |
+
+### Rules for a NEW app (and before any tests / updates)
+1. Import payment request/response shapes from `@yasser172/tec-sdk` — never local Zod; `amount` = number.
+2. All payment BFF calls use the shared gateway helper (token-refresh + `x-internal-key`).
+3. Every buy handler keeps the ADR-007 `isHubNavigation()` guard (Mode 1 vs Mode 2).
+4. CSRF middleware accepts double-submit **OR** first-party Origin (`Origin host === Host` / `*.tecosystem.app`).
+5. Keep the **CI policy guard** (`.github/workflows/ci.yml`) that fails on `x-service-secret` / `SERVICE_SECRET` / `z.string()` for amount.
+6. Never change `/hub?pay=1`, the cookie names, or the gateway path scheme without an ADR (C-76 / ADR-007 / ADR-009).
+7. Stuck/orphan payments self-heal hourly via `tec-payment-service` reconciliation (Pi = source of truth; never blind-fail a paid payment).
+
+> **Truth State:** `[Current State]` · **Verification:** `[Code Verified]` (PRs merged June 2026)
+> **References:** ADR-009 (C-64) · ADR-007 (C-76) · C-47 · C-71 Financial Integrity · `tec-app/docs/PAYMENT_SYSTEM.md`
