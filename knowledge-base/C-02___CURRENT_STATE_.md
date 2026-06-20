@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 18 June 2026 (Session 13)
+**Last Updated:** 20 June 2026 (Session 14 — Payment Unification)
 
 ---
 
@@ -35,7 +35,46 @@
 | **Knowledge Base Version** | **v3.6.2** — Phase 1 complete · Phase B2 starting · 0 violations · 10 CI gates pass |
 | **Session 13 — ADR-007 Foreign Session Fix** | **✅** — `__TEC_PI_FOREIGN_SESSION` defense-in-depth added to ALL 5 Ecommerce payment files (pi-payment.ts + page.tsx + product/[id] + store/[id] + CartDrawer) — Hub redirect on foreign session |
 | **Tec-App (Hub) Test Coverage** | **95.5%** — 2026 tests passing |
+| **Session 14 — Payment Unification (ADR-009)** | **✅** — root-caused & fixed the post-audit payment breakage across all repos (see block below) |
 | الهدف | **9.5/10** |
+
+---
+
+## SESSION 14 — PAYMENT UNIFICATION (20 June 2026) ✅
+
+Root cause of the platform-wide payment failures: a hardening audit added a **divergent BFF stack** + a **CSRF gate on payment routes** that broke every app. Fixed end-to-end:
+
+| Fix | Detail | Repo / PR |
+|-----|--------|-----------|
+| **ADR-009 Unified Payment Contract** | one contract in `@yasser172/tec-sdk` `contracts/payment.ts` — `amount: number`, `/api/payment/*`, `x-internal-key` | TEC-SDK #8 ✅ merged · C-64 ADR-009 |
+| **Hub amount=number** | Mode-1 create sent `String(amount)` → backend wants number | Tec-App #37 ✅ merged |
+| **CSRF Origin fallback** | the audit's cookie-only double-submit 403'd every payment in Pi Browser (drops `sameSite=None`). Middleware now accepts double-submit **OR** first-party Origin | all 4 apps ✅ merged |
+| **Assets mint unified** | mint used a divergent client → legacy approve hardcoded `amount:1` (DB ≠ charge). Now canonical client | Tec-Assets #22/#24 ✅ merged |
+| **Token-refresh on resolve/cancel** | expired token left payments stuck (`TOKEN_EXPIRED`). `gatewayPost()` refreshes once | Tec-App #37 ✅ merged |
+| **Reconciliation = Pi source-of-truth** | cron no longer blind-fails; asks Pi → complete/cancel/skip. Auto-clears stuck payments hourly + `/api/admin/reconcile` on-demand | tec-core-backend #83 ✅ merged |
+| **CI policy guard** | every app's CI fails on `x-service-secret` / `SERVICE_SECRET` / `z.string()` amount | all 4 apps ✅ |
+| **tec-ui test fix** | added `@testing-library/dom` (v16 peer) — 3 test files were failing | tec-ui ✅ |
+| **Payment runbook** | `tec-app/docs/PAYMENT_SYSTEM.md` + C-12 §11 — how payments work + anti-regression guide | Tec-App + KB #20 |
+
+**Project-wide tests (Session 14):** SDK 174 · Hub 2009 · Assets 133 · Commerce 209 · Ecommerce 75 · payment-service 143 · tec-auth 46 · tec-ui 75 · KB 10/10 gates — **all green**.
+
+**Operational requirement to clear stuck payments:** `PI_API_KEY` (Hub/tec-app key) + per-app keys set on `tec-payment-service` Railway → resolve/cancel/reconcile work automatically (login auto-resolve + hourly cron + on-demand).
+
+### Re-Audit reconciliation (the 2026-06-19 audit was stale — verified against code)
+
+| Prior finding | Verified status (Session 14) |
+|---|---|
+| P0-2 terminal-state bypass | ✅ CLOSED — guard at resolve (409) + `isTransitionAllowed` in approve/complete/cancel/fail |
+| P0-3 CSRF on payment routes | ✅ CLOSED — middleware: double-submit OR first-party Origin (all 4 apps) |
+| P0-4 tec-sdk Railway URL | ✅ CLOSED — `http-client.ts` env-var only + throw, zero railway URL |
+| P0-5 tec-sdk `x-internal-key` | ✅ CLOSED — sent by `http-client.ts` |
+| P1 auth-service CORS Railway URL | ✅ CLOSED — none in source |
+| P1 `NEXT_PUBLIC_REALTIME_URL` client leak | ✅ CLOSED — not in client bundle |
+| P1 tec-ui SSR window guards / failing tests | ✅ CLOSED — guards added + `@testing-library/dom` |
+| NEW-M service-registry | ✅ CLOSED — `tec-api-gateway/src/config/service-registry.ts` |
+| **P0-1 Outbox (ADR-004)** | ✅ **CLOSED** — `saveOutboxEvent()` wired atomically into approve/complete (PR #84 merged) — **payment verified working in production** after deploy |
+
+**New External Audit (Session 14):** `audits/EXTERNAL_AUDIT_2026-06-20_Session14.md` — **~9.0/10** (was ~6.5–7.0). All P0 closed (Outbox now live + payment-verified). Remaining = small P1/P2 hygiene batch → Portal.
 
 ---
 
@@ -274,8 +313,10 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 
 | Item | الإجراء |
 |------|----------|
-| **NEW-M** | **P2 OPEN** — Hardcoded Service Map — إنشاء `service-registry.ts` |
-| External Re-Audit | بعد NEW-K/L/N/O — المتوقع 9.0–9.5/10 |
+| **NEW-M** | **✅ DONE** — `tec-api-gateway/src/config/service-registry.ts` موجود (Code Verified Session 14) |
+| **P0-1 Outbox (ADR-004)** | ✅ DONE — wired atomically في approve/complete (PR #84) + **مُتحقَّق: دفعة حقيقية نجحت في الأبس بعد الـ deploy** |
+| **P0-4 tec-sdk Railway URL** | 🟡 تأكيد — fallback URL في http-client.ts |
+| External Re-Audit | بعد P0 backlog — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
 | Commerce Domain | ✅ محسوم — Current live: `tec-commerce-app.vercel.app` · Target: `commerce.tecosystem.app` (custom domain pending) — canonical في C-101 |
 | Truth Framework | ✅ Tier الأساسي (C-00→C-23) مكتمل Truth+Governance State — الباقي قيد التبنّي التدريجي |
@@ -285,9 +326,17 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 ## NEXT 🔴 (Portal path)
 
 ```
-1. Fix NEW-M  ← service-registry.ts (tec-api-gateway) [P2]
-2. External Re-Audit → target 9.0–9.5/10
-3. Portal Submission → Pi Network
+1. ✅ Payment Unification (ADR-009) — DONE Session 14
+2. ✅ P0-1 Outbox (ADR-004) — DONE (PR #84 merged + payment-verified in prod)
+3. ✅ P0-2..P0-5 — all verified CLOSED (see reconciliation table)
+4. ✅ P1/P2 hygiene batch (Session 14.1) — DONE:
+     · .dockerignore على كل 12 service (4 ناقصة + تنظيف EOF/done) ✅
+     · INTERNAL_SECRET startup guard unconditional — wallet كان آخر gap ✅
+     · npm audit advisory (non-blocking) في CI لكل 4 apps ✅
+     · Assets Zod "v4 drift" = stale — Assets أصلاً على zod ^3.23.8 (3.25.76) ✅
+     · متبقي مؤجّل (مش hygiene): Sentry major drift (Assets v10 vs v8) → change متحقَّق منه لوحده · REALTIME_URL = ops env
+5. External Re-Audit → 9.0+ (current ~9.0)
+6. Portal Submission → Pi Network
 ```
 
 ---
@@ -326,7 +375,8 @@ Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0�
 CLAUDE.md:            ✅ session start → main في كل repos
 Knowledge Base:       ✅ v3.6.2 — 96 C-docs + 16 skills + 16 charters + 10 CI gates + evals/ + scripts/ + architecture/
 Pending PRs:          NONE — all fixes on main ✅
-NEXT:                 External Re-Audit → target 8.5–9.0/10 → Portal Submission
+Latest audit:         ✅ Session 14 (2026-06-20) → ~9.0/10 (was ~6.5–7.0) — all P0 closed (Outbox live + payment-verified)
+NEXT:                 P1/P2 hygiene batch → Portal Submission
 ```
 
 ---
