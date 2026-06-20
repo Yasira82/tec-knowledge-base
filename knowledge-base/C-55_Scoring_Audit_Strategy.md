@@ -2,7 +2,7 @@
 ## الـ Score الحقيقي + كيف توصل لـ 9.5
 
 > **Truth State:** `[Current State]`
-> **Governance State:** `[Documentation Verified]`
+> **Governance State:** `[Draft]`
 > **Verification:** `[Documentation Verified]`
 
 ---
