@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-06-18T10:49:33.574971
+# Generated: 2026-06-20T08:48:55.538963
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -38,7 +38,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-47
@@ -56,7 +56,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-64
@@ -74,7 +74,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-67
@@ -92,7 +92,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   # ===========================================================================
@@ -114,7 +114,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-02
@@ -132,7 +132,7 @@ assets:
     depends_on: [C-47, C-64]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-10
@@ -150,7 +150,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-116
@@ -186,7 +186,7 @@ assets:
     depends_on: [C-00, C-47, C-64, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-118
@@ -204,7 +204,7 @@ assets:
     depends_on: [C-00, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-11
@@ -222,7 +222,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-12
@@ -240,7 +240,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-13
@@ -258,7 +258,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-14
@@ -276,7 +276,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-15
@@ -294,7 +294,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-16
@@ -312,7 +312,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-17
@@ -330,7 +330,7 @@ assets:
     depends_on: [C-00, C-47, C-64]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-18
@@ -348,7 +348,7 @@ assets:
     depends_on: [C-00, C-47, C-64]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-19
@@ -366,7 +366,7 @@ assets:
     depends_on: [C-00, C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-20
@@ -384,7 +384,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-21
@@ -402,7 +402,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-22
@@ -420,7 +420,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-23
@@ -438,7 +438,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-40
@@ -456,7 +456,7 @@ assets:
     depends_on: [C-64, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-41
@@ -474,7 +474,7 @@ assets:
     depends_on: [C-64]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-42
@@ -492,7 +492,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-43
@@ -510,7 +510,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-44
@@ -528,7 +528,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-45
@@ -546,7 +546,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-46
@@ -582,7 +582,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-49
@@ -600,7 +600,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-50
@@ -618,7 +618,7 @@ assets:
     depends_on: [C-64, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-51
@@ -636,7 +636,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-52
@@ -654,7 +654,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-53
@@ -672,7 +672,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-54
@@ -690,7 +690,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-55
@@ -708,7 +708,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-56
@@ -726,7 +726,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-57
@@ -744,7 +744,7 @@ assets:
     depends_on: [C-47, C-64, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-58
@@ -780,7 +780,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-60
@@ -798,7 +798,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-61
@@ -816,7 +816,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-62
@@ -834,7 +834,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-63
@@ -852,7 +852,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-65
@@ -870,7 +870,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-66
@@ -888,7 +888,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-68
@@ -906,7 +906,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-69
@@ -924,7 +924,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-70
@@ -942,7 +942,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-71
@@ -960,7 +960,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-72
@@ -978,7 +978,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-73
@@ -996,7 +996,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-74
@@ -1032,7 +1032,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-76
@@ -1050,7 +1050,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-77
@@ -1068,7 +1068,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-78
@@ -1086,7 +1086,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-80
@@ -1104,7 +1104,7 @@ assets:
     depends_on: [C-47, C-64, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-81
@@ -1140,7 +1140,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   # ===========================================================================
@@ -1162,7 +1162,7 @@ assets:
     depends_on: [C-76]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-101
@@ -1180,7 +1180,7 @@ assets:
     depends_on: [C-76]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-102
@@ -1198,7 +1198,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-103
@@ -1216,7 +1216,7 @@ assets:
     depends_on: [C-76]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-104
@@ -1234,7 +1234,7 @@ assets:
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-105
@@ -1252,7 +1252,7 @@ assets:
     depends_on: [C-47, C-70]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-106
@@ -1270,7 +1270,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-107
@@ -1288,7 +1288,7 @@ assets:
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-108
@@ -1306,7 +1306,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-109
@@ -1324,7 +1324,7 @@ assets:
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-110
@@ -1342,7 +1342,7 @@ assets:
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-111
@@ -1360,7 +1360,7 @@ assets:
     depends_on: [C-47, C-62, C-78]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-112
@@ -1378,7 +1378,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-113
@@ -1396,7 +1396,7 @@ assets:
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-114
@@ -1414,7 +1414,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-115
@@ -1432,7 +1432,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-83
@@ -1450,7 +1450,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-84
@@ -1468,7 +1468,7 @@ assets:
     depends_on: [C-70]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-85
@@ -1486,7 +1486,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-86
@@ -1504,7 +1504,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-87
@@ -1522,7 +1522,7 @@ assets:
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-88
@@ -1540,7 +1540,7 @@ assets:
     depends_on: [C-00, C-47, C-76]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-89
@@ -1558,7 +1558,7 @@ assets:
     depends_on: []
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-90
@@ -1576,7 +1576,7 @@ assets:
     depends_on: [C-00, C-47, C-67]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-91
@@ -1594,7 +1594,7 @@ assets:
     depends_on: [C-00]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-92
@@ -1684,7 +1684,7 @@ assets:
     depends_on: [C-00]
     supersedes: []
     superseded_by: null
-    last_verified: "2026-06-18"
+    last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
   - id: C-97
