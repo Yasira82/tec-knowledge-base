@@ -35,7 +35,7 @@ schema_rules:
   - id: R-SCHEMA-003
     severity: error
     name: "Constitutional block integrity (governance)"
-    check: "constitutional.governance_state in [draft, governance-approved, adr-approved, rejected]"
+    check: "constitutional.governance_state in [draft, governance-approved, adr-approved, documentation-verified, rejected]"
 
   - id: R-SCHEMA-004
     severity: error

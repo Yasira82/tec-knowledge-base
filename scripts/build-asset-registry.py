@@ -162,6 +162,7 @@ def extract_metadata(text, lines):
             gs_map = {
                 'governance approved': 'governance-approved',
                 'adr approved': 'adr-approved',
+                'documentation verified': 'documentation-verified',
                 'draft': 'draft',
                 'rejected': 'rejected',
             }
