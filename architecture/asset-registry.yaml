@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-06-20T08:48:55.538963
+# Generated: 2026-06-20T08:54:06.467251
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -574,7 +574,7 @@ assets:
     path: knowledge-base/C-48_Engineering_Audit_May2026.md
     constitutional:
       truth_state: current-state
-      governance_state: draft
+      governance_state: documentation-verified
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -610,7 +610,7 @@ assets:
     path: knowledge-base/C-50___SESSION_LOG.md
     constitutional:
       truth_state: current-state
-      governance_state: draft
+      governance_state: documentation-verified
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -700,7 +700,7 @@ assets:
     path: knowledge-base/C-55_Scoring_Audit_Strategy.md
     constitutional:
       truth_state: current-state
-      governance_state: draft
+      governance_state: documentation-verified
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -1060,7 +1060,7 @@ assets:
     path: knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md
     constitutional:
       truth_state: current-state
-      governance_state: draft
+      governance_state: documentation-verified
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
