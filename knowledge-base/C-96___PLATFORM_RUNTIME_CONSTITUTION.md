@@ -46,17 +46,28 @@ What are TEC's non-negotiable runtime obligations?
 
 The following was discovered via **Code Verified** inspection of Tec-App and tec-api-gateway (June 2026):
 
-### Finding 1 — Duplicate Health Polling (NEW-K)
+### Finding 1 — Duplicate Health Polling (NEW-K) — ✅ RESOLVED (21 Jun 2026)
 
 ```text
-Tec-App-main/tec-frontend/src/hooks/useBackendHealth.ts     ← Poller 1
-Tec-App-main/tec-frontend/src/components/BackendOfflineBanner.tsx  ← Poller 2
-Tec-App-main/tec-frontend/src/components/BackendStatus.tsx         ← Poller 2
+Tec-App/tec-frontend/src/context/PlatformHealthContext.tsx  ← single poller (NEW)
+Tec-App/tec-frontend/src/components/BackendOfflineBanner.tsx ← consumer
+Tec-App/tec-frontend/src/components/BackendStatus.tsx        ← consumer
 ```
 
-Both `BackendOfflineBanner` and `BackendStatus` independently call `checkGatewayHealth()` / `checkBackendHealth()` every 30 seconds. **Two independent polling loops for the same signal.**
+**Was:** `BackendOfflineBanner` and `BackendStatus` independently called
+`checkBackendHealth()` / `checkGatewayHealth()` every 30 seconds — two independent
+polling loops + two fragmented state stores for the same signal, against divergent
+endpoints (`/api/health` BFF vs a server-only `API_GATEWAY_URL` that is empty in
+the browser).
 
-**Constitutional violation:** Health runtime must be centralized. Distributed health polling is ungoverned runtime.
+**Now:** centralized into `PlatformHealthContext` — ONE poller, ONE cache, ONE
+status store; both components are pure consumers via `usePlatformHealth()`. The
+canonical source is the `/api/health` BFF (`checkBackendHealth`). This also fixed
+`BackendStatus`'s latent wrong-path bug. Verified: full Hub suite 2009/2009,
+type-check 0, lint 0.
+
+**Constitutional principle (now upheld):** Health runtime is centralized;
+distributed health polling is ungoverned runtime.
 
 ### Finding 2 — Gateway Timeout Mismatch (NEW-L)
 
@@ -187,18 +198,22 @@ Evidence not collected at Runtime    = Unverifiable Institutional State
 
 ## Health Runtime Mandate
 
-### Current State (Code Verified — June 2026)
+### Current State (Code Verified — 21 Jun 2026) — ✅ REMEDIATED
 
 ```
-VIOLATION NEW-K:
-BackendOfflineBanner  → polls checkGatewayHealth()  every 30s  ← Poller A
-BackendStatus         → polls checkBackendHealth()   every 30s  ← Poller B
+NEW-K RESOLVED:
+PlatformHealthContext  → single poller (30s) + single cache + single store
+BackendOfflineBanner   → consumer (usePlatformHealth)   ← no own poller
+BackendStatus          → consumer (usePlatformHealth)   ← no own poller
 
-Result: 2 HTTP calls per 30s interval against the same /api/health endpoint.
-        State is fragmented across two React component trees.
+Result: 1 HTTP call per 30s interval against /api/health (BFF).
+        State is unified in one context.
 ```
 
-### Required State
+> Implemented in Tec-App (`src/context/PlatformHealthContext.tsx`). The "Required
+> State" below is now the actual state.
+
+### Required State (now the actual state ✅)
 
 ```
 PlatformHealthContext.tsx
@@ -210,7 +225,7 @@ BackendOfflineBanner  (consumer — reads from context)
 BackendStatus         (consumer — reads from context)
 ```
 
-**Remediation:** NEW-K — Create `src/context/PlatformHealthContext.tsx` as the single health runtime.
+**Remediation:** NEW-K — ✅ DONE (21 Jun 2026). Created `src/context/PlatformHealthContext.tsx` as the single health runtime; `BackendOfflineBanner` + `BackendStatus` refactored to consumers; layout wrapped in `<PlatformHealthProvider>`.
 
 ---
 
@@ -339,7 +354,7 @@ Every service must expose:
 | Component | Owner | Constitutional Ref |
 |-----------|-------|-------------------|
 | API Gateway | tec-core-backend | C-10, C-20 |
-| Frontend Health Runtime | PlatformHealthContext | NEW-K — to be created |
+| Frontend Health Runtime | PlatformHealthContext | NEW-K — ✅ created (Tec-App) |
 | Service Registry | Gateway config | NEW-M — to be externalized |
 | Timeout Contracts | Gateway + BFF | NEW-L — to be aligned |
 | Health Endpoints | Each service | C-92 |

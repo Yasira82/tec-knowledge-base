@@ -40,7 +40,8 @@ Legend: 🧑‍💻 = engineering (executable in-repo) · 🛠️ = ops/infra (p
                               no open ENG/OPS checklist items, no stale Commerce domain.
 6. Drift Detection gate     — CI asserting C-doc claims vs live code  ▶️ NEXT
                               (start: route-level CSRF, ADR-009 contract, amount:number)
-7. C-96 dual-poller fix     — unify health polling (BackendOfflineBanner + BackendStatus)
+7. ✅ C-96 dual-poller fix  — PlatformHealthContext single poller (Tec-App PR #43).
+                              BackendOfflineBanner + BackendStatus now consumers. Done.
 8. Runtime Evidence schema  — manifest/contract for metrics+incidents → KB
 ```
 
