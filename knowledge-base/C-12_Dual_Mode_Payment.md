@@ -167,6 +167,7 @@ drives the browser SDK and calls its own BFF, which proxies to the gateway →
 |---------|-----------|--------|
 | Hub modal payment fails / flashes | create sent `amount` as **string** | amount is a number at the BFF |
 | All apps 403 on payment POST | CSRF double-submit gate added on payment routes; cookie unavailable in Pi Browser (drops `sameSite=None`) | CSRF must accept first-party **Origin**, not cookie-only |
+| ecommerce Mode-2 payment **and order creation** 403 (after the middleware was already fixed) | a **duplicate** strict double-submit CSRF check living *inside the BFF routes* (`payment/create`/`approve`/`complete` + `orders`) — on top of the middleware. In Pi Browser the dropped cookie made the route reject the request even though the middleware had passed it | CSRF in **ONE** place only — the middleware. A route must **never** re-validate CSRF (P2 No Rule Duplication). Commerce/Assets had no route check and worked; ecommerce + Hub did, and broke |
 | Assets mint recorded 1π not real price | a divergent client → legacy approve hardcoded `amount:1` | one payment client per app |
 | `x-service-secret` / `/payments` 404 | a parallel BFF stack | canonical `/api/payment/*` + `x-internal-key` only |
 | "Pending Payment Found" never clears | resolve/cancel didn't refresh expired token | auto-refresh; cron reconciles via Pi |
@@ -176,7 +177,7 @@ drives the browser SDK and calls its own BFF, which proxies to the gateway →
 2. All payment BFF calls use the shared gateway helper (token-refresh + `x-internal-key`).
 3. Every buy handler keeps the ADR-007 `isHubNavigation()` guard (Mode 1 vs Mode 2).
 4. CSRF middleware accepts double-submit **OR** first-party Origin (`Origin host === Host` / `*.tecosystem.app`).
-5. Keep the **CI policy guard** (`.github/workflows/ci.yml`) that fails on `x-service-secret` / `SERVICE_SECRET` / `z.string()` for amount.
+5. Keep the **CI policy guards** (`.github/workflows/ci.yml`): fail on `x-service-secret` / `SERVICE_SECRET` / `z.string()` for amount, **and on any route-level CSRF check** (`csrfCookie !== csrfHeader` / `CSRF validation failed` / `CSRF token mismatch` under `src/app/api`) — CSRF is middleware-only. Forwarding `x-csrf-token` to a downstream call is fine; *validating* it in a route is forbidden.
 6. Never change `/hub?pay=1`, the cookie names, or the gateway path scheme without an ADR (C-76 / ADR-007 / ADR-009).
 7. Stuck/orphan payments self-heal hourly via `tec-payment-service` reconciliation (Pi = source of truth; never blind-fail a paid payment).
 
