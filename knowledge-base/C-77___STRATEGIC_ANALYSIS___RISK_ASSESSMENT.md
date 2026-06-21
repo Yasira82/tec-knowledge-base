@@ -27,9 +27,13 @@ A Federated Platform Under Hardening
 
 | Metric | Value |
 |--------|-------|
-| Self-assessed | ~8.5/10 |
-| Expected external | ~7.0–7.5/10 |
+| Self-assessed | ~9.2/10 |
+| Expected external | ~9.0–9.2/10 (two external reviews: 9.0–9.2 and 9.3) |
 | Target | 9.5/10 |
+
+> Reconciled 21 Jun 2026 (Session 14.x): prior figures (~7.0–7.5, P1: 2 open,
+> tec-auth 0%) were stale. NEW-A and NEW-D are CLOSED; tec-auth-service coverage
+> = 95% stmt / 93% branch / 100% lines; P1 = 0. Authority: C-02 + Session-14 audits.
 
 ## Current Reality
 
@@ -38,8 +42,8 @@ Live:     4 apps (Hub + Commerce + Assets + Ecommerce)
 Backend:  12 Railway services Active
 Payments: Mode 1 + Mode 2 working on all 4 apps ✅
 P0:       Zero ✅
-P1:       2 open (NEW-A, NEW-D)
-Tests:    tec-auth = 0% | apps = low coverage
+P1:       Zero ✅ (NEW-A SECURITY + NEW-D test-coverage both CLOSED)
+Tests:    tec-auth-service = 95% | tec-auth pkg ≥ 80% gate | apps with payment/CSRF suites
 ```
 
 ## Maturity Assessment
@@ -50,10 +54,10 @@ Tests:    tec-auth = 0% | apps = low coverage
 | Governance Model | Elite |
 | Federation Strategy | Elite |
 | Payment Integration | Strong |
-| Runtime Hardening | Medium |
+| Runtime Hardening | Strong |
 | Reliability Engineering | Emerging |
-| Observability | Emerging |
-| Test Coverage | Weak |
+| Observability | Emerging (the #1 remaining gap — unanimous across reviews) |
+| Test Coverage | Improving (auth 95%; payment/CSRF suites in all 4 apps) |
 
 ---
 
@@ -112,15 +116,16 @@ Pi API    → can change without notice
 
 **Mitigation (post-Portal):** Pi Abstraction Layer (PAL)
 
-## R2 — tec-auth Zero Tests (NEW-D)
+## R2 — tec-auth Test Coverage (NEW-D) — ✅ CLOSED
 
 ```txt
 tec-auth controls auth for ALL 4 apps
-Zero tests = zero early warning
-auth down = entire platform down
+Was: zero tests = zero early warning
+Now: auth-service 95% stmt / 93% branch / 100% lines;
+     tec-auth pkg ≥ 80% coverage gate enforced in CI
 ```
 
-**Priority:** Week 2 — before any new features
+**Status:** CLOSED (Session 14.x). Coverage gate is permanent in CI.
 
 ## R3 — Capacity vs Vision
 
@@ -130,14 +135,15 @@ auth down = entire platform down
 
 **Rule:** No new apps until Portal submitted
 
-## R4 — Infrastructure URLs Exposed (NEW-A)
+## R4 — Infrastructure URLs Exposed (NEW-A) — ✅ CLOSED
 
 ```txt
-NEXT_PUBLIC_API_GATEWAY_URL in BFF routes
-= Railway URLs visible in browser DevTools
+Was: NEXT_PUBLIC_API_GATEWAY_URL in BFF routes
+     = Railway URLs visible in browser DevTools
+Now: API_GATEWAY_URL (server-only) in all BFF routes
 ```
 
-**Fix:** API_GATEWAY_URL (server-only) in all BFF routes
+**Status:** CLOSED (Session 14.x). No NEXT_PUBLIC_ internal URLs remain.
 
 ## R5 — Dependabot Uncontrolled
 
@@ -152,11 +158,13 @@ Major version bumps without peer dep alignment
 
 # 5. P1 VIOLATIONS — CURRENT STATUS
 
+> **P1 = 0 as of 21 Jun 2026.** All entries below CLOSED. Authority: C-02 + Session-14 audits.
+
 | ID | Description | Risk | Status |
 |----|-------------|------|--------|
-| NEW-A | NEXT_PUBLIC_ in BFF routes | 🟠 Security | OPEN — Hub 30+ routes |
-| NEW-B | INTERNAL_SECRET optional | 🟡 Blocking | OPEN — 30 min fix |
-| NEW-D | tec-auth zero tests | 🔴 Existential | OPEN |
+| NEW-A | NEXT_PUBLIC_ in BFF routes | 🟠 Security | ✅ CLOSED — server-only API_GATEWAY_URL |
+| NEW-B | INTERNAL_SECRET optional | 🟡 Blocking | ✅ CLOSED — unconditional guard, set on all services |
+| NEW-D | tec-auth zero tests | 🔴 Existential | ✅ CLOSED — auth-service 95% / pkg ≥ 80% gate |
 | NEW-I | Assets Mode 2 missing | — | ✅ FIXED June 1 |
 | NEW-J | Ecommerce Mode 1 missing | — | ✅ FIXED June 3 |
 
@@ -164,12 +172,12 @@ Major version bumps without peer dep alignment
 
 # 6. EXECUTION ROADMAP
 
-## Layer 0 — Survival (Weeks 1–2)
+## Layer 0 — Survival (Weeks 1–2) — ✅ COMPLETE
 
 ```txt
-□ NEW-B fix (INTERNAL_SECRET required)
-□ NEW-A fix (Hub 30+ BFF routes → API_GATEWAY_URL)
-□ tec-auth tests ≥ 60%
+✅ NEW-B fix (INTERNAL_SECRET required — unconditional guard)
+✅ NEW-A fix (Hub BFF routes → server-only API_GATEWAY_URL)
+✅ tec-auth tests (auth-service 95% / pkg ≥ 80% gate)
 ✅ NEW-J Ecommerce — DONE
 ✅ NEW-I Assets — DONE
 ✅ CORS all 5 domains — DONE
@@ -337,5 +345,6 @@ TEC is no longer solving: "What should we build?"
 TEC is now solving: "How do we operate a federated 
 economic platform reliably under real-world pressure?"
 
-Priority now: Close P1 → Tests → Portal → Everything else after.
+Priority now: P1 CLOSED ✅ → Tests in place ✅ → Portal-ready ✅
+Next frontier: Runtime Intelligence (observability) — the #1 remaining gap.
 ```

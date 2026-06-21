@@ -62,6 +62,15 @@ Subscriptions → Connections → Investments → Reputation
 | **Tec-App (Hub)** | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` | `false` |
 
 > ⚠️ Domain مرتبط بالـ Pi.init() registration. لو اتغيّر الـ domain → لازم update Pi Developer Portal.
+>
+> 🔧 **Reconciliation (21 Jun 2026):** the `tec-knowledge-base v9` snapshot lists
+> Commerce on `commerce.tecosystem.app` (custom domain), while this canonical table
+> still shows `tec-commerce-app.vercel.app`. Because the domain is bound to Pi.init()
+> registration, the canonical value is **NOT auto-changed here** — ops must confirm
+> which domain Pi Developer Portal actually has registered for Commerce, then update
+> this row + the §3 repo table in one PR. Until confirmed, treat `tec-commerce-app.vercel.app`
+> as the verified production value (fail-closed). All other App IDs/domains reconciled ✅
+> (Assets App ID `assets-app-af2fb490e7b03db7` confirmed).
 
 ---
 

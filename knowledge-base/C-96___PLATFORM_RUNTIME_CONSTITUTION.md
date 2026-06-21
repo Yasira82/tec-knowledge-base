@@ -18,6 +18,22 @@ Define Health, Observability, Availability, Resilience, Runtime Ownership, and *
 **C-92 defines:** Platform health model (dimensions × state machine × PHS).
 **C-96 defines:** The constitutional obligations that make runtime trustworthy — Health, Observability, Availability, Resilience, and Incident Flow.
 
+> **Scope boundary — C-84 / C-85 / C-96 (added 21 Jun 2026):** these three are
+> distinct, non-overlapping layers and must not be conflated:
+> - **C-84 Economic Runtime Constitution** — `[Future Vision]`: *economic* runtime
+>   emergence + authority gates (post-Portal, Gate A not yet passed). Answers
+>   "how does the economic layer earn authority?"
+> - **C-85 Economic Infrastructure Stack** — `[Future Vision]`: the *layer identity*
+>   + build sequencing of the economic stack (Layer 0 only is Current). Answers
+>   "what gets built, in what order?"
+> - **C-96 Platform Runtime & Observability** — `[Current State]→[Planned]`: the
+>   *operational* obligations of the live platform (Health, Observability,
+>   Availability, Resilience, Incident Flow, Runtime Evidence). Answers
+>   "what makes today's running platform trustworthy?"
+>
+> Rule: economic-emergence content → C-84; build-order/layer-identity → C-85;
+> live-runtime operability → C-96. Cross-references only — no duplicated rules (P2).
+
 ---
 
 ## Constitutional Question

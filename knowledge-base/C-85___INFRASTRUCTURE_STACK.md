@@ -13,6 +13,12 @@
 
 ---
 
+> **Scope boundary (added 21 Jun 2026):** C-85 is the *layer-identity + build
+> sequencing* layer (`[Future Vision]`; only Layer 0 is Current). It is NOT the
+> economic-runtime authority layer — that is **C-84** — nor the live-platform
+> operability layer (Health/Observability/Resilience) — that is **C-96**
+> (`[Current State]`). Full boundary table in C-96 §Purpose. No duplicated rules (P2).
+
 # 1. THE 9-LAYER INFRASTRUCTURE MODEL
 
 TEC is not a collection of apps.

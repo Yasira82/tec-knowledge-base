@@ -28,6 +28,12 @@ Four questions answered:
 4. When may TEC AI Reasoning exist?      → Reasoning Infrastructure Gate
 ```
 
+> **Scope boundary (added 21 Jun 2026):** C-84 is the *economic-runtime emergence
+> + authority* layer (`[Future Vision]`). It is NOT the live-platform operability
+> layer — that is **C-96** (`[Current State]` Health/Observability/Resilience), nor
+> the build-order/layer-identity layer — that is **C-85**. See the full boundary
+> table in C-96 §Purpose. No rule is duplicated across the three (P2).
+
 ---
 
 # 1. RUNTIME EMERGENCE PRINCIPLE

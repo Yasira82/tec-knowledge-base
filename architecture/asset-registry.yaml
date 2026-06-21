@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-06-20T15:07:15.799104
+# Generated: 2026-06-21T18:46:26.392849
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -1568,8 +1568,8 @@ assets:
     path: knowledge-base/C-90___SECURITY_TRUST_MODEL.md
     constitutional:
       truth_state: current-state
-      governance_state: draft
-      verification_state: documentation-verified
+      governance_state: governance-approved
+      verification_state: code-verified
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-90-constitutional-trust-rules"]
@@ -1591,7 +1591,7 @@ assets:
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-91-engineering-roadmap-to-scale", "c-91-critical-path", "c-91-priority-order"]
-    depends_on: [C-00]
+    depends_on: [C-00, C-02]
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
