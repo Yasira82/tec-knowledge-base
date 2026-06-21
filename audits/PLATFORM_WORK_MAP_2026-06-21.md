@@ -7,7 +7,7 @@
 ---
 
 ## 0. Where we are — one line
-Payment works (Mode 1 + Mode 2, prod-verified); the CSRF/payment regression is closed **and** guarded; every repo's CI is at parity; the new-app template is Portal-ready. **Remaining work is ops/env + a small deferred-quality backlog, then Portal submission.**
+Payment works (Mode 1 + Mode 2, prod-verified); the CSRF/payment regression is closed **and** guarded; every repo's CI is at parity; the new-app template is Portal-ready. **P0 + P1 are CLOSED (ops/env confirmed 21 Jun 2026) → cleared for Portal submission.** Only non-blocking P2/P3 quality work remains.
 
 ---
 
@@ -54,14 +54,14 @@ Template + docs
 
 ## 3. Remaining — prioritised
 
-### P1 — Ops / env (owner: platform operator; not code)
+### P1 — Ops / env — ✅ COMPLETE (confirmed 21 Jun 2026)
 ```
-□ PI_SANDBOX=false verified in production for each Pi-paying app
-□ REALTIME_URL set on Hub (closes /api/bff/realtime 500s)
-□ Pi Developer Portal: domains + App IDs match production (Assets App ID to confirm)
-□ Privacy + Terms URLs registered per app in the Portal
-□ One real end-to-end Pi payment per app: Mode 1 (Hub) AND Mode 2 (standalone)
-□ tec-auth branch protection: update required check names (Typecheck / Test & Coverage / Build)
+✅ PI_SANDBOX=false verified in production for each Pi-paying app
+✅ REALTIME_URL set on Hub (closes /api/bff/realtime 500s)
+✅ Pi Developer Portal: domains + App IDs match production
+✅ Privacy + Terms URLs registered per app in the Portal
+✅ Real end-to-end Pi payment per app: Mode 1 (Hub) AND Mode 2 (standalone)
+✅ tec-auth branch protection: required check names updated
 ```
 
 ### P2 — Deferred quality (non-blocking for Portal)

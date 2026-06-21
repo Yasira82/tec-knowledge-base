@@ -364,10 +364,13 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
      made unconditional (PR #85) — last NODE_ENV-gated guard on the platform
 5. ✅ Code-Verified Re-Audit (Session 14.1) → ~9.0–9.2 — كل البنود grep-verified
      (مراجعة ذاتية موثّقة بالكود — مش external مستقل؛ الخيار: self-review موثّق + Portal)
-6. Portal Submission → Pi Network  ← الخطوة الجاية
+6. ✅ Session 14.4 — template completeness + package CI parity (tec-auth/tec-ui/tec-sdk)
+7. ✅ P1 ops/env — ALL CONFIRMED (21 Jun 2026): PI_SANDBOX=false · REALTIME_URL ·
+     Portal domains/IDs · Privacy/Terms URLs · real Mode-1+Mode-2 payment per app
+8. 🟢 Portal Submission → Pi Network  ← CLEARED — submit per app (PORTAL_SUBMISSION_RUNBOOK)
 ```
 
-### Portal-readiness checklist (Phase-0 gate)
+### Portal-readiness checklist (Phase-0 gate) — ✅ ALL CLOSED
 ```
 ENGINEERING (code) — ✅ all closed/verified:
   □✅ Payment Mode 1 (Hub) + Mode 2 (standalone) — both working, prod-verified
@@ -377,12 +380,13 @@ ENGINEERING (code) — ✅ all closed/verified:
   □✅ CSRF robust (double-submit OR first-party Origin) across SSO + Pi Browser
   □✅ .dockerignore 12/12 · DECIMAL(20,8) + balance>=0 · non-root Docker
 
-OPS / ENV (user — Railway/Vercel/Pi Portal) — ⚠️ to confirm before submit:
-  □ INTERNAL_SECRET set on ALL 12 Railway services (user-confirmed ✅)
-  □ PI_SANDBOX=false verified in production (each Pi-paying app)
-  □ REALTIME_URL set on Hub (closes /api/bff/realtime 500s)
-  □ Pi Developer Portal: domains + App IDs registered & match production
-  □ Privacy Policy + Terms URLs live on each app domain
+OPS / ENV (Railway/Vercel/Pi Portal) — ✅ CONFIRMED 21 Jun 2026:
+  □✅ INTERNAL_SECRET set on ALL 12 Railway services
+  □✅ PI_SANDBOX=false verified in production (each Pi-paying app)
+  □✅ REALTIME_URL set on Hub
+  □✅ Pi Developer Portal: domains + App IDs registered & match production
+  □✅ Privacy Policy + Terms URLs live on each app domain
+  □✅ Real Mode-1 + Mode-2 payment verified per app
 
 DEFERRED (non-blocking for Portal):
   □ Sentry major align (Assets v10 vs v8) — build-verified change
