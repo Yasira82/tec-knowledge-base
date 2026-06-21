@@ -76,10 +76,10 @@ Stack:
   @yasser172/tec-auth (getStoredUser, getAccessToken, ssoRedirect)
   @yasser172/tec-sdk (BFF → API Gateway:4000 → commerce-service:4003)
   Vitest (unit) + Playwright (e2e)
-  Deployment: Vercel (tec-commerce-app.vercel.app)
+  Deployment: Vercel (custom domain commerce.tecosystem.app)
 
 Pi App ID: commerce-app-68aa99081fc1897a
-Domain:    https://tec-commerce-app.vercel.app
+Domain:    https://commerce.tecosystem.app
 
 Critical Security Pattern:
   Merchant identity = ALWAYS from tec_user cookie (server-side)
@@ -213,11 +213,10 @@ Phase 3:
 [P1-2] PI_SANDBOX=false Verification
   Confirm on Vercel — commerce Pi App ID must be in production mode.
 
-[P1-3] Domain Registration
-  Pi App ID commerce-app-68aa99081fc1897a must match
-  registered domain in Pi Developer Portal.
-  Current domain: tec-commerce-app.vercel.app
-  Target: commerce.tecosystem.app (align with ecosystem)
+[P1-3] Domain Registration — ✅ DONE (21 Jun 2026)
+  Pi App ID commerce-app-68aa99081fc1897a registered in the
+  Pi Developer Portal on commerce.tecosystem.app.
+  Domain: commerce.tecosystem.app (aligned with ecosystem) ✅
 ```
 
 **P2 — Post-Mainnet:**

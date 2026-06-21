@@ -314,7 +314,7 @@ Critical (P0) — تم إصلاحه:
 
 Remaining (P1) — مطلوب في Session القادمة:
 ⚠️ Port conflict: C-10/C-20 (port 3000/5001) vs README/charters (4000/4001)
-✅ Commerce domain: محسوم — current=tec-commerce-app.vercel.app · target=commerce.tecosystem.app (C-101 canonical)
+✅ Commerce domain: محسوم نهائيًا (21 Jun) — `commerce.tecosystem.app` (المسجّل في Pi Developer Portal) · متطابق عبر C-01/C-02/C-101/C-92/C-10
 ✅ Truth Framework adoption: 100% on registry (96/96 docs registered via auto-generation) — C-00→C-23 تحتاج Truth State headers
 ✅ Orphan file: 47___TEC_Kernel_Spec_v1_1.1__ → تمت أرشفته في knowledge-base/archive/ (C-47 هو الـ canonical)
 ```
@@ -365,7 +365,7 @@ Closes the Observability gap identified in architectural review (9.1/10 → targ
 | **P0-4 tec-sdk Railway URL** | 🟡 تأكيد — fallback URL في http-client.ts |
 | External Re-Audit | بعد P0 backlog — المتوقع 9.0–9.5/10 |
 | Port Conflict | C-10/C-20 (5001) vs README/Charters (4001) — يحتاج قرار موحّد |
-| Commerce Domain | ✅ محسوم — Current live: `tec-commerce-app.vercel.app` · Target: `commerce.tecosystem.app` (custom domain pending) — canonical في C-101 |
+| Commerce Domain | ✅ محسوم نهائيًا (21 Jun) — `commerce.tecosystem.app` (المسجّل في Pi Developer Portal) — متطابق عبر C-01/C-02/C-101/C-92/C-10 |
 | Truth Framework | ✅ Tier الأساسي (C-00→C-23) مكتمل Truth+Governance State — الباقي قيد التبنّي التدريجي |
 
 ---
@@ -422,7 +422,7 @@ DEFERRED (non-blocking for Portal):
 | App | Pi App ID | Domain |
 |-----|-----------|--------|
 | Tec-Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `https://ecommerce.tecosystem.app` |
-| Tec-Commerce | `commerce-app-68aa99081fc1897a` | `https://tec-commerce-app.vercel.app` |
+| Tec-Commerce | `commerce-app-68aa99081fc1897a` | `https://commerce.tecosystem.app` |
 | Tec-Assets | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` |
 | Tec-App (Hub) | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` |
 

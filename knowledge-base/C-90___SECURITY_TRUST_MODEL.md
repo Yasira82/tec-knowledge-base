@@ -4,11 +4,11 @@
 
 > Status: ACTIVE — Security Governance Layer
 > Authority: Platform Security + Architecture
-> Version: 1.0 — June 2026
-> Truth State: [Current State] — controls implemented | [Planned State] — formal verification
-> Governance State: [Draft]
-> Verification State: [Code Verified] — controls in codebase | [Unverified] — threat classifications
-> Authority Scope: [Platform]
+> Version: 1.1 — June 2026 (governance-approved)
+> **Truth State:** [Current State] — controls implemented | [Planned State] — formal verification
+> **Governance State:** [Governance Approved] — approved 21 Jun 2026 (Session 14.x); a live security model in production must be approved, not provisional
+> **Verification State:** [Code Verified] — controls in codebase | [Unverified] — threat classifications
+> **Authority Scope:** [Platform]
 
 ---
 

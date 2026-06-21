@@ -42,7 +42,7 @@ Subscriptions → Connections → Investments → Reputation
 |---|---|---|---|
 | Tec-core-backend | Backend | NestJS+Express | Railway |
 | Tec-App | Hub | Next.js 15 | hub.tecosystem.app |
-| Tec-Commerce | Commerce | Next.js 15 | tec-commerce-app.vercel.app |
+| Tec-Commerce | Commerce | Next.js 15 | commerce.tecosystem.app |
 | Tec-Assets | Assets | Next.js 15 | assets.tecosystem.app |
 | Tec-Ecommerce | Ecommerce | Next.js 15 | ecommerce.tecosystem.app |
 | TEC-SDK | SDK | TypeScript | npm @yasser172/tec-sdk |
@@ -57,11 +57,17 @@ Subscriptions → Connections → Investments → Reputation
 | App | Pi App ID | Domain | PI_SANDBOX |
 |-----|-----------|--------|------------|
 | **Tec-Ecommerce** | `ecommerce-app-71ca4d3e462eaf54` | `https://ecommerce.tecosystem.app` | `false` |
-| **Tec-Commerce** | `commerce-app-68aa99081fc1897a` | `https://tec-commerce-app.vercel.app` | `false` |
+| **Tec-Commerce** | `commerce-app-68aa99081fc1897a` | `https://commerce.tecosystem.app` | `false` |
 | **Tec-Assets** | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` | `false` |
 | **Tec-App (Hub)** | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` | `false` |
 
 > ⚠️ Domain مرتبط بالـ Pi.init() registration. لو اتغيّر الـ domain → لازم update Pi Developer Portal.
+>
+> ✅ **Reconciled (21 Jun 2026):** Commerce domain confirmed as
+> `commerce.tecosystem.app` — this is the domain registered in the Pi Developer
+> Portal for Pi App ID `commerce-app-68aa99081fc1897a`. C-01 (§3 + §4), C-101, and
+> the PORTAL_SUBMISSION_RUNBOOK are all aligned to it. Assets App ID
+> `assets-app-af2fb490e7b03db7` also confirmed. All App IDs/domains now consistent.
 
 ---
 
