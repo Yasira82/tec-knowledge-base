@@ -16,6 +16,10 @@ on:
       - '.github/workflows/**'
       - 'scripts/**'
       - 'manifests/**'
+      - 'audits/**'
+      - 'docs/**'
+      - 'deliverables/**'
+      - 'memory/**'
       - 'README.md'
       - 'CLAUDE.md'
   pull_request:
@@ -33,6 +37,10 @@ on:
       - '.github/workflows/**'
       - 'scripts/**'
       - 'manifests/**'
+      - 'audits/**'
+      - 'docs/**'
+      - 'deliverables/**'
+      - 'memory/**'
       - 'README.md'
       - 'CLAUDE.md'
 
