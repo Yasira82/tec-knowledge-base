@@ -49,7 +49,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.6.2 | Governance Charter v1.2
+Knowledge Base v3.7.0 | Governance Charter v1.2
 
 
 ---
@@ -115,3 +115,14 @@ v3.6.0 accidentally dropped the VAM manifest from v3.5.0. v3.6.1 restores it AND
 - VAM Compliance: 0 violations
 
 The DAG-guarantee (depends_on only points to HIGHER-authority docs) eliminates cycles by construction. The prefixed authoritative_for (c-NN-claim) eliminates authority vacuum by construction.
+
+## Session 14.6 Additions (v3.7.0) — Runtime Governance Layer (begins)
+
+First in-repo step of the unanimous #1 gap (doc ↔ runtime). Authority: `audits/EXECUTION_PLAN_2026-06-21.md` (NEXT — Runtime Governance Layer).
+
+| Document | Path | Purpose |
+|----------|------|---------|
+| Portal Readiness Engine | `evals/check-portal-readiness.sh` | CI gate: auto pre-submission audit. Asserts the documented Pi-Portal readiness is internally consistent before any app is submitted — App ID/domain agree across C-01 (canonical) ↔ C-02 ↔ PORTAL_RUNBOOK, no placeholders, PI_SANDBOX=false, Privacy/Terms present, no open ENG/OPS checklist items, no stale Commerce domain. |
+
+### v3.7.0 shift
+CI gates now: **11** (was 10). This is the first gate that audits *operational readiness* (Portal submission), not document structure — the beginning of binding the constitution to runtime reality. Next: Drift Detection (KB claims vs live code).

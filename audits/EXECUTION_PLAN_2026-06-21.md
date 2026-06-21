@@ -34,8 +34,11 @@ Legend: 🧑‍💻 = engineering (executable in-repo) · 🛠️ = ops/infra (p
 
 ### 🧑‍💻 Build in-repo (no infra required)
 ```
-5. Portal Readiness Engine  — auto pre-submission audit script (evals/)
-6. Drift Detection gate     — CI asserting C-doc claims vs live code
+5. ✅ Portal Readiness Engine — evals/check-portal-readiness.sh (11th CI gate, v3.7.0).
+                              Asserts App ID/domain consistency (C-01↔C-02↔RUNBOOK),
+                              no placeholders, PI_SANDBOX=false, Privacy/Terms present,
+                              no open ENG/OPS checklist items, no stale Commerce domain.
+6. Drift Detection gate     — CI asserting C-doc claims vs live code  ▶️ NEXT
                               (start: route-level CSRF, ADR-009 contract, amount:number)
 7. C-96 dual-poller fix     — unify health polling (BackendOfflineBanner + BackendStatus)
 8. Runtime Evidence schema  — manifest/contract for metrics+incidents → KB

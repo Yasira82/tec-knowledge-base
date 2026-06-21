@@ -12,7 +12,7 @@
 |-----|-----------|-------------------|---------|-------|------------|
 | Hub | `tec-app-923b947851f9dfe1` | `hub.tecosystem.app` | `/privacy` | `/terms` | false |
 | Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `ecommerce.tecosystem.app` | `/privacy` | `/terms` | false |
-| Assets | *(confirm in Pi Portal)* | `assets.tecosystem.app` | `/privacy` | `/terms` | false |
+| Assets | `assets-app-af2fb490e7b03db7` | `assets.tecosystem.app` | `/privacy` | `/terms` | false |
 | Commerce | `commerce-app-68aa99081fc1897a` | `commerce.tecosystem.app` | `/privacy` | `/terms` | false |
 
 > The Pi App ID + registered domain in the Pi Developer Portal MUST match the production domain exactly — a mismatch breaks `Pi.init()` / payment authorisation.
