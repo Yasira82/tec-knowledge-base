@@ -7,7 +7,7 @@
 ---
 
 ## 0. Where we are — one line
-Payment works (Mode 1 + Mode 2, prod-verified); the CSRF/payment regression is closed **and** guarded; every repo's CI is at parity; the new-app template is Portal-ready. **P0 + P1 are CLOSED (ops/env confirmed 21 Jun 2026) → cleared for Portal submission.** Only non-blocking P2/P3 quality work remains.
+Payment works (Mode 1 + Mode 2, prod-verified); the CSRF/payment regression is closed **and** guarded; every repo's CI is at parity; the new-app template is Portal-ready. **P0 + P1 + P2 are CLOSED, and P3's safe code part is done (security bumps) — cleared for Portal submission.** Remaining P3 is ops-gated (publish tec-auth v1.1.0) or infra (SLOs).
 
 ---
 
@@ -16,10 +16,10 @@ Payment works (Mode 1 + Mode 2, prod-verified); the CSRF/payment regression is c
 | Repo | Role | State | Open items |
 |------|------|-------|-----------|
 | tec-app (Hub) | Conductor / SSO / payment orchestrator | ✅ healthy | — |
-| tec-ecommerce | marketplace | ✅ payment-verified | Sentry major align |
-| tec-assets | NFT/assets | ✅ healthy | Sentry major align |
+| tec-ecommerce | marketplace | ✅ payment-verified | — |
+| tec-assets | NFT/assets | ✅ healthy (Sentry→v8) | — |
 | tec-commerce | merchant | ✅ healthy | — |
-| tec-core-backend | 12 microservices | ✅ healthy | realtime-service tests |
+| tec-core-backend | 12 microservices | ✅ healthy (realtime tests added) | — |
 | @yasser172/tec-sdk | server BFF SDK | ✅ complete CI | — |
 | @yasser172/tec-auth | auth package | ✅ CSRF fixed + full CI | branch-protection check names |
 | @yasser172/tec-ui | design system | ✅ CodeQL added | raise coverage over time |
@@ -64,21 +64,30 @@ Template + docs
 ✅ tec-auth branch protection: required check names updated
 ```
 
-### P2 — Deferred quality (non-blocking for Portal)
+### P2 — Deferred quality — ✅ COMPLETE (21 Jun 2026)
 ```
-□ Sentry major-version alignment (Assets @sentry/nextjs v10 vs v8 elsewhere) — build-verified
-□ tec-realtime-service unit tests
-□ Move vite/vitest to devDeps where they leaked into prod deps
-□ Raise tec-ui coverage floor as components gain tests
+✅ Sentry major-version alignment — Assets @sentry/nextjs v10 → v8 (build-verified)
+✅ tec-realtime-service unit tests — 0 → 9 (gateway + health controller)
+✅ Move vite plugin to devDeps — ecommerce · assets · commerce
+○ Raise tec-ui coverage floor as components gain tests (ongoing — floor set 72/62/68/75)
 ```
 
-### P3 — Forward / strategic (post-Portal)
+### P3 — Forward / strategic — 🟡 PARTIAL (safe code part done 21 Jun 2026)
 ```
-□ Publish tec-auth v1.1.0 + bump consumers to the fixed middleware (defence in depth)
-□ Consider migrating the 4 apps' inline middleware → the fixed package middleware (DRY)
-□ Promote npm-audit from advisory → blocking once the advisory backlog is triaged
-□ Observability SLOs (C-78) wired to dashboards
+✅ npm-audit triage + non-breaking fixes — next 15.5.12→15.5.19 (+ ws/form-data/
+   engine.io); high 6→2 per app, all 4 apps. Lesson: use package-scoped bumps,
+   not broad `npm audit fix` (it reshuffled vite/rolldown → broke Hub vitest JSX).
+⏸️ Promote npm-audit advisory → blocking — NOT yet; residual high=2 (@sentry+rollup
+   want v10 vs platform v8) + critical=1 (happy-dom, test-only devDep). Stays advisory.
+⏸️ Publish tec-auth v1.1.0 + bump consumers — ops-gated (NPM_TOKEN + Release; workflow ready)
+⏸️ Migrate apps' inline middleware → package middleware — AFTER v1.1.0 published
+   (else apps pull old buggy 1.0.0 and re-break payments)
+⏸️ Observability SLOs (C-78) wired to dashboards — infra/ops
 ```
+
+> **P3 forward sequence:** merge PRs → cut a tec-auth **Release** (fires `publish.yml`) →
+> bump the 4 apps + template to `@yasser172/tec-auth@^1.1.0` → optionally migrate
+> inline middleware → package middleware → re-triage npm-audit → consider flipping to blocking.
 
 ---
 
