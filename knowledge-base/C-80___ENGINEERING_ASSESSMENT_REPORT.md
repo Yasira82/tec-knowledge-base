@@ -278,12 +278,12 @@ C-14 يذكر tec-ui "TO BUILD" — بينما C-02 يؤكد v1.2.1 منشور.
 
 | App | C-01 / C-02 | C-10 / C-11 / C-22 | التعارض |
 |-----|-------------|---------------------|---------|
-| Commerce | `tec-commerce-app.vercel.app` | `commerce.tecosystem.app` | ❌ |
+| Commerce | `commerce.tecosystem.app` | `commerce.tecosystem.app` | ✅ |
 | Ecommerce | `ecommerce.tecosystem.app` | `ecommerce.tecosystem.app` | ✅ |
 | Assets | `assets.tecosystem.app` | `assets.tecosystem.app` | ✅ |
 | Hub | `hub.tecosystem.app` | `hub.tecosystem.app` | ✅ |
 
-Commerce domain يظهر بصيغتين مختلفتين عبر المستندات — يحتاج قرار واحد في C-01.
+✅ **محلول (21 Jun 2026):** Commerce domain اتأكد إنه `commerce.tecosystem.app` (المسجّل في Pi Developer Portal). C-01/C-02/C-101/C-92/C-10 كلهم متطابقين دلوقتي.
 
 ---
 
@@ -297,7 +297,7 @@ Commerce domain يظهر بصيغتين مختلفتين عبر المستندا
 | 2 | ✅ **تحديث C-40** — إغلاق NEW-C/E/F/G كـ VERIFIED | C-40 | فُعِّل |
 | 3 | ✅ **تحديث C-41** — tec-ui v1.2.1 ✅ + تحديث Phase 1 | C-41 | فُعِّل |
 | 4 | ~~تثبيت Port Authority~~ | ✅ **RESOLVED** — Scheme A (C-20 Code Verified) هو الـ canonical. README + memory snapshot محدَّثين. | |
-| 5 | تصحيح Commerce domain — `tec-commerce-app.vercel.app` vs `commerce.tecosystem.app` | C-01/C-68 | مطلوب |
+| 5 | ✅ **تصحيح Commerce domain** — اتأكد `commerce.tecosystem.app` (Pi Portal) + اتطابق عبر C-01/C-02/C-101/C-92/C-10 | C-01/C-68 | فُعِّل |
 
 ### P1 — يُنفَّذ في Session القادمة
 

@@ -14,7 +14,7 @@
 Pi Browser (WebView)
     │
     ├── hub.tecosystem.app     (Next.js 15 — Vercel)
-    ├── commerce.tecosystem.app (Next.js 15 — Vercel) [target; current live: tec-commerce-app.vercel.app]
+    ├── commerce.tecosystem.app (Next.js 15 — Vercel)
     ├── assets.tecosystem.app  (Next.js 15 — Vercel)
     └── ecommerce.tecosystem.app (Next.js 15 — Vercel)
          │

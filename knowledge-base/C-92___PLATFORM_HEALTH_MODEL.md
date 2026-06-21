@@ -488,7 +488,7 @@ INTERNAL_SECRET:  ✅ valid on all services
 □ hub.tecosystem.app → loads in < 2s
 □ ecommerce.tecosystem.app → loads in < 2s
 □ assets.tecosystem.app → loads in < 2s
-□ tec-commerce-app.vercel.app → loads in < 2s
+□ commerce.tecosystem.app → loads in < 2s
 □ No Vercel deployment failures in last 24h
 
 # Economic Integrity
