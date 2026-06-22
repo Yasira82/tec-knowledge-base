@@ -1,0 +1,9 @@
+# Example runtime evidence record — slo_breach (illustrative; validates against schema).
+evidence_id: ev-2026-06-21-003
+kind: slo_breach
+timestamp: "2026-06-21T19:05:00Z"
+source: tec-payment-service
+binds_to: [C-78, C-96]
+slo: payment_success_rate_24h
+observed: "94.1%"
+threshold: "95%"

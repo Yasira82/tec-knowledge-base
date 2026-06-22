@@ -1,0 +1,13 @@
+# Example runtime evidence record — health_snapshot (illustrative; validates against schema).
+evidence_id: ev-2026-06-21-002
+kind: health_snapshot
+timestamp: "2026-06-21T18:40:00Z"
+source: tec-api-gateway:/health/detailed
+binds_to: [C-96, C-92]
+phs: 9.4
+dimensions:
+  availability: ok
+  latency: ok
+  error_rate: ok
+  saturation: ok
+  freshness: ok
