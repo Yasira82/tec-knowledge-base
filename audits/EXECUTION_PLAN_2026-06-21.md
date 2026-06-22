@@ -44,7 +44,13 @@ Legend: 🧑‍💻 = engineering (executable in-repo) · 🛠️ = ops/infra (p
                               C-96 single health poller. Negative-tested. Done.
 7. ✅ C-96 dual-poller fix  — PlatformHealthContext single poller (Tec-App PR #43).
                               BackendOfflineBanner + BackendStatus now consumers. Done.
-8. Runtime Evidence schema  — manifest/contract for metrics+incidents → KB  ▶️ NEXT
+8. ✅ Runtime Evidence schema — manifests/runtime-evidence-schema.yaml +
+                              evals/check-runtime-evidence.sh (12th KB gate).
+                              Records attributable + bound to real C-docs (V-5 →
+                              C-93). Behavior↔claim half of Runtime Governance. Done.
+
+> All in-repo Runtime Governance items (5–8) complete. Remaining NEXT is infra/ops:
+> Observability stack (Prometheus + SLOs + alerts) emitting into runtime-evidence/.
 ```
 
 ### 🛠️ Ops — Observability stack

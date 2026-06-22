@@ -1,0 +1,12 @@
+# Example runtime evidence record — incident (illustrative; validates against schema).
+evidence_id: ev-2026-06-21-001
+kind: incident
+timestamp: "2026-06-21T18:37:21Z"
+source: tec-app:PlatformHealthContext
+binds_to: [C-96]
+severity: P1
+summary: >
+  Backend health endpoint /api/health returned 503 for 90s; BackendOfflineBanner
+  surfaced offline state. Single-poller (PlatformHealthContext) recorded the
+  transition with one attributable signal (post NEW-K).
+status: resolved
