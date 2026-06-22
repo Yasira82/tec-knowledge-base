@@ -88,8 +88,12 @@ Closes the doc↔runtime loop with two more KB gates (now **13** total).
 |------|--------|
 | **Runtime Evidence schema** | `manifests/runtime-evidence-schema.yaml` + `evals/check-runtime-evidence.sh` (12th gate). Every evidence record (metric/health_snapshot/incident/slo_breach) is attributable to a `source` + `binds_to` a real C-doc → C-93 at VAM V-5. Behavior↔claim half. |
 | **SLO Definitions** | `manifests/slo-definitions.yaml` + `evals/check-slo-definitions.sh` (13th gate). C-78 §2 targets made machine-readable; cross-checks every `slo_breach` references a defined SLO. Engineering's half of the Observability handoff. |
+| **Template v2** | `tec-template-base`: health endpoint · PAL (PiRuntime + circuit breaker) · structured logger · Sentry-ready reportError · feature flags · coverage gate. Every new app is production-ready by default. |
+| **24-app rollout registry** | `manifests/app-rollout-registry.yaml`: the 24 auction domains → 4 live + 20 to-build, with per-app checklist (repo→deploy→portal→smoke→5 users). 11 of 20 have KB blueprints; 9 need product definition. |
 
 > **In-repo Runtime Governance is DONE.** Remaining is ops-only: Pi Portal submission + Observability stack (Prometheus/alerts → emit `slo_breach` into `runtime-evidence/`).
+>
+> **24-app scale (Core Team gate):** 4 live; 20 to build from Template v2. Per-app: repo→deploy→Pi Portal→≥5 users. Repo creation + deploy + Portal + users are ops/marketing (deferred). See `manifests/app-rollout-registry.yaml`.
 
 ### Session 14.6 — Runtime Governance Layer begins (21 June 2026) ✅
 First in-repo work on the unanimous #1 gap (doc ↔ runtime). Authority: `audits/EXECUTION_PLAN_2026-06-21.md` (NEXT).
