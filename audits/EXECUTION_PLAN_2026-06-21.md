@@ -55,8 +55,9 @@ Legend: 🧑‍💻 = engineering (executable in-repo) · 🛠️ = ops/infra (p
 
 ### 🛠️ Ops — Observability stack
 ```
-□ Prometheus + SLOs + alerts + health dashboard
-  (engineering provides the SLO definitions + evidence schema; ops stands up the stack)
+✅ engineering's half DONE — manifests/slo-definitions.yaml (SLO contract, 13th gate)
+   + manifests/runtime-evidence-schema.yaml (evidence contract, 12th gate).
+□ Prometheus + alerts + health dashboard → emit slo_breach into runtime-evidence/
 □ Wire the 5 PHS (Platform Health) dimensions → composite endpoint
 ```
 
