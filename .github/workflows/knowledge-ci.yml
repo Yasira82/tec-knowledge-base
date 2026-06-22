@@ -220,3 +220,17 @@ jobs:
         run: chmod +x evals/*.sh
       - name: Run Runtime Evidence Engine
         run: bash evals/check-runtime-evidence.sh
+
+  check-slo-definitions:
+    name: SLO Definitions Engine
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run SLO Definitions Engine
+        run: bash evals/check-slo-definitions.sh

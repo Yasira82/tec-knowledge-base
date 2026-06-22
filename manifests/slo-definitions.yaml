@@ -1,0 +1,148 @@
+# TEC SLO Definitions v1.0
+
+> **Version:** v1.0 — June 2026 (Session 14.7)
+> **Truth State:** `[Planned State]`
+> **Governance State:** `[Governance Approved]`
+> **Verification:** `[Documentation Verified]`
+> **Authority Scope:** `[Platform]`
+> **Parent Constitutions:** C-78 (Operations & Reliability) · C-96 (Runtime & Observability) · C-92 (Platform Health Model)
+
+---
+
+## Purpose
+
+This manifest is **engineering's half of the Observability handoff** (EXECUTION_PLAN:
+"engineering provides the SLO definitions + evidence schema; ops stands up the stack").
+
+It formalizes the Service Level Targets that C-78 §2 states in prose into a
+machine-readable contract, so that:
+
+- **ops** can wire Prometheus alerts / dashboards directly from these definitions;
+- a violation emits a `slo_breach` **runtime evidence** record
+  (`manifests/runtime-evidence-schema.yaml`) that `binds_to` the relevant C-doc;
+- the Verification Engine (C-93) can consume the breach at VAM tier **V-5**.
+
+```
+C-78 (prose SLOs)  →  slo-definitions.yaml (contract)  →  ops: Prometheus/alerts
+                                   │
+                          breach → runtime-evidence/ (slo_breach)  →  C-93 verify (V-5)
+```
+
+This is the missing link that turns the `slo_breach` evidence kind from a shape
+into a governed signal: every breach now references a **defined** SLO.
+
+---
+
+## Definitions
+
+```yaml
+slo_version: "1.0"
+
+# Each SLO maps a measurable runtime objective to its owner + breach evidence.
+# `id` is referenced by slo_breach runtime-evidence records (field: slo).
+# Availability targets + MTTR are lifted verbatim from C-78 §2.
+slos:
+  - id: auth_availability
+    title: Auth service availability
+    service: tec-auth-service
+    tier: 0
+    objective: ">= 99.9%"
+    window: 30d
+    mttr_target: 15m
+    measurement: successful_auth_responses / total_auth_requests
+    binds_to: [C-78, C-96]
+
+  - id: payment_availability
+    title: Payment service availability
+    service: tec-payment-service
+    tier: 0
+    objective: ">= 99.9%"
+    window: 30d
+    mttr_target: 15m
+    measurement: successful_payment_api_responses / total_payment_api_requests
+    binds_to: [C-78, C-96]
+
+  - id: payment_success_rate
+    title: Pi payment success rate
+    service: tec-payment-service
+    tier: 0
+    objective: ">= 95%"          # commercial target (tec-core-backend)
+    window: 24h
+    mttr_target: 15m
+    measurement: completed_payments / approved_payments
+    binds_to: [C-71, C-78]       # C-71 Financial Integrity · C-78 SLOs
+
+  - id: gateway_availability
+    title: API Gateway availability
+    service: tec-api-gateway
+    tier: 0
+    objective: ">= 99.9%"
+    window: 30d
+    mttr_target: 30m
+    measurement: non_5xx_responses / total_responses
+    binds_to: [C-78, C-96]
+
+  - id: pal_availability
+    title: Pi Abstraction Layer availability
+    service: PAL
+    tier: 0
+    objective: ">= 99.95%"
+    window: 30d
+    mttr_target: 15m
+    measurement: successful_pi_calls / total_pi_calls
+    binds_to: [C-78, C-96]
+
+  - id: hub_availability
+    title: Hub (Control Plane) availability
+    service: tec-app
+    tier: 1
+    objective: ">= 99.5%"
+    window: 30d
+    mttr_target: 60m
+    measurement: successful_page_loads / total_page_loads
+    binds_to: [C-78, C-96]
+
+  - id: platform_health_score
+    title: Composite Platform Health Score (PHS)
+    service: platform
+    tier: 0
+    objective: ">= 9.0"          # 0..10, per C-92 PHS formula
+    window: realtime
+    mttr_target: 30m
+    measurement: c92_phs_composite
+    binds_to: [C-92, C-96]
+
+# Error-budget governance (C-78 §2): exhausted budget → feature freeze.
+error_budget:
+  rule: "budget exhausted → feature freeze → reliability-only work"
+  authority: C-78
+
+# How a breach becomes evidence.
+on_breach:
+  emit: slo_breach
+  schema: manifests/runtime-evidence-schema.yaml
+  required_fields: [slo, observed, threshold]
+  note: >
+    the slo_breach record's `slo` field MUST equal one of the ids above
+    (enforced by evals/check-slo-definitions.sh).
+```
+
+---
+
+## Validation
+
+`evals/check-slo-definitions.sh` (CI gate) asserts:
+
+1. every SLO has the required fields (`id`, `title`, `service`, `objective`, `window`, `binds_to`);
+2. every `binds_to` id resolves to an existing C-doc;
+3. SLO ids are unique;
+4. every `slo_breach` runtime-evidence record references a **defined** SLO id
+   (closing the SLO-defs ↔ evidence loop).
+
+---
+
+## Status
+
+`[Planned State]` — definitions + validator are live now. Live measurement begins
+when ops stands up Prometheus and wires these objectives to alerts that emit
+`slo_breach` records into `runtime-evidence/`.
