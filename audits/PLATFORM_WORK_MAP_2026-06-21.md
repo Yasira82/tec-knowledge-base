@@ -15,16 +15,21 @@ Payment works (Mode 1 + Mode 2, prod-verified); the CSRF/payment regression is c
 
 | Repo | Role | State | Open items |
 |------|------|-------|-----------|
-| tec-app (Hub) | Conductor / SSO / payment orchestrator | ✅ healthy | — |
-| tec-ecommerce | marketplace | ✅ payment-verified | — |
-| tec-assets | NFT/assets | ✅ healthy (Sentry→v8) | — |
-| tec-commerce | merchant | ✅ healthy | — |
+| tec-app (Hub) | Conductor / SSO / payment orchestrator | ✅ healthy (single health-poller, C-96) | — |
+| tec-ecommerce | marketplace | ✅ payment-verified (drift gate) | — |
+| tec-assets | NFT/assets | ✅ healthy (Sentry→v8, drift gate) | — |
+| tec-commerce | merchant | ✅ healthy (drift gate) | — |
 | tec-core-backend | 12 microservices | ✅ healthy (realtime tests added) | — |
 | @yasser172/tec-sdk | server BFF SDK | ✅ complete CI | — |
 | @yasser172/tec-auth | auth package | ✅ CSRF fixed + full CI | branch-protection check names |
 | @yasser172/tec-ui | design system | ✅ CodeQL added | raise coverage over time |
 | tec-template-base | new-app golden template | ✅ Portal-ready | — |
-| tec-knowledge-base | governance | ✅ 10/10 gates | — |
+| tec-knowledge-base | governance | ✅ 13/13 gates | — |
+
+> **Runtime Governance Layer (Session 14.6–14.7) — in-repo half COMPLETE.**
+> KB gates 10 → 13: Portal Readiness · Runtime Evidence · SLO Definitions.
+> Per-app **Drift Detection** gate live in all 4 apps. C-96 dual-poller fixed.
+> Remaining is **ops-only** (see §3): Pi Portal submission + Observability stack.
 
 ---
 
@@ -82,7 +87,19 @@ Template + docs
 ⏸️ Publish tec-auth v1.1.0 + bump consumers — ops-gated (NPM_TOKEN + Release; workflow ready)
 ⏸️ Migrate apps' inline middleware → package middleware — AFTER v1.1.0 published
    (else apps pull old buggy 1.0.0 and re-break payments)
-⏸️ Observability SLOs (C-78) wired to dashboards — infra/ops
+✅ Observability SLOs — engineering's half DONE: manifests/slo-definitions.yaml +
+   runtime-evidence-schema.yaml (contracts). Ops wires Prometheus/alerts from them.
+```
+
+### Runtime Governance Layer — ✅ COMPLETE in-repo (Session 14.6–14.7)
+```
+✅ Portal Readiness Engine    — evals/check-portal-readiness.sh (11th gate)
+✅ Drift Detection gate       — all 4 apps (ADR-009 · C-12 §11 · C-76/ADR-007; Hub +C-96)
+✅ C-96 dual-poller fix       — PlatformHealthContext single poller (Hub)
+✅ Runtime Evidence schema    — manifests/runtime-evidence-schema.yaml (12th gate)
+✅ SLO Definitions            — manifests/slo-definitions.yaml (13th gate)
+→ Remaining is OPS-ONLY: stand up Prometheus/alerts → emit slo_breach into
+  runtime-evidence/; submit the 4 apps to the Pi Portal.
 ```
 
 > **P3 forward sequence:** merge PRs → cut a tec-auth **Release** (fires `publish.yml`) →
