@@ -38,11 +38,13 @@ Legend: 🧑‍💻 = engineering (executable in-repo) · 🛠️ = ops/infra (p
                               Asserts App ID/domain consistency (C-01↔C-02↔RUNBOOK),
                               no placeholders, PI_SANDBOX=false, Privacy/Terms present,
                               no open ENG/OPS checklist items, no stale Commerce domain.
-6. Drift Detection gate     — CI asserting C-doc claims vs live code  ▶️ NEXT
-                              (start: route-level CSRF, ADR-009 contract, amount:number)
+6. ✅ Drift Detection gate  — "Drift Detection — KB claims vs code" in ALL 4 apps:
+                              ADR-009 (amount:number) · C-12 §11 (CSRF middleware-only)
+                              · C-76/ADR-007 (Mode-2 buy handler guarded). Hub also:
+                              C-96 single health poller. Negative-tested. Done.
 7. ✅ C-96 dual-poller fix  — PlatformHealthContext single poller (Tec-App PR #43).
                               BackendOfflineBanner + BackendStatus now consumers. Done.
-8. Runtime Evidence schema  — manifest/contract for metrics+incidents → KB
+8. Runtime Evidence schema  — manifest/contract for metrics+incidents → KB  ▶️ NEXT
 ```
 
 ### 🛠️ Ops — Observability stack

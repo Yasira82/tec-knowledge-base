@@ -123,6 +123,8 @@ First in-repo step of the unanimous #1 gap (doc ↔ runtime). Authority: `audits
 | Document | Path | Purpose |
 |----------|------|---------|
 | Portal Readiness Engine | `evals/check-portal-readiness.sh` | CI gate: auto pre-submission audit. Asserts the documented Pi-Portal readiness is internally consistent before any app is submitted — App ID/domain agree across C-01 (canonical) ↔ C-02 ↔ PORTAL_RUNBOOK, no placeholders, PI_SANDBOX=false, Privacy/Terms present, no open ENG/OPS checklist items, no stale Commerce domain. |
+| Drift Detection gate | each app's `.github/workflows/ci.yml` (step "Drift Detection — KB claims vs code") | Per-app CI gate binding code to specific C-docs: **ADR-009** (payment `amount` is a number, `x-internal-key`) · **C-12 §11** (CSRF middleware-only) · **C-76/ADR-007** (every Mode-2 buy handler guarded with `isHubNavigation()`; pi-test exempt). Hub also enforces **C-96** single health poller. Live in all 4 apps. |
+| C-96 dual-poller fix (NEW-K) | tec-app `src/context/PlatformHealthContext.tsx` | Single health-poller runtime; `BackendOfflineBanner` + `BackendStatus` are consumers. C-96 Finding 1 → RESOLVED. |
 
 ### v3.7.0 shift
-CI gates now: **11** (was 10). This is the first gate that audits *operational readiness* (Portal submission), not document structure — the beginning of binding the constitution to runtime reality. Next: Drift Detection (KB claims vs live code).
+CI gates now: **11** in KB (was 10) + a per-app **Drift Detection** gate in all 4 frontend apps. These are the first gates that bind the constitution to *runtime reality* (Portal readiness + code-vs-claim drift), not document structure — the Runtime Governance Layer. Remaining NEXT: Runtime Evidence schema → Observability stack (infra/ops).
