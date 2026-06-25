@@ -81,6 +81,21 @@ Made `tec-template-base` a Portal-ready golden reference and fixed the shared CS
 
 > **Lesson:** the template relied on the package middleware that carried the production CSRF bug — a new app would have shipped broken. Template is now self-contained + correct, and the package is fixed too (defence in depth). KB: 10/10 gates green; registry 99/99 (100%).
 
+### Session 14.8 — Production incident + Hub reliability fixes (25 June 2026) ✅
+A Railway platform incident (declared; **23/24 services online**, requests hanging 9s–5m) exposed five distinct frontend/gateway bugs while users tested the Hub. Root cause of the *outage* was **infra/ops** (a transient down service — recovered, all 24 active). The bugs below are real and now fixed; runtime evidence recorded in `runtime-evidence/ev-2026-06-22-010.yaml`.
+
+| ID | Symptom | Root cause | Fix | PR |
+|----|---------|-----------|-----|-----|
+| **NEW-P** | Hub wallet → "Something went wrong" (full ErrorBoundary) | `/api/bff/wallet/balance` returns `balance` as a **string** (ADR-009 string-in-API); page called `balance.toFixed()` → throw in render | coerce to number at the `useWallet` boundary (balance + fallback tx + realtime) | tec-app #45 |
+| **NEW-Q** | False "Backend Offline" banner during latency blips | double 5s timeout (client+BFF) + **no failure threshold** (1 fail → offline) | client→BFF 12s · BFF→gateway 10s · `failureThreshold=2` (consecutive) — kept honest, not blind (C-96) | tec-app #46 |
+| **NEW-R** | `/api/notification/unread-count` + `/read` → 404 (repeated) | BFF called endpoints the service doesn't expose | use base `GET /api/notification` (returns unreadCount) + `:id/read` / `read-all` | tec-app #46 |
+| **NEW-S** | `PATCH /notifications/:id/read` → 400 | `Content-Type: application/json` sent with **empty body** → Fastify rejects (self-inflicted by NEW-R) | drop Content-Type on bodyless PATCH | tec-app #47 |
+| **Gateway** | one slow upstream hangs requests 30s → cascade | gateway `proxyTimeout` default **30s** (KB NEW-L claimed 10s — drift) | default **30s → 15s** (fail-fast; still configurable via `PROXY_TIMEOUT`) | tec-core-backend #87 |
+
+**Ops fix (no code):** the Vercel **Supabase integration** (preview-branch provisioning) was attached to the **tec-app** project but only **Analytics** uses Supabase — it failed provisioning and red-X'd Hub preview deploys. Disconnected from tec-app (Hub uses Railway `DATABASE_URL`; verified zero Supabase usage in code). Check the other 3 apps too.
+
+> **Lesson:** all five bugs are **contract mismatches at the BFF↔service boundary** (string vs number · wrong paths · Content-Type/body · timeout alignment). Strong future candidates for the Drift Detection gate.
+
 ### Session 14.7 — Runtime Governance in-repo half complete (22 June 2026) ✅
 Closes the doc↔runtime loop with two more KB gates (now **13** total).
 

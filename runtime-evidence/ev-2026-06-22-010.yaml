@@ -1,0 +1,19 @@
+# First REAL runtime evidence record (prior entries are examples/).
+# The 22-25 Jun production incident + the Hub reliability bugs it exposed.
+evidence_id: ev-2026-06-22-010
+kind: incident
+timestamp: "2026-06-22T17:28:03Z"
+source: tec-api-gateway
+binds_to: [C-96, C-78]
+severity: P1
+summary: >
+  Railway platform incident (declared by provider; 23/24 services online,
+  requests hanging 9s-5m incl. the static /health → 499). Outage root cause was
+  infra/ops (a transient down service; recovered, all 24 active). It exposed five
+  real bugs, now fixed: NEW-P (wallet string balance.toFixed crash, tec-app #45),
+  NEW-Q (over-aggressive health check / false offline banner, #46), NEW-R
+  (notification BFF 404s, #46), NEW-S (notification PATCH 400 empty-body, #47),
+  and the gateway proxy default timeout 30s->15s (tec-core-backend #87). Ops:
+  disconnected the unused Supabase preview-branch integration from the Hub Vercel
+  project (only Analytics uses Supabase).
+status: resolved
