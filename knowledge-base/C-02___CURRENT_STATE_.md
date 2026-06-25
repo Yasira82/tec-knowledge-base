@@ -82,7 +82,7 @@ Made `tec-template-base` a Portal-ready golden reference and fixed the shared CS
 > **Lesson:** the template relied on the package middleware that carried the production CSRF bug — a new app would have shipped broken. Template is now self-contained + correct, and the package is fixed too (defence in depth). KB: 10/10 gates green; registry 99/99 (100%).
 
 ### Session 14.8 — Production incident + Hub reliability fixes (25 June 2026) ✅
-A Railway platform incident (declared; **23/24 services online**, requests hanging 9s–5m) exposed five distinct frontend/gateway bugs while users tested the Hub. Root cause of the *outage* was **infra/ops** (a transient down service — recovered, all 24 active). The bugs below are real and now fixed; runtime evidence recorded in `runtime-evidence/ev-2026-06-22-010.yaml`.
+Live Hub testing surfaced a cluster of bugs. Two distinct things were happening: (1) a **transient** Railway infra incident (declared; 23/24 online — recovered), and (2) a **recurring** gateway defect (**NEW-U**) that kept re-triggering the "Backend Offline" banner *after* the infra recovered. All seven bugs below are real and now fixed; runtime evidence: `runtime-evidence/ev-2026-06-22-010.yaml` (infra incident + the BFF-contract bugs) and `runtime-evidence/ev-2026-06-25-011.yaml` (NEW-U gateway saturation, runtime-verified from HTTP logs).
 
 | ID | Symptom | Root cause | Fix | PR |
 |----|---------|-----------|-----|-----|
@@ -90,11 +90,15 @@ A Railway platform incident (declared; **23/24 services online**, requests hangi
 | **NEW-Q** | False "Backend Offline" banner during latency blips | double 5s timeout (client+BFF) + **no failure threshold** (1 fail → offline) | client→BFF 12s · BFF→gateway 10s · `failureThreshold=2` (consecutive) — kept honest, not blind (C-96) | tec-app #46 |
 | **NEW-R** | `/api/notification/unread-count` + `/read` → 404 (repeated) | BFF called endpoints the service doesn't expose | use base `GET /api/notification` (returns unreadCount) + `:id/read` / `read-all` | tec-app #46 |
 | **NEW-S** | `PATCH /notifications/:id/read` → 400 | `Content-Type: application/json` sent with **empty body** → Fastify rejects (self-inflicted by NEW-R) | drop Content-Type on bodyless PATCH | tec-app #47 |
-| **Gateway** | one slow upstream hangs requests 30s → cascade | gateway `proxyTimeout` default **30s** (KB NEW-L claimed 10s — drift) | default **30s → 15s** (fail-fast; still configurable via `PROXY_TIMEOUT`) | tec-core-backend #87 |
+| **NEW-T** | `/api/bff/realtime` → **500** spam (~119 err/30min in Vercel logs) + WS reconnect loops | route **threw** when `REALTIME_URL` unset; realtime is OPTIONAL | return `{enabled:false,url:null}` 200; hooks skip cleanly when url null (C-96: no phantom failures for an off feature) | tec-app #48 |
+| **Gateway timeout** | one slow upstream hangs requests 30s → cascade | gateway `proxyTimeout` default **30s** (KB NEW-L claimed 10s — drift) | default **30s → 15s** (fail-fast; still configurable via `PROXY_TIMEOUT`) | tec-core-backend #87 |
+| **NEW-U** | recurring **`/health → 499`** bursts + **"Backend Offline"** banner | proxy opened a **fresh TCP+TLS connection per request**; a page-load fan-out of ~15-20 concurrent calls → ~20 simultaneous **TLS handshakes** → CPU 0→**1.5 vCPU** → single-thread event-loop saturates → even sync `/health` starves → 499 (NOT OOM; memory ~100MB) | shared **keepAlive** http/https Agent → reuse warm TCP+TLS; `maxSockets` (env `PROXY_MAX_SOCKETS`, default 64) bounds the burst | tec-core-backend #88 |
+
+> **Root-cause correction (runtime-verified, supersedes the infra framing above):** the **recurring** Backend-Offline banner was **NOT** the transient Railway incident — it was the gateway connection-pool defect **NEW-U**, proven from Railway HTTP Logs (02:12:04 `/health` 200/4ms → 02:12:13 `/health` 499/4s, cascading to pi-login 499/24s) + the synchronous CPU→1.5 vCPU spike. Evidence: `runtime-evidence/ev-2026-06-25-011.yaml`. The June Railway incident (`ev-2026-06-22-010`) was a separate, real, transient outage; it is not the cause of the repeat bursts.
 
 **Ops fix (no code):** the Vercel **Supabase integration** (preview-branch provisioning) was attached to the **tec-app** project but only **Analytics** uses Supabase — it failed provisioning and red-X'd Hub preview deploys. Disconnected from tec-app (Hub uses Railway `DATABASE_URL`; verified zero Supabase usage in code). Check the other 3 apps too.
 
-> **Lesson:** all five bugs are **contract mismatches at the BFF↔service boundary** (string vs number · wrong paths · Content-Type/body · timeout alignment). Strong future candidates for the Drift Detection gate.
+> **Lesson:** the BFF↔service contract bugs (NEW-P/Q/R/S/T) are **string vs number · wrong paths · Content-Type/body · timeout alignment · optional-feature-as-500** — Drift-Detection candidates. **NEW-U is a different class: a runtime/resource defect** (per-request TLS handshakes) invisible to any static gate — only the HTTP-log + CPU evidence revealed it. This is exactly why the Runtime Governance Layer (C-96 evidence) exists: a static-only platform would never have caught it.
 
 ### Session 14.7 — Runtime Governance in-repo half complete (22 June 2026) ✅
 Closes the doc↔runtime loop with two more KB gates (now **13** total).

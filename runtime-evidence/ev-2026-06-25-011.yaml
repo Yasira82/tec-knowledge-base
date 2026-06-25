@@ -1,0 +1,25 @@
+# Gateway event-loop saturation — root cause of the recurring "/health → 499"
+# bursts + "Backend Offline" banner. Runtime-verified from Railway HTTP Logs +
+# CPU/response-time metrics (the hardest evidence we have to date).
+evidence_id: ev-2026-06-25-011
+kind: incident
+timestamp: "2026-06-25T23:12:13Z"
+source: tec-api-gateway
+binds_to: [C-96, C-78]
+severity: P1
+summary: >
+  Recurring gateway collapse: healthy until a tipping point (HTTP log 02:12:04
+  /health 200 in 4ms), then every request — including the trivial sync /health —
+  hung 4-24s and the client aborted (499): /health 499 (4s,9s,9s), pi-login 499
+  (24s), payment/resolve-incomplete 499 (14s). At the same instant CPU spiked
+  0 -> 1.5 vCPU and p99 response time -> 25s, while memory stayed ~100MB (so NOT
+  OOM). Root cause: the proxy opened a fresh TCP+TLS connection PER request; a
+  page-load fan-out of ~15-20 concurrent calls (Assets view: assets/marketplace/
+  purchases/listings + wallets + notification + storage uploads + payment create)
+  produced ~20 simultaneous TLS handshakes that saturated the single-threaded
+  event loop, starving /health -> 499 -> frontend "Backend Offline / signal timed
+  out". Fix (NEW-U, tec-core-backend #88): shared keepAlive http/https Agent so
+  warm TCP+TLS connections are reused (maxSockets bounds the burst). This corrects
+  the ev-2026-06-22-010 framing: the recurring banner was a gateway connection-pool
+  defect, not the (separate, transient) Railway infra incident.
+status: resolved
