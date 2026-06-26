@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-06-22T02:32:03.962260
+# Generated: 2026-06-26T12:57:10.871819
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 99
+# Total assets: 102
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -129,7 +129,7 @@ assets:
       authority_scope: platform
     owner: yasser
     authoritative_for: ["current-state", "platform-score", "session-log"]
-    depends_on: [C-64]
+    depends_on: [C-00, C-64]
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
@@ -1435,6 +1435,60 @@ assets:
     last_verified: "2026-06-20"
     next_review: "2026-12-01"
 
+  - id: C-119
+    type: document
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Economic Operating System Model"
+    path: knowledge-base/C-119___ECONOMIC_OPERATING_SYSTEM_MODEL.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-119-economic-operating-system-model"]
+    depends_on: [C-68]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-120
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Zone Constitutional Runtime Charter"
+    path: knowledge-base/C-120___ZONE_CONSTITUTIONAL_RUNTIME_CHARTER.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-120-zone-constitutional-runtime-charter"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-121
+    type: document
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Institutional Knowledge Pipeline"
+    path: knowledge-base/C-121___INSTITUTIONAL_KNOWLEDGE_PIPELINE.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-121-institutional-knowledge-pipeline"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
   - id: C-83
     type: document
     tier: tier-1-institutional-intelligence
@@ -1820,14 +1874,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 99
+# Total assets: 102
 #   tier-1-constitutional-runtime: 58
-#   tier-1-institutional-intelligence: 33
+#   tier-1-institutional-intelligence: 36
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
 #   current-state: 83
+#   future-vision: 8
 #   planned-state: 6
-#   future-vision: 5
 #   speculation: 5
