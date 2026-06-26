@@ -15,7 +15,7 @@
 |---------|---------|-------|-----|
 | tec-sdk | v1.2.2 | BFF → Backend API calls | @yasser172/tec-sdk |
 | tec-shared | v1.1.0 | Backend middleware + event bus | shared/ جوه Tec-core-backend |
-| tec-ui | **v2.0.0** ✅ | Shared UI + types + payment utils + EVL palette (C-83) | @yasser172/tec-ui |
+| tec-ui | **v2.1.0** ✅ | Shared UI + types + payment utils + EVL palette (C-83) + Icon/CountUp | @yasser172/tec-ui |
 | tec-auth | **v1.0.0** | Auth middleware + SSO + hooks | @yasser172/tec-auth |
 
 ```
