@@ -1,3 +1,11 @@
+# ⚠️ SUPERSEDED by ev-2026-06-26-013 — the Redis "true root cause" conclusion
+# below was DISPROVEN: the freeze recurred after the in-memory rate-limit fix,
+# and the gateway creates no Redis client at all (createClient is never called).
+# The recorded observations remain valid; only the conclusion was wrong. The
+# durable root cause is event-loop saturation (see ev-013 / NEW-W). This record
+# is kept unaltered (append-only, C-00) for an honest audit trail.
+#
+# Original (now-disproven) header:
 # True root cause of the recurring "Backend Offline" — the gateway's dependency
 # on Redis for rate limiting. Supersedes the NEW-U (keep-alive) conclusion in
 # ev-2026-06-25-011: that freeze RECURRED after NEW-U deployed.
@@ -6,6 +14,7 @@ kind: incident
 timestamp: "2026-06-26T11:00:00Z"
 source: tec-api-gateway
 binds_to: [C-96, C-78]
+superseded_by: ev-2026-06-26-013
 severity: P1
 summary: >
   Recurring gateway freeze ("Backend Offline") persisted after NEW-U (keep-alive)

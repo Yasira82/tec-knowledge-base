@@ -1,0 +1,40 @@
+# Corrected, durable diagnosis of the recurring "Backend Offline".
+# SUPERSEDES ev-2026-06-26-012 (which credited Redis on the rate-limit hot path
+# as the "true root cause" — that was DISPROVEN: the freeze recurred after the
+# in-memory rate-limit fix shipped, AND the gateway creates no Redis client at
+# all anymore — createClient() is never called — so Redis cannot be the cause).
+evidence_id: ev-2026-06-26-013
+kind: incident
+timestamp: "2026-06-26T16:30:00Z"
+source: tec-api-gateway
+binds_to: [C-96, C-78, C-84]
+severity: P1
+status: resolved
+supersedes: ev-2026-06-26-012
+summary: >
+  Recurring gateway freeze ("Backend Offline") root cause is EVENT-LOOP
+  SATURATION on the single-threaded gateway — NOT Redis (ev-012) and NOT
+  TLS-handshake storms (ev-011 / NEW-U). The decisive, repeated signal across
+  every incident: the trivial dependency-free /health handler goes from ~2ms to
+  9s and 499s while CPU hits ~1.5 vCPU. Only a blocked event loop explains a
+  sync, dependency-free endpoint taking 9s. Two prior fixes (NEW-U keep-alive,
+  NEW-V in-memory rate-limit) addressed possible TRIGGERS, not the architectural
+  fragility that turned any blip into a total outage plus a FALSE offline:
+  the gateway is the platform's sole entry point on one event loop with no
+  isolation of liveness from load, no backpressure, synchronous per-request
+  logging on the hot path, and proxy timeouts that did not actually bound slow
+  upstreams (pi-login observed hanging 24s against a 15s setting).
+  Durable fix (NEW-W, tec-core-backend #93) — four structural changes:
+  (1) /health + /ready registered as the FIRST routes, isolated from
+  cache/JWT/rate-limit/proxy → liveness never fails under load (kills the FALSE
+  "Backend Offline"); (2) per-request proxy logging OFF by default
+  (PROXY_LOG_REQUESTS) + prod log levels exclude debug → removes synchronous
+  stdout backpressure that blocks the event loop under the polling flood;
+  (3) hard proxyReq.setTimeout(...).destroy() per request → a slow upstream can
+  no longer hold gateway connections; (4) event-loop-lag load shedding
+  (load-shed.ts) → fast 503 above MAX_EVENT_LOOP_LAG_MS so a blip drains instead
+  of snowballing. Companion amplifier fix in tec-app #53 (the /api/bff/realtime
+  request storm from unstable React callback deps). Process lesson: diagnosing
+  from symptom screenshots without the gateway Deploy Logs produced two confident
+  wrong calls; the durable fix targets the structural fragility so the platform
+  degrades gracefully regardless of which trigger fires.

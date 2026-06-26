@@ -102,6 +102,18 @@ Live Hub testing surfaced a cluster of bugs. Two distinct things were happening:
 
 > **Lesson:** the BFF↔service contract bugs (NEW-P/Q/R/S/T) are **string vs number · wrong paths · Content-Type/body · timeout alignment · optional-feature-as-500** — Drift-Detection candidates. **NEW-U is a different class: a runtime/resource defect** (per-request TLS handshakes) invisible to any static gate — only the HTTP-log + CPU evidence revealed it. This is exactly why the Runtime Governance Layer (C-96 evidence) exists: a static-only platform would never have caught it.
 
+### Session 14.13 — "Backend Offline" durable fix: event-loop resilience (NEW-W) (26 June 2026) ✅
+The recurring "Backend Offline" returned **again** after NEW-V. Root cause finally pinned by reading the gateway code end-to-end (not screenshots): **event-loop saturation on the single-threaded gateway.** The repeated signal across every incident — the trivial, dependency-free `/health` going from 2ms → 9s/499 while CPU hits 1.5 vCPU — can only mean a blocked event loop. **It is NOT Redis** (the gateway creates no Redis client at all — `createClient` is never called) and **NOT tec-sdk.**
+
+| Prior attempt | Verdict |
+|---------------|---------|
+| NEW-U (keep-alive) | trigger-only — freeze recurred |
+| NEW-V (in-memory rate-limit) | **claim "true root cause" was WRONG** — recurred; no Redis client exists. Kept as correct hardening. |
+
+**NEW-W (tec-core-backend #93) — durable fix, 4 structural changes:** (1) `/health`+`/ready` registered as the FIRST routes, isolated from cache/JWT/rate-limit/proxy → liveness never fails under load (kills the FALSE offline); (2) per-request proxy logging OFF by default + prod log levels exclude `debug` → removes synchronous stdout backpressure that blocks the loop under the polling flood; (3) hard `proxyReq.setTimeout(...).destroy()` → slow upstream (pi-login hung 24s vs 15s) can't hold connections; (4) event-loop-lag **load shedding** → fast 503 above `MAX_EVENT_LOOP_LAG_MS` instead of snowballing. **Amplifier fix (tec-app #53):** `/api/bff/realtime` request storm from unstable React callback deps in `useWalletRealtime`/`useRealtimeNotifications` (effect re-ran every render) → callbacks moved to refs.
+
+**Evidence:** `runtime-evidence/ev-2026-06-26-013.yaml` (supersedes ev-012, which is flagged `superseded_by` + kept unaltered for an honest audit trail). **Lesson:** diagnosing from symptom screenshots without the gateway **Deploy Logs** produced two confident wrong calls; the durable fix targets the *architectural fragility* so the platform degrades gracefully (503 + live `/health`) regardless of which trigger fires — verifiable post-deploy on Railway.
+
 ### Session 14.12 — Economic OS Model integrated (C-119→C-121, TIER 10) (26 June 2026) ✅
 Integrated three new constitutional vision-layer docs into the KB as **TIER 10 — Economic Operating System Model**.
 
