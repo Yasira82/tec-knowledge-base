@@ -27,6 +27,8 @@ governance/         # Platform governance documents
 | C-93–C-99 | Institutional Operating Loop Constitutions (Tier-1 + Tier-2) |
 | C-80 | Engineering Assessment Report |
 | C-100–C-115 | App Institutional Charters (Economic Infrastructure) |
+| C-116–C-118 | Constitutional Automation (Authority + Registry + Dependency) |
+| C-119–C-121 | Economic Operating System Model (OS Model + Zone Charter + Knowledge Pipeline) |
 
 ## Governance
 
@@ -49,7 +51,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.7.0 | Governance Charter v1.2
+Knowledge Base v3.8.0 | Governance Charter v1.2
 
 
 ---
@@ -130,3 +132,19 @@ First in-repo step of the unanimous #1 gap (doc ↔ runtime). Authority: `audits
 
 ### v3.7.0 shift
 CI gates now: **13** in KB (was 10) + a per-app **Drift Detection** gate in all 4 frontend apps. These are the first gates that bind the constitution to *runtime reality* — not document structure. The Runtime Governance Layer's in-repo half is complete: Portal readiness + code↔claim drift (Drift Detection) + behavior↔claim evidence (Runtime Evidence) + SLO definitions (engineering's observability half). Remaining NEXT is infra/ops: ops stands up the Observability stack (Prometheus/alerts) emitting `slo_breach` into `runtime-evidence/`.
+
+## Session 14.12 Additions (v3.8.0) — TIER 10: Economic Operating System Model
+
+Three new vision-layer constitutional docs integrated as **TIER 10**. They articulate the *why* above the app charters (C-100→C-115): TEC as a 3-tier economic operating system, not a collection of apps.
+
+| Document | Path | Purpose |
+|----------|------|---------|
+| C-119 Economic Operating System Model | `knowledge-base/C-119___ECONOMIC_OPERATING_SYSTEM_MODEL.md` | 3-tier model (Constitutional Runtimes / User Runtimes / Economic Products) + build sequence. Supersedes C-30's *build sequence* only. |
+| C-120 Zone Constitutional Runtime Charter | `knowledge-base/C-120___ZONE_CONSTITUTIONAL_RUNTIME_CHARTER.md` | Zone = Verification Runtime ("What can be trusted?"); `zone.pi` strategic asset; V1→V4. |
+| C-121 Institutional Knowledge Pipeline | `knowledge-base/C-121___INSTITUTIONAL_KNOWLEDGE_PIPELINE.md` | Sequential intelligence chain Hub → Life → Connection → Zone → Analytics → Nexus → TEC AI. |
+
+### v3.8.0 integration notes
+- `build-asset-registry.py` classifier extended (`119–121 → tier-1-institutional-intelligence`). Registry rebuilt: 102 assets, 100% coverage.
+- C-30 marked **partially superseded** (build sequence only) — banner added, not deleted.
+- Headers normalized to schema (`[Future Vision]` + `[Assumed]`); C-120 gained a Related Documents footer.
+- **All 13 CI gates pass, 0 errors.** Truth State of all three = `[Future Vision]` / `[Draft]` — vision, not current runtime.

@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-06-26T12:23:00.136616
+> **Generated:** 2026-06-26T12:49:08.149195
 > **Registry:** `/home/user/tec-knowledge-base/architecture/asset-registry.yaml`
 > **Rules:** `/home/user/tec-knowledge-base/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
@@ -9,12 +9,12 @@
 
 | Metric | Count |
 |--------|-------|
-| Total assets in registry | 99 |
-| Total C-docs on disk | 99 |
+| Total assets in registry | 102 |
+| Total C-docs on disk | 102 |
 | Coverage | 100.0% |
 | Errors | 0 |
-| Warnings | 93 |
-| Info | 48 |
+| Warnings | 96 |
+| Info | 51 |
 
 ## Per-Tier Breakdown
 
@@ -22,13 +22,13 @@
 |------|--------|--------|----------|
 | tier-0-foundational | 4 | 0 | 2 |
 | tier-1-constitutional-runtime | 58 | 0 | 58 |
-| tier-1-institutional-intelligence | 33 | 0 | 33 |
+| tier-1-institutional-intelligence | 36 | 0 | 36 |
 | tier-2-experimental | 4 | 0 | 0 |
 
 ## Coverage Report (R-COVERAGE)
 
-- Files on disk: 99
-- Files registered: 99
+- Files on disk: 102
+- Files registered: 102
 - Coverage: 100.0%
 - Missing from registry: 0 ✅
 - Orphan registry entries: 0 ✅
@@ -36,7 +36,7 @@
 ## Semantic Drift Report (R-SEMANTIC)
 
 - Semantic errors: 0
-- Semantic warnings: 93
+- Semantic warnings: 96
 
 ## Errors (must fix)
 
@@ -120,6 +120,9 @@ _No errors._ ✅
 - **C-113** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-114** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-115** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
+- **C-119** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
+- **C-120** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
+- **C-121** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-83** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-84** [R-SEMANTIC-002]: Only 0/3 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-85** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
@@ -140,4 +143,4 @@ _No errors._ ✅
 
 ## Recommended Actions
 
-2. Review 93 warning(s) — address within sprint.
+2. Review 96 warning(s) — address within sprint.

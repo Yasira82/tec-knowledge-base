@@ -102,6 +102,22 @@ Live Hub testing surfaced a cluster of bugs. Two distinct things were happening:
 
 > **Lesson:** the BFF↔service contract bugs (NEW-P/Q/R/S/T) are **string vs number · wrong paths · Content-Type/body · timeout alignment · optional-feature-as-500** — Drift-Detection candidates. **NEW-U is a different class: a runtime/resource defect** (per-request TLS handshakes) invisible to any static gate — only the HTTP-log + CPU evidence revealed it. This is exactly why the Runtime Governance Layer (C-96 evidence) exists: a static-only platform would never have caught it.
 
+### Session 14.12 — Economic OS Model integrated (C-119→C-121, TIER 10) (26 June 2026) ✅
+Integrated three new constitutional vision-layer docs into the KB as **TIER 10 — Economic Operating System Model**.
+
+| Doc | Role | Truth State |
+|-----|------|-------------|
+| **C-119** | Economic Operating System Model — TEC = 3-tier economic OS (Tier 1 Constitutional Runtimes: Hub/Zone/Analytics/System · Tier 2 User Runtimes · Tier 3 Economic Products) | `[Future Vision]` / `[Draft]` |
+| **C-120** | Zone Constitutional Runtime Charter — Zone = Verification Runtime ("What can be trusted?"), `zone.pi` strategic asset, V1→V4 | `[Future Vision]` / `[Draft]` |
+| **C-121** | Institutional Knowledge Pipeline — sequential chain Hub → Life → Connection → Zone → Analytics → Nexus → TEC AI | `[Future Vision]` / `[Draft]` |
+
+**Integration engineering:**
+- `scripts/build-asset-registry.py` — added range `119–121 → tier-1-institutional-intelligence` (without this the docs would default to `tier-2-experimental` — wrong for constitutional docs). Registry rebuilt: **102 assets, 100% coverage, 0 errors**.
+- **C-30 partial supersession:** C-119 supersedes only C-30's *build sequence*; the app catalogue stays valid. Documented as a banner in C-30 (not a deletion).
+- Normalized headers to schema: C-120 `[Future Vision — V1 Planned]` → `[Future Vision]`; all three `[Unverified]` → `[Assumed]`. Added a **Related Documents** footer to C-120.
+- C-57 master index: added TIER 10 table + ranges + counter (C-00 → C-121).
+- **All 13 KB CI gates pass** (registry-integrity, truth-framework, c57-index, authority-consistency, VAM, runtime-evidence, SLO, links, structure, portal-readiness, knowledge-gaps — 0 errors).
+
 ### Session 14.11 — TRUE root cause of "Backend Offline" + polish finish (26 June 2026) ✅
 The recurring gateway freeze **kept recurring after NEW-U (keep-alive) shipped** — so keep-alive was **NOT** the root cause (correcting §14.8). Decisive evidence (Railway Deploy Logs): a flood of `ERROR Error: The client is offline` on every Redis blip, **plus the rate-limit-EXEMPT `/health` itself 499'ing** — only possible if the **event loop is saturated**, not if the limiter were merely blocking.
 

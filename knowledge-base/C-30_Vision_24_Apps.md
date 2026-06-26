@@ -5,6 +5,12 @@
 > **Governance State:** `[Draft]`
 > **Verification:** `[Unverified]`
 
+> ⚠️ **Partial supersession (Session 14.12):** The *build sequence / ordering* of the
+> 24-app roadmap is superseded by **C-119 — Economic Operating System Model**
+> (3-tier build sequence). The app catalogue and vision in this document remain
+> valid; consult C-119 for the authoritative build order and the Tier 1/2/3
+> classification that governs *why* and *when* each app is built.
+
 ---
 
 
