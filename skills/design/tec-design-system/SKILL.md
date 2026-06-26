@@ -16,25 +16,37 @@ metadata:
 
 ## Design Tokens (from @yasser172/tec-ui)
 
-```typescript
-import { TEC_COLORS } from '@yasser172/tec-ui';
+**Authority: C-83 (EVL). Adopted live in `@yasser172/tec-ui` v2.0.0.** These mirror the code in `tec-ui/src/theme.ts` — keep them in sync.
 
-// Primary palette
-TEC_COLORS.gold      = '#d4af37'   // Gold accent — primary brand
-TEC_COLORS.goldDark  = '#b8882a'   // Gold dark — buttons, gradients
-TEC_COLORS.bg        = '#020205'   // Page background
-TEC_COLORS.surface   = '#0d0d14'   // Card / drawer background
-TEC_COLORS.subtext   = '#4a4a5a'   // Secondary text
+```typescript
+import { TEC_COLORS } from '@yasser172/tec-ui';   // v2.0.0+
+
+// WEALTH accent (EVL — was #d4af37 pre-2.0)
+TEC_COLORS.gold      = '#FBBF24'   // WEALTH — primary accent
+TEC_COLORS.goldDark  = '#F59E0B'   // buttons, gradients
+TEC_COLORS.goldLight = '#FCD34D'   // highlights
+// Background layers (C-83 §4 — immutable)
+TEC_COLORS.bg        = '#050816'   // Layer 1 — page background (was #020205)
+TEC_COLORS.surface   = '#0B1020'   // Layer 2 — card / drawer (was #0d0d14)
+TEC_COLORS.surface2  = '#111627'   // Layer 3 — elevated
+TEC_COLORS.subtext   = '#6b6b7a'   // secondary text
+// EVL semantic domains (C-83 §5)
+TEC_COLORS.purple    = '#8B5CF6'   // IDENTITY
+TEC_COLORS.green     = '#22C55E'   // GROWTH
+TEC_COLORS.cyan      = '#06B6D4'   // INTELLIGENCE
+TEC_COLORS.red       = '#EF4444'   // RISK
+TEC_COLORS.blue      = '#3B82F6'   // GOVERNANCE
 
 // CSS variables (via tec-design-tokens.css in hub/layout.tsx)
---tec-gold:        #d4af37
---tec-gold-dark:   #b8882a
---tec-surface-1:   #020205
---tec-surface-2:   #0d0d14
---tec-surface-3:   #141428
---tec-text-1:      #e8d5a3   // Primary text
---tec-text-2:      #6b6b7a   // Secondary text
---tec-text-3:      #4a4a5a   // Tertiary / muted
+--tec-bg:          #050816   // Layer 1
+--tec-surface:     #0B1020   // Layer 2
+--tec-surface-2:   #111627   // Layer 3
+--tec-gold:        #FBBF24   // WEALTH
+--tec-purple:      #8B5CF6   // IDENTITY
+--tec-green:       #22C55E   // GROWTH
+--tec-cyan:        #06B6D4   // INTELLIGENCE
+--tec-red:         #EF4444   // RISK
+--tec-blue:        #3B82F6   // GOVERNANCE
 ```
 
 ## Pi Browser Compatibility Rules (CRITICAL)
@@ -88,8 +100,8 @@ font-family: 'system-ui, -apple-system, sans-serif';
 ```tsx
 <div style={{
   borderRadius: 14,
-  background: '#0d0d18',
-  border: '1px solid rgba(212,175,55,0.1)',
+  background: '#0B1020',
+  border: '1px solid rgba(251,191,36,0.1)',
   overflow: 'hidden',
   transition: 'border-color 0.2s, box-shadow 0.2s',
 }}>
@@ -101,8 +113,8 @@ font-family: 'system-ui, -apple-system, sans-serif';
 ```tsx
 <div style={{
   background: 'rgba(7,7,15,0.88)',
-  border: '1px solid rgba(212,175,55,0.4)',
-  color: '#d4af37',
+  border: '1px solid rgba(251,191,36,0.4)',
+  color: '#FBBF24',
   fontSize: 11,
   fontWeight: 900,
   padding: '2px 7px',

@@ -19,8 +19,8 @@ metadata:
   width: 32,
   height: 32,
   borderRadius: '50%',
-  border: '3px solid rgba(212,175,55,0.15)',
-  borderTopColor: '#d4af37',
+  border: '3px solid rgba(251,191,36,0.15)',
+  borderTopColor: '#FBBF24',
   animation: 'spin 0.8s linear infinite',
 }} />
 <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
@@ -31,7 +31,7 @@ metadata:
 ```tsx
 <div style={{
   minHeight: '100vh',
-  background: '#07070f',
+  background: '#050816',
   color: '#fff',
   fontFamily: 'Georgia, serif',
 }}>
@@ -46,7 +46,7 @@ metadata:
 // Overlay
 <div onClick={onClose} style={{
   position: 'fixed', inset: 0, zIndex: 290,
-  background: 'rgba(2,2,5,0.75)',
+  background: 'rgba(5,8,22,0.75)',
   backdropFilter: 'blur(6px)',
 }} />
 
@@ -56,8 +56,8 @@ metadata:
   top: 0, right: 0, bottom: 0,
   zIndex: 300,
   width: 320, maxWidth: '92vw',
-  background: '#0a0a12',
-  borderLeft: '1px solid rgba(212,175,55,0.1)',
+  background: '#0B1020',
+  borderLeft: '1px solid rgba(251,191,36,0.1)',
   transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
   transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1)',
 }} />
@@ -98,8 +98,8 @@ metadata:
   <div style={{ fontSize: 44, opacity: 0.35, marginBottom: 12 }}>⚠️</div>
   <p style={{ fontSize: 14, color: '#5a3a3a', marginBottom: 8 }}>Error loading data</p>
   <button onClick={retry} style={{
-    fontSize: 12, color: '#d4af37', background: 'none',
-    border: '1px solid rgba(212,175,55,0.35)', borderRadius: 10,
+    fontSize: 12, color: '#FBBF24', background: 'none',
+    border: '1px solid rgba(251,191,36,0.35)', borderRadius: 10,
     padding: '8px 20px', cursor: 'pointer',
   }}>↺ Retry</button>
 </div>

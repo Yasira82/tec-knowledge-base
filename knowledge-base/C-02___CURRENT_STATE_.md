@@ -100,6 +100,17 @@ Live Hub testing surfaced a cluster of bugs. Two distinct things were happening:
 
 > **Lesson:** the BFF↔service contract bugs (NEW-P/Q/R/S/T) are **string vs number · wrong paths · Content-Type/body · timeout alignment · optional-feature-as-500** — Drift-Detection candidates. **NEW-U is a different class: a runtime/resource defect** (per-request TLS handshakes) invisible to any static gate — only the HTTP-log + CPU evidence revealed it. This is exactly why the Runtime Governance Layer (C-96 evidence) exists: a static-only platform would never have caught it.
 
+### Session 14.9 — EVL adopted as live identity (26 June 2026) ✅
+Governance decision: the **Economic Visual Language (C-83) color system** is now the live platform identity (was the legacy `#d4af37` gold set). Implemented in `@yasser172/tec-ui` **v2.0.0** — the color-token half of C-83 moves `[Planned] → [Current/Code-Verified]`.
+
+| Work | Detail | Repo |
+|------|--------|------|
+| **tec-ui v2.0.0** | `TEC_COLORS`: gold `#d4af37→#FBBF24` · bg `#020205→#050816` · surface `#0d0d14→#0B1020` · +`surface2` + semantic `purple/green/cyan/red/blue` (C-83 §4–§5); state colors aligned; PaymentModal/StatusBadge de-hardcoded. Major bump (R5 coordinated breaking). 75 tests · typecheck 0 · build clean | tec-ui (v1.2.1→2.0.0) |
+| **Skills synced** | `design/tec-design-system` + `design/ui-patterns` updated to the v2.0.0 tokens (code = SoT) | tec-knowledge-base |
+| **C-83 reconciled** | color tokens marked adopted; shapes/motion/ESL/CSS-vars remain `[Planned]` | tec-knowledge-base |
+
+> **Remaining (deferred, coordinated):** the 4 consumer apps re-skin by bumping `@yasser172/tec-ui` to `^2.0.0` — **no compile break** (only token values changed, no exports removed). Per R5, do the simultaneous app deploy **after Pi Portal submission** to avoid changing the identity mid-submission.
+
 ### Session 14.7 — Runtime Governance in-repo half complete (22 June 2026) ✅
 Closes the doc↔runtime loop with two more KB gates (now **13** total).
 

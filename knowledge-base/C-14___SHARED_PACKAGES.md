@@ -15,7 +15,7 @@
 |---------|---------|-------|-----|
 | tec-sdk | v1.2.2 | BFF → Backend API calls | @yasser172/tec-sdk |
 | tec-shared | v1.1.0 | Backend middleware + event bus | shared/ جوه Tec-core-backend |
-| tec-ui | v1.1.0 → **v1.2.0⏳** | Shared UI + types + payment utils | @yasser172/tec-ui |
+| tec-ui | **v2.0.0** ✅ | Shared UI + types + payment utils + EVL palette (C-83) | @yasser172/tec-ui |
 | tec-auth | **v1.0.0** | Auth middleware + SSO + hooks | @yasser172/tec-auth |
 
 ```
@@ -24,10 +24,11 @@ tec-auth v1.0.0:
   ✅ 46 tests — 4 files
   Status: NEW-D VERIFIED ✅
 
-tec-ui v1.2.0 = NEXT (Portal blocker):
-  □ createU2APayment() — Mode 2 payment
-  □ PaymentModal component
-  □ C-83 Phase 1: CSS tokens + SemanticDomain type
+tec-ui status:
+  ✅ createU2APayment() — Mode 2 payment   (shipped v1.2.x)
+  ✅ PaymentModal component                (shipped v1.2.x)
+  ✅ C-83 EVL color tokens                 (shipped v2.0.0 — live identity)
+  □ C-83 Phase 1 remainder: CSS-var layer + SemanticDomain type (planned)
 ```
 
 ---
@@ -56,24 +57,26 @@ sdk.health        // check gateway health
 
 ---
 
-## 4. @yasser172/tec-ui v1.1.0 → v1.2.0
+## 4. @yasser172/tec-ui → v2.0.0
 
-### v1.2.0 — TO BUILD (Portal blocker)
+### Shipped
 ```typescript
-// New exports:
-createU2APayment(amount, memo, metadata, internalId)  // Mode 2
-PaymentModal                                           // shared component
+// v1.2.x:
+createU2APayment(amount, memo, metadata, internalId)  // Mode 2 ✅
+PaymentModal                                           // shared component ✅
 
-// C-83 Phase 1 exports:
+// v2.0.0 — EVL color tokens live in TEC_COLORS (C-83 §4–§5): ✅
+TEC_COLORS.gold   = '#FBBF24'  // WEALTH
+TEC_COLORS.bg     = '#050816'  // Layer 1
+TEC_COLORS.purple = '#8B5CF6'  // IDENTITY  (+ green/cyan/red/blue + surface2)
+```
+
+### Still planned (C-83 Phase 1 remainder)
+```typescript
 type SemanticDomain = 'identity'|'wealth'|'growth'|'intelligence'|'risk'|'governance';
 const DOMAIN_PRIORITY: Record<SemanticDomain, 0|1|2|3>
 const resolveDomain(primary, event?): SemanticDomain
-
-// CSS tokens:
---tec-bg: #050816
---tec-purple: #8B5CF6  // identity
---tec-gold:   #FBBF24  // wealth
---tec-green:  #22C55E  // growth
+// + CSS-variable layer (--tec-* custom properties)
 ```
 
 ### Publish sequence (إلزامي)
@@ -83,11 +86,11 @@ tec-shared → tec-sdk → tec-auth → tec-ui → Commerce (test first) → app
 
 ### Rules
 ```typescript
-// ✅ CORRECT — pinned version
-"@yasser172/tec-ui": "1.2.0"  // exact, no ^
+// ✅ CORRECT — pinned version (apps adopt EVL by pinning 2.0.0)
+"@yasser172/tec-ui": "2.0.0"  // exact, no ^
 
 // ❌ WRONG — floating
-"@yasser172/tec-ui": "^1.2.0"
+"@yasser172/tec-ui": "^2.0.0"
 ```
 
 ---
