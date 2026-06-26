@@ -12,6 +12,33 @@
 
 ---
 
+> ## ⚠️ RECONCILIATION WITH CURRENT RUNTIME (read first)
+>
+> **C-83 is a `[Planned State]` / `[Draft]` / `[Unverified]` target — it is NOT the
+> live design system.** The words "IMMUTABLE" and "No app may override" below describe
+> the EVL **end-state**, not today's runtime.
+>
+> **The single source of truth for the CURRENT live tokens is the code:**
+> `@yasser172/tec-ui → src/theme.ts` (Code-Verified, used by all 4 apps today):
+>
+> | Token | C-83 EVL target (planned) | **Live now (`tec-ui/theme.ts`)** |
+> |-------|---------------------------|----------------------------------|
+> | gold / WEALTH | `#FBBF24` | **`#d4af37`** |
+> | primary background | `#050816` | **`#020205`** |
+> | surface | `#0B1020` | **`#0d0d14`** |
+>
+> Per the Authority Hierarchy (`… → Code`), code wins for *current* reality; C-83 is
+> authoritative only for the *planned* EVL migration. The `design/tec-design-system`
+> and `design/ui-patterns` skills correctly mirror the **live** tokens (`#d4af37`) and
+> **must not** be edited to the EVL values in isolation.
+>
+> **Adopting EVL is a coordinated breaking change** (tec-ui `TEC_COLORS` is a contract —
+> tec-ui R5): tec-ui **major version bump** → simultaneous deploy of all 4 apps → skills
+> updated **last, together with the code**. Until that ships, there is **no conflict** —
+> only a documented future target that differs from the present.
+
+---
+
 # 1. PHILOSOPHY
 
 TEC IS NOT:
