@@ -12,30 +12,32 @@
 
 ---
 
-> ## ⚠️ RECONCILIATION WITH CURRENT RUNTIME (read first)
+> ## ✅ RUNTIME STATUS — EVL COLOR TOKENS ADOPTED (read first)
 >
-> **C-83 is a `[Planned State]` / `[Draft]` / `[Unverified]` target — it is NOT the
-> live design system.** The words "IMMUTABLE" and "No app may override" below describe
-> the EVL **end-state**, not today's runtime.
+> **The EVL color system is now the LIVE identity**, adopted in `@yasser172/tec-ui`
+> **v2.0.0** (`src/theme.ts`, Code-Verified). The color-token half of C-83 has moved
+> from `[Planned]` to `[Current State]`:
 >
-> **The single source of truth for the CURRENT live tokens is the code:**
-> `@yasser172/tec-ui → src/theme.ts` (Code-Verified, used by all 4 apps today):
+> | Token | C-83 EVL | **Live now (`tec-ui` v2.0.0)** | Status |
+> |-------|----------|--------------------------------|--------|
+> | gold / WEALTH | `#FBBF24` | **`#FBBF24`** | ✅ adopted (was `#d4af37`) |
+> | primary background | `#050816` | **`#050816`** | ✅ adopted (was `#020205`) |
+> | surface | `#0B1020` | **`#0B1020`** | ✅ adopted (was `#0d0d14`) |
+> | surface-2 / semantic (purple/green/cyan/red/blue) | per §4–§5 | **present** | ✅ added |
 >
-> | Token | C-83 EVL target (planned) | **Live now (`tec-ui/theme.ts`)** |
-> |-------|---------------------------|----------------------------------|
-> | gold / WEALTH | `#FBBF24` | **`#d4af37`** |
-> | primary background | `#050816` | **`#020205`** |
-> | surface | `#0B1020` | **`#0d0d14`** |
+> The `design/tec-design-system` and `design/ui-patterns` skills are updated to mirror
+> the v2.0.0 tokens. Code remains the source of truth (`… → Code`); this doc and the
+> skills now agree with it.
 >
-> Per the Authority Hierarchy (`… → Code`), code wins for *current* reality; C-83 is
-> authoritative only for the *planned* EVL migration. The `design/tec-design-system`
-> and `design/ui-patterns` skills correctly mirror the **live** tokens (`#d4af37`) and
-> **must not** be edited to the EVL values in isolation.
+> **What is STILL `[Planned]`:** the rest of EVL — CSS-variable layer (§ Phase 1),
+> TypeScript domain types, **shapes**, **motion**, and the **ESL** state language.
+> Those sections below keep their `[Planned State]` markers.
 >
-> **Adopting EVL is a coordinated breaking change** (tec-ui `TEC_COLORS` is a contract —
-> tec-ui R5): tec-ui **major version bump** → simultaneous deploy of all 4 apps → skills
-> updated **last, together with the code**. Until that ships, there is **no conflict** —
-> only a documented future target that differs from the present.
+> **App adoption is the remaining coordinated step:** the 4 consumer apps re-skin when
+> they bump `@yasser172/tec-ui` to `^2.0.0` (no compile break — only token VALUES changed;
+> no exports removed). Per tec-ui R5 this is a coordinated deploy — **recommended AFTER
+> Pi Portal submission** to avoid changing the visual identity mid-submission.
+> Evidence/lineage: tec-ui v2.0.0.
 
 ---
 
@@ -282,10 +284,11 @@ export const resolveDomain = (
 # 15. PACKAGE ARCHITECTURE
 
 ```
-Phase 1 — tec-ui v1.2.0 (NOW)
-  CSS variables (design tokens)
-  SemanticDomain type
-  Basic glow utility classes
+Phase 1 — tec-ui v2.0.0
+  ✅ EVL color tokens in TEC_COLORS (DONE — live)
+  ☐ CSS variables (design tokens)        ← still planned
+  ☐ SemanticDomain type                  ← still planned
+  ☐ Basic glow utility classes           ← still planned
 
 Phase 2 — Post-Portal
   @tec/evl-core    ← Semantic Engine (Gate A required)
