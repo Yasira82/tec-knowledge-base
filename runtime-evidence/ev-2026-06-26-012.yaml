@@ -1,0 +1,25 @@
+# True root cause of the recurring "Backend Offline" — the gateway's dependency
+# on Redis for rate limiting. Supersedes the NEW-U (keep-alive) conclusion in
+# ev-2026-06-25-011: that freeze RECURRED after NEW-U deployed.
+evidence_id: ev-2026-06-26-012
+kind: incident
+timestamp: "2026-06-26T11:00:00Z"
+source: tec-api-gateway
+binds_to: [C-96, C-78]
+severity: P1
+summary: >
+  Recurring gateway freeze ("Backend Offline") persisted after NEW-U (keep-alive)
+  — proving keep-alive was NOT the root cause. Decisive evidence from Railway
+  Deploy Logs: a flood of "ERROR [Bootstrap] unhandledRejection / Error: The
+  client is offline" whenever Redis blipped, PLUS the rate-limit-EXEMPT /health
+  endpoint itself returning 499 (9s) — which is only possible if the single Node
+  event loop is saturated, not if the limiter were merely blocking. Root cause:
+  the API gateway used Redis (rate-limit-redis) on the request path; when Redis
+  dropped (Railway idle disconnect / restart), commands flooded "client is offline"
+  rejections that saturated the event loop (CPU 0->1.5 vCPU) and starved every
+  handler incl. /health -> 499 cascade. Fix (NEW-V): in-memory rate limiting
+  (express-rate-limit MemoryStore) — zero Redis on the gateway hot path, so a Redis
+  outage can no longer freeze the single entry point. tec-core-backend #90 (partial:
+  disableOfflineQueue+passOnStoreError — insufficient) -> #91 (complete: in-memory).
+  Confirmed stable in production post-deploy.
+status: resolved
