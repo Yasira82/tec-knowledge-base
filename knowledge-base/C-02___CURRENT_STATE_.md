@@ -100,6 +100,21 @@ Live Hub testing surfaced a cluster of bugs. Two distinct things were happening:
 
 > **Lesson:** the BFF↔service contract bugs (NEW-P/Q/R/S/T) are **string vs number · wrong paths · Content-Type/body · timeout alignment · optional-feature-as-500** — Drift-Detection candidates. **NEW-U is a different class: a runtime/resource defect** (per-request TLS handshakes) invisible to any static gate — only the HTTP-log + CPU evidence revealed it. This is exactly why the Runtime Governance Layer (C-96 evidence) exists: a static-only platform would never have caught it.
 
+### Session 14.10 — Professional UI polish, platform-wide (26 June 2026) ✅
+Live-screenshot-driven polish pass after EVL adoption. Fixed real UI defects + introduced a shared professional UI layer; verified live (deploy pipeline confirmed working — the "colors didn't change" was the subtle `#d4af37→#FBBF24` shift + browser cache, not a deploy failure).
+
+| Work | Detail | Repo / PR |
+|------|--------|-----------|
+| **Shared UI primitives** | `Icon` (lucide-style inline SVG set, 18 glyphs, Pi-Browser-safe, currentColor) + `CountUp` (rAF easeOutCubic + thousands separator + prefers-reduced-motion) added to `@yasser172/tec-ui` **v2.1.0** (additive minor) | tec-ui #15 |
+| **Hub flagship** | header overflow fix (`ECOSYSTEMAM`) · emoji chrome → Icon (nav/bell/AI-FAB) · balance + Pi-price `CountUp` · dual-tone EVL glow | tec-app #50/#51 |
+| **Assets** | bottom-nav emoji → Icon (gem/cart/receipt/chart) · Portfolio Value `CountUp` (respects hideBalance) · tec-ui→2.1.0 | tec-assets #34 |
+| **Commerce** | overview + bottom-nav + tab-pills + empty-state emoji → Icon · tec-ui→2.1.0 (chrome now 100% emoji-free) | tec-commerce #43/#44 |
+| **Ecommerce** | ShopHeader nav + cart emoji → Icon · tec-ui→2.1.0 · **also fixed a real bug**: product cards showed the raw seller **UUID** as store name → clean "TEC Store" fallback | tec-ecommerce #46/#47 |
+
+> **Decision (app-launcher icons):** the 24 ecosystem app tiles use *branded personality* emoji (VIP 👑, Titan ⚔️, Epic 🔥…). Mechanical conversion to mono line-icons was **rejected** — for branded launcher tiles it strips identity and isn't more professional. Correct path = **custom per-app icons/logos** (deferred design task), not a code sweep.
+>
+> **Remaining (deferred):** custom app-tile art · category-chip icons + purge of test categories (`Dfgh`/`test` — data cleanup, not code) · optional depth/motion on secondary cards · ESLint 10 flat-config migration (Dependabot, post-Portal).
+
 ### Session 14.9 — EVL adopted as live identity (26 June 2026) ✅
 Governance decision: the **Economic Visual Language (C-83) color system** is now the live platform identity (was the legacy `#d4af37` gold set). Implemented in `@yasser172/tec-ui` **v2.0.0** — the color-token half of C-83 moves `[Planned] → [Current/Code-Verified]`.
 
