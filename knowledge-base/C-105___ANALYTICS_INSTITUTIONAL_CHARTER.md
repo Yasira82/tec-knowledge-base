@@ -202,6 +202,37 @@ Phase 3:
 
 ---
 
+## 11a. IMPLEMENTATION STATUS (Session — June 2026)
+
+**Truth State:** [Code Verified] for the items below · charter overall stays [Planned State] (not yet deployed / no Pi App ID).
+
+A **standalone Analytics frontend** (`tec-analytics` repo → `analytics.tecosystem.app`,
+from the 24-app rollout registry) now exists. This is a **third analytics surface**,
+distinct from §11 P1-1 (Hub embed `/hub/analytics`) and P1-2 (Commerce embed) — both
+of which remain to-build.
+
+```
+Built (code-verified, branch claude/tec-repos-review-ht2n8s — pre-deploy):
+  ✅ App customized from tec-template-base v2 (identity, domain, slug, legal pages)
+  ✅ BFF /api/bff/analytics/{overview,payments,users,events}
+       → tec-analytics-service via gateway (^/api/analytics → /analytics)
+       → auth: Bearer token + x-internal-key · fail-closed (401 w/o session)
+  ✅ /app platform dashboard: overview cards + 30d payment volume + recent events
+       (inline bar chart — tec-ui charts still pending, §5)
+  ✅ Drift Detection CI gate (ADR-009 · C-12 §11 · ADR-007) — parity with the 4 live apps
+
+Consumed contract (tec-analytics-service, code-verified):
+  GET /analytics/overview · /payments · /users · /events?limit=N  →  { success, data }
+
+Gap (blocks §6 merchant isolation):
+  ⚠️ tec-analytics-service aggregates are PLATFORM-level — DailyMetric is keyed by date
+     only, AnalyticsEvent carries user_id but no merchantId. Merchant-scoped metrics
+     (§6 "merchant sees ONLY their own") require a SERVICE-side schema + aggregation
+     change BEFORE the BFF can isolate. Until then the dashboard is platform/admin only.
+```
+
+---
+
 ## 12. INTEGRATION MAP
 
 ```
