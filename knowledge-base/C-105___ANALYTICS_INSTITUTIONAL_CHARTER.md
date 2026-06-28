@@ -7,6 +7,14 @@
 **Authority Scope:** [Domain]
 **Decision Status:** [Recommended]
 
+> ⚠️ **SCOPE — read with C-122.** This charter is the **product / BI-surface**
+> view of Analytics (mission, revenue tiers, dashboards). The **constitutional
+> runtime** definition — Analytics as the Tier-1 **Intelligence Runtime** /
+> *Reality Infrastructure* ("what is happening?"), the Reality↔Trust duality with
+> Zone, the §5 disclosure boundary, and engine-vs-surface ownership — lives in
+> **C-122 (Analytics Constitutional Runtime Charter)**, the higher-authority doc.
+> Where the two differ, **C-122 governs the runtime; C-105 governs the product surface.**
+
 ---
 
 ## 1. MISSION

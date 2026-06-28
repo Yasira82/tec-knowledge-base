@@ -58,6 +58,8 @@ clone; turned it into a real, compliant Analytics app on branch `claude/tec-repo
 
 **Verified:** typecheck 0 · 24/24 tests (+6) · build clean · lint 0 errors · Drift + payment-policy gates 0 violations. KB: C-105 §11a implementation-status added (charter stays `[Planned]` — pre-deploy); validate-charters / truth-framework / links / structure / c57-index all green.
 
+**Constitutional (C-122 — NEW):** elevated Analytics to its Tier-1 runtime identity, mirroring the Zone precedent (Zone has C-120 runtime charter; Analytics had only the C-105 app charter). **C-122 Analytics Constitutional Runtime Charter** = Intelligence Runtime / **Reality Infrastructure** ("what is happening?"), the **Reality↔Trust duality** with Zone, the **§5 disclosure boundary** (aggregate-everything / expose-only own|de-identified|sovereign — P6), **engine-vs-surface** ownership (Analytics owns the engine, each app owns its surface — preserves C-119 Rule 1), and **operational(raw) vs institutional(Zone-verified)** input layers. C-105 reconciled → product/BI-surface charter that defers to C-122. Registry rebuilt (102→103, 100% coverage, tier-1); C-57 TIER 10 → C-119→C-122. Truth State `[Future Vision]` (vision, not runtime).
+
 **NEXT for Analytics:** deploy (Vercel) + register Pi App ID (Portal) → then flip rollout-registry `to-build → live` + C-105 → `[Current]`; service-side merchant scoping for §6.
 
 ---

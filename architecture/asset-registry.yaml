@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-06-26T12:57:10.871819
+# Generated: 2026-06-28T02:40:36.398101
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 102
+# Total assets: 103
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -1489,6 +1489,24 @@ assets:
     last_verified: null
     next_review: "2026-12-01"
 
+  - id: C-122
+    type: constitution
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Analytics Constitutional Runtime Charter"
+    path: knowledge-base/C-122___ANALYTICS_CONSTITUTIONAL_RUNTIME_CHARTER.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-122-analytics-constitutional-runtime-charter"]
+    depends_on: [C-47, C-68]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
   - id: C-83
     type: document
     tier: tier-1-institutional-intelligence
@@ -1874,14 +1892,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 102
+# Total assets: 103
 #   tier-1-constitutional-runtime: 58
-#   tier-1-institutional-intelligence: 36
+#   tier-1-institutional-intelligence: 37
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
 #   current-state: 83
-#   future-vision: 8
+#   future-vision: 9
 #   planned-state: 6
 #   speculation: 5
