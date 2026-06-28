@@ -7,7 +7,7 @@
 # v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
 # This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
 #
-# Generated: 2026-06-18T10:49:33.696101
+# Generated: 2026-06-28T02:40:36.542405
 
 documents:
 
@@ -80,7 +80,7 @@ documents:
     governance_state: "draft"
     verification_state: "documentation-verified"
     authority_scope: "platform"
-    depends_on: ["C-47", "C-64"]
+    depends_on: ["C-00", "C-64"]
     informs: []
 
   - id: "C-10"
@@ -152,7 +152,7 @@ documents:
     governance_state: "adr-approved"
     verification_state: "code-verified"
     authority_scope: "platform"
-    depends_on: []
+    depends_on: ["C-47", "C-64"]
     informs: []
 
   - id: "C-13"
@@ -377,7 +377,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "draft"
+    governance_state: "documentation-verified"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
@@ -401,7 +401,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "draft"
+    governance_state: "documentation-verified"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: ["C-64", "C-67"]
@@ -461,7 +461,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "draft"
+    governance_state: "documentation-verified"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
@@ -701,7 +701,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "draft"
+    governance_state: "documentation-verified"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
@@ -947,6 +947,54 @@ documents:
     depends_on: []
     informs: []
 
+  - id: "C-119"
+    title: "Economic Operating System Model"
+    filename: "C-119___ECONOMIC_OPERATING_SYSTEM_MODEL.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "platform"
+    depends_on: ["C-68"]
+    informs: []
+
+  - id: "C-120"
+    title: "Zone Constitutional Runtime Charter"
+    filename: "C-120___ZONE_CONSTITUTIONAL_RUNTIME_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-121"
+    title: "Institutional Knowledge Pipeline"
+    filename: "C-121___INSTITUTIONAL_KNOWLEDGE_PIPELINE.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-122"
+    title: "Analytics Constitutional Runtime Charter"
+    filename: "C-122___ANALYTICS_CONSTITUTIONAL_RUNTIME_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "platform"
+    depends_on: ["C-47", "C-68"]
+    informs: []
+
   - id: "C-83"
     title: "Economic Visual Language (evl) & Economic State Language (esl)"
     filename: "C-83___EVL_ESL.md"
@@ -1037,8 +1085,8 @@ documents:
     tier: "tier-1-institutional-intelligence"
     authority_rank: 55
     truth_state: "current-state"
-    governance_state: "draft"
-    verification_state: "documentation-verified"
+    governance_state: "governance-approved"
+    verification_state: "code-verified"
     authority_scope: "platform"
     depends_on: ["C-00", "C-47", "C-67"]
     informs: []
@@ -1052,7 +1100,7 @@ documents:
     governance_state: "draft"
     verification_state: "documentation-verified"
     authority_scope: "platform"
-    depends_on: ["C-00"]
+    depends_on: ["C-00", "C-02"]
     informs: []
 
   - id: "C-92"
@@ -1236,18 +1284,18 @@ adrs:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total documents: 99
-# Total cross-references (depends_on): 108
+# Total documents: 103
+# Total cross-references (depends_on): 114
 #
 # Tier distribution:
 #   tier-1-constitutional-runtime: 58
-#   tier-1-institutional-intelligence: 33
+#   tier-1-institutional-intelligence: 37
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
 #   current-state: 83
+#   future-vision: 9
 #   planned-state: 6
-#   future-vision: 5
 #   speculation: 5
 

@@ -73,7 +73,7 @@ def classify_tier(cid_num):
         return 'tier-1-constitutional-runtime'
     if n == 118:  # Dependency Propagation Constitution
         return 'tier-1-constitutional-runtime'
-    if 119 <= n <= 121:  # Economic OS Model + Zone Charter + Knowledge Pipeline — vision-layer constitutional docs
+    if 119 <= n <= 122:  # Economic OS Model + Zone/Analytics Runtime Charters + Knowledge Pipeline — vision-layer constitutional docs
         return 'tier-1-institutional-intelligence'
     return 'tier-2-experimental'
 

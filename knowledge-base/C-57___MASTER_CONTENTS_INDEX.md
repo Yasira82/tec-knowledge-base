@@ -1,8 +1,8 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-121)
+## دليل سريع للـ Content (C-00 → C-122)
 
 > **Truth State:** `[Current State]`
-> **Last Updated:** June 2026 (Session 14.12) — C-119→C-121 added as TIER 10 (Economic OS Model)
+> **Last Updated:** June 2026 (Session 15) — C-122 Analytics Constitutional Runtime Charter added to TIER 10
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
 
@@ -215,13 +215,14 @@
 | **C-118** | Dependency Propagation Constitution | Change propagation + stale flags + DAG-guaranteed dependencies |
 ---
 
-## TIER 10 — Economic Operating System Model (C-119→C-121)
+## TIER 10 — Economic Operating System Model (C-119→C-122)
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
 | **C-119** | Economic Operating System Model | TEC = 3-tier economic OS (Constitutional Runtimes / User Runtimes / Economic Products) — supersedes C-30 build sequence |
 | **C-120** | Zone Constitutional Runtime Charter | Zone = Verification Runtime — "What can be trusted?" · zone.pi strategic asset |
 | **C-121** | Institutional Knowledge Pipeline | Institutional Knowledge Pipeline — sequential chain: Hub → Life → Connection → Zone → Analytics → Nexus → TEC AI |
+| **C-122** | Analytics Constitutional Runtime Charter | Analytics = Intelligence Runtime / Reality Infrastructure — "What is happening?" · Reality↔Trust duality with Zone · disclosure boundary |
 ---
 
 ## Quick Lookup
@@ -323,7 +324,7 @@ C-82→C-99  Future Vision + Execution + Institutional Operating Loop Constituti
 C-80       Engineering Assessment Report (KB audit)
 C-100→C-115  App Institutional Charters
 C-116→C-118  Constitutional Automation (Authority + Registry + Dependency)
-C-119→C-121  Economic Operating System Model (OS Model + Zone Charter + Knowledge Pipeline)
+C-119→C-122  Economic Operating System Model (OS Model + Zone + Analytics Runtime Charters + Knowledge Pipeline)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80

@@ -7,6 +7,14 @@
 **Authority Scope:** [Domain]
 **Decision Status:** [Recommended]
 
+> ⚠️ **SCOPE — read with C-122.** This charter is the **product / BI-surface**
+> view of Analytics (mission, revenue tiers, dashboards). The **constitutional
+> runtime** definition — Analytics as the Tier-1 **Intelligence Runtime** /
+> *Reality Infrastructure* ("what is happening?"), the Reality↔Trust duality with
+> Zone, the §5 disclosure boundary, and engine-vs-surface ownership — lives in
+> **C-122 (Analytics Constitutional Runtime Charter)**, the higher-authority doc.
+> Where the two differ, **C-122 governs the runtime; C-105 governs the product surface.**
+
 ---
 
 ## 1. MISSION
@@ -198,6 +206,37 @@ Phase 3:
 [P2-2] ALERT Integration
   Anomaly detection: analytics service emits risk signals
   to tec-notification-service when thresholds breached.
+```
+
+---
+
+## 11a. IMPLEMENTATION STATUS (Session — June 2026)
+
+**Truth State:** [Code Verified] for the items below · charter overall stays [Planned State] (not yet deployed / no Pi App ID).
+
+A **standalone Analytics frontend** (`tec-analytics` repo → `analytics.tecosystem.app`,
+from the 24-app rollout registry) now exists. This is a **third analytics surface**,
+distinct from §11 P1-1 (Hub embed `/hub/analytics`) and P1-2 (Commerce embed) — both
+of which remain to-build.
+
+```
+Built (code-verified, branch claude/tec-repos-review-ht2n8s — pre-deploy):
+  ✅ App customized from tec-template-base v2 (identity, domain, slug, legal pages)
+  ✅ BFF /api/bff/analytics/{overview,payments,users,events}
+       → tec-analytics-service via gateway (^/api/analytics → /analytics)
+       → auth: Bearer token + x-internal-key · fail-closed (401 w/o session)
+  ✅ /app platform dashboard: overview cards + 30d payment volume + recent events
+       (inline bar chart — tec-ui charts still pending, §5)
+  ✅ Drift Detection CI gate (ADR-009 · C-12 §11 · ADR-007) — parity with the 4 live apps
+
+Consumed contract (tec-analytics-service, code-verified):
+  GET /analytics/overview · /payments · /users · /events?limit=N  →  { success, data }
+
+Gap (blocks §6 merchant isolation):
+  ⚠️ tec-analytics-service aggregates are PLATFORM-level — DailyMetric is keyed by date
+     only, AnalyticsEvent carries user_id but no merchantId. Merchant-scoped metrics
+     (§6 "merchant sees ONLY their own") require a SERVICE-side schema + aggregation
+     change BEFORE the BFF can isolate. Until then the dashboard is platform/admin only.
 ```
 
 ---
