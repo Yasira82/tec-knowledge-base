@@ -57,14 +57,27 @@ and `useHubData` used a plain `fetch` with **no refresh**, so the dashboard data
 blank (`balance` stuck at `—`). The wallet route's own `TOKEN_EXPIRED`→refresh path never
 ran because `extractContext` rejects the expired token *first*.
 
-**Fix (frontend, merged #60):** `useHubData` now uses `fetchWithAuth` — on a 401 it
-refreshes via `/api/auth/refresh` (7-day refresh token) and retries once, so an expired
-access token self-heals. **Lesson:** a fresh token that won't `jwtVerify` is **secret
-mismatch**; a token that decodes fine but is past `exp` is **expiry** — the
-`/api/admin/auth-debug` JSON (`verifyError`) distinguishes them definitively. **Follow-up
-(low priority):** other Hub pages using bare `fetch` for `/api/bff/*` (kyc, subscription,
-profile) should adopt `fetchWithAuth` too; consider raising `JWT_EXPIRES_IN` or a
-proactive refresh so the first call each hour isn't a guaranteed 401+retry.
+**Full root cause (proven via auth-debug, `backendRefresh` field):** TWO things compound:
+1. **Access token lives ~1h** (`JWT_EXPIRES_IN=3600` in tec-auth-service) → expires fast.
+2. **Refresh tokens are single-use (rotation)** — backend returns `401 "Refresh token
+   already used"` on any reuse. In Pi Browser the rotated `tec_refresh_token` set via the
+   refresh **XHR response** does not reliably persist, so the next refresh resends the
+   already-consumed token → 401 → dead session (expired access + used refresh).
+
+**Regression I caused + reverted:** `#60` switched `useHubData` to `fetchWithAuth`, whose
+`refreshAccessToken` calls `logout()` on refresh failure. With refresh 401ing, that became
+a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` to plain
+`fetch` (a 401 now just blanks the value, no session thrash).
+
+**Fixes:**
+- *Immediate:* fresh logout→login issues a clean token pair → wallet loads.
+- *Durable (ops, recommended):* raise `JWT_EXPIRES_IN` in tec-auth-service (Railway) from
+  `3600` to e.g. `604800` (7d, matching the refresh token) so the access token outlives a
+  normal session and the fragile Pi-Browser refresh-rotation is rarely exercised.
+- *Engineering follow-up:* single-flight refresh + verify the rotated `tec_refresh_token`
+  actually persists in Pi Browser before relying on auto-refresh; only then re-introduce a
+  (non-logout) refresh-retry on `/api/bff/*`. **Lesson:** `auth-debug.backendRefresh`
+  surfaces the backend's real refusal reason — use it, don't guess.
 
 ---
 
