@@ -45,12 +45,23 @@ every few seconds. Standalone Chrome was fine.
 `claude/*` working branch — fixes on the branch had no effect until merged. Confirm the
 target branch before "it didn't work" investigations.
 
-**OPEN — wallet shows no balance ("—") after login (under investigation).** NOT caused
-by the login fix: `/api/bff/wallet/balance` uses **server-side cookie auth**
-(`createHandler` + `credentials:'include'`), which `sameSite=lax` makes *more* reliable.
-Most likely same family as historical **NEW-L** (token expiry / empty gateway wallet).
-Next data point: response of `/api/bff/wallet/balance` while logged in (401 `TOKEN_EXPIRED`
-vs `balance:"0"` vs empty `wallets[]`).
+**OPEN — wallet shows no balance ("—") after login → diagnosed as BFF JWT verify
+failure.** NOT caused by the login fix. Runtime check: `GET /api/bff/wallet/balance`
+returns **`{"error":"UNAUTHORIZED","message":"Unauthorized"}`**. That string is thrown
+*only* by `createHandler.extractContext` (`src/lib/bff/createHandler.ts:45-69`): the
+`tec_access_token` cookie **is** present (login works; middleware sees it) but
+`jwtVerify(token, JWT_SECRET, {alg:HS256})` **fails** → every authenticated BFF route
+(wallet, notifications, assets) returns 401 → all dashboard data empty.
+
+**Most likely cause:** the Hub's `JWT_SECRET` (Vercel) does **not** match the secret
+`tec-auth-service` signs the access token with (Railway). The mismatch is invisible at
+login (Hub stores the backend token without verifying it) — the first local verify is the
+BFF call. **Fix (ops):** set Hub Vercel `JWT_SECRET` === auth-service Railway `JWT_SECRET`,
+redeploy. **Confirm:** fresh logout→login then re-open the route; still UNAUTHORIZED ⇒
+secret mismatch (not token expiry). Secondary gap (if it were expiry): `extractContext`
+rejects an expired token as `UNAUTHORIZED` *before* the wallet route's own
+`TOKEN_EXPIRED`→refresh path runs, and `useHubData` uses a plain `fetch` with no
+401→refresh→retry — worth hardening once the secret is confirmed.
 
 ---
 
