@@ -4,7 +4,53 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 27 June 2026 (Session 15 — Analytics App build-next: Phase 0 + 1)
+**Last Updated:** 29 June 2026 (Session 16 — Hub Pi-Browser login loop fixed; Analytics shipped)
+
+---
+
+## SESSION 16 — HUB LOGIN LOOP IN PI BROWSER (root-caused & fixed) (29 June 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified] + [Runtime Verified]** (Vercel logs + production retest)
+
+**Symptom (production, `hub.tecosystem.app`, Pi Browser only):** "Sign in with Pi"
+succeeded on the backend but the Hub never opened — it looped login → `/hub` → `/`
+every few seconds. Standalone Chrome was fine.
+
+**Two independent causes (one masked the other):**
+
+1. **Stuck incomplete Pi payment (red herring, now cleared).** An approved +
+   on-chain-verified but **not** `developer_completed` U2A payment
+   (`BgWyxcJfkmeuBLwcYR2ILwBZV4XT`, `source:ecommerce`) surfaced on every
+   `onIncompletePaymentFound`. `resolve-incomplete` returned **409** (terminal
+   locally) so it never cleared on Pi → noise in the logs. **Resolved** by calling
+   Pi `…/complete` with the txid (cancel is invalid for U2A). Not the real blocker.
+
+2. **THE real blocker — Pi Browser cookie handling.** The frontend decided "am I
+   logged in?" by reading `tec_user` from `document.cookie`. Pi Browser (a) **drops
+   `sameSite=None` cookies** and (b) can **hide a stored cookie from client JS** even
+   while sending it to the server (proof: `/hub` returned **304**, i.e. middleware
+   *saw* `tec_access_token`, yet client `getStoredUser()` was null → `usePiAuth`
+   `isAuthenticated=false` → `router.replace('/')`).
+
+**Fix (Hub repo, merged to `main` via #56 + #58):**
+
+| Change | File(s) | Why |
+|--------|---------|-----|
+| `sameSite` `none` → **`lax`** on session cookies | `api/auth/{pi-login,refresh,sso-callback,logout-from-sso}`, `middleware.ts` | Pi Browser keeps `lax`; first-party Hub cookies sent on the top-level nav to `/hub`. SSO unaffected (token rides the URL, not a cross-domain cookie). |
+| New **`GET /api/auth/me`** | `api/auth/me/route.ts` | Server resolves the session from the request cookie (always readable server-side) → returns the user; fail-closed 401. |
+| `usePiAuth` server fallback + `authSettledRef` | `lib-client/hooks/usePiAuth.ts` | When the client cookie read returns null, ask `/api/auth/me`; stay `isLoading` until it resolves so `/hub` shows a skeleton instead of bouncing. Ref stops a late `/api/auth/me` clobbering a succeeded login. |
+| Tests aligned (`sameSite='lax'`, async `usePiAuth`) + race-guard test | `__tests__/auth/refresh-cookie.test.ts`, `__tests__/usePiAuth.test.ts` | CI green on `main`. |
+
+**Deployment lesson:** production `hub.tecosystem.app` builds from **`main`**, not the
+`claude/*` working branch — fixes on the branch had no effect until merged. Confirm the
+target branch before "it didn't work" investigations.
+
+**OPEN — wallet shows no balance ("—") after login (under investigation).** NOT caused
+by the login fix: `/api/bff/wallet/balance` uses **server-side cookie auth**
+(`createHandler` + `credentials:'include'`), which `sameSite=lax` makes *more* reliable.
+Most likely same family as historical **NEW-L** (token expiry / empty gateway wallet).
+Next data point: response of `/api/bff/wallet/balance` while logged in (401 `TOKEN_EXPIRED`
+vs `balance:"0"` vs empty `wallets[]`).
 
 ---
 
