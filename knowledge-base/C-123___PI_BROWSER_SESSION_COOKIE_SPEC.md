@@ -175,7 +175,38 @@ inherit the law, not the bug).
 
 ---
 
-## §7 — ANTI-REGRESSION GATES
+## §7 — COOKIE-INDEPENDENT SESSION (the structural end-state — tec-app #69)
+
+The three laws improve cookie *odds*; they cannot remove cookie *dependence*.
+Runtime proof: identical #67 code logged in successfully in the morning and
+failed at night — Pi Browser opens the app in different contexts (top-level tab
+vs embedded webview) with **separate, differently-restricted cookie jars**.
+Therefore: **opening the app must not depend on the browser persisting anything.**
+
+```
+SESSION RESOLUTION CHAIN (client, usePiAuth):
+  1. in-memory session (tec-session.ts)          ← survives client-side nav
+  2. tec_user cookie                              ← accelerator when jar allows
+  3. GET /api/auth/me                             ← server-visible cookie check
+  4. SILENT Pi re-auth (once/page-load, single-flight)
+       → pi-login → token+user held IN MEMORY    ← always works in Pi Browser
+
+TRANSPORT: BFF calls send `Authorization: Bearer <memory token>`;
+  createHandler verifies header OR cookie with the same JWT_SECRET path.
+ENTRY: /hub shell always renders (middleware does NOT cookie-check it);
+  the landing page proceeds INTO the app on cookie refusal — the bounce to
+  the login page WAS the visible "hub won't open".
+STORAGE: memory only — ADR-001 (no localStorage/sessionStorage) intact.
+SECURITY: unchanged — every BFF route fail-closes without a valid token (P6);
+  page visibility is not authorization.
+```
+
+Result: the app opens in EVERY Pi Browser context. Cookies, when the context
+accepts them (§1–§2 rules), skip step 4 — an accelerator, never a requirement.
+
+---
+
+## §8 — ANTI-REGRESSION GATES
 
 1. `refresh-cookie.test.ts` asserts `sameSite === 'none'` — a lax PR fails CI.
 2. sso-callback contract test asserts **200 HTML + cookies + verify script**.
