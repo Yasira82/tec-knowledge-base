@@ -39,12 +39,39 @@ App → Pi.init() على domain الـ app
 
 ---
 
-## 3. __TEC_PI_FOREIGN_SESSION
+## 3. __TEC_PI_FOREIGN_SESSION + hub-entry signal
 
 | القيمة | المعنى |
 |---|---|
 | `false` | الـ app عملت Pi.init() بنجاح — دفع مباشر |
 | `true` | Hub أو app تانية عملت Pi.init() قبلنا |
+
+### hub-entry signal — إشارتين مش واحدة (July 2026)
+
+`isHubNavigation()` كان بيعتمد على `document.referrer` بس. ده اتكسر لما
+C-123 LAW 2 خلّى الـ SSO دخول للـ app يعدي على **landing page 200** بتكمل
+بـ `location.replace()` — فالـ referrer بقى same-origin مش hub. النتيجة:
+الـ apps عملت `Pi.init()` جوّه Pi Browser session مملوكة للـ Hub →
+Hub PaymentModal (Mode 1) فشل بـ "Pi Network SDK was not initialized".
+
+**العقد الحالي (كل الـ apps + template):**
+
+```typescript
+// 1) sso-callback landing script (قبل أي navigation):
+if (document.referrer.toLowerCase().includes('hub.tecosystem.app')) {
+  sessionStorage.setItem('__tec_hub_entry', '1');   // per-tab — نفس عمر ملكية الـ session
+}
+
+// 2) isHubNavigation() = flag OR referrer (src/lib-client/pi/hub-entry.ts):
+sessionStorage['__tec_hub_entry'] === '1'
+  || document.referrer.toLowerCase().includes('hub.tecosystem.app')
+
+// 3) Pi init layer: hub entry ⇒ __TEC_PI_FOREIGN_SESSION = true + ready
+//    ومن غير Pi.init() خالص — الـ init جوّه session مملوكة للـ Hub بيسمّمها.
+```
+
+> ⚠️ الـ flag مش token — ADR-001 لسه سليم. وأي تغيير في سلسلة hub→app
+> navigation لازم يعيد التحقق من الإشارة دي (C-123 §8 gate 5).
 
 ---
 
