@@ -85,6 +85,18 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
   death self-heals without any browser-side refresh logic. **Lesson:**
   `auth-debug.backendRefresh` surfaces the backend's real refusal reason — use it, don't
   guess; and token rotation must complete server-side when the client is Pi Browser.
+- *Login-establishment fix (SHIPPED — tec-app #64):* the loop kept returning because
+  `pi-login` set session cookies on an **XHR response**, which Pi Browser drops
+  non-deterministically. Login now finishes on a **top-level navigation**: `pi-login`
+  mints a one-time SSO-style token (jti, 5m) → `PiPaymentButton` navigates to
+  `/api/auth/sso-callback?token=…&redirect=/hub` → cookies (incl. `tec_refresh_token`,
+  new) are set on the navigation response — the same mechanism that already worked for
+  Assets/Commerce SSO. Also: client `refreshAccessToken` no longer `logout()`s on failure
+  (that was the `refresh 401 → logout 200` production loop), and `/api/auth/sso` forwards
+  rotated refresh cookies instead of burning the single-use token.
+  **RULE (Pi Browser cookie law):** session cookies may ONLY be established/rotated on
+  top-level navigation responses or same-origin BFF responses — never rely on XHR
+  Set-Cookie from a fetch() the client discards.
 
 ---
 
