@@ -187,6 +187,26 @@ silent re-auth (single-flight, 30s cooldown) then a single retry. The 1h
 in-memory-token expiry in cookie-refusing contexts now self-heals mid-session
 instead of waiting for a reload. Auth storms impossible; failure degrades quiet.
 
+**Side effect discovered (July 2026) — the landing page broke ADR-007's
+referrer signal.** The 200 HTML landing navigates onward with
+`location.replace()`, so the app page's `document.referrer` became the app's
+own sso-callback URL instead of `hub.tecosystem.app`. Every
+`isHubNavigation()` guard (C-12 §3 / C-76) then returned **false** for
+Hub-entered users → apps ran `Pi.init()` / auto `Pi.authenticate()` on their
+own domain **inside a Hub-owned Pi Browser session** → the Hub PaymentModal
+(Mode 1) failed with *"Pi Network SDK was not initialized"* while Mode 2
+(standalone) kept working. Fix (all 4 apps + template): the landing script
+persists `sessionStorage.__tec_hub_entry = '1'` when **its own** referrer is
+hub (identical semantics to the old 3xx chain, per-tab lifetime = Pi Browser
+session ownership); `isHubNavigation()` = flag OR referrer; the Pi init layer
+skips `Pi.init()` entirely on hub entry and sets `__TEC_PI_FOREIGN_SESSION`.
+Hub side: `pi-session` fallback-init sandbox polarity corrected
+(`=== 'true'`, was `!== 'false'` → sandbox on Mainnet when unset) and the
+`/hub?pay=1` create step now waits for auth resolution (never two concurrent
+`Pi.authenticate()` calls) and resolves identity via §7 (memory → cookie).
+**LESSON: any change to the hub→app navigation chain MUST re-verify the
+ADR-007 hub-entry signal — cookies and payments share the same chain.**
+
 ---
 
 ## §7 — COOKIE-INDEPENDENT SESSION (the structural end-state — tec-app #69)
@@ -227,6 +247,9 @@ accepts them (§1–§2 rules), skip step 4 — an accelerator, never a requirem
 3. `usePiAuth` tests assert server-fallback + no-logout-on-refresh-failure.
 4. Rule for reviewers: any PR touching cookie attributes, the login flow, or
    refresh logic MUST cite this spec and explain which LAW it preserves.
+5. Any PR touching the sso-callback landing or the hub→app navigation chain
+   MUST keep the `__tec_hub_entry` sessionStorage signal intact (C-12 §3) —
+   the referrer alone is NOT a reliable hub-entry signal anymore.
 
 ---
 
