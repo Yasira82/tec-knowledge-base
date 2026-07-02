@@ -106,6 +106,19 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
   happens only after server-confirmed session → loop structurally impossible.
   **Pi Browser cookie law (amended):** cookies persist reliably ONLY on **plain 200
   responses** — not XHR, not 3xx redirects.
+- *CORRECTION + final fix (SHIPPED — tec-app #66):* the #65 landing page's double
+  `/api/auth/me` check 401'd with ZERO cookies arriving (even `document.cookie` writes
+  ignored) → the app was running in an **embedded Pi Browser context with third-party
+  cookie semantics**, where `lax` cookies are never stored/sent and ONLY
+  `sameSite=none + secure` works. The `lax` migration (#56) — based on a misleading
+  in-code comment ("Pi Browser drops None") — was the regression that broke the
+  previously-working login. #66 restores **`none+secure` everywhere** (middleware,
+  pi-login, refresh, sso-callback + JS fallback, logout-from-sso, BFF refresh) while
+  keeping all structural fixes (#63 server-side refresh, #64 no destructive logout +
+  rotated-cookie forwarding, #65 server-verified 200 HTML landing).
+  **FINAL COOKIE LAW: `sameSite=none + secure`, established/rotated only on 200
+  responses, entry to protected pages only after server-verified session. Never
+  downgrade to `lax`.**
 
 ---
 
