@@ -167,12 +167,25 @@ Separate but related: the initial "login does nothing" was a **stuck incomplete
 U2A payment** surfacing on every authenticate — resolved by **completing** it on
 Pi with its txid (U2A payments cannot be cancelled). See C-02 Session 16.
 
-**Propagation:** tec-analytics #4 (July 2026) — Analytics brought into full
-compliance (200 landing + verified entry + jti guard + none/secure/Partitioned +
-matching-attribute logout + new `/api/auth/me`) BEFORE its first Pi Browser user
-hit the loop. Remaining consumers to audit: tec-ecommerce, tec-assets,
-tec-commerce, tec-template-base (template must ship compliant so future apps
-inherit the law, not the bug).
+**Propagation — COMPLETE (July 2026), C-123 is now platform-wide:**
+
+| Repo | PR | Notes |
+|------|----|-------|
+| tec-analytics | #4 | first propagation — pattern validated (SSO Runtime Verified) |
+| tec-ecommerce | #48 | + audience allowlist (was issuer-only verification) |
+| tec-assets | #36 | jti guard kept; tests updated to 200-landing contract |
+| tec-commerce | #46 | jti guard kept; tests updated to 200-landing contract |
+| tec-template-base | #16 | **golden template — future apps inherit the law, not the bug** |
+
+Each: 200 HTML landing + verified entry (`/api/auth/me` gate) + jti replay guard +
+`none/secure/Partitioned` on all session cookies + new `/api/auth/me` + new
+`/api/auth/logout` with creation-matching deletion attributes. Zero payment files
+touched. All repos: typecheck clean + full test suites green.
+
+**§7 hardening (tec-app #70):** `bffFetch` — on a BFF 401 in Pi Browser, ONE
+silent re-auth (single-flight, 30s cooldown) then a single retry. The 1h
+in-memory-token expiry in cookie-refusing contexts now self-heals mid-session
+instead of waiting for a reload. Auth storms impossible; failure degrades quiet.
 
 ---
 

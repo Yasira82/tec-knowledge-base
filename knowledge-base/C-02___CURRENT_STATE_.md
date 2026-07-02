@@ -151,8 +151,11 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
   → fixes the events 503) · Analytics Pi Portal registration (App ID TBD) · admin role SQL
   (`UPDATE users SET role='admin' WHERE pi_username='yas55eR82';` + re-login) · optional
   `JWT_EXPIRES_IN` raise · delete temp diagnostics (`/api/admin/auth-debug`,
-  `/api/auth/landing-report`) once stable · propagate C-123 to ecommerce/assets/commerce/
-  template-base.
+  `/api/auth/landing-report`) once stable.
+- ✅ **C-123 propagation COMPLETE (July 2026):** ecommerce #48 · assets #36 · commerce #46 ·
+  **template-base #16** (future apps born compliant) — see C-123 §6 propagation table.
+- ✅ **§7 hardening (tec-app #70):** silent re-auth on BFF 401 (single-flight + cooldown) —
+  the 1h in-memory expiry self-heals mid-session.
   **The entire incident is codified as `C-123___PI_BROWSER_SESSION_COOKIE_SPEC.md`
   (TIER 11 — Runtime Operational Law): the 3 cookie laws, the LOCKED cookie contract,
   verified-entry login architecture, server-side refresh, diagnostic playbook, and the
