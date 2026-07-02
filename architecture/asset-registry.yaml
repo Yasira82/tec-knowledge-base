@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-06-28T02:40:36.398101
+# Generated: 2026-07-02T04:41:12.351703
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 103
+# Total assets: 104
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -223,6 +223,24 @@ assets:
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
+    next_review: "2026-12-01"
+
+  - id: C-123
+    type: session-log
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Pi Browser Session & Cookie Spec"
+    path: knowledge-base/C-123___PI_BROWSER_SESSION_COOKIE_SPEC.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: runtime-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-123-pi-browser-session--cookie-spec"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-07-02"
     next_review: "2026-12-01"
 
   - id: C-12
@@ -1892,14 +1910,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 103
-#   tier-1-constitutional-runtime: 58
+# Total assets: 104
+#   tier-1-constitutional-runtime: 59
 #   tier-1-institutional-intelligence: 37
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
-#   current-state: 83
+#   current-state: 84
 #   future-vision: 9
 #   planned-state: 6
 #   speculation: 5

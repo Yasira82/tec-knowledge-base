@@ -29,6 +29,8 @@ governance/         # Platform governance documents
 | C-100–C-115 | App Institutional Charters (Economic Infrastructure) |
 | C-116–C-118 | Constitutional Automation (Authority + Registry + Dependency) |
 | C-119–C-121 | Economic Operating System Model (OS Model + Zone Charter + Knowledge Pipeline) |
+| C-122 | Analytics Constitutional Runtime Charter (Intelligence Runtime) |
+| C-123 | Pi Browser Session & Cookie Spec (Runtime Operational Law) |
 
 ## Governance
 
@@ -51,7 +53,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.8.0 | Governance Charter v1.2
+Knowledge Base v3.9.0 | Governance Charter v1.2
 
 
 ---
@@ -148,3 +150,20 @@ Three new vision-layer constitutional docs integrated as **TIER 10**. They artic
 - C-30 marked **partially superseded** (build sequence only) — banner added, not deleted.
 - Headers normalized to schema (`[Future Vision]` + `[Assumed]`); C-120 gained a Related Documents footer.
 - **All 13 CI gates pass, 0 errors.** Truth State of all three = `[Future Vision]` / `[Draft]` — vision, not current runtime.
+
+## Session 16 Additions (v3.9.0) — C-123: Pi Browser Session & Cookie Spec
+
+Born from the July 2026 Hub login outage (multi-day production incident,
+root-caused from Vercel runtime logs). Everything in it is **Runtime Verified**.
+
+| Document | Path | Purpose |
+|----------|------|---------|
+| C-123 Pi Browser Session & Cookie Spec | `knowledge-base/C-123___PI_BROWSER_SESSION_COOKIE_SPEC.md` | TIER 11 — Runtime Operational Law: the 3 cookie laws (XHR Set-Cookie unreliable · 3xx Set-Cookie dropped · embedded context requires `none+secure+Partitioned`), the LOCKED session-cookie contract, verified-entry login architecture (200 HTML landing + `/api/auth/me` gate), server-side token refresh (single-flight), diagnostic playbook (log signatures → causes), and the PR-by-PR incident ledger (#56→#67). |
+
+### v3.9.0 rules
+- Any change to cookies, login flow, or token refresh in ANY TEC app MUST cite C-123
+  and state which LAW it preserves.
+- `sameSite=lax` on session cookies is FORBIDDEN (it caused the outage). CI tests in
+  tec-app assert `none`.
+- Session cookies are established/rotated ONLY on plain 200 responses.
+- All 13 KB gates pass, 0 errors. Registry rebuilt: 104 assets, 100% coverage.

@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-06-28T02:41:02.341090
+> **Generated:** 2026-07-02T04:42:30.845605
 > **Registry:** `/home/user/tec-knowledge-base/architecture/asset-registry.yaml`
 > **Rules:** `/home/user/tec-knowledge-base/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
@@ -9,26 +9,26 @@
 
 | Metric | Count |
 |--------|-------|
-| Total assets in registry | 103 |
-| Total C-docs on disk | 103 |
+| Total assets in registry | 104 |
+| Total C-docs on disk | 104 |
 | Coverage | 100.0% |
 | Errors | 0 |
-| Warnings | 97 |
-| Info | 52 |
+| Warnings | 98 |
+| Info | 53 |
 
 ## Per-Tier Breakdown
 
 | Tier | Assets | Errors | Warnings |
 |------|--------|--------|----------|
 | tier-0-foundational | 4 | 0 | 2 |
-| tier-1-constitutional-runtime | 58 | 0 | 58 |
+| tier-1-constitutional-runtime | 59 | 0 | 59 |
 | tier-1-institutional-intelligence | 37 | 0 | 37 |
 | tier-2-experimental | 4 | 0 | 0 |
 
 ## Coverage Report (R-COVERAGE)
 
-- Files on disk: 103
-- Files registered: 103
+- Files on disk: 104
+- Files registered: 104
 - Coverage: 100.0%
 - Missing from registry: 0 ✅
 - Orphan registry entries: 0 ✅
@@ -36,7 +36,7 @@
 ## Semantic Drift Report (R-SEMANTIC)
 
 - Semantic errors: 0
-- Semantic warnings: 97
+- Semantic warnings: 98
 
 ## Errors (must fix)
 
@@ -53,6 +53,7 @@ _No errors._ ✅
 - **C-117** [R-SEMANTIC-002]: Only 0/3 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-118** [R-SEMANTIC-002]: Only 0/3 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-11** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
+- **C-123** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-12** [R-SEMANTIC-002]: Only 0/2 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-13** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
 - **C-14** [R-SEMANTIC-002]: Only 0/1 authoritative_for claims found in file content (0%, need ≥50%)
@@ -144,4 +145,4 @@ _No errors._ ✅
 
 ## Recommended Actions
 
-2. Review 97 warning(s) — address within sprint.
+2. Review 98 warning(s) — address within sprint.
