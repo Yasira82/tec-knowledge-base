@@ -125,7 +125,34 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
   (silently failed to delete). All session cookies now `none+secure+Partitioned`; deletion
   attributes match creation; landing page gained a delayed retry + `[landing-report]`
   diagnostics.
-- ✅ **SESSION 16 CLOSED — Runtime Verified:** login ✓ · logout → re-login ✓ · wallet ✓.
+- *Cookie-dependence eliminated (SHIPPED — tec-app #69, C-123 §7):* even after #67,
+  identical code worked in the morning and failed at night — Pi Browser contexts
+  (top-level vs embedded) keep **separate cookie jars**, so cookie behavior is
+  non-deterministic by construction. Final architecture: in-memory session
+  (`tec-session.ts`) + `Authorization: Bearer` on BFF calls (createHandler verifies
+  header OR cookie, same JWT_SECRET) + **silent Pi re-auth** chain in `usePiAuth`
+  (memory → cookie → /api/auth/me → one silent Pi auth per load) + `/hub` shell always
+  renders (middleware no longer cookie-checks it; landing proceeds INTO the app on
+  cookie refusal). Cookies = accelerator, never a requirement. ADR-001 + P6 intact.
+  CI lock: "/hub renders cookieless" test. **Runtime Verified in production.**
+- *Hub LIVE NOW (SHIPPED — tec-app #68):* Analytics flipped `coming_soon → live` in the
+  domain registry (`analytics.tecosystem.app/app`); LIVE NOW now lists ALL live apps —
+  Ecommerce + Analytics + Assets + Commerce (visibility ≠ authorization; KYC/role gating
+  stays in each app/service, P6). External tiles enter via `/api/auth/sso?target=…`.
+- *Analytics app hardened (SHIPPED — tec-analytics #4):* C-123 propagated (200 landing +
+  verified entry + jti guard + none/secure/Partitioned + matching-attribute logout + new
+  `/api/auth/me` + previously-MISSING `/api/auth/logout`), NEW-A cleanup (hardcoded
+  Railway URL removed from client bundle; `.env.example` server-first). SSO Hub→Analytics
+  **Runtime Verified** (sso-callback 200 → me 200 → /app 200). 29/29 tests.
+- ✅ **SESSION 16 CLOSED — Runtime Verified end-to-end:** login ✓ · logout → re-login ✓ ·
+  wallet (2,084 π rendered) ✓ · Hub→Analytics SSO ✓ · hub opens in every Pi Browser
+  context (cookieless architecture) ✓.
+- **OPEN (ops — user):** Analytics Vercel env (`API_GATEWAY_URL`/`SSO_SECRET`/`JWT_SECRET`
+  → fixes the events 503) · Analytics Pi Portal registration (App ID TBD) · admin role SQL
+  (`UPDATE users SET role='admin' WHERE pi_username='yas55eR82';` + re-login) · optional
+  `JWT_EXPIRES_IN` raise · delete temp diagnostics (`/api/admin/auth-debug`,
+  `/api/auth/landing-report`) once stable · propagate C-123 to ecommerce/assets/commerce/
+  template-base.
   **The entire incident is codified as `C-123___PI_BROWSER_SESSION_COOKIE_SPEC.md`
   (TIER 11 — Runtime Operational Law): the 3 cookie laws, the LOCKED cookie contract,
   verified-entry login architecture, server-side refresh, diagnostic playbook, and the
