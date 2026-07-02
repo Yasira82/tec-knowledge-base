@@ -1,8 +1,8 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-122)
+## دليل سريع للـ Content (C-00 → C-123)
 
 > **Truth State:** `[Current State]`
-> **Last Updated:** June 2026 (Session 15) — C-122 Analytics Constitutional Runtime Charter added to TIER 10
+> **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
 
@@ -225,12 +225,20 @@
 | **C-122** | Analytics Constitutional Runtime Charter | Analytics = Intelligence Runtime / Reality Infrastructure — "What is happening?" · Reality↔Trust duality with Zone · disclosure boundary |
 ---
 
+## TIER 11 — Runtime Operational Law (C-123)
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-123** | Pi Browser Session & Cookie Spec | Pi Browser session & cookie law (Runtime Verified) — 3 cookie laws · none+secure+Partitioned LOCKED · 200-only establishment · server-verified login entry · server-side refresh · July 2026 incident ledger |
+---
+
 ## Quick Lookup
 
 | I need to... | Go to |
 |-------------|-------|
 | Know current platform state | **C-02** |
 | Check a payment pattern | **C-12** + **C-76** |
+| Fix login/session/cookies in Pi Browser | **C-123** |
 | Find an ADR | **C-64** |
 | Understand kernel rules | **C-47** |
 | Check domain ownership | **C-68** |
@@ -325,6 +333,7 @@ C-80       Engineering Assessment Report (KB audit)
 C-100→C-115  App Institutional Charters
 C-116→C-118  Constitutional Automation (Authority + Registry + Dependency)
 C-119→C-122  Economic Operating System Model (OS Model + Zone + Analytics Runtime Charters + Knowledge Pipeline)
+C-123        Pi Browser Session & Cookie Spec (Runtime Verified operational law)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80

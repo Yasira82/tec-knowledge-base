@@ -119,6 +119,17 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
   **FINAL COOKIE LAW: `sameSite=none + secure`, established/rotated only on 200
   responses, entry to protected pages only after server-verified session. Never
   downgrade to `lax`.**
+- *Re-login fix (SHIPPED — tec-app #67):* first login worked but re-login after logout
+  failed → embedded contexts under Chrome's 3P-cookie phaseout block even `none` unless
+  **`Partitioned` (CHIPS)**; also logout's clearing cookies had mismatched attributes
+  (silently failed to delete). All session cookies now `none+secure+Partitioned`; deletion
+  attributes match creation; landing page gained a delayed retry + `[landing-report]`
+  diagnostics.
+- ✅ **SESSION 16 CLOSED — Runtime Verified:** login ✓ · logout → re-login ✓ · wallet ✓.
+  **The entire incident is codified as `C-123___PI_BROWSER_SESSION_COOKIE_SPEC.md`
+  (TIER 11 — Runtime Operational Law): the 3 cookie laws, the LOCKED cookie contract,
+  verified-entry login architecture, server-side refresh, diagnostic playbook, and the
+  PR-by-PR incident ledger. Any future change to cookies/login/refresh MUST cite C-123.**
 
 ---
 

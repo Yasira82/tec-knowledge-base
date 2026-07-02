@@ -75,6 +75,8 @@ def classify_tier(cid_num):
         return 'tier-1-constitutional-runtime'
     if 119 <= n <= 122:  # Economic OS Model + Zone/Analytics Runtime Charters + Knowledge Pipeline — vision-layer constitutional docs
         return 'tier-1-institutional-intelligence'
+    if n == 123:  # Pi Browser Session & Cookie Spec — Runtime Verified operational law
+        return 'tier-1-constitutional-runtime'
     return 'tier-2-experimental'
 
 

@@ -7,7 +7,7 @@
 # v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
 # This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
 #
-# Generated: 2026-06-28T02:40:36.542405
+# Generated: 2026-07-02T04:41:12.489595
 
 documents:
 
@@ -153,6 +153,18 @@ documents:
     verification_state: "code-verified"
     authority_scope: "platform"
     depends_on: ["C-47", "C-64"]
+    informs: []
+
+  - id: "C-123"
+    title: "Pi Browser Session & Cookie Spec"
+    filename: "C-123___PI_BROWSER_SESSION_COOKIE_SPEC.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "runtime-verified"
+    authority_scope: "platform"
+    depends_on: ["C-47"]
     informs: []
 
   - id: "C-13"
@@ -1284,17 +1296,17 @@ adrs:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total documents: 103
-# Total cross-references (depends_on): 114
+# Total documents: 104
+# Total cross-references (depends_on): 115
 #
 # Tier distribution:
-#   tier-1-constitutional-runtime: 58
+#   tier-1-constitutional-runtime: 59
 #   tier-1-institutional-intelligence: 37
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
-#   current-state: 83
+#   current-state: 84
 #   future-vision: 9
 #   planned-state: 6
 #   speculation: 5
