@@ -74,10 +74,17 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
 - *Durable (ops, recommended):* raise `JWT_EXPIRES_IN` in tec-auth-service (Railway) from
   `3600` to e.g. `604800` (7d, matching the refresh token) so the access token outlives a
   normal session and the fragile Pi-Browser refresh-rotation is rarely exercised.
-- *Engineering follow-up:* single-flight refresh + verify the rotated `tec_refresh_token`
-  actually persists in Pi Browser before relying on auto-refresh; only then re-introduce a
-  (non-logout) refresh-retry on `/api/bff/*`. **Lesson:** `auth-debug.backendRefresh`
-  surfaces the backend's real refusal reason — use it, don't guess.
+- *Engineering fix (SHIPPED — tec-app #63):* **server-side refresh in `createHandler`.**
+  Every `/api/bff/*` route now recognizes `ERR_JWT_EXPIRED` as recoverable: it refreshes at
+  the gateway (**single-flight per refresh-token value** — the Hub's parallel BFF calls
+  would otherwise burn the single-use token), verifies the new token, completes the request
+  with it, and sets the rotated cookies (`tec_access_token` 24h lax, `tec_refresh_token` 7d
+  httpOnly lax) on EVERY response path. Cookie rotation rides a normal same-origin response
+  — the path Pi Browser persists reliably — instead of a client-XHR Set-Cookie. No refresh
+  possible → 401 TOKEN_EXPIRED, fail closed, **never logout()**. The hourly hub/wallet
+  death self-heals without any browser-side refresh logic. **Lesson:**
+  `auth-debug.backendRefresh` surfaces the backend's real refusal reason — use it, don't
+  guess; and token rotation must complete server-side when the client is Pi Browser.
 
 ---
 
