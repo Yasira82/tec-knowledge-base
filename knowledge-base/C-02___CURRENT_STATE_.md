@@ -97,6 +97,15 @@ a **logout→re-SSO thrash loop** in production. **#62 reverted** `useHubData` t
   **RULE (Pi Browser cookie law):** session cookies may ONLY be established/rotated on
   top-level navigation responses or same-origin BFF responses — never rely on XHR
   Set-Cookie from a fetch() the client discards.
+- *Final gap + fix (SHIPPED — tec-app #65):* runtime logs proved Pi Browser ALSO drops
+  `Set-Cookie` on **3xx redirect responses** (`sso-callback 307` carried the cookies →
+  `/hub` arrived cookie-less → middleware bounce → loop). `sso-callback` now returns a
+  **200 HTML landing page**: cookies ride the 200; its script **verifies the session via
+  `/api/auth/me` BEFORE navigating**, falls back to `document.cookie` for the non-httpOnly
+  cookies and re-verifies; hard failure lands on `/?login=failed`. Navigation into the app
+  happens only after server-confirmed session → loop structurally impossible.
+  **Pi Browser cookie law (amended):** cookies persist reliably ONLY on **plain 200
+  responses** — not XHR, not 3xx redirects.
 
 ---
 
