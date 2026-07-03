@@ -198,6 +198,8 @@ drives the browser SDK and calls its own BFF, which proxies to the gateway →
 | Assets mint recorded 1π not real price | a divergent client → legacy approve hardcoded `amount:1` | one payment client per app |
 | `x-service-secret` / `/payments` 404 | a parallel BFF stack | canonical `/api/payment/*` + `x-internal-key` only |
 | "Pending Payment Found" never clears | resolve/cancel didn't refresh expired token | auto-refresh; cron reconciles via Pi |
+| Analytics Mode-2 payment "Payment Expired" / **approve 502** (create was 201) — Analytics 2026-07-03 | payment-service `getPiApiKey` had **no case** for the new `analytics` source → the approve call used the **default (Hub) Pi API key**; Pi rejects a key that doesn't match the payment's own Pi App ID (`analytics-822d98…`) | an app that pays under its **OWN Pi App ID** must be approved with its **OWN** `PI_API_KEY_<SOURCE>`. Resolution is now data-driven (`PI_API_KEY_<SOURCE>` for any source) and a missing-key fallback is **never silent** — loud `error`, Forbidden Behavior #6 |
+| Analytics: admin view vanished + logout dead + "Something went wrong" crash | (a) `role` was snapshotted in the session token and never refreshed; (b) logout relied on an XHR `Set-Cookie` (C-123 LAW 1 — unreliable in Pi Browser); (c) a gateway error **object** `{code,message}` was rendered as a React child (#31) | role is re-read from DB on refresh + read from the token client-side; logout clears cookies client-side then hard-navigates; **coerce any error to string** before rendering |
 
 ### Rules for a NEW app (and before any tests / updates)
 1. Import payment request/response shapes from `@yasser172/tec-sdk` — never local Zod; `amount` = number.
@@ -207,6 +209,7 @@ drives the browser SDK and calls its own BFF, which proxies to the gateway →
 5. Keep the **CI policy guards** (`.github/workflows/ci.yml`): fail on `x-service-secret` / `SERVICE_SECRET` / `z.string()` for amount, **and on any route-level CSRF check** (`csrfCookie !== csrfHeader` / `CSRF validation failed` / `CSRF token mismatch` under `src/app/api`) — CSRF is middleware-only. Forwarding `x-csrf-token` to a downstream call is fine; *validating* it in a route is forbidden.
 6. Never change `/hub?pay=1`, the cookie names, or the gateway path scheme without an ADR (C-76 / ADR-007 / ADR-009).
 7. Stuck/orphan payments self-heal hourly via `tec-payment-service` reconciliation (Pi = source of truth; never blind-fail a paid payment).
+8. If the app has its **own Pi App ID** (not the Hub's), wire `PI_API_KEY_<SOURCE>` on `tec-payment-service` — `getPiApiKey` resolves `PI_API_KEY_<APP_SOURCE.toUpperCase()>`. Approving under the default (Hub) key fails with a 502 (Analytics 2026-07-03). A missing key for a known source now logs a loud `error`, never a silent fallback.
 
 > **Truth State:** `[Current State]` · **Verification:** `[Code Verified]` (PRs merged June 2026)
 > **References:** ADR-009 (C-64) · ADR-007 (C-76) · C-47 · C-71 Financial Integrity · `tec-app/docs/PAYMENT_SYSTEM.md`

@@ -243,13 +243,28 @@ Ops precondition (was the launch blocker, now resolved):
   ✅ Vercel needs server-only API_GATEWAY_URL (not NEXT_PUBLIC_*). Missing it returned
      503 on every /api/bff/analytics/* call while login still worked — added 2026-07-03.
 
+Shipped Session 18 (2026-07-03, runtime-verified):
+  ✅ Pi App ID REGISTERED in the Pi Developer Portal (prefix `analytics-822d98…`;
+     full value = Vercel `NEXT_PUBLIC_PI_APP_ID`). The Portal "Process a Transaction"
+     step is complete — a real Merchant Pro payment succeeded in both modes.
+  ✅ §7 monetization LIVE — Merchant Pro subscription (10π/month, item `merchant_pro_monthly`)
+     via the standalone app. Mode 1 (Hub modal) AND Mode 2 (in-app Pi) both verified.
+     Required a payment-service fix: per-app Pi API key `PI_API_KEY_ANALYTICS` (see C-12 §11 —
+     approving under the default Hub key returned 502).
+  ✅ §6 merchant isolation — SLICE 1 (own-scope): GET /analytics/me/overview + the
+     frontend "Your activity" panel. Any non-admin now sees ONLY their own aggregates
+     (groupBy analytics_events WHERE user_id = session identity; identity from the verified
+     token, never a param; 401 w/o user scope). Platform aggregates stay admin/internal
+     (C-122 §5 disclosure boundary).
+
 Still pending:
-  □ Pi App ID — still TBD (register in Pi Developer Portal); §11 P1-1/P1-2 embeds to-build
-  ⚠️ Gap (blocks §6 merchant isolation): tec-analytics-service aggregates are
-     PLATFORM-level — DailyMetric is keyed by date only, AnalyticsEvent carries user_id
-     but no merchantId. Merchant-scoped metrics (§6 "merchant sees ONLY their own")
-     require a SERVICE-side schema + aggregation change BEFORE the BFF can isolate.
-     Until then the dashboard is platform/admin only (C-122 §5 disclosure boundary).
+  □ §11 P1-1/P1-2 embeds (Hub `/hub/analytics`, Commerce embed) — to-build
+  ⚠️ §6 SLICE 2 (seller-scoped "my sales"): still gated on a SERVICE change — DailyMetric
+     is keyed by date only and AnalyticsEvent carries `user_id` but no `merchantId`/seller id.
+     Attributing a SALE to the SELLER (not just the acting user) needs upstream events
+     (`payment.*` / `order.*`) to carry the merchant/seller id BEFORE Analytics can aggregate
+     it. Slice 1 (own-scope by user_id) is the correct, shippable first step; slice 2 is a
+     separate cross-service change.
 ```
 
 ---

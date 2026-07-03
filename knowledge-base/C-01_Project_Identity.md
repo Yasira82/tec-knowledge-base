@@ -60,6 +60,7 @@ Subscriptions → Connections → Investments → Reputation
 | **Tec-Commerce** | `commerce-app-68aa99081fc1897a` | `https://commerce.tecosystem.app` | `false` |
 | **Tec-Assets** | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` | `false` |
 | **Tec-App (Hub)** | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` | `false` |
+| **Tec-Analytics** | `analytics-822d9810de66bc84` | `https://analytics.tecosystem.app` | `false` |
 
 > ⚠️ Domain مرتبط بالـ Pi.init() registration. لو اتغيّر الـ domain → لازم update Pi Developer Portal.
 >
@@ -68,6 +69,14 @@ Subscriptions → Connections → Investments → Reputation
 > Portal for Pi App ID `commerce-app-68aa99081fc1897a`. C-01 (§3 + §4), C-101, and
 > the PORTAL_SUBMISSION_RUNBOOK are all aligned to it. Assets App ID
 > `assets-app-af2fb490e7b03db7` also confirmed. All App IDs/domains now consistent.
+>
+> ✅ **Analytics registered (3 Jul 2026):** Pi App ID `analytics-822d9810de66bc84`,
+> domain `analytics.tecosystem.app`, Mainnet (`PI_SANDBOX=false`) — Portal shows
+> "Completed Steps: 10 of 10" and the "Process a Transaction" step passed with a real
+> Merchant Pro payment. Full ID = Vercel `NEXT_PUBLIC_PI_APP_ID`. payment-service must
+> hold `PI_API_KEY_ANALYTICS` (approving under the default Hub key returns 502 — C-12 §11).
+> ⚠️ Portal note: the **Linked App** still reads *Testnet* — confirm it points to the
+> Mainnet linked app before relying on production Pi ledger flows.
 
 ---
 
