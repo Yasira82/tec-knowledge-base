@@ -1,9 +1,9 @@
 # C-105 — ANALYTICS INSTITUTIONAL CHARTER
 ## TEC Economic Infrastructure Design Partnership — v1.0
 
-**Truth State:** [Planned State]
+**Truth State:** [Current State]
 **Governance State:** [Draft]
-**Verification State:** [Unverified]
+**Verification State:** [Runtime Verified]
 **Authority Scope:** [Domain]
 **Decision Status:** [Recommended]
 
@@ -210,33 +210,46 @@ Phase 3:
 
 ---
 
-## 11a. IMPLEMENTATION STATUS (Session — June 2026)
+## 11a. IMPLEMENTATION STATUS (updated Session 17 — July 2026: DEPLOYED + Runtime Verified)
 
-**Truth State:** [Code Verified] for the items below · charter overall stays [Planned State] (not yet deployed / no Pi App ID).
+**Truth State:** [Current State] · **Verification:** [Runtime Verified] — the app is
+**live at `analytics.tecosystem.app`**; login (C-123 SSO) and the events dashboard were
+verified against production Vercel logs on 2026-07-03. Revenue tiers (§7) and merchant
+isolation (§6) remain [Planned State] — see the Gap note.
 
 A **standalone Analytics frontend** (`tec-analytics` repo → `analytics.tecosystem.app`,
-from the 24-app rollout registry) now exists. This is a **third analytics surface**,
-distinct from §11 P1-1 (Hub embed `/hub/analytics`) and P1-2 (Commerce embed) — both
-of which remain to-build.
+from the 24-app rollout registry) is now **deployed and live**. This is a **third
+analytics surface**, distinct from §11 P1-1 (Hub embed `/hub/analytics`) and P1-2
+(Commerce embed) — both of which remain to-build.
 
 ```
-Built (code-verified, branch claude/tec-repos-review-ht2n8s — pre-deploy):
+Live (runtime-verified in production, 2026-07-03):
   ✅ App customized from tec-template-base v2 (identity, domain, slug, legal pages)
+  ✅ Hub SSO login — C-123 compliant (200 landing + verified entry + none/secure/Partitioned)
   ✅ BFF /api/bff/analytics/{overview,payments,users,events}
        → tec-analytics-service via gateway (^/api/analytics → /analytics)
        → auth: Bearer token + x-internal-key · fail-closed (401 w/o session)
+       → server-only API_GATEWAY_URL (NEW-A: no gateway URL in the client bundle)
   ✅ /app platform dashboard: overview cards + 30d payment volume + recent events
        (inline bar chart — tec-ui charts still pending, §5)
-  ✅ Drift Detection CI gate (ADR-009 · C-12 §11 · ADR-007) — parity with the 4 live apps
+  ✅ Drift Detection CI gate — parity with the 4 live apps (ADR-009 · C-12 §11 · ADR-007)
+       + Analytics-specific checks: NEW-A (no NEXT_PUBLIC gateway var / Railway host in
+       src) and §6 merchant isolation (identity from session cookie, never query/body)
 
-Consumed contract (tec-analytics-service, code-verified):
+Consumed contract (tec-analytics-service, runtime-verified):
   GET /analytics/overview · /payments · /users · /events?limit=N  →  { success, data }
 
-Gap (blocks §6 merchant isolation):
-  ⚠️ tec-analytics-service aggregates are PLATFORM-level — DailyMetric is keyed by date
-     only, AnalyticsEvent carries user_id but no merchantId. Merchant-scoped metrics
-     (§6 "merchant sees ONLY their own") require a SERVICE-side schema + aggregation
-     change BEFORE the BFF can isolate. Until then the dashboard is platform/admin only.
+Ops precondition (was the launch blocker, now resolved):
+  ✅ Vercel needs server-only API_GATEWAY_URL (not NEXT_PUBLIC_*). Missing it returned
+     503 on every /api/bff/analytics/* call while login still worked — added 2026-07-03.
+
+Still pending:
+  □ Pi App ID — still TBD (register in Pi Developer Portal); §11 P1-1/P1-2 embeds to-build
+  ⚠️ Gap (blocks §6 merchant isolation): tec-analytics-service aggregates are
+     PLATFORM-level — DailyMetric is keyed by date only, AnalyticsEvent carries user_id
+     but no merchantId. Merchant-scoped metrics (§6 "merchant sees ONLY their own")
+     require a SERVICE-side schema + aggregation change BEFORE the BFF can isolate.
+     Until then the dashboard is platform/admin only (C-122 §5 disclosure boundary).
 ```
 
 ---
