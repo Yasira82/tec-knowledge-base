@@ -219,8 +219,9 @@ Phase 0 — app customized from tec-template-base (tec-life repo):
   ✅ Identity: APP_SOURCE 'life' · sso-callback audiences → life.tecosystem.app ·
      privacy/terms → TEC Life · NEW-A (no gateway URL in client bundle) ·
      hub-entry-aware Pi init (C-12 §3 / ADR-007). Domain life.tecosystem.app.
-  ⚠️ Pi App ID: TBD (register in Portal). Login still uses the pre-C-123 3xx→Set-Cookie
-     flow — MUST migrate to the 200 HTML landing before Pi-Browser login works (LAW 2).
+  ✅ Pi App ID REGISTERED: life-app-c468e9eb5bf115fa (C-01) · Vercel vars set.
+  ✅ C-123 login: SSO callback migrated to the 200 HTML landing + verified entry
+     (/api/auth/me) + none/secure/Partitioned cookies + hub-entry flag (LAW 2/3, §3).
 
 FEATURE slice 1 — Goals & Preferences (self-declared → STRONG consistency):
   ✅ Store: tec-identity-service — LifeGoal (title/description/status/target_date) +
