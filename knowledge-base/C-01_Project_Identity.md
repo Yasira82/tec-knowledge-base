@@ -61,6 +61,7 @@ Subscriptions → Connections → Investments → Reputation
 | **Tec-Assets** | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` | `false` |
 | **Tec-App (Hub)** | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` | `false` |
 | **Tec-Analytics** | `analytics-822d9810de66bc84` | `https://analytics.tecosystem.app` | `false` |
+| **Tec-Life** | `life-app-c468e9eb5bf115fa` | `https://life.tecosystem.app` | `false` |
 
 > ⚠️ Domain مرتبط بالـ Pi.init() registration. لو اتغيّر الـ domain → لازم update Pi Developer Portal.
 >
