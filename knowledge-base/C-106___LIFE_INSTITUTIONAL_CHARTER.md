@@ -234,6 +234,16 @@ FEATURE slice 1 — Goals & Preferences (self-declared → STRONG consistency):
   ✅ Frontend: /api/bff/life/{goals,goals/[id],preferences} → gateway; interactive
      Goals (add/done/delete) + Preferences (focus, language) in /app.
 
+FEATURE slice 2 — Activity timeline (eventual):
+  ✅ /app "Activity" presents the caller's OWN recent events (payment/order/join)
+     newest-first, read from Analytics (GET /analytics/me/activity, strict own-scope,
+     fails closed on internal key) via /api/bff/life/activity. C-106 §4 realised: activity
+     signals come FROM Analytics — Life PRESENTS, never stores/re-derives transaction truth.
+     ARCHITECTURE NOTE — [P1-1] "event-stream consumer INSIDE Life" was NOT needed:
+     Analytics already consumes payment.completed.v1 / order.created.v1 and stores them
+     per-user, so Life reads that own-scope signal instead of duplicating the stream
+     (no new consumer, no re-derivation — the cleaner path).
+
 Pending (this slice → live):
   □ Deploy tec-identity-service (db push adds life_goals + life_preferences) BEFORE the
      frontend, then wire life.tecosystem.app on Vercel (API_GATEWAY_URL, INTERNAL_SECRET,
@@ -241,8 +251,6 @@ Pending (this slice → live):
   □ P0-1 privacy: consent schema + [P1-2] consent gateway are NOT built. Not yet needed —
      Life data is self-declared and is NOT exposed to any other app (esp. TEC AI) yet.
      Required BEFORE any OUTBOUND Life-context API (C-106 §4 Interface Points) is opened.
-  □ [P1-1] Event-stream consumer (payment.completed.v1 / order.created.v1) → the Activity
-     timeline (slice 2, eventual consistency). Until then Life is purely self-declared.
 ```
 
 ---
