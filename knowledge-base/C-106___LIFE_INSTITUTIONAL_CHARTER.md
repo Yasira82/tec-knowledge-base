@@ -208,6 +208,44 @@ Phase 3:
 
 ---
 
+## 11a. IMPLEMENTATION STATUS (Session 18 — July 2026)
+
+**Truth State:** [Planned State] · **Verification:** [Code Verified] — built and merged,
+not yet deployed / Runtime Verified. (The charter header stays [Future Vision] until Life
+is live at `life.tecosystem.app`.)
+
+```
+Phase 0 — app customized from tec-template-base (tec-life repo):
+  ✅ Identity: APP_SOURCE 'life' · sso-callback audiences → life.tecosystem.app ·
+     privacy/terms → TEC Life · NEW-A (no gateway URL in client bundle) ·
+     hub-entry-aware Pi init (C-12 §3 / ADR-007). Domain life.tecosystem.app.
+  ⚠️ Pi App ID: TBD (register in Portal). Login still uses the pre-C-123 3xx→Set-Cookie
+     flow — MUST migrate to the 200 HTML landing before Pi-Browser login works (LAW 2).
+
+FEATURE slice 1 — Goals & Preferences (self-declared → STRONG consistency):
+  ✅ Store: tec-identity-service — LifeGoal (title/description/status/target_date) +
+     LifePreference (key/value, unique per user+key). @Controller('identity/life') →
+     served by the existing /api/identity/* gateway route (no gateway change).
+  ✅ Isolation (P6 / §6): owner = the verified session identity resolved via
+     findOrCreateUser from the JWT's Pi uid (P0-2 identity anchor — Pi identity, not a
+     mutable internal id); never a query/body param. Ownership enforced in the WHERE
+     clause (non-owner → 0 rows → 404). 8 service tests.
+  ✅ Frontend: /api/bff/life/{goals,goals/[id],preferences} → gateway; interactive
+     Goals (add/done/delete) + Preferences (focus, language) in /app.
+
+Pending (this slice → live):
+  □ Deploy tec-identity-service (db push adds life_goals + life_preferences) BEFORE the
+     frontend, then wire life.tecosystem.app on Vercel (API_GATEWAY_URL, INTERNAL_SECRET,
+     SSO_SECRET). Backend-first per the release chain.
+  □ P0-1 privacy: consent schema + [P1-2] consent gateway are NOT built. Not yet needed —
+     Life data is self-declared and is NOT exposed to any other app (esp. TEC AI) yet.
+     Required BEFORE any OUTBOUND Life-context API (C-106 §4 Interface Points) is opened.
+  □ [P1-1] Event-stream consumer (payment.completed.v1 / order.created.v1) → the Activity
+     timeline (slice 2, eventual consistency). Until then Life is purely self-declared.
+```
+
+---
+
 ## 12. INTEGRATION MAP
 
 ```
