@@ -256,15 +256,20 @@ Shipped Session 18 (2026-07-03, runtime-verified):
      (groupBy analytics_events WHERE user_id = session identity; identity from the verified
      token, never a param; 401 w/o user scope). Platform aggregates stay admin/internal
      (C-122 §5 disclosure boundary).
+  ✅ §6 merchant isolation — SLICE 2 (seller-scoped "my sales"): the frontend
+     "Your sales" panel (revenue / items sold / orders / top products / recent sales).
+     ARCHITECTURE NOTE — the earlier plan ("push merchantId through payment.*/order.*
+     events into analytics, then aggregate in analytics-service") was REJECTED: it would
+     make Analytics re-derive transaction truth, violating this charter's data-ownership
+     boundary. Instead the sales are aggregated by the OWNER, tec-commerce-service —
+     `GET /commerce/orders/seller/sales-summary` (order_items WHERE product.seller_id =
+     session identity AND order.status ∈ {PAID,PROCESSING,SHIPPED,DELIVERED}; money as
+     strings, DECIMAL(20,8)). Analytics only PRESENTS it via BFF `/api/bff/analytics/me/sales`.
+     Seller id is the verified session identity server-side, never a param (P6). Strong
+     consistency (commerce truth) — not eventual.
 
 Still pending:
   □ §11 P1-1/P1-2 embeds (Hub `/hub/analytics`, Commerce embed) — to-build
-  ⚠️ §6 SLICE 2 (seller-scoped "my sales"): still gated on a SERVICE change — DailyMetric
-     is keyed by date only and AnalyticsEvent carries `user_id` but no `merchantId`/seller id.
-     Attributing a SALE to the SELLER (not just the acting user) needs upstream events
-     (`payment.*` / `order.*`) to carry the merchant/seller id BEFORE Analytics can aggregate
-     it. Slice 1 (own-scope by user_id) is the correct, shippable first step; slice 2 is a
-     separate cross-service change.
 ```
 
 ---
