@@ -219,3 +219,78 @@ Other charters depend on this one for:
   C-103 ECOMMERCE → social commerce (buy what connections bought)
   C-105 ANALYTICS → relationship network metrics
 ```
+
+---
+
+## 13. RUNTIME PLACEMENT & CURRENT STATE (2026-07)
+
+**Truth State (this section):** [Current State] for the shipped slice · [Planned State] for the split
+**Verification:** [Code Verified] (slice 1)
+**Governance State:** [Governance Approved] — architectural decision of record
+
+### 13.1 The two-layer split (decision of record)
+
+Connection is **not one runtime** — it is two layers with different consistency and
+durability needs. They MUST NOT be collapsed onto a single service:
+
+| Layer | What it holds | Consistency | Home (now) | Home (at scale) |
+|-------|---------------|-------------|-----------|-----------------|
+| **System of Record** — the durable graph | follow/connect edges, trust scores, community membership | strong for self-declared edges; eventual for derived trust | **tec-identity-service** (incubation) | **tec-connection-service** (extracted) |
+| **System of Engagement** — the live layer | presence ("online now"), live follow/connection-request notifications, chat | ephemeral / eventual | **tec-realtime-service** | tec-realtime-service (unchanged) |
+
+**Why the durable graph incubates in identity-service (not realtime, not storage):**
+- The graph anchors on the `User`/`Identity` node — co-locating avoids a cross-service
+  join per edge (C-47: *cross-service references = ID only; each entity has one owner*).
+- Self-declared edges want **read-your-writes** (follow → visible immediately). C-47
+  §6: identity reads = **Strong**; realtime is eventual by design.
+- realtime-service is optimised for ephemeral pub/sub (WebSockets, presence, streams);
+  the source-of-truth graph must not depend on a runtime that restarts / scales
+  horizontally without a durable relational store.
+- **storage-service is explicitly wrong** — it owns files/blobs (avatars, media),
+  not graph edges.
+
+**Why realtime-service still matters:** it owns the *live* half — presence and
+push-notifications on relationship events (`§5` already lists `tec-realtime-service
+(4009)`). This is CQRS-shaped: identity/connection owns the **write model** (truth),
+realtime owns the **read/push model** (live signals). realtime *reacts to* the graph;
+it never *owns* it.
+
+### 13.2 Extraction trigger (identity → connection-service)
+
+Extract a standalone `tec-connection-service` when the graph outgrows its incubator —
+aligned with §10 Phase evolution + §11 [P0-1]: at **~5k–10k active users or ~100k
+graph nodes**. Until then the graph lives in identity-service behind
+`@Controller('identity/connection')`, so the existing `/api/identity/*` gateway route
+covers it with **no gateway change**. Extraction moves only the durable graph out;
+realtime keeps the live layer.
+
+### 13.3 Slice 1 — Follow / Connect — SHIPPED [Current State]
+
+The first slice of §10 Phase 1 ("Follow/unfollow other TEC users") is live:
+
+```
+Backend  (tec-identity-service):
+  prisma  Follow(follower_id → User, followee_username by Pi identity anchor;
+          @@unique(follower_id, followee_username))  → table connection_follows
+  @Controller('identity/connection'):
+     POST   follow            (upsert; self-follow rejected; username normalized)
+     DELETE follow/:username  (unfollow)
+     GET    following         (caller's own edges)
+     GET    stats             ({ following, followers } counts)
+  Isolation (P6): follower = VERIFIED session identity (JWT) — never a param/body.
+                  Only the followee comes from the request body.
+
+Frontend (tec-connection):
+  /api/bff/connection/*  →  forwardConnection  →  /api/identity/connection/*
+  useConnection hook + Connections card in /app: follow @username, unfollow,
+  live following/followers counts, own-graph list.
+
+Monetization key: PI_API_KEY_CONNECTION registered in payment-service
+  (PI_KEY_SOURCES) so a future Connection Pro buy approves under Connection's own
+  Pi App ID (`connection-aa9fba4f11664096`), not the default Hub key.
+```
+
+**Next slices (unchanged from §10):** Slice 2 — trust signals from
+`payment.completed.v1` (§11 [P1-1], event-driven, eventual) → trust score on the
+edge. Slice 3 — presence + live "new follower" notifications via
+**tec-realtime-service** (the System-of-Engagement layer above).
