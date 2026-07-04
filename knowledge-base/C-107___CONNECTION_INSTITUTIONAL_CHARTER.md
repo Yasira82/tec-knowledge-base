@@ -290,7 +290,54 @@ Monetization key: PI_API_KEY_CONNECTION registered in payment-service
   Pi App ID (`connection-aa9fba4f11664096`), not the default Hub key.
 ```
 
-**Next slices (unchanged from §10):** Slice 2 — trust signals from
-`payment.completed.v1` (§11 [P1-1], event-driven, eventual) → trust score on the
-edge. Slice 3 — presence + live "new follower" notifications via
-**tec-realtime-service** (the System-of-Engagement layer above).
+### 13.4 Slice 2 — Trust Graph — SHIPPED [Current State] [Runtime Verified]
+
+Trust signals from real economic activity (C-107 §4/§6). **Correction to §11
+[P1-1]:** `payment.completed.v1` is a **single-party** User-to-App event (payer
+only) — it cannot form a user↔user edge. Trust is built from **`order.paid.v1`**
+(buyer + seller), which commerce now emits.
+
+```
+Emit    (tec-commerce-service):
+  order.paid.v1 { buyer_id, sellers:[{seller_id, amount}], currency } on every
+  PAID order (createOrder w/ payment_id + checkout). Fail-soft (a Redis outage
+  never fails a sale). Commerce owns order truth; it only emits the fact.
+Consume (tec-identity-service):
+  order-paid.consumer (Redis Streams) → TrustEdge(source=buyer → target=seller,
+  order_count + volume DECIMAL). IDEMPOTENT via ProcessedTrustEvent (eventId in
+  the same tx → a redelivery is a no-op; C-70 at-least-once). Self-trust skipped.
+  GET identity/connection/trust → own-scope given/received (partners, orders, π).
+Frontend (tec-connection): useTrust + Trust card (given/received) — replaces the
+  "Soon" pillar. Diagnostic: GET /trust/diag (processed_events liveness).
+
+Security foundation (P6/R1): buyer_id is now derived from the SESSION (JWT sub) in
+  ALL commerce order endpoints — previously client-supplied (spoofable). This also
+  aligns buyer_id = seller_id = the trust keyspace.
+```
+
+**Runtime Verified 2026-07-04:** a real buyer with 2 paid orders to 2 distinct
+sellers showed `given: 2 partners · 2 orders · π 20` in the Trust card; idempotent
+(2 orders = 2 clean edges), own-scope, money correct.
+
+Consistency: trust is **derived / eventual** (C-47 §6) — never financial truth.
+
+### 13.5 Slice 3 — Presence — SHIPPED [Current State]
+
+The first live-layer feature (System of Engagement, §13.1) — on
+**tec-realtime-service**, keyed by Pi username (the follow-graph anchor).
+
+```
+Backend  (tec-realtime-service): PresenceService (Redis SET presence:<user> EX 45s
+  + mget) + POST /presence/sync { usernames } → marks caller online + returns the
+  online subset. Ephemeral, fail-soft, NO durable state. Reached via the gateway
+  /api/realtime/presence/sync.
+Frontend (tec-connection): usePresence — 30s HTTP heartbeat (no browser WebSocket)
+  → green online dot per followed user + "N online" in the Connections header.
+```
+
+Consistency: **eventual**, ephemeral. This is the live layer *reacting to* the
+graph (identity owns), never owning it — the §13.1 CQRS split, in code.
+
+**Remaining pillar:** ✨ Collaboration (shared context / joint ventures) —
+still `[Future Vision]` (§10 Phase 2–3). Live "new follower" push (via the
+realtime WS gateway) is a fast follow to Presence.
