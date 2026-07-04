@@ -338,6 +338,55 @@ Frontend (tec-connection): usePresence — 30s HTTP heartbeat (no browser WebSoc
 Consistency: **eventual**, ephemeral. This is the live layer *reacting to* the
 graph (identity owns), never owning it — the §13.1 CQRS split, in code.
 
-**Remaining pillar:** ✨ Collaboration (shared context / joint ventures) —
-still `[Future Vision]` (§10 Phase 2–3). Live "new follower" push (via the
-realtime WS gateway) is a fast follow to Presence.
+### 13.6 "New follower" notifications — SHIPPED [Current State]
+
+A durable relationship notice, created **synchronously in the follow handler**
+(no event bus, no WebSocket) — the engineering-correct choice over a fragile
+instant toast (durable + own-scope + HTTP-verifiable).
+
+```
+Backend  (tec-identity-service): ConnectionNotification (recipient/actor/type,
+  read; @@unique(recipient,actor,type) → a re-follow refreshes, never spams).
+  follow() upserts a 'follow' notice for the followee — FAIL-SOFT (a notification
+  write never fails the follow). GET/POST identity/connection/notifications
+  (list + unread; mark read) — recipient = session username (P6).
+Frontend (tec-connection): useNotifications (30s poll) + 🔔 banner with an unread
+  badge; opening marks read.
+```
+> NOTE: the platform-wide `Notification` entity is owned by tec-notification-
+> service (C-47). This is a bounded Connection-domain relationship notice,
+> migratable to notification-service later. A live WS push (realtime gateway)
+> remains an optional fast-follow on top of this durable base.
+
+### 13.7 Collaboration — shared collections — SHIPPED [Current State]
+
+The ✨ pillar (§4 "collaboration context" / §10 Phase 2 "collaborative features").
+"Shared context for working together": an owner creates a collection, invites
+people they're connected to, and any member adds items.
+
+```
+Backend  (tec-identity-service): Collection + CollectionMember + CollectionItem
+  (username-keyed, cascade). CollectionService — own-or-member scope (P6): create
+  (owner auto-member), list (owned OR member), get (member-only), addItem
+  (member-only), addMember (OWNER-only invite). @Controller
+  'identity/connection/collections'.
+Frontend (tec-connection): useCollections/useCollection + Collaboration card in
+  /app — create, open, add items, invite.
+```
+
+Consistency: **strong** for the self-declared collection (the members control it).
+
+### 13.8 Pillar set — COMPLETE
+
+All four C-107 pillars are live and own-scope (P6):
+
+| Pillar | Layer | Status |
+|--------|-------|--------|
+| 🤝 Connections (follow) + 🟢 Presence + 🔔 Notifications | SoR graph + live | ✅ `[Current State]` |
+| 🛡️ Trust (from `order.paid.v1`) | SoR graph, derived | ✅ `[Runtime Verified]` |
+| ✨ Collaboration (shared collections) | SoR graph | ✅ `[Current State]` |
+
+The §13.1 two-layer split held throughout: durable graph (follow · trust ·
+collections · notifications) in **tec-identity-service**; the live layer
+(presence) on **tec-realtime-service**. Extraction to a standalone
+`tec-connection-service` remains the §13.2 trigger (~5k–10k users / ~100k nodes).
