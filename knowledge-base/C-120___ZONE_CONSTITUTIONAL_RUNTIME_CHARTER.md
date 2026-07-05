@@ -143,6 +143,39 @@ Conflating them is an architectural violation.
 
 ## 5. BUILD SEQUENCE — VERSIONS
 
+### Zone V0 — App Scaffold & Portal Readiness (2026-07)
+
+**Truth State:** `[Current State]` for scaffold/key · `[Planned State]` for Zone Pro
+**Verification:** `[Code Verified]` (payment key) · `[Assumed]` (frontend scaffold)
+**Gate this satisfies:** the "**Portal submission complete**" gate that V1 depends on.
+
+Before V1's verification registry, Zone ships the same Portal-ready app skeleton
+every TEC app uses (from `tec-template-base`) — Hub SSO (C-123), dual-mode Pi
+payment (ADR-007), CSRF, legal pages — plus a real Pi payment surface so the Pi
+Developer Portal "Process a Transaction" step can be completed (the last Portal
+gate). Mirrors the proven Life / Analytics / Connection path.
+
+```
+Identity:  app = TEC Zone · domain zone.tecosystem.app · slug/APP_SOURCE = 'zone'
+           · Pi App ID (registered) · PI_SANDBOX=false. Frontend cloned from
+           tec-template-base (repo: tec-zone).
+Payment:   APP_SOURCE='zone' in src/lib/pi-payment.ts + payment/create route.
+           ✅ payment-service: PI_API_KEY_ZONE registered (env schema +
+              PI_KEY_SOURCES) so a Zone payment approves under Zone's OWN Pi App
+              ID, never the default Hub key (the Analytics/Life/Connection
+              approve→502 lesson). Ops sets PI_API_KEY_ZONE on Railway.
+Portal:    Zone Pro — a real Pi User-to-App payment (ADR-007 dual-mode) — is the
+           surface that turns the Portal "Process a Transaction" step green.
+NEW-A:     no NEXT_PUBLIC_API_GATEWAY_URL / Railway host in the client bundle.
+```
+
+> **Runtime-governance note:** V0 completion is asserted by the Portal Readiness
+> Engine (`evals/check-portal-readiness.sh`) once Zone's C-01/C-02/runbook rows
+> exist. Until the `tec-zone` frontend is wired, this section is the placeholder
+> of record; the payment-service half (`PI_API_KEY_ZONE`) is already in code.
+
+---
+
 ### Zone V1 — Static Verified Registry (post-Portal)
 
 **Gate:** Portal submission complete
