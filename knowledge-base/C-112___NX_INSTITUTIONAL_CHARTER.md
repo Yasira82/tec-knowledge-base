@@ -9,6 +9,23 @@
 
 ---
 
+> ⚠️ **SUPERSEDED ON DOMAIN (ADR-010, July 2026).** NX is **repurposed** from
+> *Cyber Security* to **Network / Opportunity Exchange** — connecting people to
+> opportunities (jobs, partnerships, grants, hackathons, investments, co-founders,
+> mentorship). *"What is the right opportunity for me now?"*
+>
+> The **security** functions below are **not deleted** — they move to **System
+> (C-110) as a "Security Center" / Security Governance** (System = operations +
+> governance runtime). Security *alerts* live in **Alert (C-111)**; *verification/
+> trust* lives in **Zone (C-120)**. If security ever becomes a standalone product
+> for the wider Pi community it gets its **own new domain** (e.g. `sentinel.pi`) —
+> **never** the `NX` slug. The sections below are retained as the source material
+> for that Security-Center scope; read them as *System security-governance*, not NX.
+>
+> See **ADR-010** (C-64) for the decision + the no-overlap role map.
+
+---
+
 ## 1. MISSION
 
 Secure the cryptographic trust foundation of the TEC ecosystem — monitoring threats, enforcing identity protection, and ensuring that economic trust is never compromised by technical vulnerabilities.
