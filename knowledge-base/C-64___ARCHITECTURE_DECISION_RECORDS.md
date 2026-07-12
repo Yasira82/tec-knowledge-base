@@ -32,6 +32,7 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-007 | Pi Payment Ownership Authority | ACCEPTED (تفاصيل في C-76) |
 | ADR-008 | Runtime Observability Architecture | ACCEPTED (June 2026) |
 | ADR-009 | Unified Payment Contract (Single Source of Truth) | ACCEPTED (June 2026) |
+| ADR-010 | NX repurposed → Opportunity Exchange · Security Governance folded into System | ACCEPTED (July 2026) |
 
 ---
 
@@ -260,3 +261,43 @@ Upstream:  8,000 ms (within gateway window)
 التطبيقات تستبدل الـ Zod المحلي بـ import من tec-sdk عند نشر 1.3.0 على npm.
 
 **References:** C-12 Dual-Mode Payment · C-76 ADR-007 · C-47 §14 SDK Contract Rules
+---
+
+## ADR-010 — NX repurposed → Opportunity Exchange · Security Governance → System
+
+**Status:** ACCEPTED | **Date:** July 2026 | **Decision Authority:** CEO (C-47)
+
+### Context
+C-112 originally defined **NX = Cyber Security** (System of Security). But the platform
+already has three institutions that overlap that space, causing role confusion:
+- **System (C-110)** — platform operations + governance + runtime.
+- **Alert (C-111)** — the notification/incident surface (security/fraud/risk *alerts*).
+- **Zone (C-120)** — verification + trust + evidence + reputation.
+
+Separately, there was **no home** for a first-class "Opportunity Exchange" (jobs,
+partnerships, grants, hackathons, investments, co-founders, mentorship) — the single
+biggest missing value for the Pi community (no unified opportunity marketplace exists).
+
+### Decision
+1. **NX is repurposed to `Network / Opportunity Exchange`** — connecting people to
+   opportunities ("What is the right opportunity for me now?"). It is NOT a security app.
+2. **Cyber-security is NOT a standalone app (now).** Its runtime functions
+   (threat detection, security audit, access logs, device management, incident response)
+   are folded into **System as a "Security Center" / Security Governance** — consistent
+   with System being the operations + governance runtime. (If security ever becomes a
+   standalone product for the wider Pi community, it gets its OWN new domain — e.g.
+   `sentinel.pi` — but **never** the `NX` slug.)
+3. Security **alerts** remain in **Alert** (the surface); **enforcement/response** is a
+   System Security-Center concern; **verification/trust** stays in **Zone**.
+
+### Consequences
+- **C-112** is superseded on its *domain* (Security → Opportunity Exchange). Its useful
+  security concepts move to System's Security-Center scope, not deleted.
+- **C-110 (System)** scope gains **Security Governance** (Security Center).
+- No overlap remains: Hub=identity · Life=personal · Connection=relationships ·
+  Zone=verification · Analytics=insight · TEC AI=reasoning · Nexus=orchestration ·
+  System=operations+security governance · Alert=notifications · **NX=opportunity**.
+- Downstream refs that read "NX → security violation signals" (C-110 §12 inbound) now
+  read "Security Center (in System) + Alert" instead of NX.
+
+**References:** C-110 SYSTEM · C-111 ALERT · C-112 NX (superseded domain) · C-120 ZONE

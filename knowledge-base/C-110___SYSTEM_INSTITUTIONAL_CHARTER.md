@@ -45,6 +45,12 @@ SYSTEM is the **Economic Constitution Runtime**. C-47 (Kernel Spec) defines the 
 - Governance workflow execution
 - Policy violation response (C-47 violation matrix)
 - Admin actor management and audit trail
+- **Security Governance — "Security Center" (ADR-010, July 2026):** threat detection,
+  security audit, access logs, device management, and incident response — the runtime
+  security functions folded in from the retired NX-Security domain. (This is a
+  System-internal governance concern, NOT a standalone app. Security *alerts* are
+  surfaced by Alert/C-111; *verification/trust* stays in Zone/C-120. If security
+  becomes a standalone Pi-community product it gets its own new domain — never `NX`.)
 
 ### Does NOT Own
 - Technical enforcement (each service self-enforces against policy)
