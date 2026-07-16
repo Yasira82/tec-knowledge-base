@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-130)
+## دليل سريع للـ Content (C-00 → C-131)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -233,7 +233,7 @@
 
 ---
 
-## TIER 12 — User-Layer App Charters (C-124→C-130)
+## TIER 12 — User-Layer App Charters (C-124→C-131)
 
 `[Future Vision]` / `[Draft]` app charters — the reputation/creation/protection/enterprise value chain. Gated (Phase 2/3); not current runtime.
 
@@ -246,6 +246,7 @@
 | **C-128** | VIP Premium Experience Runtime | System of Privilege (cross-cutting) — premium experience layer; VIP grants eligibility, owning apps enforce value (P5) |
 | **C-129** | Insure Risk Protection Runtime | System of Protection — risk scoring + escrow + recovery; escrow custody hard-gated to payment-service (P0, like FundX) |
 | **C-130** | Titan Enterprise OS Runtime | Enterprise OS — B2B counterpart to Life; orchestrates org identity/team/ops; graduation target for NBF; wallet = VIEW only |
+| **C-131** | Brookfield Infrastructure Runtime | Infrastructure & Institutional Assets — B2B/B2I counterpart to Estate; owns asset+governance records; custody+legal hard-gated (securities/REIT); simulated-only V1 |
 ---
 
 ## Quick Lookup
@@ -350,7 +351,7 @@ C-100→C-115  App Institutional Charters
 C-116→C-118  Constitutional Automation (Authority + Registry + Dependency)
 C-119→C-122  Economic Operating System Model (OS Model + Zone + Analytics Runtime Charters + Knowledge Pipeline)
 C-123        Pi Browser Session & Cookie Spec (Runtime Verified operational law)
-C-124→C-130  User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan)
+C-124→C-131  User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan · Brookfield)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80
