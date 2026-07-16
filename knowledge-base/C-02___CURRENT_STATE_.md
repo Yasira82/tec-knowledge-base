@@ -4,7 +4,44 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 5 July 2026 (Session 17 — Life + Connection built; Zone V0 scaffold; KB v3.9.0)
+**Last Updated:** 16 July 2026 (Session 18 — ALL 24 apps LIVE on Mainnet; KB v3.10.0 + C-131)
+
+---
+
+## SESSION 18 — ALL 24 APPS LIVE ON MAINNET (16 July 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** (deployed + real Pi).
+> This is the authoritative current-state header; older snapshots below are historical record.
+
+### 🎉 Milestone: the full ecosystem is live
+All **24 apps** are **registered + deployed + live on Mainnet with real Pi**. Every app has a
+Pi App ID (canonical list = **C-01 §4**), is on Vercel, is enabled in Hub SSO, and its
+**Pro/subscription** payment surface processes **real Pi** (Portal "Process a Transaction" passed).
+
+```
+24 LIVE: Hub · Commerce · Assets · Ecommerce · Analytics · Life · Connection ·
+         Zone · Nexus · Explorer · System · Alert · NX · DX · Titan · Epic ·
+         Legend · Elite · VIP · NBF · Estate · FundX · Insure · Brookfield
+```
+
+### ⚠️ "Live" = subscriptions real; high-risk financial mechanics still hard-gated
+The **Pro/subscription** flows are real Pi. But by charter, these mechanics stay **read-only /
+simulated** until legal + payment-service custody (Invariant #8) + SYSTEM governance:
+- **FundX** pools (C-113) · **Insure** escrow (C-129) · **Brookfield** investment/REITs (C-131).
+- Do NOT treat escrow/pool/REIT custody as live.
+
+### Knowledge Base
+| Field | Value |
+|-------|-------|
+| Version | **v3.10.0** (+ C-131 Brookfield) |
+| Docs | **112** C-docs · registry **100% coverage** |
+| Newest | **C-124→C-131** user-layer app charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan · Brookfield) |
+| Fleet SoT | `architecture/app-fleet.yaml` (all 24 live + App IDs) · C-01 §4 canonical |
+
+### Next phase
+Depth, not breadth: the apps are live but **read-only** (sample data). Turning any into a real
+product needs its **backend service** (`<app>-service` in tec-core-backend) + a real feature +
+real Pi flow — one at a time, gated by dependencies + (for financial apps) legal.
 
 ---
 
