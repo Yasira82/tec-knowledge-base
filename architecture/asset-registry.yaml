@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-05T07:56:27.800174
+# Generated: 2026-07-16T06:04:41.555536
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 104
+# Total assets: 111
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -1525,6 +1525,132 @@ assets:
     last_verified: null
     next_review: "2026-12-01"
 
+  - id: C-124
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Nbf Business Foundation Runtime"
+    path: knowledge-base/C-124___NBF_BUSINESS_FOUNDATION_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-124-nbf-business-foundation-runtime", "c-124-institutional-identity", "c-124-mission"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-125
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Epic Creation Runtime"
+    path: knowledge-base/C-125___EPIC_CREATION_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-125-epic-creation-runtime", "c-125-institutional-identity", "c-125-mission"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-126
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Legend Reputation Runtime"
+    path: knowledge-base/C-126___LEGEND_REPUTATION_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-126-legend-reputation-runtime", "c-126-institutional-identity", "c-126-mission"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-127
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Elite Excellence Runtime"
+    path: knowledge-base/C-127___ELITE_EXCELLENCE_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-127-elite-excellence-runtime", "c-127-institutional-identity", "c-127-mission"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-128
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Vip Premium Experience Runtime"
+    path: knowledge-base/C-128___VIP_PREMIUM_EXPERIENCE_RUNTIME.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-128-vip-premium-experience-runtime", "c-128-institutional-identity", "c-128-mission"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-129
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Insure Risk Protection Runtime"
+    path: knowledge-base/C-129___INSURE_RISK_PROTECTION_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-129-insure-risk-protection-runtime", "c-129-institutional-identity", "c-129-mission"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-130
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Titan Enterprise Os Runtime"
+    path: knowledge-base/C-130___TITAN_ENTERPRISE_OS_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-130-titan-enterprise-os-runtime", "c-130-institutional-identity", "c-130-mission"]
+    depends_on: [C-47]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
   - id: C-83
     type: document
     tier: tier-1-institutional-intelligence
@@ -1910,14 +2036,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 104
+# Total assets: 111
 #   tier-1-constitutional-runtime: 59
-#   tier-1-institutional-intelligence: 37
+#   tier-1-institutional-intelligence: 44
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
 #   current-state: 84
-#   future-vision: 9
-#   planned-state: 6
+#   future-vision: 15
+#   planned-state: 7
 #   speculation: 5

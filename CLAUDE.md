@@ -31,6 +31,7 @@ governance/         # Platform governance documents
 | C-119–C-121 | Economic Operating System Model (OS Model + Zone Charter + Knowledge Pipeline) |
 | C-122 | Analytics Constitutional Runtime Charter (Intelligence Runtime) |
 | C-123 | Pi Browser Session & Cookie Spec (Runtime Operational Law) |
+| C-124–C-130 | User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan) |
 
 ## Governance
 
@@ -53,7 +54,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.9.0 | Governance Charter v1.2
+Knowledge Base v3.10.0 | Governance Charter v1.2
 
 
 ---
@@ -167,3 +168,34 @@ root-caused from Vercel runtime logs). Everything in it is **Runtime Verified**.
   tec-app assert `none`.
 - Session cookies are established/rotated ONLY on plain 200 responses.
 - All 13 KB gates pass, 0 errors. Registry rebuilt: 104 assets, 100% coverage.
+
+## Session 17 Additions (v3.10.0) — C-124→C-130: User-Layer App Charters
+
+Seven `[Future Vision]` / `[Draft]` app charters integrated as **TIER 12**. They
+define the reputation/creation/protection/enterprise value chain above the app
+scaffolds already built (Vip/Elite/Insure/Epic/Legend repos + Titan). Gated
+(Phase 2/3) — vision, not current runtime.
+
+| Document | Path | Purpose |
+|----------|------|---------|
+| C-124 NBF Business Foundation Runtime | `knowledge-base/C-124___NBF_BUSINESS_FOUNDATION_RUNTIME.md` | Business Day-1: establish + verify a Pi business in 25 min; graduates INTO Titan |
+| C-125 Epic Creation Runtime | `knowledge-base/C-125___EPIC_CREATION_RUNTIME.md` | System of Construction — projects/communities; Epic→Zone→Legend pipeline |
+| C-126 Legend Reputation Runtime | `knowledge-base/C-126___LEGEND_REPUTATION_RUNTIME.md` | System of Evidence — records OUTCOMES not claims (read layer; Analytics computes) |
+| C-127 Elite Excellence Runtime | `knowledge-base/C-127___ELITE_EXCELLENCE_RUNTIME.md` | System of Recognition — criteria-based (BRONZE→PLATINUM); earned, never bought |
+| C-128 VIP Premium Experience Runtime | `knowledge-base/C-128___VIP_PREMIUM_EXPERIENCE_RUNTIME.md` | System of Privilege — VIP grants eligibility; owning apps enforce value (P5) |
+| C-129 Insure Risk Protection Runtime | `knowledge-base/C-129___INSURE_RISK_PROTECTION_RUNTIME.md` | System of Protection — escrow custody hard-gated to payment-service (P0, like FundX) |
+| C-130 Titan Enterprise OS Runtime | `knowledge-base/C-130___TITAN_ENTERPRISE_OS_RUNTIME.md` | Enterprise OS — B2B counterpart to Life; NBF graduation target; wallet = VIEW only |
+
+### v3.10.0 integration notes
+- **Renumbered** from the authored draft (C-122→C-127) to **C-124→C-130** — the
+  draft collided with the live **C-122 Analytics** and **C-123 Pi Browser Session
+  & Cookie Spec** (Runtime Verified law). Renumbered along the value chain.
+- **Header schema normalized**: `Verification: [Unverified]` → `[Assumed]`; VIP
+  Truth State → `[Planned State]` (Hub PRO/ENTERPRISE exists).
+- **Content hardening**: Insure escrow given a **Custody Hard-Gate** (payment-service
+  is the only π custodian — Invariant #8; 3 P0 gates like FundX C-113). Event names
+  versioned per C-70 (`payment.completed.v1`). VIP fee-authority note added (P5).
+  Domains dual-noted (`<app>.tecosystem.app` now → `<app>.pi` future).
+- `build-asset-registry.py` classifier extended (`124–130 → tier-1-institutional-intelligence`,
+  scope `app`, type `charter`). Registry rebuilt: **111 assets, 100% coverage**.
+- C-57 master index gained **TIER 12**. **All KB gates pass, 0 errors.**

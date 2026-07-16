@@ -77,6 +77,8 @@ def classify_tier(cid_num):
         return 'tier-1-institutional-intelligence'
     if n == 123:  # Pi Browser Session & Cookie Spec — Runtime Verified operational law
         return 'tier-1-constitutional-runtime'
+    if 124 <= n <= 130:  # App Charters (NBF/Epic/Legend/Elite/VIP/Insure/Titan) — Institutional Intelligence
+        return 'tier-1-institutional-intelligence'
     return 'tier-2-experimental'
 
 
@@ -87,6 +89,8 @@ def infer_authority_scope(tier, cid_num):
     if tier == 'tier-2-experimental':
         return 'experimental'
     if 100 <= cid_num <= 115:
+        return 'app'
+    if 124 <= cid_num <= 130:  # NBF/Epic/Legend/Elite/VIP/Insure/Titan app charters
         return 'app'
     if cid_num in (20, 21, 22, 23):
         return 'service'
@@ -272,6 +276,8 @@ def infer_type(cid_num, tier, role):
     if 'charter' in role_lower:
         return 'charter'
     if 100 <= cid_num <= 115:
+        return 'charter'
+    if 124 <= cid_num <= 130:  # app charters titled "... RUNTIME"
         return 'charter'
     if 'architecture' in role_lower:
         return 'architecture'

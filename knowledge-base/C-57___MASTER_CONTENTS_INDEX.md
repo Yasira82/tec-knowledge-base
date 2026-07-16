@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-123)
+## دليل سريع للـ Content (C-00 → C-130)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -230,6 +230,22 @@
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
 | **C-123** | Pi Browser Session & Cookie Spec | Pi Browser session & cookie law (Runtime Verified) — 3 cookie laws · none+secure+Partitioned LOCKED · 200-only establishment · server-verified login entry · server-side refresh · July 2026 incident ledger |
+
+---
+
+## TIER 12 — User-Layer App Charters (C-124→C-130)
+
+`[Future Vision]` / `[Draft]` app charters — the reputation/creation/protection/enterprise value chain. Gated (Phase 2/3); not current runtime.
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-124** | NBF Business Foundation Runtime | Business Day-1 — establish + verify a Pi business identity in 25 min; graduates INTO Titan (team>5 / rev>1kπ / …) |
+| **C-125** | Epic Creation Runtime | Epic Creation — System of Construction; create/launch/grow projects (startup·community·campaign·event); Epic→Zone→Legend pipeline |
+| **C-126** | Legend Reputation Runtime | System of Evidence — permanent verifiable reputation; records OUTCOMES not claims (read layer; Analytics computes scores) |
+| **C-127** | Elite Excellence Runtime | Elite Excellence — System of Recognition; criteria-based recognition (BRONZE→PLATINUM); earned via Legend evidence, never bought |
+| **C-128** | VIP Premium Experience Runtime | System of Privilege (cross-cutting) — premium experience layer; VIP grants eligibility, owning apps enforce value (P5) |
+| **C-129** | Insure Risk Protection Runtime | System of Protection — risk scoring + escrow + recovery; escrow custody hard-gated to payment-service (P0, like FundX) |
+| **C-130** | Titan Enterprise OS Runtime | Enterprise OS — B2B counterpart to Life; orchestrates org identity/team/ops; graduation target for NBF; wallet = VIEW only |
 ---
 
 ## Quick Lookup
@@ -334,6 +350,7 @@ C-100→C-115  App Institutional Charters
 C-116→C-118  Constitutional Automation (Authority + Registry + Dependency)
 C-119→C-122  Economic Operating System Model (OS Model + Zone + Analytics Runtime Charters + Knowledge Pipeline)
 C-123        Pi Browser Session & Cookie Spec (Runtime Verified operational law)
+C-124→C-130  User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80

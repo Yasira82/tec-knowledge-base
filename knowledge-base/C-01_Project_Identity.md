@@ -81,6 +81,29 @@ Subscriptions → Connections → Investments → Reputation
 
 ---
 
+## 4.1 EXTENDED APP ROSTER — User-Layer Charter Apps (C-124→C-130)
+
+> **Truth State:** `[Planned State]` / `[Future Vision]` — these are the charter-defined
+> user-layer apps. Pi App IDs here are **pending registration** (⏳) and are deliberately
+> kept OUT of §4 (Pi App Identity = only Portal-registered apps with a real App ID).
+> Do not treat a ⏳ row as Portal-ready.
+
+| App | Repo | Charter | Domain (planned) | Pi App ID | Status |
+|-----|------|---------|------------------|-----------|--------|
+| **NBF** | *(no repo yet)* | C-124 | `nbf.tecosystem.app` | ⏳ pending | Charter only — Business Foundation (Day-1) |
+| **Epic** | Tec-Epic | C-125 | `epic.tecosystem.app` | ⏳ pending | Template scaffold (V0) — Creation Runtime |
+| **Legend** | Tec-Legend | C-126 | `legend.tecosystem.app` | ⏳ pending | Template scaffold (V0) — Reputation Runtime |
+| **Elite** | Tec-Elite | C-127 | `elite.tecosystem.app` | ⏳ pending | Template scaffold (V0) — Excellence Runtime |
+| **VIP** | Tec-Vip | C-128 | `vip.tecosystem.app` | ⏳ pending | Template scaffold (V0) — Experience Runtime (V1 = Hub PRO/ENTERPRISE exists) |
+| **Insure** | Tec-Insure | C-129 | `insure.tecosystem.app` | ⏳ pending | Template scaffold (V0) — Risk Protection (escrow custody hard-gated) |
+| **Titan** | Tec-Titan | C-130 | `titan.tecosystem.app` | ⏳ pending | V0/V1 enterprise console built — Enterprise OS |
+
+> **Build gates:** all are Phase 2/3 (see each charter's Build Gate header). The repos
+> stay compliant scaffolds until their gate opens. NBF (C-124) needs a repo created before
+> it can be scaffolded. Titan (C-130) is the graduation target for NBF (team>5 / rev>1kπ / …).
+
+---
+
 ## 5. PUBLISHED PACKAGES
 
 | Package | Version | الدور | Source |
