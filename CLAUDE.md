@@ -31,7 +31,7 @@ governance/         # Platform governance documents
 | C-119–C-121 | Economic Operating System Model (OS Model + Zone Charter + Knowledge Pipeline) |
 | C-122 | Analytics Constitutional Runtime Charter (Intelligence Runtime) |
 | C-123 | Pi Browser Session & Cookie Spec (Runtime Operational Law) |
-| C-124–C-130 | User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan) |
+| C-124–C-131 | User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan · Brookfield) |
 
 ## Governance
 

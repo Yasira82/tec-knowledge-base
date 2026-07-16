@@ -17,6 +17,7 @@
 |---|---|---|---|
 | `{"error":"sso_not_configured"}` at hub `/hub` | `SSO_SECRET` missing on the app's Vercel (or ≠ Hub's) | Set `SSO_SECRET` **= Hub's exactly**, redeploy | C-13 |
 | Login/pay redirect → `.../hub` **404** | `NEXT_PUBLIC_HUB_URL` is a placeholder (e.g. `C_HUB_URL`) | Real `https://…` or unset; **redeploy** (NEXT_PUBLIC is build-time) | C-12 §11 rule 9 |
+| Login → `tecosystem.app/api/auth/sso?...` → **net::ERR_CONNECTION_CLOSED** | `NEXT_PUBLIC_HUB_URL` = the **apex** `https://tecosystem.app` (no `hub.`) — apex serves no Hub | Set `NEXT_PUBLIC_HUB_URL = https://hub.tecosystem.app`; **redeploy** | Elite login incident (Jul 2026) |
 | Standalone approve → **502**, Pi `payment_not_found`, Railway `Unknown payment source="app"` | `PI_API_KEY_<SLUG>` missing on payment-service **OR** create-route `APP_SOURCE` still `'app'` | Set `PI_API_KEY_<SLUG>` on Railway **and** verify `src/lib/app-source.ts` slug | C-12 §11 rule 10 |
 | Payment → `SDK_MISSING` / instant 404 in Pi Browser | Portal **Linked App = Testnet** on a Mainnet listing | Point Linked App to the **Mainnet** app | FundX/Estate lesson |
 

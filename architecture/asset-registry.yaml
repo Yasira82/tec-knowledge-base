@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-16T06:04:41.555536
+# Generated: 2026-07-16T18:39:02.630911
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 111
+# Total assets: 112
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -1651,6 +1651,24 @@ assets:
     last_verified: null
     next_review: "2026-12-01"
 
+  - id: C-131
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Brookfield Infrastructure Runtime"
+    path: knowledge-base/C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: app
+    owner: yasser
+    authoritative_for: ["c-131-brookfield-infrastructure-runtime", "c-131-institutional-identity", "c-131-mission"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
   - id: C-83
     type: document
     tier: tier-1-institutional-intelligence
@@ -2036,14 +2054,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 111
+# Total assets: 112
 #   tier-1-constitutional-runtime: 59
-#   tier-1-institutional-intelligence: 44
+#   tier-1-institutional-intelligence: 45
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
 #   current-state: 84
-#   future-vision: 15
+#   future-vision: 16
 #   planned-state: 7
 #   speculation: 5
