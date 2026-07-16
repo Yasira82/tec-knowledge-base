@@ -1,0 +1,288 @@
+# TEC App Fleet Registry — single source of truth for "what app is at what stage"
+# ---------------------------------------------------------------------------
+# Authority: C-01 (Project Identity, canonical for Portal identity §4) + each
+#            app's Institutional Charter (see `charter`).
+# Truth State: [Current State] for status/hub_enabled; [Planned State]/[Future
+#            Vision] for apps whose pi_app_id is `pending`.
+#
+# WHY THIS FILE EXISTS: every session was re-deriving domain / APP_SOURCE slug /
+# App-ID / Hub-enablement / charter number per app from scattered CLAUDE.md files.
+# This is the one place. Update it whenever an app changes stage.
+#
+# status legend:
+#   live-verified          deployed + a real Pi payment verified in production
+#   registered-not-deployed Pi App ID registered, app not yet deployed
+#   scaffold-v1            customized scaffold + V0/V1 read-only slice; App ID pending
+#   template-raw           raw tec-template-base clone; charter defined; not customized
+#   charter-only           charter written; no repo yet
+#
+# hub_enabled = present in Hub /api/auth/sso ALLOWED_TARGETS (SSO login works).
+# payment_mode: dual = ADR-007 Mode1(Hub)+Mode2(standalone); none = no buy flow.
+# ---------------------------------------------------------------------------
+
+meta:
+  version: 1
+  last_updated: "2026-07-16"
+  canonical_identity: knowledge-base/C-01_Project_Identity.md   # §4 = Portal-registered only
+  gate_note: >
+    pi_app_id: pending means NOT Portal-ready — do not add to C-01 §4 until a real
+    <slug>-<16hex> App ID exists (check-portal-readiness enforces §4).
+
+# ── Core platform (live) ────────────────────────────────────────────────────
+apps:
+  - app: Hub
+    repo: Tec-App
+    domain: hub.tecosystem.app
+    pi_app_id: tec-app-923b947851f9dfe1
+    app_source: hub
+    charter: C-21
+    status: live-verified
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Ecommerce
+    repo: Tec-Ecommerce
+    domain: ecommerce.tecosystem.app
+    pi_app_id: ecommerce-app-71ca4d3e462eaf54
+    app_source: ecommerce
+    charter: C-22
+    status: live-verified
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Commerce
+    repo: Tec-Commerce
+    domain: commerce.tecosystem.app
+    pi_app_id: commerce-app-68aa99081fc1897a
+    app_source: commerce
+    charter: C-22
+    status: live-verified
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Assets
+    repo: Tec-Assets
+    domain: assets.tecosystem.app
+    pi_app_id: assets-app-af2fb490e7b03db7
+    app_source: assets
+    charter: C-22
+    status: live-verified
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Analytics
+    repo: Tec-Analytics-
+    domain: analytics.tecosystem.app
+    pi_app_id: analytics-822d9810de66bc84
+    app_source: analytics
+    charter: C-105
+    status: live-verified
+    hub_enabled: true
+    payment_mode: dual   # Merchant Pro (subscription via Hub)
+
+  # ── Registered, not yet deployed ──────────────────────────────────────────
+  - app: Life
+    repo: Tec-Life
+    domain: life.tecosystem.app
+    pi_app_id: life-app-c468e9eb5bf115fa
+    app_source: life
+    charter: C-106
+    status: registered-not-deployed
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Connection
+    repo: Tec-Connection
+    domain: connection.tecosystem.app
+    pi_app_id: connection-aa9fba4f11664096
+    app_source: connection
+    charter: C-107
+    status: registered-not-deployed
+    hub_enabled: true
+    payment_mode: dual
+
+  # ── Customized scaffold + V0/V1 slice; App ID pending ─────────────────────
+  - app: Zone
+    repo: Tec-Zone
+    domain: zone.tecosystem.app
+    pi_app_id: pending
+    app_source: zone
+    charter: C-120
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Nexus
+    repo: Tec-Nexus
+    domain: nexus.tecosystem.app
+    pi_app_id: pending
+    app_source: nexus
+    charter: C-109
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: FundX
+    repo: Tec-Fundx
+    domain: fundx.tecosystem.app
+    pi_app_id: pending
+    app_source: fundx
+    charter: C-113
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual   # pools hard-gated (legal + KYC + SYSTEM)
+
+  - app: Estate
+    repo: Tec-Estate
+    domain: estate.tecosystem.app
+    pi_app_id: pending
+    app_source: estate
+    charter: C-114
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual   # services only (never full property value)
+
+  - app: Explorer
+    repo: Tec-Explorer
+    domain: explorer.tecosystem.app
+    pi_app_id: pending
+    app_source: explorer
+    charter: C-108
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: System
+    repo: Tec-system
+    domain: system.tecosystem.app
+    pi_app_id: pending
+    app_source: system
+    charter: C-110
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual   # SystemSupporter 1π voluntary only
+
+  - app: Alert
+    repo: Tec-Alert
+    domain: alert.tecosystem.app
+    pi_app_id: pending
+    app_source: alert
+    charter: C-111
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: NX
+    repo: Tec-Nx
+    domain: nx.tecosystem.app
+    pi_app_id: pending
+    app_source: nx
+    charter: C-112   # repurposed → Opportunity Exchange (ADR-010)
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: DX
+    repo: Tec-Dx
+    domain: dx.tecosystem.app
+    pi_app_id: pending
+    app_source: dx
+    charter: C-115
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual
+
+  - app: Titan
+    repo: Tec-Titan
+    domain: titan.tecosystem.app
+    pi_app_id: pending
+    app_source: titan
+    charter: C-130
+    status: scaffold-v1
+    hub_enabled: true
+    payment_mode: dual   # Titan Enterprise
+
+  # ── Raw template clones; charter defined; not customized ──────────────────
+  - app: VIP
+    repo: Tec-Vip
+    domain: vip.tecosystem.app
+    pi_app_id: pending
+    app_source: pending   # still template default 'app' — set before build
+    charter: C-128
+    status: template-raw
+    hub_enabled: false
+    payment_mode: dual
+
+  - app: Elite
+    repo: Tec-Elite
+    domain: elite.tecosystem.app
+    pi_app_id: pending
+    app_source: pending
+    charter: C-127
+    status: template-raw
+    hub_enabled: false
+    payment_mode: dual
+
+  - app: Insure
+    repo: Tec-Insure
+    domain: insure.tecosystem.app
+    pi_app_id: pending
+    app_source: pending
+    charter: C-129
+    status: template-raw
+    hub_enabled: false
+    payment_mode: dual   # escrow custody hard-gated (payment-service only)
+
+  - app: Epic
+    repo: Tec-Epic
+    domain: epic.tecosystem.app
+    pi_app_id: pending
+    app_source: pending
+    charter: C-125
+    status: template-raw
+    hub_enabled: false
+    payment_mode: dual
+
+  - app: Legend
+    repo: Tec-Legend
+    domain: legend.tecosystem.app
+    pi_app_id: pending
+    app_source: pending
+    charter: C-126
+    status: template-raw
+    hub_enabled: false
+    payment_mode: dual
+
+  # ── Charter written; no repo yet ──────────────────────────────────────────
+  - app: NBF
+    repo: null
+    domain: nbf.tecosystem.app
+    pi_app_id: pending
+    app_source: nbf
+    charter: C-124
+    status: charter-only
+    hub_enabled: false
+    payment_mode: dual
+
+# ── Shared packages / infra (not user-facing apps) ──────────────────────────
+packages:
+  - name: tec-core-backend
+    repo: Tec-core-backend
+    role: all backend microservices (Gateway :4000 + 11 services)
+    deploy: Railway
+  - name: "@yasser172/tec-sdk"
+    repo: TEC-SDK
+    role: server BFF SDK
+    deploy: npm
+  - name: "@yasser172/tec-auth"
+    repo: tec-auth
+    role: SSO/cookies auth package
+    deploy: npm
+  - name: "@yasser172/tec-ui"
+    repo: Tec-ui
+    role: shared design system
+    deploy: npm
+  - name: tec-template-base
+    repo: tec-template-base
+    role: golden starter template for new apps
+    deploy: "—"

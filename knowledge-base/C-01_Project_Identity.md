@@ -36,7 +36,7 @@ Subscriptions → Connections → Investments → Reputation
 
 ---
 
-## 3. THE 9 REPOS (Current)
+## 3. FOUNDING REPOS (core platform + packages)
 
 | Repo | Domain | Stack | Deploy |
 |---|---|---|---|
@@ -49,6 +49,42 @@ Subscriptions → Connections → Investments → Reputation
 | tec-auth | Auth Package | TypeScript | npm @yasser172/tec-auth |
 | Tec-ui | UI Package | TypeScript | npm @yasser172/tec-ui |
 | tec-template-base | Template | Next.js 15 | — |
+
+---
+
+## 3.1 FULL APP FLEET (single source of truth)
+
+> **Machine-readable:** `architecture/app-fleet.yaml` — update it whenever an app
+> changes stage. This table is a human view of that file. **Portal identity (§4) is
+> canonical for registered App IDs**; `pending` here = NOT yet Portal-ready.
+
+| App | Repo | Domain | App ID | slug | Charter | Status | Hub SSO |
+|-----|------|--------|--------|------|---------|--------|:------:|
+| Hub | Tec-App | hub.tecosystem.app | ✅ | hub | C-21 | live-verified | ✅ |
+| Ecommerce | Tec-Ecommerce | ecommerce.tecosystem.app | ✅ | ecommerce | C-22 | live-verified | ✅ |
+| Commerce | Tec-Commerce | commerce.tecosystem.app | ✅ | commerce | C-22 | live-verified | ✅ |
+| Assets | Tec-Assets | assets.tecosystem.app | ✅ | assets | C-22 | live-verified | ✅ |
+| Analytics | Tec-Analytics- | analytics.tecosystem.app | ✅ | analytics | C-105 | live-verified | ✅ |
+| Life | Tec-Life | life.tecosystem.app | ✅ | life | C-106 | registered-not-deployed | ✅ |
+| Connection | Tec-Connection | connection.tecosystem.app | ✅ | connection | C-107 | registered-not-deployed | ✅ |
+| Zone | Tec-Zone | zone.tecosystem.app | ⏳ | zone | C-120 | scaffold-v1 | ✅ |
+| Nexus | Tec-Nexus | nexus.tecosystem.app | ⏳ | nexus | C-109 | scaffold-v1 | ✅ |
+| FundX | Tec-Fundx | fundx.tecosystem.app | ⏳ | fundx | C-113 | scaffold-v1 | ✅ |
+| Estate | Tec-Estate | estate.tecosystem.app | ⏳ | estate | C-114 | scaffold-v1 | ✅ |
+| Explorer | Tec-Explorer | explorer.tecosystem.app | ⏳ | explorer | C-108 | scaffold-v1 | ✅ |
+| System | Tec-system | system.tecosystem.app | ⏳ | system | C-110 | scaffold-v1 | ✅ |
+| Alert | Tec-Alert | alert.tecosystem.app | ⏳ | alert | C-111 | scaffold-v1 | ✅ |
+| NX | Tec-Nx | nx.tecosystem.app | ⏳ | nx | C-112 | scaffold-v1 | ✅ |
+| DX | Tec-Dx | dx.tecosystem.app | ⏳ | dx | C-115 | scaffold-v1 | ✅ |
+| Titan | Tec-Titan | titan.tecosystem.app | ⏳ | titan | C-130 | scaffold-v1 | ✅ |
+| VIP | Tec-Vip | vip.tecosystem.app | ⏳ | ⏳ | C-128 | template-raw | ❌ |
+| Elite | Tec-Elite | elite.tecosystem.app | ⏳ | ⏳ | C-127 | template-raw | ❌ |
+| Insure | Tec-Insure | insure.tecosystem.app | ⏳ | ⏳ | C-129 | template-raw | ❌ |
+| Epic | Tec-Epic | epic.tecosystem.app | ⏳ | ⏳ | C-125 | template-raw | ❌ |
+| Legend | Tec-Legend | legend.tecosystem.app | ⏳ | ⏳ | C-126 | template-raw | ❌ |
+| NBF | *(no repo)* | nbf.tecosystem.app | ⏳ | nbf | C-124 | charter-only | ❌ |
+
+> **Go-live per app** → `audits/PER_APP_LAUNCH_ENV_MATRIX.md` (env matrix + checklist).
 
 ---
 
