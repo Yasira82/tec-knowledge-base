@@ -318,8 +318,8 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
     CURATED = {
         0: ['platform-constitution', 'governing-principles', 'authority-hierarchy'],
         47: ['kernel-spec', 'architecture-binding', 'forbidden-behaviors'],
-        64: ['architecture-decision-records', 'adr-001', 'adr-007'],
-        67: ['source-of-truth-matrix', 'authority-hierarchy', 'conflict-resolution'],
+        64: ['architecture-decision-records', 'adr-index', 'adr-lifecycle'],
+        67: ['source-of-truth-matrix', 'architecture-authority-map', 'constitutional-hierarchy'],
         2: ['current-state', 'session-18', 'all-24-apps'],
         57: ['master-contents-index', 'navigation', 'tier-'],
     }

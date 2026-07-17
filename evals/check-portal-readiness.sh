@@ -79,7 +79,7 @@ for entry in FLEET_APPS:
         errors.append(f"[FLEET] {entry['app']}: invalid live status {entry['status']!r}")
 
 # Pi App IDs have both long Portal-issued and short IDs (for example zone-xwc6).
-APP_ID_RE = re.compile(r"`([a-z0-9]+-[a-z0-9]+)`")
+APP_ID_RE = re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`")
 PLACEHOLDER_RE = re.compile(r"confirm in pi portal|TBD|TODO|xxxx|<.*?>|placeholder", re.IGNORECASE)
 
 def identity_section(text, anchors):
