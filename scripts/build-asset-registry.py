@@ -308,7 +308,7 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
       2. For other docs, extract keywords from the file's H2 headings + role.
          Filter out generic headings (Purpose, Scope, etc.) to prevent
          R-GOV-002 collisions across docs.
-      3. Only include keywords that actually appear in the first 5000 chars.
+      3. Only include keywords that actually appear in the first 100 lines.
       4. If no verified claims found, fall back to role-based claim (better
          than empty for R-GOV-006).
       5. For tier-2-experimental, return [] (per R-GOV-007).
@@ -320,16 +320,16 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
     CURATED = {
         0: ['platform-constitution', 'governing-principles', 'authority-hierarchy'],
         47: ['kernel-spec', 'architecture-binding', 'forbidden-behaviors'],
-        64: ['architecture-decisions', 'adr-registry', 'adr-system'],
-        67: ['source-of-truth', 'conflict-resolution', 'authority-matrix'],
-        2: ['current-state', 'platform-score', 'session-log'],
-        57: ['master-index', 'contents-index', 'navigation-gateway'],
+        64: ['architecture-decision-records', 'adr-index', 'adr-lifecycle'],
+        67: ['source-of-truth-matrix', 'architecture-authority-map', 'constitutional-hierarchy'],
+        2: ['current-state', 'session-18', 'all-24-apps'],
+        57: ['master-contents-index', 'navigation', 'tier-'],
     }
     if cid_num in CURATED:
         return CURATED[cid_num]
 
     if not file_text:
-        role_kebab = re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-')
+        role_kebab = re.sub(r'-+', '-', re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-'))
         return [role_kebab] if role_kebab else []
 
     # Extract candidate claims from H2 headings + role
@@ -357,12 +357,12 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
             seen.add(claim)
 
     # Add role as a candidate (highest priority)
-    role_kebab = re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-')
+    role_kebab = re.sub(r'-+', '-', re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-'))
     if role_kebab and role_kebab not in GENERIC_HEADINGS and role_kebab not in seen:
         candidates.insert(0, role_kebab)
 
     # Filter: only keep claims whose normalized form appears in file content
-    file_lower = file_text[:5000].lower()
+    file_lower = '\n'.join(file_text.splitlines()[:100]).lower()
     verified_claims = []
     for claim in candidates:
         claim_normalized = claim.lower().replace('-', ' ')
@@ -378,7 +378,7 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
     for claim in verified_claims:
         # If claim doesn't already start with c-NN, prefix it
         if not claim.startswith(f'c-{cid_num:02d}-') and not claim.startswith(f'c-{cid_num:0d}-'):
-            prefixed_claims.append(f'{cid_lower}-{claim}')
+            prefixed_claims.append(f'{cid_lower}-{re.sub(r"-+", "-", claim)}')
         else:
             prefixed_claims.append(claim)
 
