@@ -179,7 +179,7 @@ tec-api-gateway (4000)     tec-notification-service (4008)
 tec-auth-service (4001)    tec-realtime-service (4009)
 tec-payment-service (4002) tec-storage-service (4010)
 tec-commerce-service (4003)
-tec-identity-service (4004)  ← hosts the Life / Connection / Zone modules
+tec-identity-service (4004)  ← hosts Life / Connection / Zone / Explorer / Legend / NBF modules
 tec-kyc-service (4005)
 tec-asset-service (4006)
 tec-analytics-service (4007)
@@ -206,11 +206,18 @@ tec-analytics-service (4007)
 | **Life** | identity-service (`identity/life/*`) | ✅ live | when personal-data read load grows |
 | **Connection** | identity-service (`identity/connection/*`) | ✅ live | graph/messaging → may sit on realtime-service later |
 | **Zone** | identity-service (`identity/zone/*`) | ✅ live | when it becomes an external standard (`zone.pi`) |
-| **Explorer** | search module (host TBD) | planned | **YES — first candidate** → `search-service` (T1 scaling) |
+| **Explorer** | identity-service (`identity/explorer/*`) | ✅ live | **YES — first candidate** → `search-service` (T1 scaling); built with the clean seam |
+| **Legend** | identity-service (`identity/legend/*`) | ✅ live | read layer (append-only outcomes); scores served from Analytics |
+| **NBF** | identity-service (`identity/nbf/*`) | ✅ live | business identity; graduates a business INTO Titan (C-130) |
 | **Estate** | estate module (host: commerce/identity) | planned | when real inventory/leases appear |
 | **FundX** | fundx state module | planned | custody stays in payment-service (R-4) forever |
 | **Insure** | insure state module | planned | custody stays in payment-service (R-4) forever |
 | **NX** | opportunity module | planned | low — light index over commerce/connection |
+
+> **Live modules in `tec-identity-service` (7):** identity · life · connection · zone ·
+> explorer · legend · nbf. Each owns namespaced tables (`<domain>_*`) with no
+> cross-module joins (R-2) — extraction stays mechanical. This is the Modules-First
+> law proven in production, not on paper.
 
 ### 7.4 Bucket C — Frontend only (consumes existing services via BFF)
 
@@ -224,13 +231,13 @@ tec-analytics-service (4007)
 | VIP | auth (subscription — Hub PRO) + life + commerce |
 | Elite | analytics + legend |
 | Epic | life + analytics |
-| Legend | analytics + zone + life + connection (read layer) |
-| NBF | fundx + commerce |
 | Brookfield | estate + asset |
 
-> A Bucket-C app **may** grow a Bucket-B module later (e.g. Legend a read-model,
-> Epic a projects table). That promotion follows R-1/R-5 like any other — it is not a
-> reason to spin a new service.
+> A Bucket-C app **may** grow a Bucket-B module later — this already happened: Legend
+> (read-model) and NBF (business identity) started frontend-only and were promoted to
+> live `identity/*` modules (July 2026) following R-1/R-5, with no new service. Epic
+> (a projects table) is a likely next promotion. Promotion is never a reason to spin a
+> new service.
 
 ---
 
