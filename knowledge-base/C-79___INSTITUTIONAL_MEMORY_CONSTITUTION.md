@@ -3,7 +3,7 @@
 > **Version:** v1.0
 > **Truth State:** `[Speculation]`
 > **Governance State:** `[Draft]`
-> **Verification State:** `[Unverified]`
+> **Verification:** `[Assumed]`
 > **Authority Scope:** `[Platform]`
 > **Decision Status:** `[Recommended]`
 > **Commitment Level:** `[Exploratory]`
