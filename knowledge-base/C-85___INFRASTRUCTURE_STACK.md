@@ -8,7 +8,7 @@
 > Warning: Post-Portal content — no implementation before Gate A
 > Truth State: [Future Vision] — Layer 0 only is [Current State]
 > Governance State: [Draft]
-> Verification State: [Unverified]
+> Verification State: [Assumed]
 > Authority Scope: [Platform]
 
 ---
