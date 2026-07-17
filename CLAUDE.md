@@ -32,6 +32,7 @@ governance/         # Platform governance documents
 | C-122 | Analytics Constitutional Runtime Charter (Intelligence Runtime) |
 | C-123 | Pi Browser Session & Cookie Spec (Runtime Operational Law) |
 | C-124–C-131 | User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan · Brookfield) |
+| C-132 | Service Extraction & Modular Architecture Policy (ADR-011 detail — Modules-First) |
 
 ## Governance
 
@@ -54,7 +55,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.10.0 | Governance Charter v1.2
+Knowledge Base v3.11.0 | Governance Charter v1.2
 
 
 ---
@@ -199,3 +200,20 @@ scaffolds already built (Vip/Elite/Insure/Epic/Legend repos + Titan). Gated
 - `build-asset-registry.py` classifier extended (`124–130 → tier-1-institutional-intelligence`,
   scope `app`, type `charter`). Registry rebuilt: **111 assets, 100% coverage**.
 - C-57 master index gained **TIER 12**. **All KB gates pass, 0 errors.**
+
+## Session 18 Additions (v3.11.0) — C-132: Modules-First Architecture Policy (ADR-011)
+
+Codifies the platform's service-vs-module deployment law so no future session
+regresses to "24 apps = 24 microservices."
+
+| Document | Path | Purpose |
+|----------|------|---------|
+| C-132 Service Extraction & Modular Architecture Policy | `knowledge-base/C-132___SERVICE_EXTRACTION_MODULAR_ARCHITECTURE_POLICY.md` | ADR-011 full detail — **Modules-First** (App→Module→Service); new service only on a documented **T1–T4** production trigger; **Design-for-Extraction** (Explorer→search-service); **Financial Hard-Gate** (payment-service is the only Pi custodian, Invariant #8); Apps→Modules→Services mapping for all 24 apps; target service count now = the 11 live services. |
+| ADR-011 (C-64) | `knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md` | Decision record + pointer to C-132 (ADR-007→C-76 pattern). |
+
+### v3.11.0 notes
+- `build-asset-registry.py` classifier extended (`132 → tier-1-constitutional-runtime`,
+  type `architecture`). Registry rebuilt: **113 assets, 100% coverage**.
+- C-57 master index gained **TIER 13** (Platform Architecture Policy). Range → C-132.
+- **All 13 KB gates pass, 0 errors.** Proven in production: Life/Connection/Zone are
+  modules inside `tec-identity-service` — the reference pattern C-132 formalizes.
