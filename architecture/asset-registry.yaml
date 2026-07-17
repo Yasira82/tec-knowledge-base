@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-16T18:39:02.630911
+# Generated: 2026-07-17T03:43:24.879324
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -70,7 +70,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: constitutional
     owner: yasser
-    authoritative_for: ["architecture-decisions", "adr-registry", "adr-system"]
+    authoritative_for: ["architecture-decision-records", "adr-001", "adr-007"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -88,7 +88,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: constitutional
     owner: yasser
-    authoritative_for: ["source-of-truth", "conflict-resolution", "authority-matrix"]
+    authoritative_for: ["source-of-truth-matrix", "authority-hierarchy", "conflict-resolution"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -128,7 +128,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["current-state", "platform-score", "session-log"]
+    authoritative_for: ["current-state", "session-18", "all-24-apps"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -758,7 +758,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["master-index", "contents-index", "navigation-gateway"]
+    authoritative_for: ["master-contents-index", "navigation", "tier-"]
     depends_on: [C-47, C-64, C-67]
     supersedes: []
     superseded_by: null
@@ -1064,7 +1064,7 @@ assets:
       verification_state: code-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-76-pi-payment-ownership-authority", "c-76-why-this-content", "c-76-implementation-reference"]
+    authoritative_for: ["c-76-pi-payment-ownership-authority", "c-76-why-this-content"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -1100,7 +1100,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-78-incident-summary", "c-78-timeline", "c-78-root-cause"]
+    authoritative_for: ["c-78-platform-operations--reliability-governance"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -1154,7 +1154,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-82-final-statement"]
+    authoritative_for: ["c-82-platform-maturity--evolution-governance"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -1698,7 +1698,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-84-economic-runtime-constitution", "c-84-the-runtime-may", "c-84-the-runtime-must"]
+    authoritative_for: ["c-84-economic-runtime-constitution"]
     depends_on: [C-70]
     supersedes: []
     superseded_by: null
@@ -1752,7 +1752,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-87-constitutional-rules", "c-87-authority-in-decision"]
+    authoritative_for: ["c-87-constitutional-rules"]
     depends_on: [C-47]
     supersedes: []
     superseded_by: null
@@ -1770,7 +1770,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-88-pi-economic-flow-constitution", "c-88-actor-invariants", "c-88-constitutional-rule"]
+    authoritative_for: ["c-88-pi-economic-flow-constitution", "c-88-actor-invariants"]
     depends_on: [C-00, C-47, C-76]
     supersedes: []
     superseded_by: null
@@ -1824,7 +1824,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-91-engineering-roadmap-to-scale", "c-91-critical-path", "c-91-priority-order"]
+    authoritative_for: ["c-91-engineering-roadmap-to-scale", "c-91-critical-path"]
     depends_on: [C-00, C-02]
     supersedes: []
     superseded_by: null
@@ -1914,7 +1914,7 @@ assets:
       verification_state: code-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-96-constitutional-question", "c-96-why-this-document", "c-96-core-constitutional-principles"]
+    authoritative_for: ["c-96-constitutional-question", "c-96-why-this-document", "c-96-timeout-contract"]
     depends_on: [C-00]
     supersedes: []
     superseded_by: null

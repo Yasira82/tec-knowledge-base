@@ -4,11 +4,11 @@
 > "24 Apps. One Identity. One Wallet. One World."
 
 [![Platform](https://img.shields.io/badge/Platform-Pi%20Network%20MAINNET-6d28d9?style=flat-square)](https://minepi.com)
-[![Status](https://img.shields.io/badge/Status-Phase%200%20→%20Audit-f59e0b?style=flat-square)](#)
-[![Apps](https://img.shields.io/badge/Live%20Apps-4-22c55e?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/Status-24%20Apps%20Mainnet-22c55e?style=flat-square)](#)
+[![Apps](https://img.shields.io/badge/Live%20Apps-24-22c55e?style=flat-square)](#)
 [![Services](https://img.shields.io/badge/Railway%20Services-12-3b82f6?style=flat-square)](#)
-[![KB](https://img.shields.io/badge/KB%20Contents-C--00%20→%20C--115-8b5cf6?style=flat-square)](#)
-[![Version](https://img.shields.io/badge/KB%20Version-v3.6.2-10b981?style=flat-square)](#)
+[![KB](https://img.shields.io/badge/KB%20Contents-112-8b5cf6?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/KB%20Version-v3.10.0-10b981?style=flat-square)](#)
 
 ---
 
@@ -38,13 +38,13 @@ Settlement → Record → Reasoning → Access → Construction → Production �
 ```
 tec-knowledge-base/
 ├── README.md                          ← You are here
-├── CLAUDE.md                          ← AI assistant navigation index (v3.2.0)
+├── CLAUDE.md                          ← AI assistant navigation index (v3.10.0)
 │
-├── knowledge-base/                    ← 93 platform knowledge contents (C-00 → C-115)
+├── knowledge-base/                    ← 112 platform knowledge contents (C-00 → C-131)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
 │   ├── C-01 → C-99                   ← Architecture, Engineering, Governance, Institutional Operating Loop
-│   ├── C-100 → C-115                 ← App Institutional Charters
-│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 93 contents
+│   ├── C-100 → C-131                 ← App and user-layer institutional charters
+│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 112 contents
 │
 ├── skills/                            ← 16 Claude Code skills
 │   ├── platform/                      ← payment-expert, platform-architect, security-reviewer…
@@ -73,7 +73,7 @@ tec-knowledge-base/
 | [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Live platform state — score, violations, checklist |
 | [C-77 Strategic Analysis](knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md) | Risk register, execution roadmap |
 | [C-78 Operations](knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md) | SLOs, incidents, reliability |
-| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 93 contents indexed with quick lookup |
+| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 112 contents indexed with quick lookup |
 | [C-93 Institutional Verification Constitution](knowledge-base/C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md) | How reality becomes verified institutional state (Tier-1) |
 | [C-94 Governed Capability Constitution](knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md) | How knowledge becomes executable capability (Tier-1) |
 | [C-95 Institutional Knowledge Constitution](knowledge-base/C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md) | How institutional state becomes knowledge (Tier-1) |
@@ -140,14 +140,13 @@ tec-knowledge-base/
 
 ## Platform at a Glance
 
-### Live Now (Phase 0 → Audit)
+### Live on Mainnet
 
-| App | Role | Domain | Charter |
-|-----|------|--------|---------|
-| **Hub** | Control Plane / Conductor | hub.tecosystem.app | [C-100](knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md) |
-| **Commerce** | Merchant Dashboard (Reference Impl) | tec-commerce-app.vercel.app | [C-101](knowledge-base/C-101___COMMERCE_INSTITUTIONAL_CHARTER.md) |
-| **Assets** | Digital Ownership / NFTs | assets.tecosystem.app | [C-102](knowledge-base/C-102___ASSETS_INSTITUTIONAL_CHARTER.md) |
-| **Ecommerce** | Consumer Marketplace | ecommerce.tecosystem.app | [C-103](knowledge-base/C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md) |
+All **24 apps** are registered, deployed, and process real Pi on their
+Pro/subscription surfaces. The canonical app IDs are in [C-01 §4](knowledge-base/C-01_Project_Identity.md);
+the machine-readable fleet source is [`architecture/app-fleet.yaml`](architecture/app-fleet.yaml).
+FundX pools, Insure escrow, and Brookfield investment/REIT mechanics remain read-only
+and hard-gated; a live subscription is not custody readiness.
 
 ### Backend Services (Railway — 12 Active)
 
@@ -162,7 +161,7 @@ KYC     :5008  │  Asset   :5009  │  Realtime :5010  │  Analytics:5011
 ### Release Chain
 
 ```
-tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [4 apps simultaneously]
+tec-core-backend  →  tec-sdk  →  tec-auth  →  tec-ui  →  [fleet apps]
     (deploy)           (npm)       (npm)        (npm)        (Vercel)
 ```
 
@@ -205,7 +204,7 @@ The Asset Registry is now **auto-generated** from file headers and **semanticall
 
 | Asset | Path | Role |
 |-------|------|------|
-| **Asset Registry** (auto-generated) | `architecture/asset-registry.yaml` | 96 C-docs + tier + truth_state + depends_on — DO NOT EDIT MANUALLY |
+| **Asset Registry** (auto-generated) | `architecture/asset-registry.yaml` | 112 C-docs + tier + truth_state + depends_on — DO NOT EDIT MANUALLY |
 | **Integrity Rules** | `architecture/registry-integrity-rules.yaml` | 28 rules across 7 categories (schema, semantic, structural, governance, lifecycle, audit, coverage) |
 | **Registry Integrity Engine** | `evals/check-registry-integrity.sh` | CI gate: validates registry against rules + against actual files |
 
@@ -323,7 +322,7 @@ No Charter Without Engineering Substance
 ## Phase Status
 
 ```
-Phase 0 — Pre-Mainnet (v3.6.0):
+Session 18 — Mainnet Governance Baseline (v3.10.0):
   ✅ NEW-B: INTERNAL_SECRET set on Railway — all 4 services
   ✅ tec-ui v1.2.1 published — PaymentModal + createU2APayment + 80% tests
   ✅ All apps coverage ≥ 60%
@@ -334,25 +333,20 @@ Phase 0 — Pre-Mainnet (v3.6.0):
   ✅ AHV Engine v1 + CDG manifest + Impact Analysis v1             ← v3.5.0
   ✅ C-116 Authority Automation Constitution                       ← v3.5.0
   ✅ LANGUAGE_POLICY.md + 90-Day Strategic Roadmap                 ← v3.5.0
-  ✅ Asset Registry auto-generated (96/96 coverage)                ← v3.6.0
+  ✅ Asset Registry auto-generated (112/112 coverage)             ← v3.10.0
   ✅ R-SEMANTIC-001 catches institutional_role drift               ← v3.6.0
   ✅ C-117 Registry Integrity Constitution                         ← v3.6.0
   ✅ VAM restored + check-vam-compliance.sh (BLOCKING)            ← v3.6.1
   ✅ C-118 Dependency Propagation Constitution                    ← v3.6.2
   ✅ DAG-guaranteed depends_on (0 cycles + 0 inversions)           ← v3.6.2
-  ✅ All 10 CI gates passing (0 errors)                            ← v3.6.2
+  ✅ All 13 CI gates passing (0 errors)                            ← v3.10.0
   ✅ 28 rules across 7 categories (schema/semantic/structural/...) ← v3.6.0
-  ⬜ Resolve 30 AHV/Registry violations (Phase 2 — Weeks 3–5)
-  ⬜ External audit ≥ 9.5 (pending — PRs #27 + #24 first)
-  ⬜ Pi Developer Portal submission (Week 4)
-
-Phase 1 — After Mainnet:
-  ⬜ Life MVP
-  ⬜ Analytics UI
-  ⬜ Connection MVP
+  ✅ 24 apps registered and deployed on Mainnet; real-Pi subscription surfaces verified
+  ⬜ External audit ≥ 9.5 and independently attributable production evidence
+  ⬜ Deepen product capability one app at a time, preserving financial hard-gates
 ```
 
 ---
 
-*Knowledge Base v3.6.2 — June 2026 (Session 12.2)*
+*Knowledge Base v3.10.0 — July 2026 (Session 18)*
 *Authority: Yasser (CEO/Founder) | GitHub: Yasira82 | npm: @yasser172*

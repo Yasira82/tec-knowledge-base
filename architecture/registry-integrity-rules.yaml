@@ -101,10 +101,12 @@ semantic_rules:
     name: "authoritative_for claims match file content"
     description: |
       Every value in authoritative_for SHOULD appear (or have a synonym appear)
-      in the first 100 lines of the actual file. This prevents claiming
+      in the first 100 lines of the actual file. Generated claims may carry an
+      optional `c-NN-` namespace prefix for registry uniqueness; validation
+      strips that prefix before matching the document text. This prevents claiming
       authority over topics the document doesn't actually cover.
     check: |
-      for each claim in authoritative_for:
+      for each claim in authoritative_for after stripping optional c-NN- prefix:
         claim appears in file (case-insensitive substring match on first 100 lines)
     minimum_match_ratio: 0.5
 

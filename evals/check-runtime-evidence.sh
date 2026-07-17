@@ -9,13 +9,14 @@
 # Drift Detection asserts code matches the documented claims; Runtime Evidence
 # binds live behavior back to the same claims (C-96 Runtime Evidence obligation).
 #
-# Checks (binding_rules RE-1..RE-6):
+# Checks (binding_rules RE-1..RE-7):
 #   RE-1  all required_fields_all present
 #   RE-2  kind ∈ {metric, health_snapshot, incident, slo_breach}
 #   RE-3  kind-specific required fields present
 #   RE-4  source non-empty (attributable — C-96 Incident Evidence Principle)
 #   RE-5  every binds_to id resolves to an existing C-doc
 #   RE-6  evidence_id unique across runtime-evidence/
+#   RE-7  coverage requirements bind broad current-state claims to evidence
 #
 # If there are no records yet (Portal stage), the gate passes — the schema is the
 # ready contract; records begin when the Observability stack emits them.
@@ -39,6 +40,8 @@ import os, re, sys, glob
 
 EV_DIR = "runtime-evidence"
 KB_DIR = "knowledge-base"
+COVERAGE = "manifests/runtime-evidence-coverage.yaml"
+FLEET = "architecture/app-fleet.yaml"
 
 if not os.path.isdir(EV_DIR):
     print("  No runtime-evidence/ directory — nothing to validate.")
@@ -106,6 +109,7 @@ if not records:
 
 errors = []
 seen_ids = {}
+parsed_records = []
 
 for path in records:
     rel = path
@@ -117,6 +121,7 @@ for path in records:
     if not isinstance(rec, dict):
         errors.append(f"{rel}: not a mapping")
         continue
+    parsed_records.append((rel, rec))
 
     # RE-1 required fields
     for k in REQUIRED_ALL:
@@ -166,6 +171,68 @@ for path in records:
             cid_u = str(cid).strip().upper()
             if cid_u not in cdoc_ids:
                 errors.append(f"{rel}: binds_to '{cid}' does not resolve to an existing C-doc (RE-5)")
+
+# RE-7: coverage requirements are intentionally separate from per-record schema
+# validation. They prevent broad current-state claims from being runtime-labelled
+# without at least one attributable, non-example record.
+if os.path.exists(COVERAGE):
+    try:
+        import yaml
+        with open(COVERAGE, encoding="utf-8") as fh:
+            coverage = yaml.safe_load(fh) or {}
+        with open(FLEET, encoding="utf-8") as fh:
+            fleet = yaml.safe_load(fh) or {}
+    except Exception as exc:
+        errors.append(f"{COVERAGE}: cannot load coverage/fleet data ({exc}) (RE-7)")
+        coverage, fleet = {}, {}
+
+    fleet_apps = fleet.get("apps", []) if isinstance(fleet, dict) else []
+    fleet_by_name = {item.get("app"): item for item in fleet_apps if item.get("app")}
+    for requirement in coverage.get("requirements", []):
+        req_id = requirement.get("id", "RE-COV-UNKNOWN")
+        binding = requirement.get("binds_to_required")
+        allowed_kinds = set(requirement.get("allowed_kinds", []))
+        candidates = [
+            (path, rec) for path, rec in parsed_records
+            if not path.startswith(os.path.join(EV_DIR, "examples"))
+            and binding in ([rec.get("binds_to")] if isinstance(rec.get("binds_to"), str)
+                            else rec.get("binds_to", []))
+            and rec.get("kind") in allowed_kinds
+        ]
+        required_count = int(requirement.get("min_non_example_records", 1))
+        if len(candidates) < required_count:
+            errors.append(f"{req_id}: requires {required_count} non-example {allowed_kinds} "
+                          f"record(s) bound to {binding}; found {len(candidates)}")
+            continue
+        fleet_binding = requirement.get("fleet_binding")
+        if fleet_binding:
+            expected_count = int(fleet_binding.get("required_count", 0))
+            if len(fleet_by_name) != expected_count:
+                errors.append(f"{req_id}: fleet source expected {expected_count} apps, "
+                              f"found {len(fleet_by_name)}")
+                continue
+            evidence_apps = candidates[0][1].get("dimensions", {}).get("apps", [])
+            reported_count = candidates[0][1].get("dimensions", {}).get("apps_verified")
+            if reported_count != expected_count:
+                errors.append(f"{req_id}: apps_verified is {reported_count!r}, "
+                              f"expected {expected_count}")
+            if len(evidence_apps) != expected_count:
+                errors.append(f"{req_id}: evidence lists {len(evidence_apps)} apps, "
+                              f"expected {expected_count}")
+                continue
+            evidence_names = {app.get("app") for app in evidence_apps}
+            if evidence_names != set(fleet_by_name):
+                errors.append(f"{req_id}: evidence app names do not exactly match fleet")
+                continue
+            for app in evidence_apps:
+                canonical = fleet_by_name.get(app.get("app"))
+                if not canonical:
+                    errors.append(f"{req_id}: evidence app {app.get('app')!r} is not in fleet")
+                    continue
+                for field in fleet_binding.get("match_fields", []):
+                    if app.get(field) != canonical.get(field):
+                        errors.append(f"{req_id}: {app.get('app')} {field} mismatch "
+                                      f"({app.get(field)!r} != {canonical.get(field)!r})")
 
 print(f"  Records validated: {len(records)}")
 print(f"  C-docs available for binding: {len(cdoc_ids)}")

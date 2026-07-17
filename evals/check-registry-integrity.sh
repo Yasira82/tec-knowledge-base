@@ -235,13 +235,16 @@ for asset in assets:
                           f"institutional_role='{role}' does not match file H1='{file_h1}' "
                           f"(overlap: {len(overlap)} words, need ≥2)")
 
-    # R-SEMANTIC-002: authoritative_for claims SHOULD appear in file content
+    # R-SEMANTIC-002: authoritative_for claims SHOULD appear in file content.
+    # Generated non-curated claims are namespaced as c-NN-<claim> for uniqueness;
+    # that namespace is registry metadata, not text expected in the C-document.
     auth_for = asset.get("authoritative_for", [])
     if auth_for and path:
         file_content = get_file_content(path, 100)
         matches = 0
         for claim in auth_for:
-            claim_normalized = claim.lower().replace('-', ' ')
+            claim_without_namespace = re.sub(r'^c-\d+-', '', claim.lower())
+            claim_normalized = re.sub(r'-+', ' ', claim_without_namespace)
             if claim_normalized in file_content:
                 matches += 1
         match_ratio = matches / len(auth_for) if auth_for else 0

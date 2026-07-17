@@ -36,10 +36,12 @@ fi
 
 python3 - <<'PY'
 import re, os, sys
+import yaml
 
 C01 = "knowledge-base/C-01_Project_Identity.md"
 C02 = "knowledge-base/C-02___CURRENT_STATE_.md"
 RUNBOOK = "audits/PORTAL_SUBMISSION_RUNBOOK_2026-06-21.md"
+FLEET = "architecture/app-fleet.yaml"
 
 errors = []
 warnings = []
@@ -55,11 +57,29 @@ c01 = read(C01)
 c02 = read(C02)
 rb  = read(RUNBOOK)
 
-# Canonical app keys we expect to find (Pi-paying apps)
-APPS = ["Hub", "Ecommerce", "Commerce", "Assets"]
+# The fleet registry enumerates the complete submission scope. C-01 remains
+# canonical for the actual Pi identity values, so this gate checks both sources.
+fleet_text = read(FLEET)
+try:
+    fleet = yaml.safe_load(fleet_text) or {}
+    FLEET_APPS = fleet.get("apps", [])
+except yaml.YAMLError as exc:
+    errors.append(f"[FLEET] cannot parse {FLEET}: {exc}")
+    FLEET_APPS = []
 
-# A Pi App ID looks like:  <slug>-<16 hex>   e.g. tec-app-923b947851f9dfe1
-APP_ID_RE = re.compile(r"`([a-z0-9-]+-[0-9a-f]{16})`")
+APPS = [entry.get("app") for entry in FLEET_APPS if entry.get("app")]
+if len(APPS) != 24 or len(set(APPS)) != len(APPS):
+    errors.append(f"[FLEET] expected 24 uniquely named apps, found {len(APPS)}")
+for entry in FLEET_APPS:
+    missing = [field for field in ("app", "pi_app_id", "domain", "status")
+               if not entry.get(field)]
+    if missing:
+        errors.append(f"[FLEET] {entry.get('app', '<unnamed>')}: missing {', '.join(missing)}")
+    elif entry["status"] not in {"live-verified", "live-readonly-gated"}:
+        errors.append(f"[FLEET] {entry['app']}: invalid live status {entry['status']!r}")
+
+# Pi App IDs have both long Portal-issued and short IDs (for example zone-xwc6).
+APP_ID_RE = re.compile(r"`([a-z0-9]+-[a-z0-9]+)`")
 PLACEHOLDER_RE = re.compile(r"confirm in pi portal|TBD|TODO|xxxx|<.*?>|placeholder", re.IGNORECASE)
 
 def identity_section(text, anchors):
@@ -99,11 +119,11 @@ def parse_identity_table(text, app_label_keys):
     text = identity_section(text, ["pi app identity", "per-app registration"])
     # Precise app matchers — "commerce" must NOT match inside "ecommerce".
     app_re = {
-        "Hub":       re.compile(r"\bhub\b"),
-        "Ecommerce": re.compile(r"ecommerce"),
-        "Commerce":  re.compile(r"(?<!e)commerce"),
-        "Assets":    re.compile(r"assets"),
+        app: re.compile(rf"(?<![a-z0-9]){re.escape(app.lower())}(?![a-z0-9])")
+        for app in app_label_keys
     }
+    if "Commerce" in app_re:
+        app_re["Commerce"] = re.compile(r"(?<!e)commerce")
     out = {}
     for line in text.splitlines():
         if not line.strip().startswith("|"):
@@ -127,11 +147,12 @@ def parse_identity_table(text, app_label_keys):
     return out
 
 # Hub appears as "Tec-App (Hub)" or "Hub" — add aliases for table matching
-TABLE_KEYS = ["Hub", "Ecommerce", "Commerce", "Assets"]
+TABLE_KEYS = APPS
 
 c01_tbl = parse_identity_table(c01, TABLE_KEYS)
 c02_tbl = parse_identity_table(c02, TABLE_KEYS)
 rb_tbl  = parse_identity_table(rb,  TABLE_KEYS)
+fleet_by_app = {entry["app"]: entry for entry in FLEET_APPS if entry.get("app")}
 
 # ── 1. C-01 is canonical: every app must be present with a real App ID + domain ──
 for app in APPS:
@@ -145,6 +166,13 @@ for app in APPS:
         errors.append(f"[C-01] {app}: placeholder text in registration row")
     if not rec["domain"]:
         errors.append(f"[C-01] {app}: missing domain")
+    fleet_rec = fleet_by_app.get(app, {})
+    if fleet_rec and rec["id"] and fleet_rec.get("pi_app_id") != rec["id"]:
+        errors.append(f"[FLEET] {app}: App ID mismatch vs C-01 "
+                      f"({fleet_rec.get('pi_app_id')} != {rec['id']})")
+    if fleet_rec and rec["domain"] and fleet_rec.get("domain", "").lower() != rec["domain"]:
+        errors.append(f"[FLEET] {app}: domain mismatch vs C-01 "
+                      f"({fleet_rec.get('domain')} != {rec['domain']})")
 
 # ── 2. C-02 and RUNBOOK must MATCH C-01 (the canonical source) ──
 def cross_check(name, tbl):
@@ -173,14 +201,12 @@ def cross_check(name, tbl):
 cross_check("C-02", c02_tbl)
 cross_check("RUNBOOK", rb_tbl)
 
-# ── 3. PI_SANDBOX must be false for every Pi-paying app (per runbook table) ──
-#     The runbook table column ends with the sandbox flag; require no "true".
-for line in rb.splitlines():
-    low = line.lower()
-    if low.strip().startswith("|") and any(a.lower() in low for a in APPS):
-        if re.search(r"\btrue\b", low) and "sandbox" not in low:
-            # a 'true' in an app row of the registration table = PI_SANDBOX on
-            errors.append(f"[RUNBOOK] PI_SANDBOX appears enabled in row: {line.strip()}")
+# ── 3. PI_SANDBOX must be false for every fleet app in C-01 + runbook ──────
+for source_name, table in (("C-01", c01_tbl), ("RUNBOOK", rb_tbl)):
+    for app in APPS:
+        row = table.get(app, {}).get("raw", "").lower()
+        if row and re.search(r"\|\s*true\s*\|", row):
+            errors.append(f"[{source_name}] PI_SANDBOX appears enabled for {app}")
 
 # ── 4. Privacy + Terms must be referenced for each app in the runbook ──
 if "/privacy" not in rb:
@@ -218,8 +244,8 @@ for name, text in (("C-01", c01), ("C-02", c02), ("RUNBOOK", rb)):
         errors.append(f"[{name}] stale Commerce domain tec-commerce-app.vercel.app present")
 
 # ── Report ──
-print(f"  Apps audited:        {len(APPS)} (Hub · Ecommerce · Commerce · Assets)")
-print(f"  Sources cross-read:  C-01 (canonical) · C-02 · PORTAL_RUNBOOK")
+print(f"  Apps audited:        {len(APPS)} (full app fleet)")
+print(f"  Sources cross-read:  app-fleet.yaml · C-01 (canonical) · C-02 · PORTAL_RUNBOOK")
 for app in APPS:
     rec = c01_tbl.get(app, {})
     print(f"    • {app:<10} {rec.get('id','?'):<28} {rec.get('domain','?')}")

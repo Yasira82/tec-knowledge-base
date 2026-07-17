@@ -4,8 +4,32 @@
 > **Truth State:** `[Current State]`
 > **Governance State:** `[ADR Approved]`
 > **Verification:** `[Documentation Verified]`
-> **Last Updated:** 16 June 2026 (Session 9)
+> **Last Updated:** 17 July 2026 (Session 18 addendum)
 > **Prepared by:** Cloud Agent Engineering Review — Cursor AI
+
+---
+
+## SESSION 18 ADDENDUM — REMEDIATION STATUS
+
+> This report preserves the Session 9 findings as an audit record. The table below
+> supersedes its operational status where later machine-checked evidence exists.
+
+| Session 9 finding | Current status | Verification |
+|---|---|---|
+| C-57 index drift | ✅ Resolved | `evals/check-c57-index.sh` checks 111 entries with zero drift |
+| Incomplete Truth Framework adoption | ✅ Resolved for all 112 C-doc headers | `evals/check-truth-framework.sh` reports zero missing states |
+| Registry was manually maintained | ✅ Resolved | `architecture/asset-registry.yaml` is generated; 112/112 coverage |
+| Authority-graph consistency gap | ✅ Resolved | AHV engine reports zero errors and zero warnings |
+| Current-state fleet was ambiguous | ✅ Resolved | C-01 §4, C-02, runbook, and `app-fleet.yaml` are cross-checked for 24 apps |
+
+### Remaining engineering work
+
+1. Replace the Session 18 documentation attestation with recurring, independently
+   emitted application/operations telemetry.
+2. Obtain the VAM-recommended external verification for Tier-0 assets C-00, C-64,
+   and C-67 before using them as Portal-level evidence.
+3. Preserve financial hard-gates: real subscription payments do not authorize FundX
+   custody, Insure escrow, or Brookfield investment/REIT flows.
 
 ---
 

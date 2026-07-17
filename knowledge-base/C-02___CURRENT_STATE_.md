@@ -793,12 +793,35 @@ DEFERRED (non-blocking for Portal):
 
 ## PI APP IDENTITY
 
-| App | Pi App ID | Domain |
-|-----|-----------|--------|
-| Tec-Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `https://ecommerce.tecosystem.app` |
-| Tec-Commerce | `commerce-app-68aa99081fc1897a` | `https://commerce.tecosystem.app` |
-| Tec-Assets | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` |
-| Tec-App (Hub) | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` |
+> **Canonical identity:** C-01 §4. This table mirrors the complete fleet and is
+> cross-checked by `evals/check-portal-readiness.sh`.
+
+| App | Pi App ID | Domain | PI_SANDBOX |
+|-----|-----------|--------|------------|
+| Hub | `tec-app-923b947851f9dfe1` | `https://hub.tecosystem.app` | false |
+| Commerce | `commerce-app-68aa99081fc1897a` | `https://commerce.tecosystem.app` | false |
+| Assets | `assets-app-af2fb490e7b03db7` | `https://assets.tecosystem.app` | false |
+| Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `https://ecommerce.tecosystem.app` | false |
+| Analytics | `analytics-822d9810de66bc84` | `https://analytics.tecosystem.app` | false |
+| Life | `life-app-c468e9eb5bf115fa` | `https://life.tecosystem.app` | false |
+| Connection | `connection-aa9fba4f11664096` | `https://connection.tecosystem.app` | false |
+| Zone | `zone-xwc6` | `https://zone.tecosystem.app` | false |
+| Nexus | `nexus-3x2v` | `https://nexus.tecosystem.app` | false |
+| Explorer | `explorer-kxfp` | `https://explorer.tecosystem.app` | false |
+| System | `system-qbz2` | `https://system.tecosystem.app` | false |
+| Alert | `alert-3ag1` | `https://alert.tecosystem.app` | false |
+| NX | `nx-cahj` | `https://nx.tecosystem.app` | false |
+| DX | `dx-hqma` | `https://dx.tecosystem.app` | false |
+| Titan | `titan-e1ta` | `https://titan.tecosystem.app` | false |
+| Epic | `epic-4muf` | `https://epic.tecosystem.app` | false |
+| Legend | `legend-43xr` | `https://legend.tecosystem.app` | false |
+| Elite | `elite-cfwh` | `https://elite.tecosystem.app` | false |
+| VIP | `vip-vzge` | `https://vip.tecosystem.app` | false |
+| NBF | `nbf-zutt` | `https://nbf.tecosystem.app` | false |
+| FundX | `fundx-55a3cb7bc6cf09fd` | `https://fundx.tecosystem.app` | false |
+| Estate | `estate-f4d67b390ff45ed6` | `https://estate.tecosystem.app` | false |
+| Insure | `insure-ayh6` | `https://insure.tecosystem.app` | false |
+| Brookfield | `brookfield-ftq4` | `https://brookfield.tecosystem.app` | false |
 
 ---
 
@@ -806,7 +829,7 @@ DEFERRED (non-blocking for Portal):
 
 ```
 12 Railway services:   Active — INTERNAL_SECRET set ✅
-4 apps (Vercel):      Hub + Commerce + Assets + Ecommerce
+24 apps (Vercel):     all registered + deployed + Mainnet subscriptions live
 4 npm packages:       tec-auth + tec-ui (v1.2.1) + tec-sdk + tec-shared
 PI_SANDBOX:           false (Mainnet)
 tec-auth coverage:    95% (46 tests)
@@ -815,18 +838,18 @@ Hub coverage:         95.5% (2026 tests) ✅
 Hub CI:               ✅ GREEN — 2026 tests passing (commit 275d6fd0)
 Ecommerce CI:         ✅ GREEN — ADR-007 foreign session fix (commit a586c1ca)
 All repos coverage:   ≥ 60% ✅
-All 4 apps:           Mode 1 + Mode 2 + ADR-007 + __TEC_PI_FOREIGN_SESSION ✅
+All 24 apps:          Pro/subscription Mode 1 + Mode 2 real-Pi surfaces ✅
 All P1 violations:    ✅ ZERO
 All P2 violations:    ✅ ZERO
-All Pi App IDs:       ✅ كل 4 apps مسجّلة
+All Pi App IDs:       ✅ all 24 apps registered; canonical list = C-01 §4
 All audit fixes:      ✅ ON MAIN — Hub + Ecommerce + Commerce + Assets
 Last audit score:     7.65/10 (Session 3) → Architectural Review 9.1/10 (Session 8)
 Architectural Review: Knowledge Architecture 9.5+/10 | Platform Engineering 9.0–9.2/10
 CLAUDE.md:            ✅ session start → main في كل repos
-Knowledge Base:       ✅ v3.6.2 — 96 C-docs + 16 skills + 16 charters + 10 CI gates + evals/ + scripts/ + architecture/
+Knowledge Base:       ✅ v3.10.0 — 112 C-docs + 16 skills + 16 charters + 13 CI gates
 Pending PRs:          NONE — all fixes on main ✅
 Latest audit:         ✅ Session 14 (2026-06-20) → ~9.0/10 (was ~6.5–7.0) — all P0 closed (Outbox live + payment-verified)
-NEXT:                 P1/P2 hygiene batch → Portal Submission
+NEXT:                 deepen real product functionality one gated app at a time
 ```
 
 ---
