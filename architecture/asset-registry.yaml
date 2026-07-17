@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-17T03:43:55.229408
+# Generated: 2026-07-17T03:44:32.587853
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -236,7 +236,7 @@ assets:
       verification_state: runtime-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-123-pi-browser-session--cookie-spec"]
+    authoritative_for: ["c-123-pi-browser-session-cookie-spec"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -272,7 +272,7 @@ assets:
       verification_state: code-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-13-auth--sso-architecture"]
+    authoritative_for: ["c-13-auth-sso-architecture"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -362,7 +362,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-18-disaster-recovery--backup-constitution"]
+    authoritative_for: ["c-18-disaster-recovery-backup-constitution"]
     depends_on: [C-00, C-47, C-64]
     supersedes: []
     superseded_by: null
@@ -380,7 +380,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-19-fraud-abuse--aml--sanctions-controls"]
+    authoritative_for: ["c-19-fraud-abuse-aml-sanctions-controls"]
     depends_on: [C-00, C-47]
     supersedes: []
     superseded_by: null
@@ -560,7 +560,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-45-observability--monitoring"]
+    authoritative_for: ["c-45-observability-monitoring"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -722,7 +722,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-55-scoring--audit-strategy"]
+    authoritative_for: ["c-55-scoring-audit-strategy"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -1100,7 +1100,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-78-platform-operations--reliability-governance"]
+    authoritative_for: ["c-78-platform-operations-reliability-governance"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -1154,7 +1154,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-82-platform-maturity--evolution-governance"]
+    authoritative_for: ["c-82-platform-maturity-evolution-governance"]
     depends_on: []
     supersedes: []
     superseded_by: null

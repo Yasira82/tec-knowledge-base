@@ -241,11 +241,14 @@ for asset in assets:
     auth_for = asset.get("authoritative_for", [])
     if auth_for and path:
         file_content = get_file_content(path, 100)
+        normalized_content = re.sub(r'[^a-z0-9]+', ' ', file_content)
+        compact_content = re.sub(r'[^a-z0-9]+', '', file_content)
         matches = 0
         for claim in auth_for:
             claim_without_namespace = re.sub(r'^c-\d+-', '', claim.lower())
-            claim_normalized = re.sub(r'-+', ' ', claim_without_namespace)
-            if claim_normalized in file_content:
+            claim_normalized = re.sub(r'[^a-z0-9]+', ' ', claim_without_namespace)
+            compact_claim = re.sub(r'[^a-z0-9]+', '', claim_without_namespace)
+            if claim_normalized in normalized_content or compact_claim in compact_content:
                 matches += 1
         match_ratio = matches / len(auth_for) if auth_for else 0
         if match_ratio < 0.5:

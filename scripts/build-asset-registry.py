@@ -327,7 +327,7 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
         return CURATED[cid_num]
 
     if not file_text:
-        role_kebab = re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-')
+        role_kebab = re.sub(r'-+', '-', re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-'))
         return [role_kebab] if role_kebab else []
 
     # Extract candidate claims from H2 headings + role
@@ -355,7 +355,7 @@ def infer_authoritative_for(cid_num, role, tier, file_text=''):
             seen.add(claim)
 
     # Add role as a candidate (highest priority)
-    role_kebab = re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-')
+    role_kebab = re.sub(r'-+', '-', re.sub(r'[^a-z0-9 ]', '', role.lower()).strip().replace(' ', '-'))
     if role_kebab and role_kebab not in GENERIC_HEADINGS and role_kebab not in seen:
         candidates.insert(0, role_kebab)
 
