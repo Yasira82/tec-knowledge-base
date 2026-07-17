@@ -1,0 +1,15 @@
+coverage_version: "1.0"
+authority: C-96
+
+# Required evidence coverage for current-state claims that are broad enough to
+# otherwise be easy to state without a traceable record.
+requirements:
+  - id: RE-COV-001
+    name: C-02 full-fleet Mainnet attestation
+    binds_to_required: C-02
+    allowed_kinds: [health_snapshot]
+    min_non_example_records: 1
+    fleet_binding:
+      source: architecture/app-fleet.yaml
+      required_count: 24
+      match_fields: [app, pi_app_id, domain]
