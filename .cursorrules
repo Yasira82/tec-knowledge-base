@@ -1,0 +1,67 @@
+# TEC Knowledge Base — Agent Rules (Cursor + any AI agent)
+
+You are editing the TEC platform's constitutional knowledge base. These rules are
+NON-NEGOTIABLE. Breaking them fails CI. Read before editing anything.
+
+## 🔴 RULE 1 — The asset registry is AUTO-GENERATED. Never hand-edit it.
+
+`architecture/asset-registry.yaml` is generated from the C-doc headers. If you edit
+ANY `knowledge-base/C-*.md` file — even a single header value — you MUST regenerate
+the registry and commit BOTH files together:
+
+```bash
+python3 scripts/build-asset-registry.py     # rebuild from the edited headers
+git add knowledge-base/ architecture/asset-registry.yaml architecture/registry-integrity-report.md
+```
+
+- ❌ Editing `asset-registry.yaml` by hand → the **Registry Integrity Check** CI gate
+  FAILS with: `asset-registry.yaml has manual edits that conflict with auto-generation`.
+- ❌ Editing a C-doc header but NOT rebuilding the registry → same failure (the
+  committed registry no longer matches the file). This is the single most common way
+  these PRs fail — do not repeat it.
+
+## 🔴 RULE 2 — Valid Truth-Framework header tokens
+
+Every C-doc header declares three fields. Only these values are valid:
+
+```
+Truth State:        [Current State] | [Planned State] | [Future Vision] | [Speculation]
+Governance State:   [Governance Approved] | [ADR Approved] | [Draft] | [Rejected]
+Verification:       [Documentation Verified] | [Code Verified] | [Runtime Verified] | [Assumed]
+```
+
+- `[Unverified]` is **NOT** a valid Verification token. For `[Future Vision]` /
+  `[Planned State]` docs the correct value is **`[Assumed]`**. (Note: some docs carry
+  the header inline on one line, e.g. `> Truth State: … | … | Verification: [Assumed]` —
+  fix those too; do not miss C-83.)
+- Do NOT change the literal string `[Unverified]` where it appears in PROSE/tables that
+  document the schema itself — only fix real header **values**.
+
+## 🔴 RULE 3 — Before opening a PR, run the gates locally
+
+```bash
+python3 scripts/build-asset-registry.py
+for g in evals/check-registry-integrity.sh evals/check-truth-framework.sh \
+         evals/check-c57-index.sh evals/check-links.sh evals/check-vam-compliance.sh; do
+  echo "== $g =="; bash "$g" || echo "FAILED: $g";
+done
+```
+Open the PR only when Registry Integrity shows **0 errors**. There are 13 gates in
+`evals/`; the registry + truth-framework + c57-index gates are the ones edits break.
+
+## RULE 4 — Adding a new C-doc
+
+Update `knowledge-base/C-57___MASTER_CONTENTS_INDEX.md` (index + the right TIER),
+add the standard 3-field header, THEN rebuild the registry (Rule 1). New ADRs are
+registered in `C-64`; large decisions get their own C-doc (the ADR-007→C-76 pattern).
+
+## RULE 5 — Don't open duplicate PRs
+
+Check open PRs first. If a PR already proposes your change, update it or comment —
+do not open a fresh near-identical PR. (Eight duplicate `[Unverified]→[Assumed]` PRs
+were opened and all failed the same way before this rule existed.)
+
+## Authority + full guidance
+
+`CLAUDE.md` (repo root) is the complete guide — read it. Authority hierarchy:
+`C-00 → C-67 → ADRs (C-64) → Current State docs → Runtime Evidence → Code`.
