@@ -7,7 +7,7 @@
 > Scope: All 24 apps, shared UI packages, design tokens
 > Version: 2.0 — June 2026
 > Priority: Strategic Design Layer
-> Truth State: [Planned State] | Governance State: [Draft] | Verification: [Unverified]
+> Truth State: [Planned State] | Governance State: [Draft] | Verification: [Assumed]
 > Authority Scope: [Platform]
 
 ---
@@ -255,7 +255,7 @@ risk     ≠ success   (red never on growth contexts)
 ---
 
 # 14. TYPESCRIPT TYPES (Phase 1 — tec-ui v1.2.0)
-> Truth State: [Planned State] | Commitment: [Committed] | Verification: [Unverified]
+> Truth State: [Planned State] | Commitment: [Committed] | Verification: [Assumed]
 > SemanticDomain type and resolveDomain() are NOT yet in npm package
 
 ```typescript
