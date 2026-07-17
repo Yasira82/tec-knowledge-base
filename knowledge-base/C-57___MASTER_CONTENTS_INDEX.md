@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-131)
+## دليل سريع للـ Content (C-00 → C-132)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -247,6 +247,16 @@
 | **C-129** | Insure Risk Protection Runtime | System of Protection — risk scoring + escrow + recovery; escrow custody hard-gated to payment-service (P0, like FundX) |
 | **C-130** | Titan Enterprise OS Runtime | Enterprise OS — B2B counterpart to Life; orchestrates org identity/team/ops; graduation target for NBF; wallet = VIEW only |
 | **C-131** | Brookfield Infrastructure Runtime | Infrastructure & Institutional Assets — B2B/B2I counterpart to Estate; owns asset+governance records; custody+legal hard-gated (securities/REIT); simulated-only V1 |
+---
+
+## TIER 13 — Platform Architecture Policy (C-132)
+
+`[Current State]` / `[Governance Approved]` — how the 24 apps map to backend deployment.
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-132** | Service Extraction & Modular Architecture Policy | ADR-011 detail — Modules-First (App→Module→Service); new service only on a T1–T4 production trigger; Design-for-Extraction (Explorer→search-service); payment-service is the only Pi custodian; target now = 11 services |
+
 ---
 
 ## Quick Lookup

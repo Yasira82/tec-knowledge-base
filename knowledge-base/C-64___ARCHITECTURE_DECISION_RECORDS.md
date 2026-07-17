@@ -33,6 +33,7 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-008 | Runtime Observability Architecture | ACCEPTED (June 2026) |
 | ADR-009 | Unified Payment Contract (Single Source of Truth) | ACCEPTED (June 2026) |
 | ADR-010 | NX repurposed → Opportunity Exchange · Security Governance folded into System | ACCEPTED (July 2026) |
+| ADR-011 | Modules-First — Service Extraction & Modular Architecture Policy | ACCEPTED (July 2026 · تفاصيل في C-132) |
 
 ---
 
@@ -301,3 +302,41 @@ biggest missing value for the Pi community (no unified opportunity marketplace e
   read "Security Center (in System) + Alert" instead of NX.
 
 **References:** C-110 SYSTEM · C-111 ALERT · C-112 NX (superseded domain) · C-120 ZONE
+
+---
+
+## ADR-011 — Modules-First — Service Extraction & Modular Architecture Policy
+
+**Status:** ACCEPTED — تفاصيل كاملة في **C-132** | **Date:** July 2026 | **Decision Authority:** CEO (C-47)
+
+### Context
+TEC has **24 apps**. The default reflex "1 app = 1 microservice" would create 24
+deploys / 24 databases / 24 points of failure long before the load justifies even a
+handful — an unrecoverable ops mistake for a pre-scale platform on Pi Network.
+
+### Decision
+The correct layering is **App → Domain Module → Service**, not App → Microservice:
+1. **Modules-First** — a new domain's backend ships as a **module inside an existing
+   service** by default (proven: Life / Connection / Zone are modules in
+   `tec-identity-service`). A new service requires a **documented extraction trigger**.
+2. **Extraction triggers (T1–T4)** — extract only on a real production signal:
+   different scaling profile · different consistency/security boundary · independent
+   deploy cadence · different team ownership. "Has business logic" is not a trigger.
+   *(extract-on-load, not extract-on-imagination.)*
+3. **Design-for-Extraction** — a known future-service candidate (Explorer → Search)
+   gets a clean seam from day one (own folder, namespaced tables, no cross-module DB
+   joins) so extraction is mechanical.
+4. **Financial Hard-Gate** — `tec-payment-service` is the **only** Pi custodian
+   (Invariant #8), at any scale. FundX / Insure / Brookfield are state+workflow
+   modules that issue intents; they get **no custody service of their own**.
+5. **Target service count now = the 11 live services — unchanged.** Every other
+   domain is a module or a frontend until §5 (C-132) fires.
+
+### Consequences
+- A PR that creates a new backend service must cite its T1–T4 trigger, or it is rejected.
+- Extraction is a **deployment** change, never an **ownership** change (C-68 owner +
+  C-70 event contract preserved).
+- Explorer is the designated first extraction candidate (→ `search-service`).
+
+**References:** C-132 (full detail) · C-47 (Invariant #8, P5) · C-68 (Domain Ownership) ·
+C-70 (Event Governance) · C-113 FundX · C-129 Insure · C-108 Explorer

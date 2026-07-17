@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-16T18:39:02.630911
+# Generated: 2026-07-17T03:08:49.453336
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 112
+# Total assets: 113
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -259,6 +259,24 @@ assets:
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
+    next_review: "2026-12-01"
+
+  - id: C-132
+    type: architecture
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Service Extraction & Modular Architecture Policy"
+    path: knowledge-base/C-132___SERVICE_EXTRACTION_MODULAR_ARCHITECTURE_POLICY.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-132-service-extraction--modular-architecture-policy"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-07-17"
     next_review: "2026-12-01"
 
   - id: C-13
@@ -2054,14 +2072,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 112
-#   tier-1-constitutional-runtime: 59
+# Total assets: 113
+#   tier-1-constitutional-runtime: 60
 #   tier-1-institutional-intelligence: 45
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
-#   current-state: 84
+#   current-state: 85
 #   future-vision: 16
 #   planned-state: 7
 #   speculation: 5

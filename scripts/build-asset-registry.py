@@ -79,6 +79,8 @@ def classify_tier(cid_num):
         return 'tier-1-constitutional-runtime'
     if 124 <= n <= 131:  # App Charters (NBF/Epic/Legend/Elite/VIP/Insure/Titan/Brookfield) — Institutional Intelligence
         return 'tier-1-institutional-intelligence'
+    if n == 132:  # Service Extraction & Modular Architecture Policy (ADR-011 detail) — current-state governance
+        return 'tier-1-constitutional-runtime'
     return 'tier-2-experimental'
 
 
