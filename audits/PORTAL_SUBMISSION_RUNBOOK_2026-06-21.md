@@ -1,7 +1,7 @@
 # TEC Platform — Pi Portal Submission Runbook
 
-> **Date:** 2026-06-21 · **Status:** ✅ **Portal-ready** (all engineering + ops items closed)
-> **Scope:** the 4 Pi-paying apps (Hub, Ecommerce, Assets, Commerce)
+> **Date:** 2026-07-16 · **Status:** ✅ **Portal-ready** (all engineering + ops items closed)
+> **Scope:** all 24 Pi-paying apps. Canonical IDs/domains: C-01 §4; fleet enumeration: `architecture/app-fleet.yaml`.
 > **Companion:** payment architecture in `knowledge-base/C-12_Dual_Mode_Payment.md` · readiness in `knowledge-base/C-02___CURRENT_STATE_.md` · re-audit in `audits/EXTERNAL_AUDIT_2026-06-20_Session14.md`
 
 ---
@@ -11,9 +11,29 @@
 | App | Pi App ID | Production domain | Privacy | Terms | PI_SANDBOX |
 |-----|-----------|-------------------|---------|-------|------------|
 | Hub | `tec-app-923b947851f9dfe1` | `hub.tecosystem.app` | `/privacy` | `/terms` | false |
-| Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `ecommerce.tecosystem.app` | `/privacy` | `/terms` | false |
-| Assets | `assets-app-af2fb490e7b03db7` | `assets.tecosystem.app` | `/privacy` | `/terms` | false |
 | Commerce | `commerce-app-68aa99081fc1897a` | `commerce.tecosystem.app` | `/privacy` | `/terms` | false |
+| Assets | `assets-app-af2fb490e7b03db7` | `assets.tecosystem.app` | `/privacy` | `/terms` | false |
+| Ecommerce | `ecommerce-app-71ca4d3e462eaf54` | `ecommerce.tecosystem.app` | `/privacy` | `/terms` | false |
+| Analytics | `analytics-822d9810de66bc84` | `analytics.tecosystem.app` | `/privacy` | `/terms` | false |
+| Life | `life-app-c468e9eb5bf115fa` | `life.tecosystem.app` | `/privacy` | `/terms` | false |
+| Connection | `connection-aa9fba4f11664096` | `connection.tecosystem.app` | `/privacy` | `/terms` | false |
+| Zone | `zone-xwc6` | `zone.tecosystem.app` | `/privacy` | `/terms` | false |
+| Nexus | `nexus-3x2v` | `nexus.tecosystem.app` | `/privacy` | `/terms` | false |
+| Explorer | `explorer-kxfp` | `explorer.tecosystem.app` | `/privacy` | `/terms` | false |
+| System | `system-qbz2` | `system.tecosystem.app` | `/privacy` | `/terms` | false |
+| Alert | `alert-3ag1` | `alert.tecosystem.app` | `/privacy` | `/terms` | false |
+| NX | `nx-cahj` | `nx.tecosystem.app` | `/privacy` | `/terms` | false |
+| DX | `dx-hqma` | `dx.tecosystem.app` | `/privacy` | `/terms` | false |
+| Titan | `titan-e1ta` | `titan.tecosystem.app` | `/privacy` | `/terms` | false |
+| Epic | `epic-4muf` | `epic.tecosystem.app` | `/privacy` | `/terms` | false |
+| Legend | `legend-43xr` | `legend.tecosystem.app` | `/privacy` | `/terms` | false |
+| Elite | `elite-cfwh` | `elite.tecosystem.app` | `/privacy` | `/terms` | false |
+| VIP | `vip-vzge` | `vip.tecosystem.app` | `/privacy` | `/terms` | false |
+| NBF | `nbf-zutt` | `nbf.tecosystem.app` | `/privacy` | `/terms` | false |
+| FundX | `fundx-55a3cb7bc6cf09fd` | `fundx.tecosystem.app` | `/privacy` | `/terms` | false |
+| Estate | `estate-f4d67b390ff45ed6` | `estate.tecosystem.app` | `/privacy` | `/terms` | false |
+| Insure | `insure-ayh6` | `insure.tecosystem.app` | `/privacy` | `/terms` | false |
+| Brookfield | `brookfield-ftq4` | `brookfield.tecosystem.app` | `/privacy` | `/terms` | false |
 
 > The Pi App ID + registered domain in the Pi Developer Portal MUST match the production domain exactly — a mismatch breaks `Pi.init()` / payment authorisation.
 
@@ -52,9 +72,10 @@ DEFERRED (non-blocking for Portal)
 2. Confirm **Mainnet** mode (sandbox OFF) for the app.
 3. Run a **real Pi payment** end-to-end: standalone (Mode 2) **and** via the Hub (`/hub?pay=1`, Mode 1). Confirm the payment completes **and** the downstream record (order / asset / subscription) is created.
 4. Submit the app for Pi review.
-5. Repeat for each of the 4 apps.
+5. Repeat for every app in `architecture/app-fleet.yaml`; FundX, Insure, and Brookfield
+   remain limited to their subscription surface while custody mechanics are hard-gated.
 
-> Release order if redeploying backend: `tec-core-backend → tec-sdk → tec-auth → tec-ui → all 4 apps (simultaneously)`.
+> Release order if redeploying backend: `tec-core-backend → tec-sdk → tec-auth → tec-ui → fleet apps`.
 
 ---
 

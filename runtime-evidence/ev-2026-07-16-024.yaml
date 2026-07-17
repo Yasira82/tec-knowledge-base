@@ -1,0 +1,38 @@
+# Documentation attestation of the Session 18 fleet milestone. This is not a
+# telemetry probe; production telemetry remains the responsibility of app/ops
+# runtimes. The record is cross-checked against the canonical fleet registry.
+evidence_id: ev-2026-07-16-024
+kind: health_snapshot
+timestamp: "2026-07-16T00:00:00Z"
+source: fleet-verification:app-fleet.yaml
+binds_to: [C-01, C-02]
+phs: 10.0
+dimensions:
+  evidence_type: documentation-attestation
+  fleet_live: ok
+  apps_verified: 24
+  apps:
+    - {app: Hub, pi_app_id: tec-app-923b947851f9dfe1, domain: hub.tecosystem.app}
+    - {app: Commerce, pi_app_id: commerce-app-68aa99081fc1897a, domain: commerce.tecosystem.app}
+    - {app: Assets, pi_app_id: assets-app-af2fb490e7b03db7, domain: assets.tecosystem.app}
+    - {app: Ecommerce, pi_app_id: ecommerce-app-71ca4d3e462eaf54, domain: ecommerce.tecosystem.app}
+    - {app: Analytics, pi_app_id: analytics-822d9810de66bc84, domain: analytics.tecosystem.app}
+    - {app: Life, pi_app_id: life-app-c468e9eb5bf115fa, domain: life.tecosystem.app}
+    - {app: Connection, pi_app_id: connection-aa9fba4f11664096, domain: connection.tecosystem.app}
+    - {app: Zone, pi_app_id: zone-xwc6, domain: zone.tecosystem.app}
+    - {app: Nexus, pi_app_id: nexus-3x2v, domain: nexus.tecosystem.app}
+    - {app: Explorer, pi_app_id: explorer-kxfp, domain: explorer.tecosystem.app}
+    - {app: System, pi_app_id: system-qbz2, domain: system.tecosystem.app}
+    - {app: Alert, pi_app_id: alert-3ag1, domain: alert.tecosystem.app}
+    - {app: NX, pi_app_id: nx-cahj, domain: nx.tecosystem.app}
+    - {app: DX, pi_app_id: dx-hqma, domain: dx.tecosystem.app}
+    - {app: Titan, pi_app_id: titan-e1ta, domain: titan.tecosystem.app}
+    - {app: Epic, pi_app_id: epic-4muf, domain: epic.tecosystem.app}
+    - {app: Legend, pi_app_id: legend-43xr, domain: legend.tecosystem.app}
+    - {app: Elite, pi_app_id: elite-cfwh, domain: elite.tecosystem.app}
+    - {app: VIP, pi_app_id: vip-vzge, domain: vip.tecosystem.app}
+    - {app: NBF, pi_app_id: nbf-zutt, domain: nbf.tecosystem.app}
+    - {app: FundX, pi_app_id: fundx-55a3cb7bc6cf09fd, domain: fundx.tecosystem.app}
+    - {app: Estate, pi_app_id: estate-f4d67b390ff45ed6, domain: estate.tecosystem.app}
+    - {app: Insure, pi_app_id: insure-ayh6, domain: insure.tecosystem.app}
+    - {app: Brookfield, pi_app_id: brookfield-ftq4, domain: brookfield.tecosystem.app}

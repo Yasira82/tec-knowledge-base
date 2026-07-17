@@ -119,6 +119,9 @@ binding_rules:
     rule: every binds_to id resolves to an existing C-doc (no dangling claims)
   - id: RE-6
     rule: evidence_id is unique across runtime-evidence/
+  - id: RE-7
+    rule: broad current-state claims meet manifests/runtime-evidence-coverage.yaml
+      with non-example, attributable evidence
 ```
 
 ---

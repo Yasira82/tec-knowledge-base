@@ -5,7 +5,10 @@
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
 > **Authority Scope:** `[Platform]`
-> **Source of truth for live apps:** C-01 §4 (Pi App Identity)
+> **Status:** `[Deprecated]` historical Session 17 snapshot — do not use for current
+> fleet status or Portal identity.
+> **Current source of truth:** `architecture/app-fleet.yaml`, cross-checked against
+> C-01 §4 by `evals/check-portal-readiness.sh`.
 
 ---
 
