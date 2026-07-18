@@ -83,13 +83,38 @@ CREATE INDEX IF NOT EXISTS "explorer_businesses_owner_idx" ON "explorer_business
 - Production DB confirmed via Railway console: `zone_entities` + `zone_evidence`
   seeded; `explorer_businesses` seeded (8 rows); `owner` columns present.
 
-## What's next (not started)
+## Follow-up — the three next steps, now DONE (later 2026-07-18)
 
-- **Zone review UI** — the reviewer decision is API-available (ADMIN-gated) but has no
-  in-app button (Zone is consumed mainly by other runtimes; an admin console is the
-  natural home).
-- **Explorer → Analytics ranking** — self-listings exist; wiring live
-  popularity/trend ranking from `tec-analytics-service` at discovery time is the next
-  intelligence step (Explorer presents, Analytics computes).
-- **KYC → Explorer verification sync** — flip `explorer_businesses.verification` to
-  `VERIFIED` from `tec-kyc-service` (presented, never self-minted).
+All three "what's next" items shipped, same session, each merged green:
+
+| Step | What shipped | Layer | PR(s) |
+|------|--------------|-------|-------|
+| **Zone review UI** | `GET /identity/zone/review/queue` (ADMIN-gated, FIFO, evidence included) + `ReviewPanel` in `/app` (admin-only; relies on the backend `403` to stay hidden — no client-side role signal) | backend + UI | #139 · zone#17 |
+| **Explorer → Analytics ranking** | denormalized `popularity` column + `search()` orders trust-first then popularity + `ExplorerConsumer` on `analytics.business.popularity.v1` → `applyPopularity` | backend | #140 |
+| **KYC → Explorer verification** | `applyVerification(owner, verified)` + the Explorer consumer made **multi-stream** — added `kyc.verified.v1` / `kyc.rejected.v1` → flips `verification` | backend | #141 |
+
+Zone's verification loop is now complete end-to-end: **submit → append evidence →
+human (ADMIN) review**. Explorer's two discovery signals are wired as **consume seams**
+(the Legend-consumer pattern): Explorer ranks WITH popularity and PRESENTS the verified
+badge — it computes/mints neither. `tec-identity-service` suite after this follow-up:
+**104 passing**.
+
+### Architecture held
+
+- **Identity = source data · Analytics = ranking · KYC = verification.** Explorer only
+  consumes. Both new seams are standalone (ioredis only, no cross-module dependency),
+  so the module stays extraction-clean for the future `search-service` (C-132 §6).
+- `explorer_businesses` gained a `popularity` column (expand-only, db push). KYC sync
+  needed **no schema change** (reuses the existing `verification` column).
+
+### Remaining — the PRODUCER halves (separate service builds)
+
+These consume seams are live and idle until their producers exist. Both are defined
+event contracts (like the Legend consumer's streams), not missing wiring:
+
+- **Analytics** must compute per-business popularity and emit `analytics.business.popularity.v1`.
+- **tec-kyc-service** must emit `kyc.verified.v1` / `kyc.rejected.v1` carrying the Pi username.
+
+Until then, `popularity` stays `0` (ranking unchanged) and `verification` stays as the
+self-listing set it — and the moment a producer emits, Explorer reflects it with no
+further change.
