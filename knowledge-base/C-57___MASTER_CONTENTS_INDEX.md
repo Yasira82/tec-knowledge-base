@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-133)
+## دليل سريع للـ Content (C-00 → C-134)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -259,13 +259,23 @@
 
 ---
 
-## TIER 14 — Growth & Go-to-Market (C-133)
+## TIER 14 — Platform Adoption & Growth (C-133)
 
-`[Current State]` / `[Governance Approved]` — the single source of truth for marketing, the Pioneer campaign, and the domain-claim strategy.
+`[Current State]` / `[Governance Approved]` — the durable adoption/growth constitution: how users progress (Adoption Levels), how we measure it (Adoption Event Model), and how campaigns are governed. Founding 100 is the first campaign.
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-133** | Growth & Go-to-Market Governance | Marketing/growth SSoT — North-Star = claimed Pi domains (≥5 KYC'd Pioneers/app); Founding 100 campaign via `/pioneers`; **no fabricated numbers** (Pi Core Team credibility); Pi enforces KYC (we present, never verify); Growth presents, Analytics/Legend own the truth (P5) |
+| **C-133** | Platform Adoption & Growth Governance | Adoption/growth SSoT — Adoption Levels ladder + Adoption Event Model + campaigns register (Founding 100 first); North-Star = claimed Pi domains (≥5 KYC'd Pioneers/app); **no fabricated numbers** (Pi Core Team credibility); community retention loop; Growth presents, Analytics/Legend own the truth (P5) |
+
+---
+
+## TIER 15 — Pioneer Runtime (C-134)
+
+`[Planned State]` / `[Governance Approved]` — the official onboarding runtime the growth campaigns drive users into: missions, the immutable event contract, the journey state machine, and Founding rules.
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-134** | Pioneer Runtime Charter | Onboarding runtime — Login → real per-app **missions** → Founding Pioneer → Legend; one immutable `pioneer.mission.completed` event per app (P4); identity ALWAYS from JWT principal, never a client param (P6 — the IDOR law); Hub = Conductor (presents), state owned by `tec-identity-service`; cap 100, **no payment**, **no fabricated counters** |
 
 ---
 
@@ -373,7 +383,8 @@ C-119→C-122  Economic Operating System Model (OS Model + Zone + Analytics Runt
 C-123        Pi Browser Session & Cookie Spec (Runtime Verified operational law)
 C-124→C-131  User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan · Brookfield)
 C-132        Service Extraction & Modular Architecture Policy (Modules-First / ADR-011)
-C-133        Growth & Go-to-Market Governance (Marketing · Pioneer campaign · domain-claim strategy)
+C-133        Platform Adoption & Growth Governance (Adoption Levels · campaigns · domain-claim strategy)
+C-134        Pioneer Runtime Charter (official onboarding runtime — missions · event contract · Founding rules)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80
