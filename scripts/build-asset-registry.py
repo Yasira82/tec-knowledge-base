@@ -81,8 +81,10 @@ def classify_tier(cid_num):
         return 'tier-1-institutional-intelligence'
     if n == 132:  # Service Extraction & Modular Architecture Policy (ADR-011 detail) — current-state governance
         return 'tier-1-constitutional-runtime'
-    if n == 133:  # Growth & Go-to-Market Governance — current-state governance/strategy (like C-77/C-78)
+    if n == 133:  # Platform Adoption & Growth Governance — current-state governance/strategy (like C-77/C-78)
         return 'tier-1-constitutional-runtime'
+    if n == 134:  # Pioneer Runtime Charter — cross-app onboarding runtime (planned; rules binding)
+        return 'tier-1-institutional-intelligence'
     return 'tier-2-experimental'
 
 

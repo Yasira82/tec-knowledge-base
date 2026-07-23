@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-23T16:23:15.449980
+# Generated: 2026-07-23T17:10:27.140589
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 114
+# Total assets: 115
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -282,15 +282,15 @@ assets:
   - id: C-133
     type: governance
     tier: tier-1-constitutional-runtime
-    institutional_role: "Growth & Go-to-market Governance"
-    path: knowledge-base/C-133___GROWTH_GO_TO_MARKET_GOVERNANCE.md
+    institutional_role: "Platform Adoption & Growth Governance"
+    path: knowledge-base/C-133___PLATFORM_ADOPTION_GROWTH_GOVERNANCE.md
     constitutional:
       truth_state: current-state
       governance_state: governance-approved
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-133-growth-gotomarket-governance"]
+    authoritative_for: ["c-133-platform-adoption-growth-governance"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -1705,6 +1705,24 @@ assets:
     last_verified: null
     next_review: "2026-12-01"
 
+  - id: C-134
+    type: charter
+    tier: tier-1-institutional-intelligence
+    institutional_role: "Pioneer Runtime Charter"
+    path: knowledge-base/C-134___PIONEER_RUNTIME_CHARTER.md
+    constitutional:
+      truth_state: planned-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-134-pioneer-runtime-charter"]
+    depends_on: [C-133, C-47, C-70]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
   - id: C-83
     type: document
     tier: tier-1-institutional-intelligence
@@ -2090,14 +2108,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 114
+# Total assets: 115
 #   tier-1-constitutional-runtime: 61
-#   tier-1-institutional-intelligence: 45
+#   tier-1-institutional-intelligence: 46
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
 #   current-state: 86
 #   future-vision: 16
-#   planned-state: 7
+#   planned-state: 8
 #   speculation: 5
