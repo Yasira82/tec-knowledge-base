@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-132)
+## دليل سريع للـ Content (C-00 → C-133)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -259,6 +259,16 @@
 
 ---
 
+## TIER 14 — Growth & Go-to-Market (C-133)
+
+`[Current State]` / `[Governance Approved]` — the single source of truth for marketing, the Pioneer campaign, and the domain-claim strategy.
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-133** | Growth & Go-to-Market Governance | Marketing/growth SSoT — North-Star = claimed Pi domains (≥5 KYC'd Pioneers/app); Founding 100 campaign via `/pioneers`; **no fabricated numbers** (Pi Core Team credibility); Pi enforces KYC (we present, never verify); Growth presents, Analytics/Legend own the truth (P5) |
+
+---
+
 ## Quick Lookup
 
 | I need to... | Go to |
@@ -362,6 +372,8 @@ C-116→C-118  Constitutional Automation (Authority + Registry + Dependency)
 C-119→C-122  Economic Operating System Model (OS Model + Zone + Analytics Runtime Charters + Knowledge Pipeline)
 C-123        Pi Browser Session & Cookie Spec (Runtime Verified operational law)
 C-124→C-131  User-Layer App Charters (NBF · Epic · Legend · Elite · VIP · Insure · Titan · Brookfield)
+C-132        Service Extraction & Modular Architecture Policy (Modules-First / ADR-011)
+C-133        Growth & Go-to-Market Governance (Marketing · Pioneer campaign · domain-claim strategy)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80
