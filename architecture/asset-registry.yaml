@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-17T19:28:49.229837
+# Generated: 2026-07-23T16:23:15.449980
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 113
+# Total assets: 114
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -277,6 +277,24 @@ assets:
     supersedes: []
     superseded_by: null
     last_verified: "2026-07-17"
+    next_review: "2026-12-01"
+
+  - id: C-133
+    type: governance
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Growth & Go-to-market Governance"
+    path: knowledge-base/C-133___GROWTH_GO_TO_MARKET_GOVERNANCE.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-133-growth-gotomarket-governance"]
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-07-23"
     next_review: "2026-12-01"
 
   - id: C-13
@@ -2072,14 +2090,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 113
-#   tier-1-constitutional-runtime: 60
+# Total assets: 114
+#   tier-1-constitutional-runtime: 61
 #   tier-1-institutional-intelligence: 45
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
-#   current-state: 85
+#   current-state: 86
 #   future-vision: 16
 #   planned-state: 7
 #   speculation: 5
