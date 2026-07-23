@@ -7,6 +7,8 @@ Centralized knowledge base for the TEC Federated Platform Ecosystem.
 ```
 knowledge-base/     # Platform knowledge (C-00 → C-99 + C-100→C-115)
 governance/         # Platform governance documents
+marketing/          # Marketing Assets Kit — launch posts, one-liners, Portal copy,
+                    #   ambassador kit (executes C-133; SSoT = tec-app registry valueProp)
 ```
 
 ## Contents
