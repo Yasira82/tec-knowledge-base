@@ -64,6 +64,10 @@ Discover  →  Open in Pi Browser  →  Log in with Pi  →  Engage  →  Advanc
 Growth does not measure visits — it measures **how a user evolves**. Every campaign moves
 users **up this ladder**; every KPI (§11) maps to a transition on it.
 
+The ladder has **two parts** that must not be conflated:
+
+**(A) Onboarding spine — linear & monotonic** (owned by the Pioneer Runtime, C-134):
+
 ```
 VISITOR            browsing, not logged in
    │  Pi login
@@ -73,21 +77,30 @@ PIONEER            engaging (≥1 mission)
    │  sustained engagement
 ACTIVE PIONEER     recurring across apps
    │  complete the journey (all live apps) within the cap
-FOUNDING PIONEER   first-100 permanent recognition (Legend)
-   │  creates value
-BUILDER            ships a project / business (Epic · NBF)
-   │  transacts as supply
-MERCHANT           sells / accepts Pi (Commerce · Ecommerce)
-   │  formal collaboration
-PARTNER            org-level (Titan · institutional)
-   │  proven reputation
-LEGEND             evidence-based standing (C-126) — the top of the ladder
+FOUNDING PIONEER   first-100 permanent recognition (materialized in Legend)
 ```
 
-- **Forward-only** (monotonic) — a user never regresses (mirrors P3).
+**(B) Role tracks — parallel, NOT sequential** (each owned by its domain). After Founding
+Pioneer, a user branches into one or more *independent* economic roles — a user can become
+a MERCHANT without first being a BUILDER, or be both:
+
+```
+                    ┌─ BUILDER    ships a project / business   (Epic · NBF)
+FOUNDING PIONEER ──►├─ MERCHANT   sells / accepts Pi           (Commerce · Ecommerce)
+   (spine end)      └─ PARTNER    org-level collaboration      (Titan · institutional)
+                           │
+                           ▼  (evidence from ANY track accrues)
+                        LEGEND    evidence-based standing (C-126)
+```
+
+- **LEGEND is not a fourth sequential step** — it is the **reputation apex**, a *cross-cutting*
+  projection that reflects proven evidence from any role track (Builder/Merchant/Partner
+  activity all feed it). One earns Legend standing *through* a role, not *after* Partner.
+- The **spine (A)** is forward-only/monotonic (mirrors P3, enforced by C-134's state machine).
+  The **role tracks (B)** are opt-in and composable — order is the user's, not the ladder's.
 - Each level's *truth* is owned by a service (§8) — Growth only **presents** the level.
-- Ladder positions are the substrate campaigns target (e.g. Founding 100 targets
-  `PIONEER → FOUNDING PIONEER`; a future Merchant 500 targets `BUILDER → MERCHANT`).
+- Levels are the substrate campaigns target (e.g. Founding 100 targets the spine
+  `PIONEER → FOUNDING PIONEER`; a future Merchant 500 targets the track `→ MERCHANT`).
 
 ---
 

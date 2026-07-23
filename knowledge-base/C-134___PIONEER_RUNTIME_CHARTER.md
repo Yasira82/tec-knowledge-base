@@ -50,6 +50,25 @@ single event contract, with zero duplication of reputation/XP/stats in the Hub).
 
 ---
 
+## Runtime Principles (what Pioneer is, and is not)
+
+> These five lines are the philosophy the rest of the charter enforces. They exist so that
+> no future session can quietly turn the onboarding runtime into a game or a growth-hack.
+
+1. **Pioneer is NOT gamification.** Points/streaks/leaderboards are never the goal; they may
+   only ever *represent* real evidence, and only via the owning domain (Legend/Analytics).
+2. **Pioneer is NOT marketing.** The campaign that recruits a user lives in C-133; Pioneer is
+   the *runtime* the user actually enters. No number here is ever promotional.
+3. **Pioneer is NOT a reward system.** Nothing of value is *granted* for participation. The
+   Founding badge is earned by completing real missions, not paid for or handed out.
+4. **Pioneer IS the canonical onboarding runtime** — the one official path from Pi login to a
+   permanent, evidence-based identity inside TEC.
+5. **Every mission must produce real value; completion is evidence; recognition follows
+   evidence.** A mission that isn't a real action does not belong in the catalog (§6). This is
+   the same law C-133 R6 states for apps: no empty steps.
+
+---
+
 ## 2. Constitution Alignment (C-47)
 
 | Principle / Invariant | How Pioneer honors it |
@@ -120,38 +139,29 @@ single event contract, with zero duplication of reputation/XP/stats in the Hub).
 
 v1 missions are intentionally simple: a single real touch per app, tracked as a checkbox.
 They need **no** XP, leaderboard, or reputation — but they make usage real and are the
-seed the richer missions grow from. The catalog lives in `_registry.ts` (single source of
-truth) so the Hub never drifts from what is live.
+seed the richer missions grow from.
 
-| App | Owner service | v1 Mission (now) | Richer Mission (Phase C) |
-|---|---|---|---|
-| tec (Hub) | identity | Log in to the Hub | Complete profile basics |
-| nexus | nexus | Open Nexus | View a workflow/route |
-| assets | assets | View the assets dashboard | Create first asset |
-| commerce | commerce | Browse the marketplace | Complete first checkout |
-| fundx | fundx | View a pool charter | (gated — no real contribution v1) |
-| nbf | nbf | Open the launch funnel | Start a business template |
-| insure | insure | View your risk score | Explore a protection surface |
-| ecommerce | ecommerce | Browse a storefront | Place first order |
-| estate | estate | View sample portfolio | Save a listing |
-| brookfield | brookfield | View institutional portfolio | View a governance record |
-| explorer | explorer | Run one search | Save/follow a listing |
-| connection | connection | Open Connection | Add first connection |
-| zone | zone | Open Zone | Submit first verification evidence |
-| life | life | Complete profile / first Goal | Log first activity |
-| dx | dx | Open the Developer Portal | Generate an API key |
-| nx | nx | Browse the opportunity board | Save first opportunity |
-| system | system | Open the Governance Console | Read a policy |
-| alert | alert | Open your inbox | Set a first alert rule |
-| analytics | analytics | View the ecosystem dashboard | Open a metric |
-| vip | vip | View tiers & benefits | (eligibility only) |
-| elite | elite | View recognition home | (earned, never bought) |
-| titan | titan | Open the enterprise console | Create org profile |
-| legend | legend | View your reputation profile | (accrues from activity) |
-| epic | epic | Browse the project board | Create first project |
+> **The canonical mission catalog is NOT defined in this charter.** It lives in code —
+> the mission registry derived from `_registry.ts` (the LIVE-domain SSoT). This charter
+> defines the **rules** a mission must satisfy; the concrete per-app list is data, and the
+> constitution must not have to change every time an app ships, is renamed, or is delisted
+> (P1 — one source of truth). Treat any table reproduced in a doc as *illustrative only*.
 
-> Count is derived from `LIVE_DOMAINS.length` — never hard-coded. If a domain goes live or
-> is delisted, the mission set changes with it automatically.
+**Rules every catalog entry MUST satisfy** (this is the normative part):
+
+1. **One canonical mission per app in v1** — a single, real, completable action (never merely
+   "open" once richer missions exist), owned by that app's service.
+2. **Real value** — the mission must correspond to genuine use (Runtime Principle §5 / C-133 R6).
+   A no-op does not qualify.
+3. **Derived from LIVE domains** — the mission set size is `LIVE_DOMAINS.length`; a domain going
+   live or being delisted changes the catalog automatically, with no charter edit.
+4. **Emitted by the owner** — completion is reported by the app's own BFF via the §7 event; the
+   Hub never fabricates or infers a completion.
+
+*Illustrative* (non-normative — the registry is authoritative): `tec → log in`,
+`commerce → browse the marketplace`, `explorer → run one search`, `zone → open Zone`,
+`epic → browse the project board`. Phase-C richer missions (e.g. `commerce → first checkout`,
+`epic → create a project`) are confirmed per app with each domain team (§19).
 
 ---
 
@@ -257,7 +267,12 @@ XP is **not** active in Phase A. It is specified here so the event contract (§7
 forward-compatible: the `missionId` is enough — the XP weight table lives server-side
 (single source), so turning XP on later needs **no** contract change.
 
-| Action | XP | Notes |
+> ⚠️ **The table below is ILLUSTRATIVE DEFAULTS — NOT NORMATIVE. Future Phase (B+).** These
+> numbers are examples of shape, not committed values, and are **not part of the system today**.
+> The authoritative weights are set by **Legend** (C-126) server-side when XP ships; final
+> values are an open question (§19). Do not build against these figures.
+
+| Action | XP *(illustrative)* | Notes |
 |---|---|---|
 | Visit | 5 | lowest signal |
 | Login | 10 | |
