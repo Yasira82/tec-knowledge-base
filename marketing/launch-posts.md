@@ -36,6 +36,14 @@ Part of TEC — 24 apps, one Pi identity. Become a Founding Pioneer: hub.tecosys
 - Always end with the Pioneers CTA so every app post feeds the funnel (C-133).
 - Emoji + domains stay as-is in both languages; only the words are translated.
 
+> ⚠️ **Before you post "X is live" — verify it.** The honesty rule (C-133 §7) forbids
+> claiming an app is live if it isn't deployed + reachable. **Open `{app}.tecosystem.app`
+> in Pi Browser first.** If it doesn't load (or is still a scaffold), post the **preview**
+> variant instead. Deployment status is tracked in `C-02 CURRENT_STATE`; where C-02 and an
+> app's own CLAUDE.md disagree, trust what actually loads. Confirmed live at time of
+> writing: **Hub · Commerce · Ecommerce · Analytics** (registered Pi App IDs, C-02). Treat
+> every other "live" post below as **claim-on-verify** — flip it to preview until it loads.
+
 ---
 
 ## Ready posts
