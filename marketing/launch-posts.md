@@ -43,6 +43,12 @@ Part of TEC — 24 apps, one Pi identity. Become a Founding Pioneer: hub.tecosys
 > app's own CLAUDE.md disagree, trust what actually loads. Confirmed live at time of
 > writing: **Hub · Commerce · Ecommerce · Analytics** (registered Pi App IDs, C-02). Treat
 > every other "live" post below as **claim-on-verify** — flip it to preview until it loads.
+>
+> 🤖 **This rule is now enforced.** `evals/check-marketing-live-claims.sh` (CI gate)
+> cross-checks every "live" post here against `architecture/app-fleet.yaml` (the fleet
+> SSoT) and **fails the build** if a post claims an app is live when the registry doesn't —
+> or markets a hard-gated app (FundX pools · Insure escrow · Brookfield REITs) as bare
+> "live". Under-claiming (a live app posted as preview) is always allowed.
 
 ---
 

@@ -21,6 +21,7 @@ on:
       - 'docs/**'
       - 'deliverables/**'
       - 'memory/**'
+      - 'marketing/**'
       - 'README.md'
       - 'CLAUDE.md'
   pull_request:
@@ -43,6 +44,7 @@ on:
       - 'docs/**'
       - 'deliverables/**'
       - 'memory/**'
+      - 'marketing/**'
       - 'README.md'
       - 'CLAUDE.md'
 
@@ -236,3 +238,19 @@ jobs:
         run: chmod +x evals/*.sh
       - name: Run SLO Definitions Engine
         run: bash evals/check-slo-definitions.sh
+
+  check-marketing-live-claims:
+    name: Marketing Live-Claim Engine (v3.11.1+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run Marketing Live-Claim Engine
+        run: bash evals/check-marketing-live-claims.sh
