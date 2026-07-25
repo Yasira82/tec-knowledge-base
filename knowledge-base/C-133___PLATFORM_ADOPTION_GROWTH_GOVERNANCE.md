@@ -169,6 +169,42 @@ Backend authority: the `pioneer` module in `tec-identity-service` (Modules-First
 
 ---
 
+## 5.1 Referral Program — "Invite & Earn" (SHIPPED · July 2026)
+
+The viral loop on top of the funnel. A user invites a friend; when that friend
+takes their **first subscription**, **both** receive a free **30-day PRO month**.
+Constitutional decision recorded in **ADR-012 (C-64)**.
+
+**The reward model (non-negotiable):**
+
+| Rule | Why |
+|------|-----|
+| Reward = **gift subscription month**, never raw Pi | A Pi cashback is capital movement — only `tec-payment-service` custodies Pi (Invariant #8). A gift month moves no Pi → no custody, no legal gate. |
+| Reward fires on the referee's **first paid subscription** (outcome, not signup) | Anti-sybil — a mass-registered account with no economic action earns nothing (mirrors Legend "outcomes not claims", C-126). |
+| **At-most-once** per referee · atomic `PENDING→REWARDED` | No double-reward on upgrade/re-subscribe. |
+| Owner = **`tec-commerce-service`** | The reward *is* a subscription extension → atomic in the service that owns `Subscription` (no cross-service call). Identity from the verified JWT, never the body (P6). |
+| **Raw-Pi cashback = HARD-GATED** (not built) | Ships only after legal + payment-service custody + SYSTEM governance + anti-fraud (FundX/Insure P0 pattern). |
+
+**The loop + entry points (Hub):**
+
+```
+Share invite  →  friend opens ?ref=CODE (captured on ANY page, pre-login)
+   →  friend logs in → code auto-applies (PENDING)
+   →  friend's first paid subscription
+   →  +30d PRO to referrer AND referee   (atomic, once)
+```
+
+Three entry points, one attribution: the animated **Invite & Earn** carousel slide,
+the **🎁 Invite** Hub tool button, and any **`?ref=` invite link** (captured before
+login via `RefCapture`, applied on first auth via `RefApply`).
+
+**Implementation of record:**
+- Backend — `commerce/referral` (`GET /me`, `POST /attribute`) + `ReferralCode` /
+  `ReferralAttribution` (Prisma); reward hook fail-safe inside `subscription.subscribe()`.
+- Hub — `/hub/referral` ("Invite & Earn") + `/api/referral` BFF + global `?ref` capture.
+
+---
+
 ## 6. Domain-Claim Growth Strategy (the real objective)
 
 Claiming a Pi domain for an app requires **≥ 5 unique KYC-verified Pioneers engaging** with

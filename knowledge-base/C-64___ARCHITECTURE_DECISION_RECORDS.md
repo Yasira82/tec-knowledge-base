@@ -34,6 +34,7 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-009 | Unified Payment Contract (Single Source of Truth) | ACCEPTED (June 2026) |
 | ADR-010 | NX repurposed → Opportunity Exchange · Security Governance folded into System | ACCEPTED (July 2026) |
 | ADR-011 | Modules-First — Service Extraction & Modular Architecture Policy | ACCEPTED (July 2026 · تفاصيل في C-132) |
+| ADR-012 | Referral Rewards = Gift Subscription (raw-Pi bonus hard-gated) | ACCEPTED (July 2026) |
 
 ---
 
@@ -340,3 +341,52 @@ The correct layering is **App → Domain Module → Service**, not App → Micro
 
 **References:** C-132 (full detail) · C-47 (Invariant #8, P5) · C-68 (Domain Ownership) ·
 C-70 (Event Governance) · C-113 FundX · C-129 Insure · C-108 Explorer
+
+---
+
+## ADR-012 — Referral Rewards = Gift Subscription (raw-Pi bonus hard-gated)
+
+**Status:** ACCEPTED | **Date:** July 2026 | **Decision Authority:** CEO (C-47) | **Extends:** C-133 (Growth Governance)
+
+### Context
+A referral / invite program (à la Binance/OKX) is the natural amplifier for the
+existing **Founding-Pioneer** growth funnel (C-133). The tempting design — pay the
+referrer a **Pi cash bonus** — is a trap on this platform: a raw-Pi payout is
+**capital movement**, and under the Kernel Spec **`tec-payment-service` is the only
+Pi custodian** (Invariant #8). A Pi giveaway also carries promotions/lottery
+regulatory exposure and is trivially **sybil-farmable** (mass-register → self-refer).
+
+### Decision
+1. **Reward = a gift SUBSCRIPTION month, never raw Pi.** The referrer and the
+   referee each receive a **+30-day PRO** entitlement. No Pi is moved → no custody,
+   no legal gate. Gifting a FREE user makes them PRO; stacking on a paid user extends
+   `current_period_end` (never a downgrade).
+2. **Reward on OUTCOME, not signup.** The reward fires only on the **referee's first
+   paid subscription** — so an account with no economic action earns nothing. Mirrors
+   Legend's "records outcomes, not claims" (C-126).
+3. **Idempotent, once-only.** Attribution is `PENDING → REWARDED` via an **atomic
+   claim**; an upgrade / re-subscribe can never double-reward. A user can be referred
+   **at most once** (unique referee).
+4. **Owned by `tec-commerce-service`.** The reward *is* a subscription extension, so
+   the whole loop (code · attribution · grant) stays atomic in the service that owns
+   `Subscription` — no cross-service call. Identity is derived from the verified JWT,
+   never the request body (P6).
+5. **Raw-Pi cashback is HARD-GATED** (future, not built): it may not ship until it
+   clears the same P0 gates as FundX/Insure custody — **legal review + payment-service
+   custody + SYSTEM governance + anti-fraud** (C-113 / C-129 pattern).
+
+### Consequences
+- A PR that pays a referral bonus in Pi (or moves Pi outside payment-service for
+  growth) is rejected — it must cite the three P0 gates first.
+- The reward path is fail-safe: `subscription.subscribe()` grants the referral bonus
+  in a `try/catch`, so a referral hiccup never breaks the (financial) payment path.
+- Three entry points, one attribution: the animated **Invite & Earn** carousel slide,
+  the **🎁 Invite** Hub tool, and any **`?ref=` invite link** captured before login
+  (applied automatically on first authentication).
+
+**Implementation:** `tec-commerce-service` referral module (`commerce/referral` — `GET /me`,
+`POST /attribute`) + `ReferralCode` / `ReferralAttribution` (Prisma); Hub `/hub/referral`
++ `/api/referral` BFF + global `?ref` capture. See C-133 §Referral Program.
+
+**References:** C-133 (Growth Governance) · C-47 (Invariant #8 custody, P6) · C-113 FundX
+(hard-gate pattern) · C-126 Legend (outcome-not-claim) · C-68 (commerce ownership)
