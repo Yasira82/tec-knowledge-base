@@ -1,8 +1,12 @@
 name: Knowledge Base CI
 
 on:
+  # push = main ONLY. A branch push used to ALSO fire this workflow while the
+  # pull_request event fired it again for the same commit — two identical runs
+  # (2 × 14 jobs) per push, competing for the same runners. Branch coverage comes
+  # from the pull_request trigger below; main covers post-merge.
   push:
-    branches: [main, 'claude/**', 'cursor/**']
+    branches: [main]
     paths:
       - 'skills/**'
       - 'knowledge-base/**'
@@ -47,6 +51,15 @@ on:
       - 'marketing/**'
       - 'README.md'
       - 'CLAUDE.md'
+
+# One live run per ref. A new push supersedes the previous run for the same
+# branch/PR instead of queueing behind it — without this, superseded runs sat
+# `queued` forever and starved the current commit's checks (25 July 2026: 3 runs
+# × 14 jobs stuck 25+ min, zero ever reaching in_progress).
+# main is exempt from cancellation: a post-merge run must always complete.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   validate-skills:
