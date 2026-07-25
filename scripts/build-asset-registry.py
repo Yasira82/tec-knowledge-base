@@ -85,6 +85,8 @@ def classify_tier(cid_num):
         return 'tier-1-constitutional-runtime'
     if n == 134:  # Pioneer Runtime Charter — cross-app onboarding runtime (planned; rules binding)
         return 'tier-1-institutional-intelligence'
+    if n == 135:  # Launch Strategy: Focused-8 + Month-9 trigger — current-state governance/strategy (like C-133)
+        return 'tier-1-constitutional-runtime'
     return 'tier-2-experimental'
 
 

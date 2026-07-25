@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-25T12:17:31.608229
+# Generated: 2026-07-25T19:46:40.338573
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -12,7 +12,7 @@
 #     To update: edit the source C-NN.md file, then re-run:
 #       python3 scripts/build-asset-registry.py
 #
-# Total assets: 115
+# Total assets: 116
 # Coverage: 100% (all C-docs in knowledge-base/)
 
 version: 1.2.0
@@ -295,6 +295,24 @@ assets:
     supersedes: []
     superseded_by: null
     last_verified: "2026-07-23"
+    next_review: "2026-12-01"
+
+  - id: C-135
+    type: document
+    tier: tier-1-constitutional-runtime
+    institutional_role: "Launch Strategy: The Focused-8 & the Month-9 Marketing Trigger"
+    path: knowledge-base/C-135___LAUNCH_STRATEGY_FOCUSED_8.md
+    constitutional:
+      truth_state: current-state
+      governance_state: governance-approved
+      verification_state: documentation-verified
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-135-launch-strategy-the-focused8-the-month9-marketing-trigger"]
+    depends_on: [C-64]
+    supersedes: []
+    superseded_by: null
+    last_verified: "2026-07-25"
     next_review: "2026-12-01"
 
   - id: C-13
@@ -2108,14 +2126,14 @@ assets:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total assets: 115
-#   tier-1-constitutional-runtime: 61
+# Total assets: 116
+#   tier-1-constitutional-runtime: 62
 #   tier-1-institutional-intelligence: 46
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
-#   current-state: 86
+#   current-state: 87
 #   future-vision: 16
 #   planned-state: 8
 #   speculation: 5
