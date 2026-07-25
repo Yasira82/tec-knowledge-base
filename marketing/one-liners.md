@@ -21,6 +21,13 @@ Pi Browser, and earn a permanent Founding badge in your reputation. Earned, neve
 **Founding 100 (AR):** كن من أول 100 Founding Pioneer. افتح كل تطبيقات TEC في متصفح Pi،
 واكسب شارة Founding دائمة في سمعتك. بتتكسب، متتشريش.
 
+**Invite & Earn (EN):** Invite a friend to TEC — when they take their first
+subscription, you both get a free 30-day PRO month. The reward is a subscription
+month, never Pi.
+
+**Invite & Earn (AR):** ادعُ صاحبك على TEC — أول ما يشترك أول اشتراك ليه، الاتنين
+تاخدوا شهر PRO مجانًا (30 يوم). المكافأة شهر اشتراك، مش Pi.
+
 ## Per-app one-liners
 
 | App | EN | AR |

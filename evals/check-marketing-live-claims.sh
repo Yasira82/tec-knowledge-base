@@ -103,6 +103,11 @@ PREVIEW_MARKERS = ("preview", "معاينة", "simulated", "educational", "comin
 LIVE_MARKERS_EN = ("is live on pi", "live on pi")
 LIVE_MARKERS_AR = ("شغّال دلوقتي", "شغال دلوقتي")
 
+# Cross-cutting marketing sections that are NOT per-app posts (referral, pricing,
+# campaign copy…). They may legitimately mention the platform being live without
+# naming a fleet app, so they must never be read as an app claim (R3 false positive).
+NON_APP_SECTIONS = ("invite", "referral", "founding", "pioneer", "campaign", "template", "platform")
+
 def classify(block: str):
     """Return 'preview', 'live', or None for a section's text."""
     low = block.lower()
@@ -139,6 +144,12 @@ for md in sorted(glob.glob(os.path.join(mkt_dir, "*.md"))):
 
     def flush():
         if cur_header and cur_app and buf:
+            # Match the extracted NAME only (never the whole header line — a
+            # description like "risk platform, not an insurer" must not disqualify
+            # the real Insure post).
+            name_low = (cur_app or "").lower()
+            if any(k in name_low for k in NON_APP_SECTIONS):  # cross-cutting, not an app post
+                return
             body = "".join(buf)
             if PLACEHOLDER.search(body):        # template scaffold — not a claim
                 return

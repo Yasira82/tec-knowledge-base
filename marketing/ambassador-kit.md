@@ -27,6 +27,9 @@ the honesty rules there are binding on ambassadors too.
 - **Honest by design.** Counters show real numbers or zero. We never fake traction.
 - **Pi does KYC.** We don't verify identity ourselves; Pi handles wallet + KYC.
 - **Built to a constitution.** Every app has a charter; money is gated to one service.
+- **Invite & Earn is a free month, not a payout.** Invite a friend; when they take
+  their first subscription, you both get a free 30-day PRO month. It's a subscription
+  reward — we don't pay Pi for referrals.
 
 ## Do
 
@@ -44,6 +47,9 @@ the honesty rules there are binding on ambassadors too.
 - ❌ Don't claim we KYC or verify people ourselves.
 - ❌ Don't promote an app whose experience is an empty page — mark it preview.
 - ❌ Don't create false urgency or fake scarcity.
+- ❌ Don't pitch the referral as "earn Pi" / "Pi cashback" / "X π per invite" — the
+  reward is a **free PRO month**, and it unlocks only on the friend's first
+  subscription (ADR-012). A Pi-denominated referral payout is hard-gated; it doesn't exist.
 
 ## Handling common questions
 
