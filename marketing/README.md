@@ -13,9 +13,20 @@ runtime). C-133 governs; this kit executes.
 | File | Use |
 |------|-----|
 | `one-liners.md` | Elevator pitches — platform + per-app one-liners (bios, ads, intros) |
-| `launch-posts.md` | A ready launch post per app (X/Twitter, Telegram, Pi community) |
+| `launch-posts.md` | A ready launch post per app + the Invite & Earn post (X/Twitter, Telegram, Pi community) |
 | `pi-portal-copy.md` | Pi Developer Portal listing copy per app (tagline + description) |
 | `ambassador-kit.md` | Talking points, do/don't, and the honesty rules for TEC Ambassadors |
+| `faq.md` | Objection-handling — the trust questions people actually ask (EN + AR) |
+| `whats-live.md` | The honest "is this real?" proof sheet — **CI-checked** against the fleet registry |
+| `launch-plan.md` | The launch sequence + cadence (turns the posts into an ordered campaign) |
+| `outreach.md` | First-touch DM templates for merchants · developers · Pioneers (EN + AR) |
+
+## Link hygiene (measure what works)
+
+Tag every shared link so you know which post/channel drove sign-ups — add a UTM tail
+(e.g. `?utm_source=telegram&utm_campaign=founding100`) on marketing links, and use the
+referral **`?ref=`** code for invites (it attributes the reward automatically). Keep the
+apex path clean: real `https://` URLs only, never a placeholder.
 
 ## Single source of truth
 
