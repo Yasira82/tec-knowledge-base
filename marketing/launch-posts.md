@@ -52,6 +52,44 @@ Part of TEC — 24 apps, one Pi identity. Become a Founding Pioneer: hub.tecosys
 
 ---
 
+## Invite & Earn (referral)
+
+The viral loop post — use it anywhere, any time (it is not tied to one app launch).
+**The reward is a free PRO month, not Pi.** Never write this as a Pi bonus, cashback,
+or earnings — that is a different (hard-gated) thing and claiming it breaks honesty
+rule #3. The month unlocks only when the invited friend takes their **first
+subscription** — say that plainly; it is what makes the offer credible.
+
+**EN**
+```
+🎁 Invite a friend to TEC — you both get a free PRO month.
+
+Share your invite link. When they take their first subscription, you each get 30 days of TEC PRO.
+
+Get your link → hub.tecosystem.app/hub/referral
+24 apps, one Pi identity. Become a Founding Pioneer: hub.tecosystem.app/pioneers
+```
+
+**AR**
+```
+🎁 ادعُ صاحبك على TEC — الاتنين تاخدوا شهر PRO مجانًا.
+
+ابعتله لينك الدعوة بتاعك. أول ما يشترك أول اشتراك ليه، كل واحد فيكم ياخد 30 يوم TEC PRO.
+
+هات لينكك → hub.tecosystem.app/hub/referral
+24 تطبيق، هوية Pi واحدة. كن من نادي الـ 100 المؤسّس: hub.tecosystem.app/pioneers
+```
+
+**Short version (for a reply or a bio line)**
+- **EN:** Invite a friend to TEC — when they subscribe, you both get a free PRO month. 🎁
+- **AR:** ادعُ صاحبك على TEC — لما يشترك، الاتنين تاخدوا شهر PRO مجانًا. 🎁
+
+> ⚠️ **Do not write:** "earn Pi", "Pi cashback", "referral bonus in Pi", or any number
+> of π per invite. The reward is a **subscription month** (ADR-012 / C-133 §5.1). A
+> Pi-denominated referral payout is hard-gated and does not exist.
+
+---
+
 ## Ready posts
 
 ### TEC (Hub) — 🔷
