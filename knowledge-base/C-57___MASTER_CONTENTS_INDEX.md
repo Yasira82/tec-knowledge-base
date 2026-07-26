@@ -286,7 +286,7 @@ to a professional bar, then start marketing at a **month-9 hard trigger** (even 
 
 | Content | العنوان | جملة واحدة |
 |---------|---------|----------|
-| **C-135** | Launch Strategy: Focused-8 & Month-9 Trigger | Depth over breadth — deepen **8 apps** (Hub · Commerce · Ecommerce · Explorer · Zone · Connection · NBF · Analytics) to an objective **Professional Bar** by month 9, then **marketing starts unconditionally** (rolling launch); credibility before campaign; the other 16 stay honest **"preview"**; **R2 open question** — confirm whether the Pi domain claim needs *active users* or just "app done" |
+| **C-135** | Launch Strategy: Focused-8 & Month-9 Trigger | Depth over breadth — deepen the core **8** (Hub · Commerce · Ecommerce · Explorer · Zone · Connection · NBF · Analytics) + **Assets promoted (#9)**, path to **11** with Life/Alert candidates (only if depth allows), to an objective **Professional Bar** by month 9, then **marketing starts unconditionally** (rolling launch); credibility before campaign; the rest stay honest **"preview"**; **R2 open question** — confirm whether the Pi domain claim needs *active users* or just "app done" |
 
 ---
 

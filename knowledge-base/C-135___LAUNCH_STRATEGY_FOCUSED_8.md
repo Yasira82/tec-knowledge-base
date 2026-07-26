@@ -59,11 +59,34 @@ deployed + verified, so month-9 depth is achievable.
 | 6 | **Connection** | Your trusted network + reputation baseline | Turns one-off use into a graph → retention |
 | 7 | **NBF** | Start a verified Pi business in minutes | Converts a Pioneer into a *producer* (supply for Commerce) |
 | 8 | **Analytics** | See the real numbers behind your Pi activity | The proof layer — makes the economy legible + credible |
+| **+9** | **Assets** | Own + manage Pi-native assets (NFTs, domains) | **Promoted (see §2.1)** — already launch-ready; completes "own things on Pi" beside buy/sell |
 
 **The loop the 8 create:** NBF (start a business) → Commerce/Ecommerce (transact) →
 Explorer (get discovered) → Zone (get verified) → Connection (build trust) → Analytics
 (see it working) — all on **Hub** identity + payments. That's a self-reinforcing economy,
-not eight islands.
+not eight islands. **Assets** slots in naturally as the ownership layer.
+
+### 2.1 Review outcome & the path to a launch set of 9 → 11 (July 2026)
+
+A launch-readiness review of the three most-mature apps produced:
+
+| App | In the core 8? | Review verdict |
+|-----|:---:|---|
+| **Commerce** | ✅ | Clean on static review — full BFF, real payment flow (ADR-007), auth, legal, 20 test files, no placeholders |
+| **Assets** | — (was outside) | Clean on static review → **promoted into the launch set (#9)**. Free win: already done |
+| **Ecommerce** | ✅ | Had one real gap — **missing `/api/health`** — now **fixed** (`tec-ecommerce` #54: health route + 3 tests; typecheck + 78/78 suite green). Runtime-verify its client `ssoRedirect` login in Pi Browser (manual, C-123) |
+
+So the launch set is now **9** (the core 8 + Assets). Because Commerce + Assets are done
+and Ecommerce is a small gap, dev capacity is freed for **up to 2 more → a set of 11**.
+
+**Candidate +2 (→ 11):** **Life** (personal OS — goals/preferences; the personalization
+baseline, C-121 pipeline) and **Alert** (unified notification inbox — a retention tool).
+Both already have real backends, are **ungated**, and are broadly useful.
+
+> ⚠️ **Guard the thesis:** the number is not the goal — **depth is.** Add Life/Alert to the
+> launch set **only if** each can hit the Professional Bar (§4) by month 9 **without**
+> stealing polish from the transaction spine (Hub · Commerce · Ecommerce · Assets). If in
+> doubt, ship **9** excellently rather than **11** adequately.
 
 ---
 
@@ -172,12 +195,14 @@ The kit is ready — no new copy needed. Day-1 actions (all assets exist in `mar
 ## 9. Definition of done (for THIS plan)
 
 ```
-□ By 30 Sep 2026: the Focused-8 each pass the Professional Bar (§4)
-□ Each Focused-8 app soft-validated with ≥5 real Pioneers before its public push
+□ By 30 Sep 2026: the launch set (core 8 + Assets = 9; up to 11 with Life/Alert)
+  each pass the Professional Bar (§4)
+□ Each launched app soft-validated with ≥5 real Pioneers before its public push
 □ Marketing Wave 1 live at the month-9 trigger (§6) — unconditional
 □ Referral loop self-verified end-to-end before it's promoted
-□ By Dec 2026 (month 12): the Focused-8 on track for their Pi domains
-□ The other 16 remain deployed + honestly labelled "preview" throughout
+□ By Dec 2026 (month 12): the launch set on track for their Pi domains
+□ Add Life/Alert (→11) ONLY if they hit the Bar without stealing spine depth (§2.1)
+□ The remaining apps stay deployed + honestly labelled "preview" throughout
 ```
 
 ---
