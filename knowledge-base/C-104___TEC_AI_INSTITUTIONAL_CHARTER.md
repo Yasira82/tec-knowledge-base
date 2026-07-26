@@ -1,17 +1,75 @@
 # C-104 — TEC AI Intelligence Reasoning CHARTER
-## TEC Economic Infrastructure Design Partnership — v1.0
+## TEC AI — The Intelligence Layer of the TEC Economy — v2.0
 
 **Truth State:** [Planned State]
-**Governance State:** [Draft]
-**Verification State:** [Unverified]
+**Governance State:** [Governance Approved]
+**Verification State:** [Assumed]
 **Authority Scope:** [Platform]
-**Decision Status:** [Recommended]
+**Decision Status:** [Approved]
+
+> **v2.0 activation (CEO decision).** TEC AI is promoted from a Draft charter to one
+> of the platform's **three constitutional pillars**. It is **NOT app #25** — it is the
+> **intelligence layer ABOVE all 24 apps**. **V1 (the honest concierge) is SHIPPED**
+> (Hub `/ai` — accurate app-guide + auth-gated); the full cross-app orchestrator is
+> V2/V3 (§10), phased to fit the launch plan (**C-135**). This charter now carries the
+> unified definition, the 3-pillar model, and the reason→orchestrate→execute law.
+
+> **TEC AI — The Intelligence Layer.** The unified AI orchestrator that understands
+> users, apps, workflows, and the Pi economy — delivering intelligent assistance and
+> cross-domain automation across the entire TEC ecosystem.
 
 ---
 
 ## 1. MISSION
 
 Transform the TEC Economic Runtime's institutional knowledge and real-time economic data into governed, auditable intelligence that assists every actor — user, merchant, investor, builder — in making better economic decisions.
+
+---
+
+## 1.5 THE THREE PILLARS + THE INTELLIGENCE-LAYER LAW
+
+TEC's institutional moat is that it is not 24 apps — it is **one economy with three
+constitutional pillars above the apps**:
+
+| Pillar | Role | Question it answers | Charter |
+|--------|------|---------------------|---------|
+| **Nexus** | Orchestration | *"What should happen next?"* — runs the multi-step plan | C-109 |
+| **TEC AI** | **Intelligence** | *"What should I do, and where?"* — understands + recommends | **C-104 (this)** |
+| **Legend** | Trust | *"What actually happened?"* — records the outcome as evidence | C-126 |
+
+### The reason → orchestrate → execute law (LOCKED)
+```
+TEC AI      REASONS   — understands intent, assembles context, proposes a PLAN
+   ↓ hands the plan to
+Nexus       EXECUTES  — runs the plan as a governed saga (C-109), with compensation
+   ↓ each step calls
+Owning svc  DOES THE WORK — payment-service moves Pi, Estate owns listings, etc.
+   ↓ after the fact
+Legend      RECORDS   — the outcome becomes reputation evidence (C-126)
+```
+TEC AI **never executes** a workflow itself and **never writes another service's truth**.
+It proposes; Nexus orchestrates; the owning service acts; Legend records.
+
+### Decision SUPPORT, not Decision Maker (C-47 P6 — non-negotiable)
+For any **sensitive or financial** step the AI may **recommend and pre-fill**, but the
+**human confirms inside the owning app**. The AI must never auto-buy, auto-move Pi, or
+auto-commit capital. Missing/unknown actor context → the AI **denies by default**.
+
+### Honesty (C-133 §7) — the AI inherits the platform's honesty rules
+- Present **preview/gated** apps honestly. In a recommendation, if a step routes through
+  **FundX / Insure / Brookfield**, the AI states they are **educational/preview — not live**.
+- Never fabricate a number; never promise returns; a correct *"I don't know"* beats a
+  confident wrong answer. (Enforced in the V1 system prompt already.)
+
+### Worked example — "I want to buy land" (the target V2 experience)
+1. TEC AI interprets → opens **Estate**, surfaces options from **Explorer**, prices from
+   **Analytics**, verified status from **Zone** *(all reads)*.
+2. Financing → routes to **FundX** — **stated as preview/not-live** until it's ungated.
+3. Protection → routes to **Insure** — **stated as preview**.
+4. The purchase itself happens **in Estate + payment-service, with the user confirming** —
+   never the AI.
+5. After completion, **Legend** records the outcome — the AI does not write Legend.
+All inside one conversation, but every action stays constitutional.
 
 ---
 
@@ -170,40 +228,53 @@ Availability:              ≥ 99.5% (graceful degradation — not P0 down)
 
 ---
 
-## 10. FUTURE EVOLUTION
+## 10. FUTURE EVOLUTION (phased to the launch plan — C-135)
 
 ```
-Phase 1 (Post-Mainnet):
-  → Basic Hub recommendations (wallet insights, product suggestions)
-  → Merchant intelligence (revenue optimization hints)
-  → Natural language query for Analytics
+V1 — Honest Concierge  ✅ SHIPPED (Hub /ai)
+  → Bilingual chat that understands intent and routes to the RIGHT app + page
+  → System prompt = the real 24-app registry (SSoT) + honesty rules (C-133)
+  → Auth-gated (logged-in TEC users only; protects the paid AI budget)
+  → Text-only guide — it recommends + explains; it does NOT execute
+  → Does NOT require the full C-94 Capability Registry (that gate is a V2 prerequisite)
 
-Phase 2:
-  → Personal economic advisor (Life + Connection integration)
-  → Business agent (Nexus orchestration via AI)
-  → AI-assisted DX (capability generation support)
+V2 — Cross-App Orchestrator  (AFTER the economy is running; not before the C-135 launch)
+  → Tool/function-calling → navigation + pre-filled intents into owning apps
+  → Reason → hand plan to Nexus (C-109) → owning services execute → Legend records
+  → Personal economic advisor: Life + Connection context, CONSENT-gated (C-106)
+  → Governed Capability Registry (C-94) + Context Engine (C-97) come online here
 
-Phase 3:
+V3 — Institutional Intelligence
   → Institutional Construction Runtime (TEC AI + DX)
-  → External Pi ecosystem AI services (via DX API)
-  → Economic forecasting and market intelligence
+  → External Pi-ecosystem AI services (via DX API)
+  → Economic forecasting + market intelligence
 ```
+
+> **Sequencing discipline (C-135 + C-121):** the Intelligence Layer is the moat, but it
+> is built **on top of a running economy** — C-121 requires Analytics + Zone live first
+> ("reasoning without observation / from unverified claims" otherwise). V1 ships now; V2
+> waits until the Focused set is live and adopted. Do NOT let V2 block the month-9 launch.
 
 ---
 
 ## 11. ENGINEERING UPDATES REQUIRED
 
-**P0 — Pre-Launch Requirement:**
+> **Scope correction (v2.0):** the P0 items below are prerequisites for **V2 (the
+> orchestrator)**, NOT for V1. V1 (the honest concierge) shipped **without** C-94/C-97 —
+> it recommends + routes + explains from the app registry, executes nothing, and needs no
+> capability registry. Keep V2 gated on these; do not retrofit them onto V1.
+
+**P0 — Pre-V2 Requirement (the orchestrator):**
 ```
 [P0-1] Governed Capability Registry (C-94)
-  Must be built before TEC AI launches.
-  AI cannot operate without certified capabilities to consume.
+  Must be built before TEC AI V2 (tool-calling / execution) launches.
+  AI cannot execute actions without certified capabilities to consume.
   Dependency: C-110 SYSTEM for governance approval flows.
 
 [P0-2] Context Engine (C-97)
   User context assembly from Life + Connection + Analytics.
   Required for relevant (non-generic) recommendations.
-  Privacy: explicit consent model before Life data consumed.
+  Privacy: explicit consent model before Life data consumed (C-106).
 ```
 
 **P1:**
@@ -244,3 +315,18 @@ Other charters depend on this one for:
   C-103 ECOMMERCE → product recommendations
   C-115 DX        → AI builder assistance
 ```
+
+---
+
+## Related Documents
+
+- **C-121** Institutional Knowledge Pipeline — positions TEC AI at the **apex** of the
+  intelligence chain (Hub → Life → Connection → Zone → Analytics → Nexus → **TEC AI**);
+  the source of the "reason from observation + verified evidence" rule.
+- **C-109** Nexus (Coordination Runtime) — the **Orchestration** pillar; TEC AI hands it
+  the plan, Nexus executes the saga.
+- **C-126** Legend (Reputation Runtime) — the **Trust** pillar; records the outcome TEC AI
+  never writes.
+- **C-135** Launch Strategy — the V1-now / V2-after-launch sequencing this charter follows.
+- **C-133** Adoption & Growth Governance — the honesty rules the AI inherits.
+- **C-47** Kernel Spec — P6 (Decision Support, fail closed) + P5 (layer responsibility).
