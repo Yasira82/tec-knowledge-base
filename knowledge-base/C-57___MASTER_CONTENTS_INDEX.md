@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-134)
+## دليل سريع للـ Content (C-00 → C-135)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -279,6 +279,17 @@
 
 ---
 
+## TIER 16 — Launch Strategy (C-135)
+
+`[Current State]` / `[Governance Approved]` — the CEO launch decision: deepen a **Focused-8**
+to a professional bar, then start marketing at a **month-9 hard trigger** (even if apps aren't 100%).
+
+| Content | العنوان | جملة واحدة |
+|---------|---------|----------|
+| **C-135** | Launch Strategy: Focused-8 & Month-9 Trigger | Depth over breadth — deepen the core **8** (Hub · Commerce · Ecommerce · Explorer · Zone · Connection · NBF · Analytics) + **Assets promoted (#9)**, path to **11** with Life/Alert candidates (only if depth allows), to an objective **Professional Bar** by month 9, then **marketing starts unconditionally** (rolling launch); credibility before campaign; the rest stay honest **"preview"**; **R2 open question** — confirm whether the Pi domain claim needs *active users* or just "app done" |
+
+---
+
 ## Quick Lookup
 
 | I need to... | Go to |
@@ -385,6 +396,7 @@ C-124→C-131  User-Layer App Charters (NBF · Epic · Legend · Elite · VIP ·
 C-132        Service Extraction & Modular Architecture Policy (Modules-First / ADR-011)
 C-133        Platform Adoption & Growth Governance (Adoption Levels · campaigns · domain-claim strategy)
 C-134        Pioneer Runtime Charter (official onboarding runtime — missions · event contract · Founding rules)
+C-135        Launch Strategy: Focused-8 & Month-9 Trigger (deepen 8 apps → month-9 hard marketing trigger)
 
 ⚠️ هذا الفهرس تم تصحيحه بالكامل في Session 9 (يونيو 2026) ليطابق
    عناوين الملفات الفعلية. للتفاصيل → C-80
