@@ -230,13 +230,16 @@ that keeps it that way — plus the AI guardrail that stops any agent from creat
 | Artifact | Path | Purpose |
 |----------|------|---------|
 | Canonical Numbering Engine | `evals/check-canonical-numbering.sh` | CI gate: the `C-NN.md` files are the **canonical** ID source; the generated registry and the C-57 index MUST mirror them exactly. Fails on any **duplicate**, **invented**, **renumbered**, **orphaned**, or **missing** ID. Complements (does not overlap) `check-registry-integrity` (R-* rules) and `check-c57-index` (description drift). |
-| AI Constitutional Guard | `.cursorrules` **RULE 6** | Forbids any AI/human from inventing, renumbering, reusing, or replacing a `C-number`; a new doc takes the **next unused integer** and must land in file + C-57 + regenerated registry together. |
+| Session ⟶ Canonical Engine | `evals/check-session-canonical.sh` | CI gate: the "Sessions → Must Follow" link. Every `C-NN` cited in `memory/` or `audits/` MUST resolve to a real canonical file — catches invented/renumbered IDs leaking into session/audit narrative. Range endpoints are validated; reserved-gap interiors are not asserted. |
+| AI Constitutional Guard | `.cursorrules` **RULE 6** | Encodes the golden chain **PDF → Canonical → Files → Registry (generated) → Sessions (must follow)**. Forbids inventing, renumbering, reusing, or replacing a `C-number`; makes **C-number assignment human authority** (AI drafts content as `C-XX___PLACEHOLDER.md`, never self-assigns or cites an ID before its file exists). |
 
 ### v3.12.0 notes
 - Pure additive change — **no C-doc edited**, so the registry is unchanged (no rebuild
-  needed). File↔registry↔index verified at 116/116/116, 0 drift.
-- New CI job `check-canonical-numbering` wired into `.github/workflows/knowledge-ci.yml`
-  alongside the other ID/registry gates.
-- Reserved-range gaps (C-3–9, C-24–29, C-33–39) are reported as **INFO only** — they are
-  legitimate domain reservations (see the range table above), never a failure.
-- **All KB gates pass, 0 errors** (now including the new numbering gate).
+  needed). Verified: file↔registry↔index at 116/116/116; `memory/`+`audits/` cite **0**
+  dangling C-references (12 files scanned).
+- Two new CI jobs wired into `.github/workflows/knowledge-ci.yml`:
+  `check-canonical-numbering` (files ⟺ registry ⟺ C-57 index) and
+  `check-session-canonical` (memory/audits ⟶ canonical files).
+- Reserved-range gaps (C-3–9, C-24–29, C-33–39) are reported as **INFO only** by the
+  numbering gate — they are legitimate domain reservations, never a failure.
+- **All KB gates pass, 0 errors** (now including both new gates).

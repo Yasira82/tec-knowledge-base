@@ -189,6 +189,16 @@ jobs:
       - name: Run Canonical Numbering Enforcement
         run: bash evals/check-canonical-numbering.sh
 
+  check-session-canonical:
+    name: Session ⟶ Canonical Reference Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run Session Canonical Reference Check
+        run: bash evals/check-session-canonical.sh
+
   check-truth-framework:
     name: Truth Framework Adoption (v3.5.0+)
     runs-on: ubuntu-latest

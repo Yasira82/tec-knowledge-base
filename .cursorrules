@@ -63,21 +63,49 @@ were opened and all failed the same way before this rule existed.)
 
 ## 🔴 RULE 6 — AI Constitutional Guard (canonical numbering)
 
-Constitutional IDs (`C-NN`) are LAW. The `C-NN.md` files in `knowledge-base/` are the
-**canonical** source of every ID; `architecture/asset-registry.yaml` (generated) and
-`C-57` (index) MUST mirror them exactly. Therefore, no AI agent (or human) may:
+**The golden chain — memorize it:**
 
-- **invent** a `C-number` out of thin air — a new doc takes the **next unused integer**
-  (highest existing + 1; see `CLAUDE.md` range table), never a "nice-looking" number;
-- **renumber** an existing doc — once assigned, an ID is permanent (Rule: *don't renumber
-  any doc that exists*; see the C-124→C-130 renumber that only happened pre-assignment);
-- **reuse** a retired/existing number for different content — an ID maps to exactly one doc;
+```
+PDF  →  Canonical      (the constitutional index is the source of truth)
+ ↓
+Files (knowledge-base/C-NN.md)  →  Canonical in-repo (mirror the PDF; never invent)
+ ↓
+Registry (asset-registry.yaml)  →  Generated       (never hand-write an ID)
+ ↓
+Sessions / memory / audits      →  Must Follow      (only cite IDs that exist)
+```
+
+Constitutional IDs (`C-NN`) are LAW. The `C-NN.md` files in `knowledge-base/` are the
+**canonical** in-repo source of every ID; `architecture/asset-registry.yaml` (generated)
+and `C-57` (index) MUST mirror them exactly. Therefore, no AI agent (or human) may:
+
+- **invent** a `C-number` out of thin air;
+- **renumber** an existing doc — once assigned, an ID is permanent (the C-124→C-130
+  renumber only happened *pre-assignment*, before any file/registry/index existed);
+- **reuse** a retired/existing number for different content — one ID ⟷ exactly one doc;
 - **replace** one doc's ID with another's, or reference an ID that has no backing file.
 
-Any new ID MUST land in all three surfaces together: the file, the C-57 index (Rule 4),
-and the regenerated registry (Rule 1). The **Canonical Numbering Enforcement** CI gate
-(`evals/check-canonical-numbering.sh`) fails the build on any duplicate, invented,
-renumbered, orphaned, or missing ID — files ⟺ registry ⟺ C-57 index must agree exactly.
+**C-number assignment is human authority.** An AI agent MAY draft the *content* of a new
+constitutional document, but:
+
+- it MUST NOT self-assign the final `C-number`; it proposes the **next unused integer**
+  (highest existing + 1; see `CLAUDE.md` range table) and flags it for human ratification —
+  e.g. author the draft as `C-XX___PLACEHOLDER.md` (the `XX` keeps it out of the registry
+  builder, which only matches `C-\d+`);
+- it MUST NOT cite a not-yet-created `C-number` as if it were canonical in any session log,
+  `memory/` entry, `audit/`, or PR description — cite an ID only after the backing file
+  exists and is registered.
+
+Once a number *is* ratified, the new ID MUST land in all three surfaces together: the file,
+the C-57 index (Rule 4), and the regenerated registry (Rule 1).
+
+**Two CI gates enforce this** (both fail the build on drift):
+
+- `evals/check-canonical-numbering.sh` — files ⟺ registry ⟺ C-57 index must agree exactly
+  (no duplicate, invented, renumbered, orphaned, or missing ID).
+- `evals/check-session-canonical.sh` — every `C-NN` cited in `memory/` or `audits/` must
+  resolve to a real canonical file (catches invented/renumbered IDs leaking into the
+  session/audit narrative — the "Sessions → Must Follow" link of the chain).
 
 ## Authority + full guidance
 
