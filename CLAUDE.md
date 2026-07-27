@@ -219,3 +219,24 @@ regresses to "24 apps = 24 microservices."
 - C-57 master index gained **TIER 13** (Platform Architecture Policy). Range → C-132.
 - **All 13 KB gates pass, 0 errors.** Proven in production: Life/Connection/Zone are
   modules inside `tec-identity-service` — the reference pattern C-132 formalizes.
+
+## Session 19 Additions (v3.12.0) — Canonical Numbering Enforcement (Engineering Audit P0)
+
+Closes the **P0 "Canonical Numbering / Single Source of Truth"** finding from the
+Engineering Audit & Remediation Report. There was no *live* numbering drift (files ⟺
+registry ⟺ C-57 index already matched 1:1), so this session adds the **enforcement**
+that keeps it that way — plus the AI guardrail that stops any agent from creating it.
+
+| Artifact | Path | Purpose |
+|----------|------|---------|
+| Canonical Numbering Engine | `evals/check-canonical-numbering.sh` | CI gate: the `C-NN.md` files are the **canonical** ID source; the generated registry and the C-57 index MUST mirror them exactly. Fails on any **duplicate**, **invented**, **renumbered**, **orphaned**, or **missing** ID. Complements (does not overlap) `check-registry-integrity` (R-* rules) and `check-c57-index` (description drift). |
+| AI Constitutional Guard | `.cursorrules` **RULE 6** | Forbids any AI/human from inventing, renumbering, reusing, or replacing a `C-number`; a new doc takes the **next unused integer** and must land in file + C-57 + regenerated registry together. |
+
+### v3.12.0 notes
+- Pure additive change — **no C-doc edited**, so the registry is unchanged (no rebuild
+  needed). File↔registry↔index verified at 116/116/116, 0 drift.
+- New CI job `check-canonical-numbering` wired into `.github/workflows/knowledge-ci.yml`
+  alongside the other ID/registry gates.
+- Reserved-range gaps (C-3–9, C-24–29, C-33–39) are reported as **INFO only** — they are
+  legitimate domain reservations (see the range table above), never a failure.
+- **All KB gates pass, 0 errors** (now including the new numbering gate).

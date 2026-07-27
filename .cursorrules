@@ -61,6 +61,24 @@ Check open PRs first. If a PR already proposes your change, update it or comment
 do not open a fresh near-identical PR. (Eight duplicate `[Unverified]→[Assumed]` PRs
 were opened and all failed the same way before this rule existed.)
 
+## 🔴 RULE 6 — AI Constitutional Guard (canonical numbering)
+
+Constitutional IDs (`C-NN`) are LAW. The `C-NN.md` files in `knowledge-base/` are the
+**canonical** source of every ID; `architecture/asset-registry.yaml` (generated) and
+`C-57` (index) MUST mirror them exactly. Therefore, no AI agent (or human) may:
+
+- **invent** a `C-number` out of thin air — a new doc takes the **next unused integer**
+  (highest existing + 1; see `CLAUDE.md` range table), never a "nice-looking" number;
+- **renumber** an existing doc — once assigned, an ID is permanent (Rule: *don't renumber
+  any doc that exists*; see the C-124→C-130 renumber that only happened pre-assignment);
+- **reuse** a retired/existing number for different content — an ID maps to exactly one doc;
+- **replace** one doc's ID with another's, or reference an ID that has no backing file.
+
+Any new ID MUST land in all three surfaces together: the file, the C-57 index (Rule 4),
+and the regenerated registry (Rule 1). The **Canonical Numbering Enforcement** CI gate
+(`evals/check-canonical-numbering.sh`) fails the build on any duplicate, invented,
+renumbered, orphaned, or missing ID — files ⟺ registry ⟺ C-57 index must agree exactly.
+
 ## Authority + full guidance
 
 `CLAUDE.md` (repo root) is the complete guide — read it. Authority hierarchy:
