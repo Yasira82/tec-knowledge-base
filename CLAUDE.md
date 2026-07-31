@@ -320,3 +320,18 @@ consumers boot in prod) and the **last edge is wired**: Legend → Elite.
   way to build a cross-module dependency; contrast the VIP → Elite raw read).
 - **C-02**: Session 21 block (Runtime-live consumers + Legend → Elite). Charter headers
   unchanged → registry stable.
+
+## Session 22 Additions — Value-chain loose ends closed (2 of 3 gaps; 1 deferred with reason)
+
+Backend `tec-core-backend #161` closed the two clean-to-close gaps from the value-chain
+audit; the docs are reconciled here. Registry unaffected (no C-doc header lines changed).
+
+| Gap | Fix (code) | Doc reconciliation |
+|-----|------------|--------------------|
+| **1 — popularity producer missing** | `analytics-service` daily scoring batch (`scoring.service.ts::runScoringBatch`, ADR-013) now ALSO emits `analytics.business.popularity.v1` per active owner (popularity = merchant-activity count, from Analytics' OWN log — no cross-service read). Explorer degrades gracefully without it. | `events-catalog.yaml`: that event flipped **planned → live** (11 live · 1 planned). **C-105** Implementation Status: "Shipped Session 22" producer note. |
+| **2 — VIP→Elite raw cross-module DB read** | `vip.getCurrentTier` no longer reads the `EliteRecognition` table; it calls **`EliteService.hasActiveRecognition(owner)`** — a service API (VipModule imports EliteModule), the same R-2-clean pattern as Elite→Legend. | **C-132 §7.5**: seam note flipped ⚠️ R-2-watch → ✅ **R-2 RESOLVED**; module table row + intro note updated. **Every cross-module dependency in `tec-identity-service` is now service-API or event-only — zero raw cross-module reads.** |
+| **3 — unversioned events (`user.created`, `wallet.update`)** | **Deferred, tracked (not a silent rename).** Each has live cross-service consumers (`user.created`: identity · analytics · realtime), so C-70 versioning needs a coordinated dual-emit/dual-read migration across independent deploys — a dedicated careful change, not bundled with a feature. | `events-catalog.yaml`: `user.created` note records the decision + rationale; the events gate already accepts them as flagged legacy debt. |
+
+**Honest status:** gaps 1 & 2 are `[Code Verified]` (merged), not yet `[Runtime Verified]`
+(fire only when `REDIS_URL` is set on `tec-identity-service` + `tec-analytics-service` and
+the batch/consumers run). All 16 KB gates pass, 0 errors.

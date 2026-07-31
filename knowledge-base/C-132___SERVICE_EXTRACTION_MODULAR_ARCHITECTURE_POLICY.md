@@ -218,9 +218,9 @@ tec-analytics-service (4007)
 > life · connection · zone · explorer · legend · nbf), but the host has since grown to
 > **17 domain modules** as Bucket-C apps were promoted (R-1/R-5). The full, code-verified
 > list + per-module DB namespace + events + seam status is the **§7.5 Module-Seam Audit**
-> below. Each owns namespaced tables (`<domain>_*`); cross-talk is event-only except the
-> one flagged VIP→Elite in-service read — so extraction stays mechanical. This is the
-> Modules-First law proven in production, not on paper.
+> below. Each owns namespaced tables (`<domain>_*`); **all cross-talk is now service-API or
+> event-only** (the last raw cross-module read, VIP→Elite, became a service API in #161) — so
+> extraction stays mechanical. This is the Modules-First law proven in production, not on paper.
 
 ### 7.4 Bucket C — Frontend only (consumes existing services via BFF)
 
@@ -263,7 +263,7 @@ tables — the Modules-First seam held as the platform grew. Full audit:
 | nbf | `nbf/` | `NbfBusiness` | — | ✅ clean |
 | elite | `elite/` | `EliteRecognition` | — | ✅ clean |
 | epic | `epic/` | `EpicProject` | emits `epic.project.completed.v1` | ✅ clean |
-| vip | `vip/` | `VipTierDef·VipMembership` | — | ⚠️ **reads `EliteRecognition` directly** (see below) |
+| vip | `vip/` | `VipTierDef·VipMembership` | — | ✅ clean (was ⚠️ raw Elite read — now `EliteService.hasActiveRecognition`, #161) |
 | insure | `insure/` | `InsureProtection·InsureRiskProfile` | — | ✅ state module — custody stays in payment-service (R-4) |
 | system | `system/` | `SystemPolicy·SystemTierDef·SystemCapability` | — | ✅ clean |
 | dx | `dx/` | `DxSdk·DxTemplate·DxCapability·DxGuide` | — | ✅ clean |
@@ -272,20 +272,22 @@ tables — the Modules-First seam held as the platform grew. Full audit:
 | titan | `titan/` | `TitanOrg·TitanMember` | — | ✅ clean |
 | pioneer | `pioneer/` | `_registry.ts` SSoT (C-134) | — | runtime charter (C-134) |
 
-> ⚠️ **Seam note — VIP → Elite (R-2 watch):** `vip.getCurrentTier` reads the `EliteRecognition`
-> table directly (to lift the base tier to `ELITE` — the Elite→VIP value-chain edge, C-128).
-> This is acceptable **only** because both are modules **inside the same service**. If VIP
-> or Elite is ever extracted, this read MUST become an Elite **service API call** or an
-> **event** consumption — a direct cross-service DB read would violate R-2. Recorded here so
-> the coupling is not forgotten at extraction time. No other cross-module DB read was found;
-> all other cross-talk is event-only (R-2 satisfied).
+> ✅ **Seam note — VIP → Elite (R-2 RESOLVED, #161):** `vip.getCurrentTier` previously read
+> the `EliteRecognition` table directly (to lift the base tier to `ELITE` — the Elite→VIP
+> value-chain edge, C-128). That raw cross-module read is **gone**: as of tec-core-backend
+> **#161**, VIP calls **`EliteService.hasActiveRecognition(owner)` — a service API** (VipModule
+> imports EliteModule), the same R-2-clean pattern as Elite→Legend below. Extraction of either
+> module now needs only a transport swap (in-process → HTTP/event), no rewrite. No cross-module
+> DB read remains in `tec-identity-service` — **all cross-talk is service-API or event-only
+> (R-2 fully satisfied).**
 
 > ✅ **Reference seam — Elite → Legend (the right way):** the Legend → Elite criteria
 > engine (`EliteService.evaluateOwner`, tec-core-backend #159) reads Legend evidence via
 > **`LegendService.getStatsForOwner` — a service API call, not a table read** (EliteModule
 > imports LegendModule). This is the R-2-clean pattern: extraction of either module needs
-> no rewrite, only a transport swap (in-process → HTTP/event). Contrast the VIP→Elite raw
-> read above — the Elite→Legend edge is how a cross-module dependency SHOULD be built.
+> no rewrite, only a transport swap (in-process → HTTP/event). The **VIP→Elite edge now
+> follows the same pattern** (`EliteService.hasActiveRecognition`, #161) — every cross-module
+> dependency in the host service is built this way.
 
 > **Extraction posture:** Explorer is the one flagged T1 candidate (`→ search-service`).
 > Everything else stays a module until a documented §5 T1–T4 trigger — Modules-First (R-1).

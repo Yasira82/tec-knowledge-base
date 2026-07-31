@@ -38,7 +38,10 @@ events:
     binds_to: [C-70, C-47]
     note: >
       Emitted on first Pi identity resolution. UNVERSIONED (legacy) — should migrate to
-      `user.created.v1` per C-70 naming. Tracked as a naming-debt item.
+      `user.created.v1` per C-70 naming. NAMING-DEBT (tracked, deferred by decision): it
+      has 3 live cross-service consumers (identity · analytics · realtime), so the rename
+      needs a coordinated dual-emit/dual-read migration across independent deploys — a
+      dedicated careful change, NOT bundled with a feature (tec-core-backend #161 rationale).
 
   # ── Payment (tec-payment-service — ADR-004 Outbox) ───────────────────────
   - name: payment.approved.v1
@@ -124,14 +127,28 @@ events:
   # ── Analytics / Discovery ────────────────────────────────────────────────
   - name: analytics.business.popularity.v1
     owner: tec-analytics-service
-    subject: businessId
+    subject: owner
     consumers: [tec-identity-service/explorer]
-    status: planned
-    verified: false
+    status: live
+    verified: true
     binds_to: [C-105, C-108]
     note: >
-      Explorer consumes it for discovery-time ranking; the analytics-side producer is
-      not yet confirmed in code. Ranking degrades gracefully without it.
+      Explorer ranks its listing with it. PRODUCER NOW BUILT (tec-core-backend #161): the
+      Analytics daily scoring batch emits it per active owner (popularity = merchant-activity
+      count) alongside legend.scores.updated.v1. Ranking degrades gracefully without it.
+
+  # ── Legend scoring (Analytics → Legend, ADR-013) ─────────────────────────
+  - name: legend.scores.updated.v1
+    owner: tec-analytics-service
+    subject: owner
+    consumers: [tec-identity-service/legend]
+    status: live
+    verified: true
+    binds_to: [C-105, C-126, C-127]
+    note: >
+      Analytics computes the six Legend dimension scores from its own AnalyticsEvent log
+      (daily batch) and emits them; Legend writes its own LegendProfile (Invariant #8),
+      then re-evaluates Elite. Producer + consumer both built (tec-core-backend #160).
 
   # ── Wallet ────────────────────────────────────────────────────────────────
   - name: wallet.update
