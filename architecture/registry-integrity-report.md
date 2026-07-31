@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-07-23T17:49:31.370674
+> **Generated:** 2026-07-31T13:20:58.983178
 > **Registry:** `/home/user/tec-knowledge-base/architecture/asset-registry.yaml`
 > **Rules:** `/home/user/tec-knowledge-base/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
@@ -9,26 +9,26 @@
 
 | Metric | Count |
 |--------|-------|
-| Total assets in registry | 115 |
-| Total C-docs on disk | 115 |
+| Total assets in registry | 116 |
+| Total C-docs on disk | 116 |
 | Coverage | 100.0% |
 | Errors | 0 |
 | Warnings | 0 |
-| Info | 61 |
+| Info | 62 |
 
 ## Per-Tier Breakdown
 
 | Tier | Assets | Errors | Warnings |
 |------|--------|--------|----------|
 | tier-0-foundational | 4 | 0 | 0 |
-| tier-1-constitutional-runtime | 61 | 0 | 0 |
+| tier-1-constitutional-runtime | 62 | 0 | 0 |
 | tier-1-institutional-intelligence | 46 | 0 | 0 |
 | tier-2-experimental | 4 | 0 | 0 |
 
 ## Coverage Report (R-COVERAGE)
 
-- Files on disk: 115
-- Files registered: 115
+- Files on disk: 116
+- Files registered: 116
 - Coverage: 100.0%
 - Missing from registry: 0 ✅
 - Orphan registry entries: 0 ✅

@@ -57,7 +57,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.11.0 | Governance Charter v1.2
+Knowledge Base v3.12.0 | Governance Charter v1.2
 
 
 ---
@@ -219,3 +219,39 @@ regresses to "24 apps = 24 microservices."
 - C-57 master index gained **TIER 13** (Platform Architecture Policy). Range → C-132.
 - **All 13 KB gates pass, 0 errors.** Proven in production: Life/Connection/Zone are
   modules inside `tec-identity-service` — the reference pattern C-132 formalizes.
+
+## Session 19 Additions (v3.12.0) — Value Chain WIRED (Epic/Zone → Legend → Elite → VIP)
+
+The user-layer **reputation value chain** (C-121 Rule 3 "Data Flows Forward") moved
+from `[Future Vision]` to **`[Code Verified]` (merged to `main`)**. It is the first
+live, event-driven forward-flow in the platform. Built in `tec-identity-service`
+(backend) + the app frontends; all 6 PRs merged.
+
+| Edge | Signal (C-70) | Direction | Status |
+|------|---------------|-----------|--------|
+| Epic → Legend | `epic.project.completed.v1` | create → earn | ✅ Code Verified |
+| Zone → Legend | `zone.badge.issued.v1` | verify → earn | ✅ Code Verified |
+| Elite → VIP | live tier check (no event) | recognition → experience | ✅ Code Verified |
+| → Legend (consumer) | `legend.consumer.ts`, idempotent by `eventId` | ingest | ✅ Code Verified |
+
+**Producer:** `src/events/stream-emitter.ts` (shared Redis Streams emitter; fail-safe
+no-op when `REDIS_URL` is unset — never rolls back the source write).
+
+### v3.12.0 doc updates (this session)
+- Added an **`## Implementation Status`** section to **C-120 (Zone)**, **C-121
+  (Pipeline)**, **C-125 (Epic)**, **C-126 (Legend)**, **C-127 (Elite)**, and **C-128
+  (VIP)** — each declares, per the Truth Framework, exactly which edge is now
+  `[Code Verified]` vs still `[Future Vision]`. Charter **headers were intentionally
+  left unchanged**: each charter's primary claim (the full runtime) genuinely remains
+  future — only the named V0/V1 slice is current.
+- **Honest gaps recorded:** (1) the chain is `[Code Verified]`, **NOT** `[Runtime
+  Verified]` — it fires only when `REDIS_URL` is set on `tec-identity-service` and the
+  Legend consumer runs; (2) the **Legend → Elite** edge is deliberately NOT wired —
+  criteria evaluation is Analytics' function (C-127), not to be faked.
+- Registry unaffected: the parser reads `Truth State` from the FIRST header line
+  (unchanged), so no truth_state/tier reclassification. All KB gates re-run below.
+
+### Operational follow-ups (ops, not code)
+- Set `REDIS_URL` on `tec-identity-service` (Railway) + ensure the Legend consumer runs
+  → promotes the chain from `[Code Verified]` to `[Runtime Verified]`.
+- Next code step: Analytics criteria engine → wires the missing **Legend → Elite** edge.

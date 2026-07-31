@@ -10,6 +10,25 @@
 > **Domain:** `legend.tecosystem.app` (live pattern now) → `legend.pi` (future)
 
 ---
+## Implementation Status (2026-07-31)
+
+> **Truth State:** `[Current State]` for the V0/V1 read layer + event ingestion · `[Future Vision]` for the full CV/badges
+> **Verification:** `[Code Verified]` (merged) · deployment per app CLAUDE.md
+
+Legend's V0/V1 is built in `tec-identity-service` (backend) + `tec-legend` (frontend),
+merged to `main`:
+- **Reputation read layer** (profile + achievements, owner-scoped) — Legend records
+  OUTCOMES, never claims (the read-layer rule).
+- **Event ingestion (write path):** `legend.consumer.ts` (group `identity-legend`)
+  consumes `zone.badge.issued.v1` + `epic.project.completed.v1` from Redis Streams and
+  records achievements **idempotently by `eventId`** (at-least-once safe, C-70).
+  `[Code Verified]`; ingests at runtime only when `REDIS_URL` is set and the consumer runs.
+
+**Still future:** Analytics-computed scores, the Pi Professional CV export, embeddable
+badges, and the remaining source streams (fundx/connection). Score computation stays
+Analytics' function — Legend serves, never computes.
+
+---
 
 ## Institutional Identity
 
