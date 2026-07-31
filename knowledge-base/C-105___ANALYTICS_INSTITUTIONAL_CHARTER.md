@@ -276,6 +276,15 @@ Shipped Session 18 (2026-07-03, runtime-verified):
      This is the intelligence half of the reputation chain (Legend → Elite unblocked).
      `[Code Verified]` — tec-core-backend #160.
 
+Shipped Session 22 (2026-07-31, code-verified — tec-core-backend #161):
+  ✅ Analytics is now the PRODUCER of `analytics.business.popularity.v1` (Explorer
+     discovery-ranking signal, C-108). The daily Legend-scoring batch
+     (`scoring.service.ts::runScoringBatch`, ADR-013) emits it per active owner
+     alongside `legend.scores.updated.v1` — popularity = the owner's merchant-activity
+     count, computed from Analytics' OWN AnalyticsEvent log (no cross-service read, §4
+     boundary held). Explorer degrades gracefully when the signal is absent. This closed
+     the events-catalog `planned → live` gap for that event (no consumer was left dangling).
+
 Still pending:
   □ §11 P1-1/P1-2 embeds (Hub `/hub/analytics`, Commerce embed) — to-build
   □ Richer multi-signal scoring (weighting/decay) + historical backfill — ADR-013 revision
