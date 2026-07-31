@@ -8,6 +8,20 @@
 **Decision Status:** [Exploratory]
 
 ---
+## Deployment Status (2026-07-31)
+
+> **Truth State:** `[Current State]` for the deployed app + live payment · `[Future Vision]` for the full runtime below
+> **Verification:** `[Runtime Verified]` — deployed on Mainnet, real Pi payment live (SSoT: `architecture/app-fleet.yaml` → `live-verified`)
+
+**Alert is deployed on Mainnet** with Hub SSO and dual-mode (ADR-007) Pi payment live:
+- **Domain:** `alert.tecosystem.app` · **Pi App ID:** `alert-3ag1` · **APP_SOURCE:** `alert`
+- **Payment:** real Pi subscription — Mode 1 (Hub) + Mode 2 (standalone); `PI_API_KEY_ALERT` set on payment-service.
+- **Hub SSO:** enabled (in `/api/auth/sso` ALLOWED_TARGETS + Hub domain registry).
+- **Growth:** referral loop wired (C-133).
+
+**Still `[Future Vision]`:** the advanced runtime described below (V2+ / the charter's later phases) — vision, not yet built.
+
+---
 
 ## 1. MISSION
 

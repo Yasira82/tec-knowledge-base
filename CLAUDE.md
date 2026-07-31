@@ -255,3 +255,17 @@ no-op when `REDIS_URL` is unset — never rolls back the source write).
 - Set `REDIS_URL` on `tec-identity-service` (Railway) + ensure the Legend consumer runs
   → promotes the chain from `[Code Verified]` to `[Runtime Verified]`.
 - Next code step: Analytics criteria engine → wires the missing **Legend → Elite** edge.
+
+### Repo-wide status reconciliation (all 24 apps live)
+All apps are **deployed on Mainnet with real Pi payment live** (SSoT:
+`architecture/app-fleet.yaml` — 21 `live-verified`, 3 `live-readonly-gated`). Added a
+**`## Deployment Status`** section to the 14 app charters that still read
+`[Future Vision]` with no status (C-106 Life · C-107 Connection · C-108 Explorer ·
+C-109 Nexus · C-110 System · C-111 Alert · C-112 NX · C-113 FundX · C-114 Estate ·
+C-115 DX · C-124 NBF · C-129 Insure · C-130 Titan · C-131 Brookfield) — each cites the
+fleet, records `[Runtime Verified]` for the deployed app + live payment (domain / Pi
+App ID / APP_SOURCE / Hub SSO / referral), and keeps the full runtime `[Future Vision]`.
+The **3 financially hard-gated** apps (FundX pools · Insure escrow · Brookfield
+investment/REITs) are marked read-only until legal + payment-service custody + SYSTEM
+(Invariant #8) — only their Pro subscription processes real Pi. Charter **headers
+unchanged** (the grand runtime stays future) → registry `truth_state`/tier untouched.

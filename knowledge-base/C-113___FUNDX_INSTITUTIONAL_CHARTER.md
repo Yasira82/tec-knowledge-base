@@ -8,6 +8,21 @@
 **Decision Status:** [Exploratory]
 
 ---
+## Deployment Status (2026-07-31)
+
+> **Truth State:** `[Current State]` for the deployed app + live payment · `[Future Vision]` for the full runtime below
+> **Verification:** `[Runtime Verified]` — deployed on Mainnet, real Pi payment live (SSoT: `architecture/app-fleet.yaml` → `live-readonly-gated`)
+
+**FundX is deployed on Mainnet** with Hub SSO and dual-mode (ADR-007) Pi payment live:
+- **Domain:** `fundx.tecosystem.app` · **Pi App ID:** `fundx-55a3cb7bc6cf09fd` · **APP_SOURCE:** `fundx`
+- **Payment:** real Pi subscription — Mode 1 (Hub) + Mode 2 (standalone); `PI_API_KEY_FUNDX` set on payment-service.
+- **Hub SSO:** enabled (in `/api/auth/sso` ALLOWED_TARGETS + Hub domain registry).
+- **Growth:** referral loop wired (C-133).
+- ⚠️ **Financial mechanics HARD-GATED (read-only):** FundX capital pools (contribution / withdrawal / distribution) stay simulated/read-only until legal + payment-service custody + SYSTEM (Invariant #8). Only the Pro subscription processes real Pi.
+
+**Still `[Future Vision]`:** the gated financial mechanics + the advanced runtime described below — vision, not yet built.
+
+---
 
 ## 1. MISSION
 
