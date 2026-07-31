@@ -12,8 +12,8 @@
 ---
 ## Implementation Status (2026-07-31)
 
-> **Truth State:** `[Current State]` for the V0/V1 recognition read layer · `[Future Vision]` for criteria-based granting
-> **Verification:** `[Code Verified]` (merged) · deployment per app CLAUDE.md
+> **Truth State:** `[Current State]` for the recognition read layer + the criteria engine · `[Future Vision]` for full multi-signal scoring
+> **Verification:** `[Code Verified]` · deployment per app CLAUDE.md
 
 Elite's V0/V1 recognition read layer is built in `tec-identity-service` + `tec-elite`,
 merged to `main` (programs · tiers · criteria-met status · `/recognition/[id]`).
@@ -21,10 +21,20 @@ merged to `main` (programs · tiers · criteria-met status · `/recognition/[id]
 **Downstream edge LIVE — Elite → VIP:** VIP checks an owner's ACTIVE Elite recognition
 live and surfaces the VIP `ELITE` tier (C-128). `[Code Verified]`.
 
-**Upstream edge NOT yet wired — Legend → Elite:** criteria evaluation (does the owner
-meet the thresholds?) is **Analytics'** function and is deliberately NOT faked.
-Recognition stays criteria-based + free, never sold; GOLD/PLATINUM still require human
-review. Building the criteria engine (Analytics) is the next step for this edge.
+**Upstream edge WIRED — Legend → Elite (criteria engine):** `EliteService.evaluateOwner`
+reads the owner's Legend evidence via `LegendService.getStatsForOwner` — the
+Analytics-computed `score_*` (relayed, never recomputed) + real verified-achievement /
+Zone-verified counts — and grants recognition on transparent thresholds. The Legend
+outcome consumer triggers it after each recorded achievement. `[Code Verified]`
+(tec-core-backend #159). **Constitutional guarantees:** recognition is **earned, not
+sold** (no grant endpoint — the engine is the only automated path); **GOLD/PLATINUM are
+never auto-active** — they land as `CANDIDATE` for a human `PANEL`; a dropped criterion
+`EXPIRES` an automated grant (never deleted); a human PANEL decision is never downgraded.
+Elite compares thresholds only — Analytics owns the scores, Legend owns the evidence.
+
+**Still `[Future Vision]`:** richer multi-signal criteria (weighted composites, decay,
+cross-program rules) as Analytics' scoring matures — the V1 engine grants on one metric
+per program.
 
 ---
 

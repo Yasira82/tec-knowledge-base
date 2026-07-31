@@ -280,6 +280,13 @@ tables — the Modules-First seam held as the platform grew. Full audit:
 > the coupling is not forgotten at extraction time. No other cross-module DB read was found;
 > all other cross-talk is event-only (R-2 satisfied).
 
+> ✅ **Reference seam — Elite → Legend (the right way):** the Legend → Elite criteria
+> engine (`EliteService.evaluateOwner`, tec-core-backend #159) reads Legend evidence via
+> **`LegendService.getStatsForOwner` — a service API call, not a table read** (EliteModule
+> imports LegendModule). This is the R-2-clean pattern: extraction of either module needs
+> no rewrite, only a transport swap (in-process → HTTP/event). Contrast the VIP→Elite raw
+> read above — the Elite→Legend edge is how a cross-module dependency SHOULD be built.
+
 > **Extraction posture:** Explorer is the one flagged T1 candidate (`→ search-service`).
 > Everything else stays a module until a documented §5 T1–T4 trigger — Modules-First (R-1).
 
