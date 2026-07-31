@@ -390,3 +390,56 @@ regulatory exposure and is trivially **sybil-farmable** (mass-register → self-
 
 **References:** C-133 (Growth Governance) · C-47 (Invariant #8 custody, P6) · C-113 FundX
 (hard-gate pattern) · C-126 Legend (outcome-not-claim) · C-68 (commerce ownership)
+
+---
+
+## ADR-013 — Legend Scoring Contract (Analytics computes · Legend serves)
+
+**Status:** ACCEPTED | **Date:** July 2026 | **Decision Authority:** CEO (C-47) | **Extends:** C-105 (Analytics) · C-126 (Legend) · C-127 (Elite)
+
+### Context
+The reputation value chain (Epic/Zone → Legend → Elite → VIP) shipped, but the
+**score-based** Elite programs (TOP_MERCHANT/CREATOR/INVESTOR/BUILDER/COMMUNITY) were
+**dormant**: they grant on `LegendProfile.score_*`, and nobody computed those — they
+defaulted to `0`. C-126 is explicit that **Legend never computes a score** (it serves a
+projection Analytics refreshes), and C-105 assigns intelligence/computation to Analytics.
+So the missing piece is a **scoring contract** between the two services — and *where* it
+runs + *who writes* the result is an architectural decision (Invariant #8: each entity has
+exactly one owning service; `LegendProfile` is Legend's).
+
+### Decision
+1. **Analytics COMPUTES from its OWN data.** Scores are derived in `tec-analytics-service`
+   from its `AnalyticsEvent` log — **no cross-service DB read** of Legend's tables. To have
+   the signals, the Analytics consumer ingests the reputation-dimension events
+   (`order.paid.v1` → merchant · `epic.project.completed.v1` → creator · `zone.badge.issued.v1`
+   → builder · `connection.milestone.v1` → collaborator), attributed to the Pi-username owner.
+2. **ABSOLUTE scoring, not percentile.** A fixed, published count→score curve (monotone,
+   bounded `[0,100]`); `overall` = mean of the five dimensions. A recognition is **earned
+   against a stable bar** (C-127), not relative to how active everyone else happens to be.
+   Changing the curve is an ADR-013 change (it is the criteria bar).
+3. **`investor` scores 0 until FundX exists.** Its only signal (`fundx.investment.closed.v1`)
+   is hard-gated (C-113) — the dimension is dormant by design, **never faked**.
+4. **Legend OWNS the write (Invariant #8 / C-126).** Analytics emits
+   **`legend.scores.updated.v1`** (owner + the six scores); `LegendService.updateScores`
+   writes `LegendProfile` (clamped, idempotent). Analytics never writes identity-service's DB.
+5. **Elite re-evaluates on score change.** The Legend scores-consumer, after applying,
+   triggers `elite.evaluateOwner` — a score crossing a threshold grants/adjusts recognition
+   (GOLD/PLATINUM still gated to a human PANEL, C-127).
+6. **Cadence = daily batch** over recently-active users — matches Analytics = **eventual
+   consistency** (C-47 §Consistency); never used for a financial mutation.
+
+### Consequences
+- A PR that computes a Legend score inside Legend, or writes `LegendProfile` from another
+  service, is rejected (violates C-126 / Invariant #8).
+- Scores are **forward-looking**: they accrue as `AnalyticsEvent` collects activity after
+  deploy. A historical backfill is a later refinement, not V1.
+- V1 grants on **one metric per program**; richer multi-signal composites (weighting, decay)
+  are a later ADR-013 revision as Analytics matures.
+
+**Implementation:** `tec-analytics-service` `modules/scoring/*` (pure curve + `computeScoresForUser`
++ daily `runScoringBatch`) + `events/emit.ts` + dimension ingest consumers;
+`tec-identity-service` `LegendService.updateScores` + `modules/legend/scores-updated.consumer.ts`.
+Event: `legend.scores.updated.v1` (see `manifests/events-catalog.yaml`). tec-core-backend #160.
+
+**References:** C-105 (Analytics — intelligence/computation) · C-126 (Legend — serves, never computes)
+· C-127 (Elite — criteria over scores) · C-47 (Invariant #8, eventual consistency) · C-70 (event law)

@@ -133,6 +133,19 @@ events:
       Explorer consumes it for discovery-time ranking; the analytics-side producer is
       not yet confirmed in code. Ranking degrades gracefully without it.
 
+  # ── Legend scoring (Analytics → Legend, ADR-013) ─────────────────────────
+  - name: legend.scores.updated.v1
+    owner: tec-analytics-service
+    subject: owner
+    consumers: [tec-identity-service/legend]
+    status: live
+    verified: true
+    binds_to: [C-105, C-126, C-127]
+    note: >
+      Analytics computes the six Legend dimension scores from its own AnalyticsEvent log
+      (daily batch) and emits them; Legend writes its own LegendProfile (Invariant #8),
+      then re-evaluates Elite. Producer + consumer both built (tec-core-backend #160).
+
   # ── Wallet ────────────────────────────────────────────────────────────────
   - name: wallet.update
     owner: tec-wallet-service

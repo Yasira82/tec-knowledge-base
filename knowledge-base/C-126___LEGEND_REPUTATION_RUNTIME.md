@@ -24,9 +24,14 @@ merged to `main`:
   records achievements **idempotently by `eventId`** (at-least-once safe, C-70).
   `[Code Verified]`; ingests at runtime only when `REDIS_URL` is set and the consumer runs.
 
-**Still future:** Analytics-computed scores, the Pi Professional CV export, embeddable
-badges, and the remaining source streams (fundx/connection). Score computation stays
-Analytics' function — Legend serves, never computes.
+- **Scores now refreshed by Analytics (ADR-013):** `LegendService.updateScores` applies
+  the six `score_*` from `legend.scores.updated.v1` (Analytics computes; **Legend owns the
+  write** — Invariant #8). Legend still **never computes** a score. A score update also
+  re-triggers Elite (Legend → Elite). `[Code Verified]` (tec-core-backend #160).
+
+**Still future:** the Pi Professional CV export, embeddable badges, and richer
+multi-signal scoring (weighting/decay) as Analytics matures. Score **computation** stays
+Analytics' function — Legend serves + stores, never computes.
 
 ---
 
