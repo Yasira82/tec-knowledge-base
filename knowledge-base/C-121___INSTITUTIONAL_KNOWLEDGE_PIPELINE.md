@@ -31,9 +31,13 @@ Producer: `src/events/stream-emitter.ts` (Redis Streams; fail-safe no-op without
 `tec-identity-service` **and** the Legend consumer runs. Until then the emit is a logged
 no-op — hence `[Code Verified]`, **not** `[Runtime Verified]`.
 
+The **Legend → Elite** edge is now also wired: `EliteService.evaluateOwner` grants
+criteria-based recognition from Legend evidence (Analytics `score_*` relayed + verified
+counts), GOLD/PLATINUM gated behind a human PANEL. `[Code Verified]` (tec-core-backend #159).
+
 **Still future:** the canonical infrastructure pipeline
-(Hub → Life → Connection → Zone → Analytics → Nexus → TEC AI) and the **Legend → Elite**
-edge (criteria evaluation is Analytics/System's function, C-127 — deliberately NOT faked).
+(Hub → Life → Connection → Zone → Analytics → Nexus → TEC AI), and richer multi-signal
+Elite scoring as Analytics matures (the V1 engine grants on one metric per program).
 
 ---
 

@@ -301,3 +301,22 @@ design compares sessions to the **canonical files** (not to an external PDF):
   a post-scale ADR, not a silent change (`INTERNAL_SECRET` spans 12 services).
 - KB gates now: **16** (added: events-catalog + canonical-numbering + session-canonical).
   Registry unaffected (no C-doc headers changed).
+
+## Session 21 Additions — Legend → Elite criteria engine (value chain complete)
+
+The value chain is now **Runtime-live** (`REDIS_URL` set on `tec-identity-service`; all
+consumers boot in prod) and the **last edge is wired**: Legend → Elite.
+
+| Item | Path | Purpose |
+|------|------|---------|
+| Elite criteria engine | `tec-identity-service/src/modules/elite/elite.service.ts` (`evaluateOwner`) | Grants criteria-based recognition from Legend evidence; GOLD/PLATINUM → CANDIDATE/PANEL; EXPIRE on drop; earned-not-sold (C-127). tec-core-backend #159. |
+| Legend evidence API | `legend.service.ts` (`getStatsForOwner`) | Analytics `score_*` (relayed) + verified/Zone counts — a **service API**, the R-2-clean seam (not a raw table read). |
+| Consumer trigger | `legend.consumer.ts` + `main.ts` | Legend outcome consumer calls `elite.evaluateOwner(owner)` after each achievement (fail-safe). |
+
+### Doc reconciliation (this session)
+- **C-127** Implementation Status: Legend → Elite flipped from "NOT yet wired" → `[Code Verified]`.
+- **C-121**: pipeline note updated — the reputation chain is now end-to-end.
+- **C-132 §7.5**: added the Elite → Legend **reference seam** (service API = the R-2-clean
+  way to build a cross-module dependency; contrast the VIP → Elite raw read).
+- **C-02**: Session 21 block (Runtime-live consumers + Legend → Elite). Charter headers
+  unchanged → registry stable.
