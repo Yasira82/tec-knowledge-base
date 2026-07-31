@@ -284,10 +284,20 @@ C-124→C-131 renumber is clean, no stale C-122/C-123 references remain).
 | Quick Start | `docs/QUICKSTART.md` | 10-minute onboarding (clone → run → login → pay → deploy). **NOT a C-doc** — not in C-57, no Truth Framework header (it changes weekly; a C-doc would add drift). |
 | C-132 §7.5 Module-Seam Audit | `knowledge-base/C-132___...POLICY.md` | Code-verified audit of `tec-identity-service`: **17 domain modules** (§7 recorded 7), each with folder + DB namespace + events; flags the one VIP→Elite in-service table read for R-2 at extraction time. |
 
+### Canonical numbering gates (folded in from PR #99)
+The audit's "canonical numbering" idea landed as **two bash/py gates** — the right
+design compares sessions to the **canonical files** (not to an external PDF):
+| Gate | Path | Checks |
+|------|------|--------|
+| Canonical Numbering Engine | `evals/check-canonical-numbering.sh` | files ⟺ `asset-registry.yaml` ⟺ C-57 index match (116/116/116); catches duplicate / invented / renumbered / orphan / missing IDs. Reserved-range gaps = INFO. |
+| Session Canonical Reference Check | `evals/check-session-canonical.sh` | every `C-NN` cited in `memory/` + `audits/` resolves to a real canonical file (0 dangling). |
+
+> Both pass on this branch: **0 numbering drift · 0 dangling refs**. This supersedes the
+> earlier "no session-canonical gate is possible" note — it *is* possible against the
+> canonical files (there is no PDF in the repo; canonical = C-01 + C-57 + asset-registry).
+
 ### Notes
-- **Not done (with reason):** a `check-session-canonical.sh` "PDF gate" — there is **no
-  PDF in the repo**; the canonical index is C-01 + C-57 + the asset-registry, already
-  enforced by `check-registry-integrity`. A CI gate can't diff against an un-versioned
-  external PDF. Service-JWT (ADR-013) is a real architectural decision → deferred to a
-  post-scale ADR, not a silent change (`INTERNAL_SECRET` spans 12 services).
-- KB gates now: **14**. Registry unaffected (no C-doc headers changed).
+- **Deferred (with reason):** Service-JWT (ADR-013) is a real architectural decision →
+  a post-scale ADR, not a silent change (`INTERNAL_SECRET` spans 12 services).
+- KB gates now: **16** (added: events-catalog + canonical-numbering + session-canonical).
+  Registry unaffected (no C-doc headers changed).
