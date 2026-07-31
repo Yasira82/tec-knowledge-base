@@ -350,14 +350,17 @@ first surfaced two facts that reshaped the task:
 - **`user.created` shipped with no `eventId`** (a C-70 violation) and has **FOUR** live
   consumers (identity · analytics · realtime · notification), not the 3 previously noted.
 
-**`user.created` C-70 rename — Phase 1 (Expand) DONE** (`tec-core-backend #162`): the auth
-producer now adds an `eventId` and **dual-emits** to both `user.created` and the new
-`user.created.v1` (shared eventId, MAXLEN-bounded). Consumers still read the legacy stream →
-behaviour-neutral, zero double-processing. `events-catalog.yaml`: added `user.created.v1`
-(live), corrected the `user.created` consumer list + migration note.
+**`user.created` C-70 rename — Phases 1 + 2 DONE** (`tec-core-backend #162`):
+- **Phase 1 (Expand):** the auth producer adds an `eventId` and **dual-emits** to both
+  `user.created` and the new `user.created.v1` (shared eventId, MAXLEN-bounded).
+- **Phase 2 (Migrate reads):** all **four** consumers (identity · analytics · realtime ·
+  notification) now **dual-read** both streams in one `xreadgroup`, deduped by `eventId`
+  (`SET NX`, released on error) → exactly-once, gapless, no double side-effects. Identity
+  needs no dedup (`findOrCreateUser` is idempotent by username). `analytics.claimEvent`
+  is unit-tested.
 
-**Deferred with reason (production-mindset):** Phase 2 (make analytics/notification consumers
-idempotent BY eventId, then cut over to `.v1`) + Phase 3 (drop legacy emit → naming-debt = 0).
-The analytics/notification consumers are **not** idempotent today, so a same-PR dual-**read**
-would double-count users + duplicate welcome notifications on a live Mainnet platform. Each
-phase is its own careful PR. Registry rebuilt (timestamp only). Events: 13 (12 live · 1 planned).
+`events-catalog.yaml`: `user.created.v1` now shows the four consumers; both notes record
+Phase 1+2 done. **Only Phase 3 remains** — drop the legacy emit → naming-debt = 0 (safe once
+#162 is deployed and consumers are confirmed reading `.v1`); its own follow-up PR.
+
+Registry rebuilt (timestamp only). Events: 13 (12 live · 1 planned). All 16 KB gates pass.

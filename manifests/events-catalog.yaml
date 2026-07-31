@@ -37,25 +37,25 @@ events:
     verified: true
     binds_to: [C-70, C-47]
     note: >
-      Emitted on first Pi identity resolution. UNVERSIONED (legacy). MIGRATION IN PROGRESS
-      (C-70 rename → `user.created.v1`): PHASE 1 (Expand) DONE — the producer now adds an
-      `eventId` and DUAL-EMITS to both this stream and `user.created.v1` (tec-core-backend
-      #162). Consumers still read THIS stream, so behaviour is unchanged. It has FOUR live
-      cross-service consumers (identity · analytics · realtime · notification); Phase 2 makes
-      each idempotent BY eventId then cuts it over to `.v1` (analytics/notification are not
-      idempotent today, so a same-PR dual-READ would double-count — deferred by decision).
-      Phase 3 drops this legacy emit → naming-debt = 0.
+      Emitted on first Pi identity resolution. UNVERSIONED (legacy). MIGRATION (C-70 rename →
+      `user.created.v1`, tec-core-backend #162): PHASE 1 (Expand) DONE — producer adds an
+      `eventId` and DUAL-EMITS to both this stream and `user.created.v1`. PHASE 2 (Migrate
+      reads) DONE — all FOUR consumers (identity · analytics · realtime · notification) now
+      dual-read both streams in one xreadgroup, deduped by `eventId` (exactly-once; identity
+      is naturally idempotent). Only PHASE 3 remains: drop this legacy emit → naming-debt = 0
+      (safe once #162 is deployed and consumers are confirmed reading `.v1`).
   - name: user.created.v1
     owner: tec-auth-service
     subject: piUsername
-    consumers: []
+    consumers: [tec-identity-service, tec-analytics-service, tec-realtime-service, tec-notification-service]
     status: live
     verified: true
     binds_to: [C-70, C-47]
     note: >
-      C-70-compliant versioned replacement for `user.created`. Producer dual-emits it now
-      (Phase 1, tec-core-backend #162) with a shared `eventId`; MAXLEN-bounded and NOT yet
-      consumed (consumers cut over in Phase 2). Carries the same payload as the legacy stream.
+      C-70-compliant versioned replacement for `user.created`. Producer dual-emits it (shared
+      `eventId`, MAXLEN-bounded, tec-core-backend #162) and all FOUR consumers now dual-read
+      it alongside the legacy stream, deduped by `eventId` (Phase 2). Once the legacy emit is
+      dropped (Phase 3) this becomes the sole stream. Same payload as the legacy stream.
 
   # ── Payment (tec-payment-service — ADR-004 Outbox) ───────────────────────
   - name: payment.approved.v1
