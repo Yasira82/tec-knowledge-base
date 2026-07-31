@@ -32,16 +32,30 @@ events:
   - name: user.created
     owner: tec-auth-service
     subject: piUsername
+    consumers: [tec-identity-service, tec-analytics-service, tec-realtime-service, tec-notification-service]
+    status: live
+    verified: true
+    binds_to: [C-70, C-47]
+    note: >
+      Emitted on first Pi identity resolution. UNVERSIONED (legacy). MIGRATION IN PROGRESS
+      (C-70 rename → `user.created.v1`): PHASE 1 (Expand) DONE — the producer now adds an
+      `eventId` and DUAL-EMITS to both this stream and `user.created.v1` (tec-core-backend
+      #162). Consumers still read THIS stream, so behaviour is unchanged. It has FOUR live
+      cross-service consumers (identity · analytics · realtime · notification); Phase 2 makes
+      each idempotent BY eventId then cuts it over to `.v1` (analytics/notification are not
+      idempotent today, so a same-PR dual-READ would double-count — deferred by decision).
+      Phase 3 drops this legacy emit → naming-debt = 0.
+  - name: user.created.v1
+    owner: tec-auth-service
+    subject: piUsername
     consumers: []
     status: live
     verified: true
     binds_to: [C-70, C-47]
     note: >
-      Emitted on first Pi identity resolution. UNVERSIONED (legacy) — should migrate to
-      `user.created.v1` per C-70 naming. NAMING-DEBT (tracked, deferred by decision): it
-      has 3 live cross-service consumers (identity · analytics · realtime), so the rename
-      needs a coordinated dual-emit/dual-read migration across independent deploys — a
-      dedicated careful change, NOT bundled with a feature (tec-core-backend #161 rationale).
+      C-70-compliant versioned replacement for `user.created`. Producer dual-emits it now
+      (Phase 1, tec-core-backend #162) with a shared `eventId`; MAXLEN-bounded and NOT yet
+      consumed (consumers cut over in Phase 2). Carries the same payload as the legacy stream.
 
   # ── Payment (tec-payment-service — ADR-004 Outbox) ───────────────────────
   - name: payment.approved.v1
@@ -151,13 +165,11 @@ events:
       then re-evaluates Elite. Producer + consumer both built (tec-core-backend #160).
 
   # ── Wallet ────────────────────────────────────────────────────────────────
-  - name: wallet.update
-    owner: tec-wallet-service
-    subject: walletId
-    consumers: []
-    status: live
-    verified: true
-    binds_to: [C-70, C-71]
-    note: >
-      UNVERSIONED (legacy) — should migrate to `wallet.updated.v1` per C-70 naming.
-      Tracked as a naming-debt item alongside user.created.
+  # CORRECTION (2026-07-31): a `wallet.update` Redis-stream event was previously cataloged
+  # here as live+verified. Code audit found NO producer — `tec-wallet-service` XADDs nothing
+  # (its `publishEvent()` has zero non-test call sites; its only event constant is the
+  # `payment.completed` it CONSUMES; every `wallet.update` in code is a Prisma `tx.wallet.update()`
+  # DB write). Balance changes reach the client as the realtime SOCKET event `wallet.updated`
+  # (socket.io, derived from `payment.completed`), NOT a stream. The phantom entry was removed
+  # to keep this catalog code-sourced. If a real wallet stream event is added, catalog it as
+  # `wallet.updated.v1` (C-70) at that time.
