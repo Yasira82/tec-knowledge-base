@@ -214,10 +214,13 @@ tec-analytics-service (4007)
 | **Insure** | insure state module | planned | custody stays in payment-service (R-4) forever |
 | **NX** | opportunity module | planned | low — light index over commerce/connection |
 
-> **Live modules in `tec-identity-service` (7):** identity · life · connection · zone ·
-> explorer · legend · nbf. Each owns namespaced tables (`<domain>_*`) with no
-> cross-module joins (R-2) — extraction stays mechanical. This is the Modules-First
-> law proven in production, not on paper.
+> **Live modules in `tec-identity-service`:** this table lists the original 7 (identity ·
+> life · connection · zone · explorer · legend · nbf), but the host has since grown to
+> **17 domain modules** as Bucket-C apps were promoted (R-1/R-5). The full, code-verified
+> list + per-module DB namespace + events + seam status is the **§7.5 Module-Seam Audit**
+> below. Each owns namespaced tables (`<domain>_*`); cross-talk is event-only except the
+> one flagged VIP→Elite in-service read — so extraction stays mechanical. This is the
+> Modules-First law proven in production, not on paper.
 
 ### 7.4 Bucket C — Frontend only (consumes existing services via BFF)
 
@@ -238,6 +241,47 @@ tec-analytics-service (4007)
 > live `identity/*` modules (July 2026) following R-1/R-5, with no new service. Epic
 > (a projects table) is a likely next promotion. Promotion is never a reason to spin a
 > new service.
+
+### 7.5 Module-Seam Audit — `tec-identity-service` (2026-07-31)
+
+> **Truth State:** `[Current State]` · **Verification:** `[Code Verified]` — read from
+> `src/modules/*` + `prisma/schema.prisma` in `tec-core-backend`.
+
+**Finding — the module count grew past what §7.2/§7.3 recorded.** §7.2 named **7** live
+modules; the host service now runs **17 domain modules** (many "planned"/Bucket-C apps
+were promoted to live `identity/*` modules following R-1/R-5). Each owns namespaced
+tables — the Modules-First seam held as the platform grew. Full audit:
+
+| Module | Folder | DB namespace (Prisma) | Events | Seam / extraction |
+|--------|--------|-----------------------|--------|-------------------|
+| identity (core) | `identity/` | `User·Profile·Kyc·Role·UserRole·Session·AuditLog` | — | host core — not extracted |
+| life | `life/` | `LifeGoal·LifePreference` | — | ✅ clean |
+| connection | `connection/` | `Follow·TrustEdge·ProcessedTrustEvent·ConnectionNotification` | emits `connection.milestone.v1` · consumes `order.paid.v1` | ✅ clean (event-only cross-talk) |
+| zone | `zone/` | `ZoneEntity·ZoneEvidence` | emits `zone.badge.issued.v1` | ✅ clean |
+| explorer | `explorer/` | `ExplorerBusiness` | consumes `kyc.*` · `analytics.business.popularity.v1` | ✅ **T1 extraction candidate → `search-service`** (R-2) |
+| legend | `legend/` | `LegendProfile·LegendAchievement·LegendBadge` | consumes `payment/epic/zone/connection/fundx` | ✅ clean (append-only read layer) |
+| nbf | `nbf/` | `NbfBusiness` | — | ✅ clean |
+| elite | `elite/` | `EliteRecognition` | — | ✅ clean |
+| epic | `epic/` | `EpicProject` | emits `epic.project.completed.v1` | ✅ clean |
+| vip | `vip/` | `VipTierDef·VipMembership` | — | ⚠️ **reads `EliteRecognition` directly** (see below) |
+| insure | `insure/` | `InsureProtection·InsureRiskProfile` | — | ✅ state module — custody stays in payment-service (R-4) |
+| system | `system/` | `SystemPolicy·SystemTierDef·SystemCapability` | — | ✅ clean |
+| dx | `dx/` | `DxSdk·DxTemplate·DxCapability·DxGuide` | — | ✅ clean |
+| nx | `nx/` | `NxOpportunity` | — | ✅ clean |
+| alert | `alert/` | `AlertNotification` | — | ✅ clean |
+| titan | `titan/` | `TitanOrg·TitanMember` | — | ✅ clean |
+| pioneer | `pioneer/` | `_registry.ts` SSoT (C-134) | — | runtime charter (C-134) |
+
+> ⚠️ **Seam note — VIP → Elite (R-2 watch):** `vip.getCurrentTier` reads the `EliteRecognition`
+> table directly (to lift the base tier to `ELITE` — the Elite→VIP value-chain edge, C-128).
+> This is acceptable **only** because both are modules **inside the same service**. If VIP
+> or Elite is ever extracted, this read MUST become an Elite **service API call** or an
+> **event** consumption — a direct cross-service DB read would violate R-2. Recorded here so
+> the coupling is not forgotten at extraction time. No other cross-module DB read was found;
+> all other cross-talk is event-only (R-2 satisfied).
+
+> **Extraction posture:** Explorer is the one flagged T1 candidate (`→ search-service`).
+> Everything else stays a module until a documented §5 T1–T4 trigger — Modules-First (R-1).
 
 ---
 

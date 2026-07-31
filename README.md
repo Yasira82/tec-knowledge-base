@@ -8,7 +8,7 @@
 [![Apps](https://img.shields.io/badge/Live%20Apps-24-22c55e?style=flat-square)](#)
 [![Services](https://img.shields.io/badge/Railway%20Services-12-3b82f6?style=flat-square)](#)
 [![KB](https://img.shields.io/badge/KB%20Contents-112-8b5cf6?style=flat-square)](#)
-[![Version](https://img.shields.io/badge/KB%20Version-v3.10.0-10b981?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/KB%20Version-v3.12.0-10b981?style=flat-square)](#)
 
 ---
 
@@ -38,7 +38,7 @@ Settlement → Record → Reasoning → Access → Construction → Production �
 ```
 tec-knowledge-base/
 ├── README.md                          ← You are here
-├── CLAUDE.md                          ← AI assistant navigation index (v3.10.0)
+├── CLAUDE.md                          ← AI assistant navigation index (v3.12.0)
 │
 ├── knowledge-base/                    ← 112 platform knowledge contents (C-00 → C-131)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
@@ -342,11 +342,14 @@ Session 18 — Mainnet Governance Baseline (v3.10.0):
   ✅ All 13 CI gates passing (0 errors)                            ← v3.10.0
   ✅ 28 rules across 7 categories (schema/semantic/structural/...) ← v3.6.0
   ✅ 24 apps registered and deployed on Mainnet; real-Pi subscription surfaces verified
+  ✅ Value chain wired: Epic/Zone→Legend, Elite→VIP — [Code Verified]           ← v3.12.0
+  ✅ All app charters reconciled to the fleet (Deployment Status; 24 live)      ← v3.12.0
   ⬜ External audit ≥ 9.5 and independently attributable production evidence
   ⬜ Deepen product capability one app at a time, preserving financial hard-gates
+  ⬜ Runtime-verify the value chain (set REDIS_URL + run the Legend consumer)   ← v3.12.0
 ```
 
 ---
 
-*Knowledge Base v3.10.0 — July 2026 (Session 18)*
+*Knowledge Base v3.12.0 — July 2026 (Session 20)*
 *Authority: Yasser (CEO/Founder) | GitHub: Yasira82 | npm: @yasser172*

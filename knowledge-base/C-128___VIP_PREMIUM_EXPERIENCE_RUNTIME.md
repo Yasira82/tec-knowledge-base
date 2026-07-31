@@ -10,6 +10,21 @@
 > **Domain:** `vip.tecosystem.app` (live pattern now) → `vip.pi` (future)
 
 ---
+## Implementation Status (2026-07-31)
+
+> **Truth State:** `[Current State]` — the Elite → VIP lift below · V1 = Hub PRO/ENTERPRISE (exists)
+> **Verification:** `[Code Verified]` (merged) · deployment per app CLAUDE.md
+
+**Value chain LIVE — Elite → VIP (earned, not bought):** `getCurrentTier`
+(`tec-identity-service`) lifts the base `STANDARD` experience to `ELITE` when the owner
+holds an **ACTIVE** Elite recognition (C-127) — checked **live**, never stored in VIP, and
+never downgrading a purchased tier (P5). `[Code Verified]` (merged). The only sold tier
+stays `STANDARD`; earned tiers are unlocked by recognition/verification elsewhere.
+
+**Still future:** the dedicated `vip-service` (V2) with live status/benefits/events/
+concierge endpoints, and `vip.pi` external membership (V3).
+
+---
 
 ## Institutional Identity
 

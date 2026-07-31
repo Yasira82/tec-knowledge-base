@@ -1,6 +1,6 @@
 ---
 name: charter-advisor
-description: "When working on any app within the TEC ecosystem — before modifying code, architecture, or CLAUDE.md — load the app's Institutional Charter (C-100→C-115) to understand its engineering authority, security model, and P0/P1/P2 gaps."
+description: "When working on any app within the TEC ecosystem — before modifying code, architecture, or CLAUDE.md — load the app's Institutional Charter (C-100→C-115 infra apps + C-124→C-131 user-layer apps) to understand its engineering authority, security model, and P0/P1/P2 gaps."
 metadata:
   version: 1.0.0
   tier: CRITICAL
@@ -20,7 +20,7 @@ C-67  Source of Truth Matrix
   ↓
 ADRs  (C-64: ADR-001→ADR-007)
   ↓
-App Institutional Charter (C-100→C-115)   ← must read FIRST per app
+App Institutional Charter (C-100→C-115 + C-124→C-131)   ← must read FIRST per app
   ↓
 App CLAUDE.md
   ↓
@@ -34,24 +34,37 @@ Code
 
 ## Charter Registry
 
-| Charter | App | System Role | Truth State | Phase |
-|---------|-----|-------------|-------------|-------|
-| [C-100](../../../knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md) | Hub | System of Access — Control Plane | `[Current State]` | Phase 0 ✅ |
-| [C-101](../../../knowledge-base/C-101___COMMERCE_INSTITUTIONAL_CHARTER.md) | Commerce | System of Production (Reference Impl) | `[Current State]` | Phase 0 ✅ |
-| [C-102](../../../knowledge-base/C-102___ASSETS_INSTITUTIONAL_CHARTER.md) | Assets | Digital Asset Infrastructure | `[Current State]` | Phase 0 ✅ |
-| [C-103](../../../knowledge-base/C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md) | Ecommerce | Consumer Marketplace | `[Current State]` | Phase 0 ✅ |
-| [C-104](../../../knowledge-base/C-104___TEC_AI_INSTITUTIONAL_CHARTER.md) | TEC AI | System of Reasoning | `[Planned State]` | Phase 1 |
-| [C-105](../../../knowledge-base/C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md) | Analytics | System of Intelligence | `[Planned State]` | Phase 1 |
-| [C-106](../../../knowledge-base/C-106___LIFE_INSTITUTIONAL_CHARTER.md) | Life | System of Record (Personal) | `[Future Vision]` | Phase 2 |
-| [C-107](../../../knowledge-base/C-107___CONNECTION_INSTITUTIONAL_CHARTER.md) | Connection | Economic Relationship Infrastructure | `[Future Vision]` | Phase 2 |
-| [C-108](../../../knowledge-base/C-108___EXPLORER_INSTITUTIONAL_CHARTER.md) | Explorer | Economic Discovery Infrastructure | `[Future Vision]` | Phase 2 |
-| [C-109](../../../knowledge-base/C-109___NEXUS_INSTITUTIONAL_CHARTER.md) | Nexus | System of Coordination | `[Future Vision]` | Phase 3 |
-| [C-110](../../../knowledge-base/C-110___SYSTEM_INSTITUTIONAL_CHARTER.md) | SYSTEM | System of Governance | `[Future Vision]` | Phase 3 |
-| [C-111](../../../knowledge-base/C-111___ALERT_INSTITUTIONAL_CHARTER.md) | ALERT | System of Risk | `[Future Vision]` | Phase 3 |
-| [C-112](../../../knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md) | NX | System of Security | `[Future Vision]` | Phase 3 |
-| [C-113](../../../knowledge-base/C-113___FUNDX_INSTITUTIONAL_CHARTER.md) | FundX | Capital Coordination Infrastructure | `[Future Vision]` | Phase 3 |
-| [C-114](../../../knowledge-base/C-114___ESTATE_INSTITUTIONAL_CHARTER.md) | Estate | Real Estate Coordination | `[Future Vision]` | Phase 3 |
-| [C-115](../../../knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md) | DX | System of Construction | `[Future Vision]` | Phase 3 |
+> **Deployed** column = the fleet SSoT (`architecture/app-fleet.yaml`): 🟢 Live ·
+> 🟡 Live · financial mechanics gated · ⚪ Planned (not deployed). Each charter's
+> **header** still declares the *full runtime* Truth State (mostly `[Future Vision]`);
+> its **`## Deployment Status`** section is the live V0/V1 (`[Runtime Verified]`).
+
+| Charter | App | System Role | Deployed |
+|---------|-----|-------------|----------|
+| [C-100](../../../knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md) | Hub | System of Access — Control Plane | 🟢 Live |
+| [C-101](../../../knowledge-base/C-101___COMMERCE_INSTITUTIONAL_CHARTER.md) | Commerce | System of Production (Reference Impl) | 🟢 Live |
+| [C-102](../../../knowledge-base/C-102___ASSETS_INSTITUTIONAL_CHARTER.md) | Assets | Digital Asset Infrastructure | 🟢 Live |
+| [C-103](../../../knowledge-base/C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md) | Ecommerce | Consumer Marketplace | 🟢 Live |
+| [C-104](../../../knowledge-base/C-104___TEC_AI_INSTITUTIONAL_CHARTER.md) | TEC AI | System of Reasoning | ⚪ Planned (`[Planned State]`) |
+| [C-105](../../../knowledge-base/C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md) | Analytics | System of Intelligence | 🟢 Live |
+| [C-106](../../../knowledge-base/C-106___LIFE_INSTITUTIONAL_CHARTER.md) | Life | System of Record (Personal) | 🟢 Live |
+| [C-107](../../../knowledge-base/C-107___CONNECTION_INSTITUTIONAL_CHARTER.md) | Connection | Economic Relationship Infrastructure | 🟢 Live |
+| [C-108](../../../knowledge-base/C-108___EXPLORER_INSTITUTIONAL_CHARTER.md) | Explorer | Economic Discovery Infrastructure | 🟢 Live |
+| [C-109](../../../knowledge-base/C-109___NEXUS_INSTITUTIONAL_CHARTER.md) | Nexus | System of Coordination | 🟢 Live |
+| [C-110](../../../knowledge-base/C-110___SYSTEM_INSTITUTIONAL_CHARTER.md) | SYSTEM | System of Governance | 🟢 Live |
+| [C-111](../../../knowledge-base/C-111___ALERT_INSTITUTIONAL_CHARTER.md) | ALERT | Notification Hub / System of Risk | 🟢 Live |
+| [C-112](../../../knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md) | NX | Opportunity Exchange (repurposed, ADR-010) | 🟢 Live |
+| [C-113](../../../knowledge-base/C-113___FUNDX_INSTITUTIONAL_CHARTER.md) | FundX | Capital Coordination Infrastructure | 🟡 Live · pools gated |
+| [C-114](../../../knowledge-base/C-114___ESTATE_INSTITUTIONAL_CHARTER.md) | Estate | Real Estate Coordination | 🟢 Live |
+| [C-115](../../../knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md) | DX | Developer Platform / System of Construction | 🟢 Live |
+| [C-124](../../../knowledge-base/C-124___NBF_BUSINESS_FOUNDATION_RUNTIME.md) | NBF | Business Foundation Runtime | 🟢 Live |
+| [C-125](../../../knowledge-base/C-125___EPIC_CREATION_RUNTIME.md) | Epic | Creation Runtime | 🟢 Live |
+| [C-126](../../../knowledge-base/C-126___LEGEND_REPUTATION_RUNTIME.md) | Legend | Reputation Runtime | 🟢 Live |
+| [C-127](../../../knowledge-base/C-127___ELITE_EXCELLENCE_RUNTIME.md) | Elite | Excellence Runtime | 🟢 Live |
+| [C-128](../../../knowledge-base/C-128___VIP_PREMIUM_EXPERIENCE_RUNTIME.md) | VIP | Premium Experience Runtime | 🟢 Live |
+| [C-129](../../../knowledge-base/C-129___INSURE_RISK_PROTECTION_RUNTIME.md) | Insure | Risk Protection Runtime | 🟡 Live · escrow gated |
+| [C-130](../../../knowledge-base/C-130___TITAN_ENTERPRISE_OS_RUNTIME.md) | Titan | Enterprise OS Runtime | 🟢 Live |
+| [C-131](../../../knowledge-base/C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md) | Brookfield | Infrastructure Runtime | 🟡 Live · investment/REITs gated |
 
 ---
 
@@ -94,10 +107,18 @@ Explorer                → C-108
 Nexus                   → C-109
 SYSTEM                  → C-110
 ALERT                   → C-111
-NX                      → C-112
+NX (Opportunity Exchange, ADR-010) → C-112
 FundX                   → C-113
 Estate                  → C-114
 DX                      → C-115
+NBF / tec-nbf           → C-124
+Epic / tec-epic         → C-125
+Legend / tec-legend     → C-126
+Elite / tec-elite       → C-127
+VIP / tec-vip           → C-128
+Insure / tec-insure     → C-129
+Titan / tec-titan       → C-130
+Brookfield / tec-brookfield → C-131
 ```
 
 ### Step 2 — Read Charter sections
@@ -234,7 +255,7 @@ Explorer (C-108) → will consume: Commerce data + Location
 ## Checklist Before Modifying Any App
 
 ```
-□ Read the app's Institutional Charter (C-100→C-115)
+□ Read the app's Institutional Charter (C-100→C-115 + C-124→C-131)
 □ Check Engineering Updates — are there P0/P1 gaps blocking this work?
 □ Verify the change doesn't violate the Charter's Authority Boundary
 □ Check Truth State — is this feature in scope for current phase?

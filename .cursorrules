@@ -65,3 +65,31 @@ were opened and all failed the same way before this rule existed.)
 
 `CLAUDE.md` (repo root) is the complete guide — read it. Authority hierarchy:
 `C-00 → C-67 → ADRs (C-64) → Current State docs → Runtime Evidence → Code`.
+
+## RULE 6 — C-numbers are human authority (AI numbering guard)
+
+Constitutional IDs (`C-NN`) are canonical and permanent. The canonical source of the
+numbering is the platform's constitution index (C-01 identity + C-57 master index +
+the auto-generated `architecture/asset-registry.yaml`).
+
+An AI agent **MUST NOT**:
+- **invent** a new `C-NN` (assigning the next number is a human decision)
+- **renumber** an existing doc (breaks C-117 R-COVERAGE + C-118 stale-flag IDs + C-57)
+- **reuse** a retired/collided number (the C-124→C-131 renumber exists *because* the
+  draft collided with the live C-122 Analytics + C-123 Pi-Browser-Spec — do not repeat)
+- **replace** a `C-NN` reference with a different number in any session log, audit, memory
+  entry, PR body, or doc unless correcting a *verified* drift against the canonical index
+
+An AI agent **MAY**:
+- propose the *content* of a new C-doc using a placeholder header
+  (`# C-XX — <TITLE>` / filename `C-XX___PLACEHOLDER.md`) and let a human assign `XX`
+- reference an existing `C-NN` only after confirming it against the canonical index
+
+Flow (authority precedence):
+```
+Constitution index (C-01 + C-57 + asset-registry)  →  Canonical
+Registry (asset-registry.yaml)                       →  Generated (never hand-numbered)
+Sessions / audits / memory / PRs                     →  Must follow the canonical index
+```
+Any new number is a **human** act, verified against the canonical index — never minted
+by an agent.

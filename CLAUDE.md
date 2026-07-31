@@ -57,7 +57,7 @@ Every architectural statement must declare:
 
 ## Version
 
-Knowledge Base v3.11.0 | Governance Charter v1.2
+Knowledge Base v3.12.0 | Governance Charter v1.2
 
 
 ---
@@ -219,3 +219,85 @@ regresses to "24 apps = 24 microservices."
 - C-57 master index gained **TIER 13** (Platform Architecture Policy). Range → C-132.
 - **All 13 KB gates pass, 0 errors.** Proven in production: Life/Connection/Zone are
   modules inside `tec-identity-service` — the reference pattern C-132 formalizes.
+
+## Session 19 Additions (v3.12.0) — Value Chain WIRED (Epic/Zone → Legend → Elite → VIP)
+
+The user-layer **reputation value chain** (C-121 Rule 3 "Data Flows Forward") moved
+from `[Future Vision]` to **`[Code Verified]` (merged to `main`)**. It is the first
+live, event-driven forward-flow in the platform. Built in `tec-identity-service`
+(backend) + the app frontends; all 6 PRs merged.
+
+| Edge | Signal (C-70) | Direction | Status |
+|------|---------------|-----------|--------|
+| Epic → Legend | `epic.project.completed.v1` | create → earn | ✅ Code Verified |
+| Zone → Legend | `zone.badge.issued.v1` | verify → earn | ✅ Code Verified |
+| Elite → VIP | live tier check (no event) | recognition → experience | ✅ Code Verified |
+| → Legend (consumer) | `legend.consumer.ts`, idempotent by `eventId` | ingest | ✅ Code Verified |
+
+**Producer:** `src/events/stream-emitter.ts` (shared Redis Streams emitter; fail-safe
+no-op when `REDIS_URL` is unset — never rolls back the source write).
+
+### v3.12.0 doc updates (this session)
+- Added an **`## Implementation Status`** section to **C-120 (Zone)**, **C-121
+  (Pipeline)**, **C-125 (Epic)**, **C-126 (Legend)**, **C-127 (Elite)**, and **C-128
+  (VIP)** — each declares, per the Truth Framework, exactly which edge is now
+  `[Code Verified]` vs still `[Future Vision]`. Charter **headers were intentionally
+  left unchanged**: each charter's primary claim (the full runtime) genuinely remains
+  future — only the named V0/V1 slice is current.
+- **Honest gaps recorded:** (1) the chain is `[Code Verified]`, **NOT** `[Runtime
+  Verified]` — it fires only when `REDIS_URL` is set on `tec-identity-service` and the
+  Legend consumer runs; (2) the **Legend → Elite** edge is deliberately NOT wired —
+  criteria evaluation is Analytics' function (C-127), not to be faked.
+- Registry unaffected: the parser reads `Truth State` from the FIRST header line
+  (unchanged), so no truth_state/tier reclassification. All KB gates re-run below.
+
+### Operational follow-ups (ops, not code)
+- Set `REDIS_URL` on `tec-identity-service` (Railway) + ensure the Legend consumer runs
+  → promotes the chain from `[Code Verified]` to `[Runtime Verified]`.
+- Next code step: Analytics criteria engine → wires the missing **Legend → Elite** edge.
+
+### Repo-wide status reconciliation (all 24 apps live)
+All apps are **deployed on Mainnet with real Pi payment live** (SSoT:
+`architecture/app-fleet.yaml` — 21 `live-verified`, 3 `live-readonly-gated`). Added a
+**`## Deployment Status`** section to the 14 app charters that still read
+`[Future Vision]` with no status (C-106 Life · C-107 Connection · C-108 Explorer ·
+C-109 Nexus · C-110 System · C-111 Alert · C-112 NX · C-113 FundX · C-114 Estate ·
+C-115 DX · C-124 NBF · C-129 Insure · C-130 Titan · C-131 Brookfield) — each cites the
+fleet, records `[Runtime Verified]` for the deployed app + live payment (domain / Pi
+App ID / APP_SOURCE / Hub SSO / referral), and keeps the full runtime `[Future Vision]`.
+The **3 financially hard-gated** apps (FundX pools · Insure escrow · Brookfield
+investment/REITs) are marked read-only until legal + payment-service custody + SYSTEM
+(Invariant #8) — only their Pro subscription processes real Pi. Charter **headers
+unchanged** (the grand runtime stays future) → registry `truth_state`/tier untouched.
+
+## Session 20.1 Additions — Audit Remediation (P0/P1 batch)
+
+Acting on the v3.10.0 Engineering Audit — implemented the 4 verified items (the audit's
+"numbering drift" P0 was checked against the repo and found **already fixed**: the
+C-124→C-131 renumber is clean, no stale C-122/C-123 references remain).
+
+| Item | Path | Purpose |
+|------|------|---------|
+| Event Catalog | `manifests/events-catalog.yaml` | Canonical machine-readable event registry (12 events: 10 live · 2 planned), sourced from real backend code. C-70 GOVERNS; this CATALOGS. |
+| Event Catalog Engine | `evals/check-events-catalog.sh` | **14th KB gate** — schema + `binds_to` resolves to a C-doc + unique names + naming law (unversioned only if flagged legacy). |
+| AI numbering guard | `.cursorrules` **RULE 6** | AI MUST NOT invent / renumber / reuse / replace `C-NN`; human authority only; propose content with a `PLACEHOLDER` header. |
+| Quick Start | `docs/QUICKSTART.md` | 10-minute onboarding (clone → run → login → pay → deploy). **NOT a C-doc** — not in C-57, no Truth Framework header (it changes weekly; a C-doc would add drift). |
+| C-132 §7.5 Module-Seam Audit | `knowledge-base/C-132___...POLICY.md` | Code-verified audit of `tec-identity-service`: **17 domain modules** (§7 recorded 7), each with folder + DB namespace + events; flags the one VIP→Elite in-service table read for R-2 at extraction time. |
+
+### Canonical numbering gates (folded in from PR #99)
+The audit's "canonical numbering" idea landed as **two bash/py gates** — the right
+design compares sessions to the **canonical files** (not to an external PDF):
+| Gate | Path | Checks |
+|------|------|--------|
+| Canonical Numbering Engine | `evals/check-canonical-numbering.sh` | files ⟺ `asset-registry.yaml` ⟺ C-57 index match (116/116/116); catches duplicate / invented / renumbered / orphan / missing IDs. Reserved-range gaps = INFO. |
+| Session Canonical Reference Check | `evals/check-session-canonical.sh` | every `C-NN` cited in `memory/` + `audits/` resolves to a real canonical file (0 dangling). |
+
+> Both pass on this branch: **0 numbering drift · 0 dangling refs**. This supersedes the
+> earlier "no session-canonical gate is possible" note — it *is* possible against the
+> canonical files (there is no PDF in the repo; canonical = C-01 + C-57 + asset-registry).
+
+### Notes
+- **Deferred (with reason):** Service-JWT (ADR-013) is a real architectural decision →
+  a post-scale ADR, not a silent change (`INTERNAL_SECRET` spans 12 services).
+- KB gates now: **16** (added: events-catalog + canonical-numbering + session-canonical).
+  Registry unaffected (no C-doc headers changed).

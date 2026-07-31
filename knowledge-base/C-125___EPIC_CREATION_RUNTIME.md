@@ -10,6 +10,25 @@
 > **Domain:** `epic.tecosystem.app` (live pattern now) → `epic.pi` (future)
 
 ---
+## Implementation Status (2026-07-31)
+
+> **Truth State:** `[Current State]` for V0/V1 (below) · `[Future Vision]` for the full creation runtime
+> **Verification:** `[Code Verified]` (merged) · deployment per app CLAUDE.md
+
+Epic's V0/V1 is built in `tec-identity-service` (backend) + `tec-epic` (frontend),
+merged to `main`:
+- **Project board** (read layer, owner-scoped P6) + `/project/[id]` detail.
+- **Value chain (create → earn):** owner-scoped `completeProject` graduates a project to
+  `LEGEND` and emits `epic.project.completed.v1`; a "Mark project complete → Legend"
+  trigger on `/project/[id]` (the BFF derives the owner from the session cookie, never the
+  body — P6). Legend records the "Completed an Epic project" achievement. Terminal-state
+  safe; Epic records no reputation itself. `[Code Verified]`; fires at runtime only when
+  `REDIS_URL` is set.
+
+**Still future:** real project creation (STARTUP/COMMUNITY), team invitation, milestone
+tracking, Zone verification request, FundX funding (Phase 2 gates).
+
+---
 
 ## Institutional Identity
 

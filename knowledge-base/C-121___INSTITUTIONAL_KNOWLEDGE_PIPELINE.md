@@ -8,6 +8,34 @@
 > **Authority Scope:** `[Platform]`
 
 ---
+## Implementation Status — Value Chain (2026-07-31)
+
+> **Truth State:** `[Current State]` for the edges below · `[Future Vision]` for the full 7-layer pipeline
+> **Verification:** `[Code Verified]` (merged to `main`) — not yet `[Runtime Verified]`
+
+**Rule 3 — Data Flows Forward** now has its first live, event-driven edges in
+production code. The **reputation value chain** (a user-layer branch of the pipeline)
+is wired end-to-end in `tec-identity-service`:
+
+| Edge | Signal (C-70) | Direction | Status |
+|------|---------------|-----------|--------|
+| Epic → Legend | `epic.project.completed.v1` | create → earn | ✅ Code Verified (merged) |
+| Zone → Legend | `zone.badge.issued.v1` | verify → earn | ✅ Code Verified (merged) |
+| Elite → VIP | live tier check (no event) | recognition → experience | ✅ Code Verified (merged) |
+| → Legend (consumer) | ingests both streams, idempotent by `eventId` | — | ✅ Code Verified (merged) |
+
+Producer: `src/events/stream-emitter.ts` (Redis Streams; fail-safe no-op without
+`REDIS_URL`). Consumer: `legend.consumer.ts` (group `identity-legend`).
+
+**Runtime gate:** these edges fire only when `REDIS_URL` is set on
+`tec-identity-service` **and** the Legend consumer runs. Until then the emit is a logged
+no-op — hence `[Code Verified]`, **not** `[Runtime Verified]`.
+
+**Still future:** the canonical infrastructure pipeline
+(Hub → Life → Connection → Zone → Analytics → Nexus → TEC AI) and the **Legend → Elite**
+edge (criteria evaluation is Analytics/System's function, C-127 — deliberately NOT faked).
+
+---
 
 ## PREAMBLE
 

@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-07-26T02:52:03.882486
+# Generated: 2026-07-31T13:55:43.889157
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -129,7 +129,7 @@ assets:
       authority_scope: platform
     owner: yasser
     authoritative_for: ["current-state", "session-18", "all-24-apps"]
-    depends_on: []
+    depends_on: [C-64]
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
@@ -1335,7 +1335,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-106-life-institutional-charter"]
@@ -1353,7 +1353,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-107-connection-institutional-charter"]
@@ -1371,7 +1371,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-108-explorer-institutional-charter"]
@@ -1389,7 +1389,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-109-nexus-institutional-charter"]
@@ -1407,7 +1407,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-110-system-institutional-charter"]
@@ -1425,7 +1425,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-111-alert-institutional-charter"]
@@ -1443,11 +1443,11 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-112-nx-security-institutional-charter"]
-    depends_on: []
+    depends_on: [C-64]
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
@@ -1461,7 +1461,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-113-fundx-institutional-charter"]
@@ -1479,7 +1479,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-114-estate-institutional-charter"]
@@ -1497,7 +1497,7 @@ assets:
     constitutional:
       truth_state: current-state
       governance_state: draft
-      verification_state: documentation-verified
+      verification_state: runtime-verified
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-115-dx-developer-institutional-charter"]

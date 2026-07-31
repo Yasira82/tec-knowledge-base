@@ -8,6 +8,25 @@
 > **Authority Scope:** `[Platform + Ecosystem]`
 
 ---
+## Implementation Status (2026-07-31)
+
+> **Truth State:** `[Current State]` for V0/V1 (below) · `[Future Vision]` for V2→V4
+> **Verification:** `[Code Verified]` (merged) · deployment per app CLAUDE.md
+
+Zone's V0/V1 verification runtime is built in `tec-identity-service` (backend) +
+`tec-zone` (frontend), merged to `main`:
+- **Verified registry** (V1) + public entity detail — read layer live.
+- **Verification workflow** (§7): submit → PENDING → human review (admin-gated),
+  evidence append-only, no self-verify, no paid path to VERIFIED.
+- **Value chain (verify → earn):** on a confirmed `VERIFY`, `reviewDecision` emits
+  `zone.badge.issued.v1` (`stream-emitter.ts`) so Legend records the owner's
+  "Earned a Zone verification" achievement. `[Code Verified]`; fires at runtime only
+  when `REDIS_URL` is set.
+
+**Still future (§5):** Evidence Registry (V2) → Dynamic Trust Graph (V3) → Ecosystem
+Intelligence (V4). Trust-score computation stays Analytics/TEC AI (§4).
+
+---
 
 ## PREAMBLE
 
