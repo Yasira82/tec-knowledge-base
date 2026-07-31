@@ -1,0 +1,146 @@
+# TEC Event Catalog — canonical machine-readable registry of platform events
+# ---------------------------------------------------------------------------
+# Authority: C-70 Event Governance Spec (the LAW: naming `domain.action.version`,
+#            events = FACTS, at-least-once → idempotent consumers) + C-121
+#            (Institutional Knowledge Pipeline — the forward-flow edges).
+# Truth State: [Current State] — sourced from the running backend code, not planned.
+# Verification: [Code Verified] — each `live` event has a producer XADD in code +
+#               (where noted) a consumer group. `planned` = consumer mapped but the
+#               producer is not yet implemented.
+#
+# WHY THIS FILE EXISTS: event names were scattered across 12 services + the KB. This
+# is the single source of truth for "what events exist, who emits them, who consumes
+# them". C-70 GOVERNS events (the rules); this file CATALOGS them (the instances).
+#
+# Contract per event: producers XADD onto a Redis Stream named exactly `name`, with a
+# single `data` field carrying a JSON payload that includes at least `eventId`
+# (idempotency key) + `timestamp` + the subject id. Consumers read via a consumer
+# GROUP and MUST be idempotent (keyed on `eventId`).
+#
+# Validated by: evals/check-events-catalog.sh (schema + binds_to resolves to a C-doc).
+# ---------------------------------------------------------------------------
+
+meta:
+  version: 1
+  last_updated: "2026-07-31"
+  governed_by: knowledge-base/C-70___EVENT_GOVERNANCE_SPEC.md
+  naming: "domain.action.version (e.g. payment.completed.v1)"
+  delivery: "at-least-once → consumers MUST be idempotent (key on eventId)"
+
+events:
+  # ── Identity / Auth ──────────────────────────────────────────────────────
+  - name: user.created
+    owner: tec-auth-service
+    subject: piUsername
+    consumers: []
+    status: live
+    verified: true
+    binds_to: [C-70, C-47]
+    note: >
+      Emitted on first Pi identity resolution. UNVERSIONED (legacy) — should migrate to
+      `user.created.v1` per C-70 naming. Tracked as a naming-debt item.
+
+  # ── Payment (tec-payment-service — ADR-004 Outbox) ───────────────────────
+  - name: payment.approved.v1
+    owner: tec-payment-service
+    subject: paymentId
+    consumers: []
+    status: live
+    verified: true
+    binds_to: [C-70, C-71]
+  - name: payment.completed.v1
+    owner: tec-payment-service
+    subject: paymentId
+    consumers: [tec-identity-service/legend]
+    status: live
+    verified: true
+    binds_to: [C-70, C-71, C-126]
+    note: Legend records a "Completed a Pi payment" achievement (value chain, C-121).
+
+  # ── Commerce ──────────────────────────────────────────────────────────────
+  - name: order.paid.v1
+    owner: tec-commerce-service
+    subject: orderId
+    consumers: [tec-identity-service/connection]
+    status: live
+    verified: true
+    binds_to: [C-70, C-107]
+    note: Connection consumes it into relationship trust signals (order-paid.consumer).
+
+  # ── KYC ───────────────────────────────────────────────────────────────────
+  - name: kyc.verified.v1
+    owner: tec-kyc-service
+    subject: piUsername
+    consumers: [tec-identity-service/explorer]
+    status: live
+    verified: true
+    binds_to: [C-70, C-108]
+    note: Explorer syncs the "Verified Business" badge from KYC (never mints it).
+  - name: kyc.rejected.v1
+    owner: tec-kyc-service
+    subject: piUsername
+    consumers: [tec-identity-service/explorer]
+    status: live
+    verified: true
+    binds_to: [C-70, C-108]
+
+  # ── Value chain (tec-identity-service modules → Legend) ──────────────────
+  - name: zone.badge.issued.v1
+    owner: tec-identity-service/zone
+    subject: piUsername
+    consumers: [tec-identity-service/legend]
+    status: live
+    verified: true
+    binds_to: [C-120, C-126, C-121]
+    note: verify → earn. Emitted by zone.reviewDecision on a confirmed VERIFY.
+  - name: epic.project.completed.v1
+    owner: tec-identity-service/epic
+    subject: piUsername
+    consumers: [tec-identity-service/legend]
+    status: live
+    verified: true
+    binds_to: [C-125, C-126, C-121]
+    note: create → earn. Emitted by epic.completeProject.
+  - name: connection.milestone.v1
+    owner: tec-identity-service/connection
+    subject: piUsername
+    consumers: [tec-identity-service/legend]
+    status: live
+    verified: false
+    binds_to: [C-107, C-126]
+    note: Collaboration milestone. Recorded as a non-verified Legend signal.
+  - name: fundx.investment.closed.v1
+    owner: tec-identity-service/fundx
+    subject: piUsername
+    consumers: [tec-identity-service/legend]
+    status: planned
+    verified: true
+    binds_to: [C-113, C-126]
+    note: >
+      Consumer is MAPPED in legend.consumer, but the producer is NOT built — FundX
+      pool mechanics are hard-gated (legal + custody + SYSTEM, C-113). Emit only after
+      the gates clear. Listed for contract completeness.
+
+  # ── Analytics / Discovery ────────────────────────────────────────────────
+  - name: analytics.business.popularity.v1
+    owner: tec-analytics-service
+    subject: businessId
+    consumers: [tec-identity-service/explorer]
+    status: planned
+    verified: false
+    binds_to: [C-105, C-108]
+    note: >
+      Explorer consumes it for discovery-time ranking; the analytics-side producer is
+      not yet confirmed in code. Ranking degrades gracefully without it.
+
+  # ── Wallet ────────────────────────────────────────────────────────────────
+  - name: wallet.update
+    owner: tec-wallet-service
+    subject: walletId
+    consumers: []
+    status: live
+    verified: true
+    binds_to: [C-70, C-71]
+    note: >
+      UNVERSIONED (legacy) — should migrate to `wallet.updated.v1` per C-70 naming.
+      Tracked as a naming-debt item alongside user.created.

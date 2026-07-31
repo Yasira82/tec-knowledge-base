@@ -269,3 +269,25 @@ The **3 financially hard-gated** apps (FundX pools · Insure escrow · Brookfiel
 investment/REITs) are marked read-only until legal + payment-service custody + SYSTEM
 (Invariant #8) — only their Pro subscription processes real Pi. Charter **headers
 unchanged** (the grand runtime stays future) → registry `truth_state`/tier untouched.
+
+## Session 20.1 Additions — Audit Remediation (P0/P1 batch)
+
+Acting on the v3.10.0 Engineering Audit — implemented the 4 verified items (the audit's
+"numbering drift" P0 was checked against the repo and found **already fixed**: the
+C-124→C-131 renumber is clean, no stale C-122/C-123 references remain).
+
+| Item | Path | Purpose |
+|------|------|---------|
+| Event Catalog | `manifests/events-catalog.yaml` | Canonical machine-readable event registry (12 events: 10 live · 2 planned), sourced from real backend code. C-70 GOVERNS; this CATALOGS. |
+| Event Catalog Engine | `evals/check-events-catalog.sh` | **14th KB gate** — schema + `binds_to` resolves to a C-doc + unique names + naming law (unversioned only if flagged legacy). |
+| AI numbering guard | `.cursorrules` **RULE 6** | AI MUST NOT invent / renumber / reuse / replace `C-NN`; human authority only; propose content with a `PLACEHOLDER` header. |
+| Quick Start | `docs/QUICKSTART.md` | 10-minute onboarding (clone → run → login → pay → deploy). **NOT a C-doc** — not in C-57, no Truth Framework header (it changes weekly; a C-doc would add drift). |
+| C-132 §7.5 Module-Seam Audit | `knowledge-base/C-132___...POLICY.md` | Code-verified audit of `tec-identity-service`: **17 domain modules** (§7 recorded 7), each with folder + DB namespace + events; flags the one VIP→Elite in-service table read for R-2 at extraction time. |
+
+### Notes
+- **Not done (with reason):** a `check-session-canonical.sh` "PDF gate" — there is **no
+  PDF in the repo**; the canonical index is C-01 + C-57 + the asset-registry, already
+  enforced by `check-registry-integrity`. A CI gate can't diff against an un-versioned
+  external PDF. Service-JWT (ADR-013) is a real architectural decision → deferred to a
+  post-scale ADR, not a silent change (`INTERNAL_SECRET` spans 12 services).
+- KB gates now: **14**. Registry unaffected (no C-doc headers changed).
