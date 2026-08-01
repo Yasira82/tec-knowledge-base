@@ -57,6 +57,19 @@ events:
     status: live
     verified: true
     binds_to: [C-70, C-71]
+  - name: payment.completed
+    owner: tec-payment-service
+    subject: paymentId
+    consumers: [tec-wallet-service, tec-commerce-service, tec-analytics-service, tec-notification-service, tec-realtime-service]
+    status: live
+    verified: true
+    binds_to: [C-70, C-71]
+    note: >
+      UNVERSIONED (naming-debt). The DIRECT emit (`EVENTS.PAYMENT_COMPLETED` XADD) that
+      wallet/commerce/analytics/notification/realtime consume. Payment ALSO emits
+      `payment.completed.v1` via the outbox (below) for Legend — same fact, two stream
+      names (dual-emission, stream-consistency audit F-2 2026-08-01). Works today; a future
+      coordinated change should converge on `.v1` (money-path blast radius → not a drive-by).
   - name: payment.completed.v1
     owner: tec-payment-service
     subject: paymentId
@@ -64,34 +77,49 @@ events:
     status: live
     verified: true
     binds_to: [C-70, C-71, C-126]
-    note: Legend records a "Completed a Pi payment" achievement (value chain, C-121).
+    note: >
+      The OUTBOX-emitted (ADR-004) versioned variant Legend consumes to record a "Completed a
+      Pi payment" achievement (value chain, C-121). Dual with the direct `payment.completed`
+      above (audit F-2) — both fire per payment; each consumer reads exactly one, no double-processing.
 
   # ── Commerce ──────────────────────────────────────────────────────────────
   - name: order.paid.v1
     owner: tec-commerce-service
     subject: orderId
-    consumers: [tec-identity-service/connection]
+    consumers: [tec-identity-service/connection, tec-analytics-service]
     status: live
     verified: true
     binds_to: [C-70, C-107]
-    note: Connection consumes it into relationship trust signals (order-paid.consumer).
+    note: >
+      Connection consumes it into relationship trust signals (order-paid.consumer); Analytics
+      also tracks it as the merchant scoring dimension (ADR-013). Both verified in the
+      stream-consistency audit (2026-08-01).
 
   # ── KYC ───────────────────────────────────────────────────────────────────
-  - name: kyc.verified.v1
+  - name: kyc.verified
     owner: tec-kyc-service
     subject: piUsername
-    consumers: [tec-identity-service/explorer]
+    consumers: [tec-identity-service/explorer, tec-analytics-service, tec-notification-service]
     status: live
     verified: true
     binds_to: [C-70, C-108]
-    note: Explorer syncs the "Verified Business" badge from KYC (never mints it).
-  - name: kyc.rejected.v1
+    note: >
+      UNVERSIONED (naming-debt — kyc-service emits `kyc.verified`, not `.v1`; a C-70 rename
+      is deferred like user.created was). CORRECTION (stream-consistency audit 2026-08-01):
+      cataloged as `kyc.verified.v1` before, matching Explorer's consumer — but NO producer
+      emits `.v1`, so Explorer's "Verified Business" badge sync never fired. Explorer now
+      consumes the unversioned name (tec-core-backend Explorer KYC fix); analytics +
+      notification already did.
+  - name: kyc.rejected
     owner: tec-kyc-service
     subject: piUsername
-    consumers: [tec-identity-service/explorer]
+    consumers: [tec-identity-service/explorer, tec-notification-service]
     status: live
     verified: true
     binds_to: [C-70, C-108]
+    note: >
+      UNVERSIONED (naming-debt, paired with kyc.verified). Was cataloged as `kyc.rejected.v1`;
+      corrected to the real producer name (stream-consistency audit 2026-08-01).
 
   # ── Value chain (tec-identity-service modules → Legend) ──────────────────
   - name: zone.badge.issued.v1
