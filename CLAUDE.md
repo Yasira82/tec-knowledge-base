@@ -335,3 +335,32 @@ audit; the docs are reconciled here. Registry unaffected (no C-doc header lines 
 **Honest status:** gaps 1 & 2 are `[Code Verified]` (merged), not yet `[Runtime Verified]`
 (fire only when `REDIS_URL` is set on `tec-identity-service` + `tec-analytics-service` and
 the batch/consumers run). All 16 KB gates pass, 0 errors.
+
+## Session 23 Additions — Gap 3 begun (event versioning) + phantom-event correction
+
+Acting on the last value-chain loose end (Gap 3: unversioned events). Reading the code
+first surfaced two facts that reshaped the task:
+
+- **`wallet.update` was a PHANTOM catalog entry** — cataloged as live+verified, but there
+  is **no producer** in code (`tec-wallet-service` XADDs nothing; its only event constant is
+  the `payment.completed` it CONSUMES; every `wallet.update` in code is a Prisma
+  `tx.wallet.update()` DB write; balance changes reach the client as the *socket* event
+  `wallet.updated`, not a stream). **Removed** from `events-catalog.yaml` with a correction
+  note — the catalog is code-sourced, so a fictional event can't stay. Nothing to version.
+- **`user.created` shipped with no `eventId`** (a C-70 violation) and has **FOUR** live
+  consumers (identity · analytics · realtime · notification), not the 3 previously noted.
+
+**`user.created` C-70 rename — Phases 1 + 2 DONE** (`tec-core-backend #162`):
+- **Phase 1 (Expand):** the auth producer adds an `eventId` and **dual-emits** to both
+  `user.created` and the new `user.created.v1` (shared eventId, MAXLEN-bounded).
+- **Phase 2 (Migrate reads):** all **four** consumers (identity · analytics · realtime ·
+  notification) now **dual-read** both streams in one `xreadgroup`, deduped by `eventId`
+  (`SET NX`, released on error) → exactly-once, gapless, no double side-effects. Identity
+  needs no dedup (`findOrCreateUser` is idempotent by username). `analytics.claimEvent`
+  is unit-tested.
+
+`events-catalog.yaml`: `user.created.v1` now shows the four consumers; both notes record
+Phase 1+2 done. **Only Phase 3 remains** — drop the legacy emit → naming-debt = 0 (safe once
+#162 is deployed and consumers are confirmed reading `.v1`); its own follow-up PR.
+
+Registry rebuilt (timestamp only). Events: 13 (12 live · 1 planned). All 16 KB gates pass.
