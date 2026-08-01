@@ -364,3 +364,20 @@ Phase 1+2 done. **Only Phase 3 remains** — drop the legacy emit → naming-deb
 #162 is deployed and consumers are confirmed reading `.v1`); its own follow-up PR.
 
 Registry rebuilt (timestamp only). Events: 13 (12 live · 1 planned). All 16 KB gates pass.
+
+## Session 24 Additions — Gap 3 CLOSED (event versioning complete)
+
+Phase 3 (Contract) shipped (`tec-core-backend #163`): the auth producer now emits **only**
+`user.created.v1` — the legacy unversioned `user.created` emit is dropped. The full C-70
+rename is done end-to-end (expand → migrate → contract): **naming-debt = 0**.
+
+- `events-catalog.yaml`: legacy `user.created` **RETIRED** (no producer — removed with a
+  history note); `user.created.v1` is now the canonical SOLE new-user event.
+- Safe ordering: #163 (drop legacy) deploys AFTER #162's dual-read consumers (merged first),
+  so no event is missed. The now-silent legacy stream is a harmless no-op the consumers still
+  tolerate — a future housekeeping cleanup can drop that vestigial read.
+- Events: 12 (11 live · 1 planned) — one fewer after retiring the legacy entry. All 16 gates pass.
+
+**Gap 3 is fully closed.** With the two phantom corrections (Session 22 popularity → live;
+Session 23 `wallet.update` removed) and this rename, the events-catalog now has **zero
+unversioned-legacy debt** and every entry is code-sourced.
