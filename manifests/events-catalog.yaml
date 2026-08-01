@@ -29,21 +29,12 @@ meta:
 
 events:
   # ── Identity / Auth ──────────────────────────────────────────────────────
-  - name: user.created
-    owner: tec-auth-service
-    subject: piUsername
-    consumers: [tec-identity-service, tec-analytics-service, tec-realtime-service, tec-notification-service]
-    status: live
-    verified: true
-    binds_to: [C-70, C-47]
-    note: >
-      Emitted on first Pi identity resolution. UNVERSIONED (legacy). MIGRATION (C-70 rename →
-      `user.created.v1`, tec-core-backend #162): PHASE 1 (Expand) DONE — producer adds an
-      `eventId` and DUAL-EMITS to both this stream and `user.created.v1`. PHASE 2 (Migrate
-      reads) DONE — all FOUR consumers (identity · analytics · realtime · notification) now
-      dual-read both streams in one xreadgroup, deduped by `eventId` (exactly-once; identity
-      is naturally idempotent). Only PHASE 3 remains: drop this legacy emit → naming-debt = 0
-      (safe once #162 is deployed and consumers are confirmed reading `.v1`).
+  # RETIRED (2026-07-31, Phase 3 / tec-core-backend #163): the legacy unversioned
+  # `user.created` stream is no longer PRODUCED — the C-70 rename to `user.created.v1`
+  # is complete (Phase 1 dual-emit → Phase 2 consumers dual-read → Phase 3 drop legacy).
+  # The auth producer now emits ONLY `user.created.v1`. Removed from the catalog because
+  # it has no producer (the catalog is code-sourced). The four consumers still tolerate the
+  # now-silent stream (harmless dual-read) — a future housekeeping cleanup can drop that read.
   - name: user.created.v1
     owner: tec-auth-service
     subject: piUsername
@@ -52,10 +43,11 @@ events:
     verified: true
     binds_to: [C-70, C-47]
     note: >
-      C-70-compliant versioned replacement for `user.created`. Producer dual-emits it (shared
-      `eventId`, MAXLEN-bounded, tec-core-backend #162) and all FOUR consumers now dual-read
-      it alongside the legacy stream, deduped by `eventId` (Phase 2). Once the legacy emit is
-      dropped (Phase 3) this becomes the sole stream. Same payload as the legacy stream.
+      The canonical, C-70-compliant new-user event (SOLE stream as of Phase 3, #163). Producer
+      emits it with an `eventId`, MAXLEN-bounded; all FOUR consumers (identity · analytics ·
+      realtime · notification) read it, deduped by `eventId` (exactly-once; identity is
+      naturally idempotent by username). Replaced the legacy unversioned `user.created` via a
+      clean expand→migrate→contract migration (#162 → #163). Naming-debt = 0.
 
   # ── Payment (tec-payment-service — ADR-004 Outbox) ───────────────────────
   - name: payment.approved.v1
