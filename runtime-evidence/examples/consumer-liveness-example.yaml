@@ -1,0 +1,20 @@
+# Example runtime evidence record — health_snapshot / consumer-liveness (illustrative).
+#
+# Emitted by tec-core-backend `scripts/verify-runtime.mjs --emit-evidence` (read-only
+# XINFO over the shared Redis — the PRODUCER half of the C-96 evidence loop, twin of
+# tec-identity-service GET /health/streams). This sample is the exact shape the tool
+# writes; real records land in runtime-evidence/ when ops runs it against prod Redis.
+# Validates against manifests/runtime-evidence-schema.yaml.
+evidence_id: ev-2026-08-01-901
+kind: health_snapshot
+timestamp: "2026-08-01T00:00:00Z"
+source: tec-identity-service:/health/streams
+binds_to: [C-96, C-92, C-70]
+phs: 10.0
+dimensions:
+  evidence_type: consumer-liveness-probe
+  consumers_live: ok
+  streams_checked: 11
+  missing_required_groups: 0
+  lag_pending_warnings: 0
+  broken_streams: []

@@ -381,3 +381,24 @@ rename is done end-to-end (expand → migrate → contract): **naming-debt = 0**
 **Gap 3 is fully closed.** With the two phantom corrections (Session 22 popularity → live;
 Session 23 `wallet.update` removed) and this rename, the events-catalog now has **zero
 unversioned-legacy debt** and every entry is code-sourced.
+
+## Session 25 Additions — Nervous System: consumer-liveness sensor → evidence loop
+
+The event layer went from `[Code Verified]` to **observable at runtime**. Two silent
+prod breakages this month (Explorer-KYC dead stream · analytics Decimal crash) were both
+"a consumer isn't doing its job" and neither tripped any health check — found only by
+hand from Railway logs. This closes that gap end-to-end.
+
+| Piece | Repo / Path | Purpose |
+|-------|-------------|---------|
+| Consumer-liveness sensor | `tec-identity-service/src/modules/health/stream-health.service.ts` + `GET /health/streams` | One Redis client sees EVERY consumer group; read-only XINFO; fail-safe always-200; `EXPECTED` map (11 streams) synced with the CLI twin + events-catalog. (merged, tec-core-backend #167) |
+| Gateway aggregation | `tec-api-gateway` `/health/detailed` `streams` field | Relays the sensor verdict through the platform's single aggregation point. **Informational — NOT folded into `status`** (a dead consumer never false-flips the gateway offline, NEW-W). tec-core-backend #168 |
+| Hub surface | `tec-app` `/api/health/streams` BFF + pi-test "Consumer Liveness" | The Hub (and any uptime monitor) sees `ok`/`missingGroups`/`degraded`. NOT a second poller (C-96 single-poller stays `/api/health`). tec-app #134 |
+| **Evidence producer** | `scripts/verify-runtime.mjs --emit-evidence` | Emits a schema-conforming `health_snapshot` runtime-evidence record from the live XINFO data → the **PRODUCER half of the C-96 loop** (`Reality → Evidence → Governance`). PHS = 10 − 2·missing − 0.5·warnings; binds_to `[C-96, C-92, C-70]`. Verified against a live Redis: healthy → PHS 10.0 exit 0; a dropped `identity-explorer` group on `kyc.verified` → PHS 8.0, `broken_streams: [kyc.verified]`, exit 1 (the exact Explorer-KYC regression, now caught + recorded). |
+| Evidence example | `runtime-evidence/examples/consumer-liveness-example.yaml` | Illustrative sample of the emitter's output; validates against the schema. **Runtime Evidence gate: 9 records, 0 errors.** |
+
+### Honest status
+- The sensor + emitter are `[Code Verified]`; they become `[Runtime Verified]` when ops
+  runs `--emit-evidence` against **prod** Redis and commits the record (no fabricated prod
+  telemetry is committed — the KB record above is an explicit example, not a prod reading).
+- Registry unaffected (no C-doc header lines changed). Runtime-evidence gate re-run: pass.
