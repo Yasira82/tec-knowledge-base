@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-08-01T08:26:00.725964
+> **Generated:** 2026-08-07T17:59:17.479779
 > **Registry:** `/home/user/tec-knowledge-base/architecture/asset-registry.yaml`
 > **Rules:** `/home/user/tec-knowledge-base/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
@@ -13,7 +13,7 @@
 | Total C-docs on disk | 116 |
 | Coverage | 100.0% |
 | Errors | 0 |
-| Warnings | 0 |
+| Warnings | 1 |
 | Info | 62 |
 
 ## Per-Tier Breakdown
@@ -21,7 +21,7 @@
 | Tier | Assets | Errors | Warnings |
 |------|--------|--------|----------|
 | tier-0-foundational | 4 | 0 | 0 |
-| tier-1-constitutional-runtime | 62 | 0 | 0 |
+| tier-1-constitutional-runtime | 62 | 0 | 1 |
 | tier-1-institutional-intelligence | 46 | 0 | 0 |
 | tier-2-experimental | 4 | 0 | 0 |
 
@@ -36,7 +36,7 @@
 ## Semantic Drift Report (R-SEMANTIC)
 
 - Semantic errors: 0
-- Semantic warnings: 0
+- Semantic warnings: 1
 
 ## Errors (must fix)
 
@@ -44,8 +44,8 @@ _No errors._ ✅
 
 ## Warnings (should fix)
 
-_No warnings._ ✅
+- **C-02** [R-SEMANTIC-002]: Only 1/3 authoritative_for claims found in file content (33%, need ≥50%)
 
 ## Recommended Actions
 
-1. Registry is clean and complete. Run `python3 scripts/registry-impact-analysis.py C-XX` for change analysis.
+2. Review 1 warning(s) — address within sprint.
