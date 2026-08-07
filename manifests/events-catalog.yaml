@@ -73,14 +73,19 @@ events:
   - name: payment.completed.v1
     owner: tec-payment-service
     subject: paymentId
-    consumers: [tec-identity-service/legend]
+    consumers: [tec-identity-service/legend, tec-identity-service/nexus, tec-commerce-service/subscription]
     status: live
     verified: true
     binds_to: [C-70, C-71, C-126]
     note: >
-      The OUTBOX-emitted (ADR-004) versioned variant Legend consumes to record a "Completed a
-      Pi payment" achievement (value chain, C-121). Dual with the direct `payment.completed`
-      above (audit F-2) — both fire per payment; each consumer reads exactly one, no double-processing.
+      The OUTBOX-emitted (ADR-004) versioned variant, now carrying the payment's own metadata.
+      Three idempotent consumer groups (each reads exactly one stream, no double-processing):
+      `identity-legend` records a "Completed a Pi payment" achievement (value chain, C-121);
+      `identity-nexus` resumes a Nexus workflow run after its U2A payment (metadata.nexusRunId,
+      Session 26 / tec-core-backend #186); `commerce-subscription` activates a PRO/ENTERPRISE
+      subscription when the payment was a Pro buy (metadata item_id/product_id `<slug>_pro_monthly`
+      or metadata.plan — the platform-wide "in-app Pro payment → real subscription" link,
+      Session 26 / tec-core-backend #188). Dual with the direct `payment.completed` above (audit F-2).
 
   # ── Commerce ──────────────────────────────────────────────────────────────
   - name: order.paid.v1

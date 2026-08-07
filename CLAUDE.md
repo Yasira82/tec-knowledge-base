@@ -402,3 +402,28 @@ hand from Railway logs. This closes that gap end-to-end.
   runs `--emit-evidence` against **prod** Redis and commits the record (no fabricated prod
   telemetry is committed — the KB record above is an explicit example, not a prod reading).
 - Registry unaffected (no C-doc header lines changed). Runtime-evidence gate re-run: pass.
+
+## Session 26 Additions — Subscription activation + Pro entitlement (fleet-wide)
+
+Closed the platform's largest pre-campaign gap: every app's in-app **"Pro" button** took a
+real Pi payment but activated **nothing** — commerce had no consumer linking payment →
+subscription (the old `OrderConsumer` is registered in no module = dead code). Users could
+pay and get no entitlement across ~19 apps.
+
+| Piece | Repo / Path | Purpose |
+|-------|-------------|---------|
+| SubscriptionConsumer | `tec-commerce-service/src/modules/subscription/subscription.consumer.ts` | Consumes `payment.completed.v1`; activates PRO/ENTERPRISE via `SubscriptionService.subscribe` when the payment is a Pro buy (`<slug>_pro_monthly` item_id/product_id or `metadata.plan`). Idempotent; both payment modes; same path as the Hub (P2). New group `commerce-subscription`. tec-core-backend #188. |
+| Read path (BFF) | each app `src/app/api/bff/subscription/route.ts` | `GET /api/bff/subscription` → gateway `/api/commerce/subscriptions/status`. Needed because auth `/me` never carries the plan (`getMe` selects none; login hardcodes `subscriptionPlan: null`). Subscription stays commerce-owned (C-47). |
+| Pro entitlement UI | 19 app Pro components | Shows "★ You're on Pro" when subscribed, gated on `isActive` + not `isExpired` (30-day pass; no auto-renewal) → ends when the month lapses. Life also: ★ PRO badge + unlimited-goals benefit. |
+| Sensor sync | `stream-health.service.ts` + `scripts/verify-runtime.mjs` | Added `commerce-subscription` (and `identity-nexus`, from the Nexus resume fix) to the `payment.completed.v1` EXPECTED map. |
+| Docs | `C-02` Session 26 block · `events-catalog.yaml` (`payment.completed.v1` now lists 3 consumers) | Code-sourced; events gate passes (13 events, 0 errors). |
+
+### Honest status
+- **[Runtime Verified] = Life only** (a real 5π Life Pro payment → ★ PRO live after redeploy;
+  full loop activate → read → show → expire). The other 18 apps are merged `[Code Verified]`
+  — each needs its Vercel redeploy + a real payment; earlier (pre-consumer) payments do NOT
+  back-activate.
+- **Follow-ups (recorded):** no auto-renewal (Pi U2A one-time → renewal reminder flow);
+  no server-side downgrade job (a commerce cron flip expired→FREE); price-vs-plan assertion
+  at activation (`PLANS.PRO=10π` vs some 5π surfaces). System intentionally excluded
+  (`system_supporter` grants nothing, C-110).
