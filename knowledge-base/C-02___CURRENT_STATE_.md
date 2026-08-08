@@ -4,7 +4,195 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 8 August 2026 (Session 30 — Analytics Pro becomes a REAL service: 90-day activity history CSV export)
+**Last Updated:** 8 August 2026 (Session 34 — Peer comparison segmentation: you vs merchants on your own app source)
+
+---
+
+## SESSION 34 — PEER COMPARISON SEGMENTATION (by app source) (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open). Extends Session 33's peer comparison with the category dimension — the honest, owned version of "category/region."
+
+### What it is
+The peer comparison (Session 33) gains a **segment toggle**: compare against **All** active
+merchants, or just those on **your own app source** (e.g. Commerce). Each segment is
+k-anonymized independently.
+
+### The honest boundary call (category = app source; region = deferred)
+"Category/region segmentation" was the recorded next step. Reading the data decided *which*
+is honestly buildable:
+- **Category → app SOURCE** (`payload.metadata.source`) — this is the **only category
+  dimension Analytics genuinely OWNS**: it already lives in Analytics' own event payload
+  (the `payment.completed.v1` event carries the payment's `metadata`, incl. `source`). So
+  "vs other merchants on Commerce" is real, owned, no cross-service read.
+- **Region / geography → DEFERRED (with reason)** — a merchant's location is **business-profile
+  data Analytics does NOT own** (it belongs to Explorer / identity). Segmenting by region would
+  need a governed cross-service signal (a bigger data model) — recorded, not faked.
+
+### The design (per-segment k-anonymity)
+- Backend `getCategoryComparison(userId, segment?)` **auto-detects** the caller's dominant
+  source (bounded own read) → returns it as `ownSegment` so the UI can offer the toggle. When
+  a segment is chosen, the cohort is restricted via a **JSON-path filter**
+  (`payload.metadata.source == segment`), and the **same k-anonymity floor** applies **per
+  segment** (a too-small segment cohort → suppressed, fail safe). Still counts (never π), still
+  no per-user row leaves.
+- Frontend: an "All / <your source>" toggle on the PeerComparison panel; the BFF forwards a
+  **whitelisted** segment slug (a malformed value is dropped before it reaches the JSON filter).
+
+### Honest gaps / follow-ups (still recorded)
+- **Region segmentation** — needs a category/geo signal on the merchant profile (Explorer/
+  identity) surfaced via a governed cross-service read; deferred.
+- **Differential-privacy noise** — the k-anonymity floor remains the v1 guard.
+- `[Code Verified]` → `[Runtime Verified]` after the Vercel redeploy.
+
+### PR ledger
+tec-core-backend **#199** (…+ segment, 74/74) · tec-analytics **#29** (…+ segment toggle, 41/41).
+All local gates green (build · lint · tests · tsc).
+
+---
+
+## SESSION 33 — DE-IDENTIFIED PEER COMPARISON (you vs the field) (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open) — becomes `[Runtime Verified]` after the Vercel redeploy. Third step of "Analytics serves the broader Pi community" — the recorded next step from Sessions 31–32.
+
+### What it is
+Inside Merchant Intelligence: **"how am I doing vs other active Pi merchants?"** The caller's
+OWN metric (transactions, last 30d) next to a **de-identified cohort baseline** — cohort mean,
+median, and the caller's **percentile** ("top X%" / "ahead of Y%"), over all active merchants.
+
+### The privacy design (this is the whole point)
+A comparison against "the average" is the classic place a naive analytics feature leaks. The
+guards:
+- **Distribution only** — the backend `groupBy`s per-merchant counts but uses ONLY the sorted
+  distribution; **no `user_id` and no other merchant's value ever leaves the method**.
+- **k-anonymity, fail-safe** — if the active-merchant cohort is below the floor (**5**), the
+  **entire comparison is suppressed** (`available:false`) — never a mean/median over too few
+  peers. The UI then says, honestly, "not enough active merchants to compare privately yet."
+- **What leaves:** the caller's own count, the cohort mean/median (aggregates over ≥K), the
+  percentile, and the cohort size (already public via the Pulse).
+- **Counts, never money** — transactions per merchant, never π volume (C-105 — activity, not value).
+
+Constitutional basis: C-105 §6 (own-scope for the caller) + C-122 §5.2 (de-identified aggregate
+for the cohort). Both allowed; the cohort side is k-anonymized.
+
+### Backend / frontend (no schema change)
+- `getCategoryComparison(userId)` + `GET /analytics/me/comparison` (own-scope, fail-closed).
+  6 backend tests incl. **suppression below floor** + **no-user_id-leak** + percentile.
+- `/api/bff/analytics/me/comparison` (own-scope forward) + a `PeerComparison` panel inside the
+  Merchant Intelligence block (renders nothing when unavailable; honest small-cohort message).
+
+### The three community surfaces now (Sessions 31–33)
+| Surface | Scope | Who sees it |
+|---------|-------|-------------|
+| **Merchant Intelligence** | own-scope (§5.1) | any signed-in Pi merchant |
+| **Peer comparison** | own + de-identified cohort (§5.2) | any signed-in merchant (when a cohort exists) |
+| **Pi Economy Pulse** | de-identified aggregate (§5.2) | the whole Pi community (public, no login) |
+
+### Honest gaps / follow-ups (recorded)
+- **Category/region segmentation** — "vs other Pi *cafés* near you" needs a category signal on
+  the merchant profile + a per-segment cohort ≥K (a bigger data model); the current comparison
+  is platform-wide-cohort. Recorded as the next step.
+- **Differential-privacy noise** — the k-anonymity floor is the v1 guard; adding small noise to
+  the mean is a future hardening against differential attacks as the platform grows.
+- `[Code Verified]` → `[Runtime Verified]` after the Vercel redeploy.
+
+### PR ledger
+tec-core-backend **#199** (MI + Pulse + comparison, 70/70) · tec-analytics **#29** (all three
+frontends, 40/40). All local gates green (build · lint · tests · tsc).
+
+---
+
+## SESSION 32 — PI ECONOMY PULSE (Analytics' first PUBLIC surface) (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open) — becomes `[Runtime Verified]` after the Vercel redeploy. Second step of "Analytics serves the broader Pi community" (after Merchant Intelligence): a public board anyone can see, even logged out.
+
+### What it is
+A **public** `/pulse` page (no login) — **"is the Pi economy active?"** — showing platform-wide
+**activity signals**: total transactions, 7-day count, week-over-week growth, active-merchant
+count, and a 14-day daily-activity sparkline. This is the community-facing complement to
+Merchant Intelligence (own-scope): Pulse is the *aggregate*, public view.
+
+### The constitutional basis (C-122 §5.2 AGGREGATE disclosure) + the guards
+Analytics may disclose de-identified AGGREGATE data publicly (§5.2). This is that — with
+hard guards so it can never identify anyone:
+- **Aggregate counts ONLY** — no per-user / per-merchant row ever leaves the service
+  (the distinct-merchant query returns a COUNT; rows never leave the method).
+- **k-anonymity floor** — an active-merchant cohort below **5** is suppressed to `null`
+  (UI shows `—`), so a tiny early platform can't identify individuals.
+- **Activity, NOT money-as-truth, NOT price** — no π volume, no market/price chart (the
+  Session 31 decision holds). Analytics never presents a figure as financial truth (C-105).
+  The page carries an explicit disclaimer ("de-identified aggregate signals · not investment
+  information").
+- **Served via a public BFF** that adds the internal key server-side; the backend `authorize()`
+  still requires a valid actor (internal/user) and it is **never** platform-sovereign data.
+
+### Backend / frontend (no schema change)
+- `getEconomyPulse()` — built from the already-aggregated `dailyMetric` table + a distinct-
+  merchant COUNT. `GET /analytics/pulse` (public-via-BFF). 6 backend tests (de-id shape / no
+  user_id leak / k-anonymity / WoW).
+- `/api/bff/analytics/pulse` (public, no token) + a themed public `/pulse` page (inline
+  Pi-Browser-safe charts). 2 frontend tests.
+
+### Honest gaps / follow-ups (recorded)
+- **De-identified category comparison** ("you vs the average Pi café") — still the deliberate
+  NEXT step; needs a cohort-safe AGGREGATE join (min cohort size), not faked.
+- Pulse is only as populated as `dailyMetric` — if the daily-metric updater lags, it shows
+  fewer days (honest, no fabrication).
+- `[Code Verified]` → `[Runtime Verified]` after the Vercel redeploy.
+
+### PR ledger
+tec-core-backend **#199** (Merchant Intelligence + `getEconomyPulse`, 64/64) · tec-analytics
+**#29** (MI dashboard + public `/pulse`, 38/38). All local gates green (build · lint · tests · tsc).
+
+---
+
+## SESSION 31 — MERCHANT INTELLIGENCE (Analytics → the broader Pi community) (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open) — becomes `[Runtime Verified]` after the Vercel redeploy. Answers the strategic question "how does Analytics serve Pi merchants OUTSIDE TEC?" — the first step: give any Pi merchant real insight into their own business.
+
+### The strategic frame (a deliberate NO to price charts)
+The user asked whether Analytics could serve the wider Pi community — e.g. "analyze a coin
+price chart." **Recorded decision: NO to market/price charts** (for now). A price/market
+chart is (1) **not our data** — market price is owned by external exchanges, not
+payment-service; presenting it as truth breaks C-105; (2) **legal risk** — a price chart
+with any trend/buy signal reads as financial advice (same reason FundX/Insure/Estate are
+hard-gated); (3) accuracy liability. If ever built, it must be an *external, clearly-labelled
+indicative source* with **no buy/sell signal** — a separate governed decision, not a feature.
+
+**The right first step (shipped): Merchant Intelligence** — Analytics' CORE value ("understand
+your own activity") surfaced for **any Pi merchant**, from OUR real data, fully within the
+constitution.
+
+### What it is (C-105 §6 own-scope — same truth, real insight)
+A dashboard computed **only from the caller's own event log**:
+- **When you're busiest** — UTC peak hour + a 24-bucket hour-of-day histogram.
+- **The trend** — week-over-week change (▲/▼ %).
+- **Daily activity** — a zero-gap-filled sparkline.
+- **Activity mix** — top event types as % bars.
+
+Never cross-merchant, never financial truth (the owning services own the money). No new
+disclosure surface — own-scope + fail-closed, same rule as `me/overview` / `me/activity`.
+
+### Freemium (draws the community in, then Pro depth)
+FREE merchants get the full intelligence on a **14-day** window (real value → a reason to
+show up); **Merchant Pro** widens it to **90 days** + the CSV export (Session 30) — *same
+trusted numbers, more depth*. Window chosen server-side from the live subscription (P5 —
+Analytics never stores billing).
+
+### Backend (no schema change — all derived from the existing event log)
+- `getMerchantIntelligence(userId, sinceDays)` — own-scope, bounded compute (scans ≤5000 own
+  events; honest `sampled` flag), UTC-deterministic hour histogram, WoW math, zero-gap daily
+  series, top activity. `peakHour = null` on no activity (honest empty state).
+- `me/intelligence` — own-scope, fail-closed (401), `days` clamped ≤365.
+
+### Honest gaps / follow-ups (recorded)
+- **De-identified category comparison** ("you vs the average Pi café") is a deliberate NEXT
+  step — it needs an AGGREGATE disclosure (C-122 §5.2) with real de-identification, not faked.
+- **Pi Economy Pulse** (a public, de-identified "is the Pi economy active?" board) — proposed.
+- `[Code Verified]` → `[Runtime Verified]` after the Vercel redeploy.
+
+### PR ledger
+tec-core-backend **#199** (getMerchantIntelligence + me/intelligence, 58/58) · tec-analytics
+**#29** (Merchant Intelligence dashboard, 36/36). All local gates green (build · lint · tests · tsc).
 
 ---
 
