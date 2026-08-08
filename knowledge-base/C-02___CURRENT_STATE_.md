@@ -20,15 +20,17 @@ until a population exists — a featured card in an empty directory is worth not
 surfaces **the user's own data** (like LinkedIn "who viewed your profile"): valuable on day one, no
 population needed, and **additive** (a new Pro-only capability — never removing a free one).
 
-### Shipped (2 apps upgraded)
+### Shipped (3 apps upgraded)
 | App | New standalone Pro service | Own-data source |
 |-----|----------------------------|-----------------|
 | **Connection** | **📈 Network Insights** — who follows you + `mutual` flag + one-tap follow-back | your follow graph |
 | **Epic** | **📊 Portfolio Insights** — completion rate · milestone progress · Zone-verified · Legend outcomes · funding | your projects |
+| **Life** | **📊 Goal Insights** — completion rate · funding progress toward π targets · goals reached (deeper than the free strip) | your goals |
 
-Both gate the aggregate/list **server-side behind live Pro** (P5); the count/teaser is non-sensitive.
-Connection backend `listFollowers` (mutual from own following set) · Epic backend `portfolioInsights`.
-Tests: connection 22/22 · epic 26/26 (backend) · connection 26/26 · epic 30/30 (frontend).
+All gate the aggregate/list **server-side behind live Pro** (P5); the count/teaser is non-sensitive.
+Connection `listFollowers` (mutual from own following set) · Epic `portfolioInsights` · Life `goalInsights`.
+Tests (backend): connection 22/22 · epic 26/26 · life 15/15 — (frontend): connection 26/26 · epic 30/30 · life 21/21.
+**Life is already `[Runtime Verified]`** → this upgrade reaches real users fastest (additive to unlimited goals).
 
 ### Honest ruling on the other 3 "Featured" apps (NOT forced)
 Applying the same pattern to NX / Explorer / Zone would be **fake or harmful**, so it was **not** done:
@@ -41,8 +43,9 @@ Applying the same pattern to NX / Explorer / Zone would be **fake or harmful**, 
   **Analytics** computes/judges). Zone Pro stays **priority review** — the constitutionally correct model.
 
 ### PR ledger
-tec-core-backend **#202** (Connection directory + followers · Epic insights) · tec-connection **#27** ·
-tec-epic **#21**. Ops: `db push` on `tec-identity-service`. All local gates green.
+tec-core-backend **#202** (Connection directory + followers · Epic insights · Life goal insights) ·
+tec-connection **#27** · tec-epic **#21** · tec-life **#21**. Ops: `db push` on `tec-identity-service`
+(Life goal-insights needs no new table — reads existing `life_goals`). All local gates green.
 
 ---
 
