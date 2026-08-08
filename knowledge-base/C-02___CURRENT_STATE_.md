@@ -4,7 +4,95 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 8 August 2026 (Session 35 — Analytics prod review: admins see Merchant Intelligence + honest charts + platform charts read the event log)
+**Last Updated:** 8 August 2026 (Session 37 — NX deepened: opportunity posting + public board + NX Pro = Featured)
+
+---
+
+## SESSION 37 — NX: OPPORTUNITY POSTING + NX PRO = FEATURED (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open). Seventh app deepened — the "make Pro real + serve the Pi community" campaign continues (Epic → NX).
+
+### What it is
+NX (the Pi Opportunity Exchange, ADR-010) already had a **public** searchable board — but
+seed-only (read-only). The two gaps closed:
+- **Community value → real two-sided service:** **posting**. Any signed-in Pi user posts a
+  job / grant / gig / partnership; the whole community discovers it on the public board.
+  Posts start **unverified** (Zone/kyc verifies later — NX presents, never mints, ADR-010).
+- **Real Pro → NX Pro = ⭐ Featured:** a Pro poster's opportunities get featured placement.
+  Search ranks `verified → featured → title` — featured lifts **within** the verified tier
+  (pay for reach, never verification). Synced from the live subscription by the BFF (P5).
+
+### Backend / frontend (needs db push)
+- `NxOpportunity.owner` (nullable, P6) + `featured` (+ `featured_until`, `@@index`);
+  `createOpportunity` + `listOwn` + `setFeaturedForOwner`; `POST /identity/nx/opportunity`,
+  `GET /identity/nx/mine/:owner`, `PATCH /identity/nx/featured`. 12/12 nx tests.
+- Post form + "your posts" + ⭐ badges; `/api/bff/nx/opportunities` (POST) + `/api/bff/nx/mine`
+  (own + featured reconcile). 31/31 frontend tests.
+
+### The scorecard (7 apps: real Pro + a Pi-community surface)
+| App | Real Pro | Pi-community surface (outside TEC) |
+|-----|----------|-----------------------------------|
+| Life | Unlimited goals | — |
+| Explorer | ⭐ Featured listing | public merchant discovery |
+| Zone | ⭐ Priority review | public verification badges |
+| Legend | 🔖 Embeddable badge | public `/u` CV |
+| Analytics | 📁 90-day export | public Pi Economy Pulse + peer comparison |
+| Epic | ⭐ Featured project | public `/discover` project directory |
+| **NX** | **⭐ Featured opportunity** | **public opportunity board + community posting** |
+
+### Process note (recorded)
+`tec-core-backend` uses ONE session branch, so the Epic (#201) and NX backend changes are
+**both on that branch** (independent modules — Epic + NX). PR #201 covers both. Frontends are
+separate repos/PRs (tec-epic #20 · tec-nx #17). Next candidates: **Connection · Alert · DX**.
+
+### PR ledger
+tec-core-backend **#201** (Epic + NX backend, 36/36) · tec-epic **#20** (27/27) · tec-nx
+**#17** (31/31). Ops: `db push` on `tec-identity-service`. All local gates green.
+
+---
+
+## SESSION 36 — EPIC: PUBLIC DISCOVERY + EPIC PRO = FEATURED (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open). Resumes the "deepen the rest" campaign — apply the proven pattern (real Pro service + external Pi-community value) to the remaining apps, starting with **Epic** (it already has a real project backend: create → Zone-verify → Legend).
+
+### What it is (the Explorer pattern on Epic)
+- **Community value (outside TEC):** a **public `/discover`** page — the whole Pi community
+  browses **launched** Pi projects ("what's being built on Pi?"), **no login**. Trust-first:
+  Zone-verified rank first; ⭐ Featured within the tier; category filter.
+- **Real Pro:** **Epic Pro = Featured placement** in that public directory — visibility only,
+  ranked **below** `zone_verified` (pay for reach, never verification). Synced from the
+  owner's live subscription by the BFF (P5); lapsed Pro clears it.
+
+### Boundary correction (found while wiring)
+Epic Pro's copy previously claimed *"priority Zone verification"* — **constitutionally wrong**
+(Epic can't sell Zone's review queue; only Zone Pro does that, C-120 §7). Corrected to
+**Featured placement**, which Epic genuinely owns and which ranks below verification.
+
+### Backend / frontend (needs db push)
+- `EpicProject.featured` (+ `featured_until`, `@@index`); `listPublic()` (launched-only,
+  trust-first) + `GET /identity/epic/discover` (public); `setFeaturedForOwner()` + `PATCH
+  /identity/epic/featured` (owner-scoped). 24/24 epic tests.
+- Public `/discover` page + `/api/bff/epic/discover` (public, no token) + featured sync in
+  the "my projects" BFF + ⭐ badge on the board. 27/27 frontend tests.
+
+### The "Pro is real + serves Pi" scorecard (apps done)
+| App | Real Pro | Pi-community surface (outside TEC) |
+|-----|----------|-----------------------------------|
+| Life | Unlimited goals | — |
+| Explorer | ⭐ Featured listing | public merchant discovery |
+| Zone | ⭐ Priority review | public verification badges |
+| Legend | 🔖 Embeddable badge | public `/u` CV |
+| Analytics | 📁 90-day export | public Pi Economy Pulse + peer comparison |
+| **Epic** | **⭐ Featured project** | **public `/discover` project directory** |
+
+### Next (recorded)
+Same pattern for the remaining apps — candidates: **NX** (public opportunity board + featured
+posting), **Connection** (public trust profiles), **Alert** (public Pi-community feed), **DX**
+(public builder catalog). Each: real Pro benefit + a public/community surface, within the boundary.
+
+### PR ledger
+tec-core-backend **#201** (listPublic + featured, 24/24) · tec-epic **#20** (public discovery
++ Pro sync, 27/27). Ops: `db push` on `tec-identity-service`. All local gates green.
 
 ---
 
