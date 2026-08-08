@@ -8,6 +8,96 @@
 
 ---
 
+## SESSION 39 — PRO = STANDALONE VALUE (not just reach): Connection + Epic insights (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open). A quality pass on the
+> campaign: turn the "⭐ Featured" (reach-only) Pros into services with **standalone value** — value
+> that works with **zero population** because it surfaces the user's OWN data.
+
+### The principle (recorded)
+"Featured placement" is constitutionally clean (pay for reach, never trust) but its value is **latent**
+until a population exists — a featured card in an empty directory is worth nothing. A stronger Pro
+surfaces **the user's own data** (like LinkedIn "who viewed your profile"): valuable on day one, no
+population needed, and **additive** (a new Pro-only capability — never removing a free one).
+
+### Shipped (3 apps upgraded)
+| App | New standalone Pro service | Own-data source |
+|-----|----------------------------|-----------------|
+| **Connection** | **📈 Network Insights** — who follows you + `mutual` flag + one-tap follow-back | your follow graph |
+| **Epic** | **📊 Portfolio Insights** — completion rate · milestone progress · Zone-verified · Legend outcomes · funding | your projects |
+| **Life** | **📊 Goal Insights** — completion rate · funding progress toward π targets · goals reached (deeper than the free strip) | your goals |
+
+All gate the aggregate/list **server-side behind live Pro** (P5); the count/teaser is non-sensitive.
+Connection `listFollowers` (mutual from own following set) · Epic `portfolioInsights` · Life `goalInsights`.
+Tests (backend): connection 22/22 · epic 26/26 · life 15/15 — (frontend): connection 26/26 · epic 30/30 · life 21/21.
+**Life is already `[Runtime Verified]`** → this upgrade reaches real users fastest (additive to unlimited goals).
+
+### Honest ruling on the other 3 "Featured" apps (NOT forced)
+Applying the same pattern to NX / Explorer / Zone would be **fake or harmful**, so it was **not** done:
+- **NX** — its real value (applicants, views) needs **traffic**, not own-data. The only own-data Pro
+  would be a **posting cap** (free-capped) — that **removes** a free capability (user-hostile). Kept
+  Featured; a richer Pro (applicant insights) waits for traffic. **Honest defer.**
+- **Explorer** — sample-only, **not deployed** yet (no real listing index). A "listing analytics" Pro
+  is premature. **Defer until the index is real.**
+- **Zone** — a data-insight Pro would **violate its charter** (C-120 §4: Zone records evidence;
+  **Analytics** computes/judges). Zone Pro stays **priority review** — the constitutionally correct model.
+
+### PR ledger
+tec-core-backend **#202** (Connection directory + followers · Epic insights · Life goal insights) ·
+tec-connection **#27** · tec-epic **#21** · tec-life **#21**. Ops: `db push` on `tec-identity-service`
+(Life goal-insights needs no new table — reads existing `life_goals`). All local gates green.
+
+---
+
+## SESSION 38 — CONNECTION: DISCOVER DIRECTORY + CONNECTION PRO = FEATURED (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open). Eighth app deepened — the "make Pro real + serve the Pi community" campaign continues (NX → Connection).
+
+### What it is
+Connection's graph was **username-only** — you could follow a handle only if you already
+knew it — and **Connection Pro enforced nothing** (it promised "unlimited collections",
+which everyone already had). Two gaps closed with the proven pattern:
+- **Community value → opt-in public discovery:** a **Discover directory** (`/app`) to find +
+  follow people, plus a **public `/u/[username]` profile** reachable **outside a TEC session**
+  (share `connection.tecosystem.app/u/<handle>` anywhere). Publishing is **opt-in**
+  (sovereignty, C-107); verification is **presented** from Zone/kyc, never minted.
+- **Real Pro → two genuine benefits (not just reach):**
+  - **Network Insights** — the caller's OWN follower list + a `mutual` flag ("do I follow
+    back?") + one-tap follow-back. Like "who viewed your profile" — **standalone value with
+    zero population** (it's your own graph). The LIST is gated server-side behind live Pro
+    (P5); the count is a non-sensitive teaser for non-Pro.
+  - **⭐ Featured** directory card, ranked `verified → featured → recent` (reach only, within
+    the verified tier — never trust). Both synced from the live subscription by the BFF (P5).
+  - The Pro copy was rewritten from the empty "unlimited collections" claim to these.
+
+### Backend / frontend (needs db push)
+- `ConnectionProfile` (opt-in listing; `published` default false; `verified` presented;
+  `featured` = Pro, `@@index`); `listDirectory` / `getPublicProfile` / `getMyProfile` /
+  `upsertMyProfile` / `setDirectoryFeatured`. Controller: `GET discover` + `GET profile/:username`
+  **public**; `profile/me` (GET/PUT) + `directory/featured` (PATCH) session-scoped. 20/20 connection tests.
+- Discover section + "your public profile" editor + `/u/[username]` public page; BFF
+  `/discover` + `/profile/[username]` (public) + `/profile/me` (own + featured reconcile). 23/23 frontend tests.
+
+### The scorecard (8 apps: real Pro + a Pi-community surface)
+| App | Real Pro | Pi-community surface (outside TEC) |
+|-----|----------|-----------------------------------|
+| Life | Unlimited goals | — |
+| Explorer | ⭐ Featured listing | public merchant discovery |
+| Zone | ⭐ Priority review | public verification badges |
+| Legend | 🔖 Embeddable badge | public `/u` CV |
+| Analytics | 📁 90-day export | public Pi Economy Pulse + peer comparison |
+| Epic | ⭐ Featured project | public `/discover` project directory |
+| NX | ⭐ Featured opportunity | public opportunity board + community posting |
+| **Connection** | **📈 Network Insights (who follows you) + ⭐ Featured** | **public Discover directory + `/u/[handle]` profile** |
+
+### PR ledger
+tec-core-backend **#202** (ConnectionProfile + directory + followers endpoints, 22/22) ·
+tec-connection **#27** (26/26). Ops: `db push` on `tec-identity-service` (`connection_profiles`).
+All local gates green.
+Next candidates: **Alert · DX**.
+
+---
+
 ## SESSION 37 — NX: OPPORTUNITY POSTING + NX PRO = FEATURED (8 Aug 2026) ✅
 
 > Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open). Seventh app deepened — the "make Pro real + serve the Pi community" campaign continues (Epic → NX).
