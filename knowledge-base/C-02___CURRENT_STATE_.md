@@ -4,7 +4,201 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 7 August 2026 (Session 26 — platform subscription activation + Pro entitlement, fleet-wide)
+**Last Updated:** 8 August 2026 (Session 30 — Analytics Pro becomes a REAL service: 90-day activity history CSV export)
+
+---
+
+## SESSION 30 — ANALYTICS PRO = 90-DAY ACTIVITY HISTORY + CSV EXPORT (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open) — becomes `[Runtime Verified]` after the Vercel redeploy + a real Analytics Pro payment. Fourth app in the "make Pro real" line (Explorer · Zone · Legend · **Analytics**).
+
+### The benefit — deeper/longer own data + export
+Session 28 recorded Analytics Pro as the next "still just a supporter badge." Now it delivers
+a **concrete service**: a deeper/longer **own-scope activity history** you can **export as
+CSV**. FREE sees the live on-screen "Recent events" preview; **Pro exports the full 90-day
+history (≤500 rows)** — for the merchant's own records, spreadsheets, or accounting.
+
+### The constitutional line held (C-105 — same truth, more depth)
+The numbers are **identical computed truth** — Pro unlocks **DEPTH + export**, never
+different data. No new disclosure surface: `me/activity` was already **own-scope +
+fail-closed** (C-105 §6 / C-122 §5.1). This only changes *how much* of the caller's OWN data
+returns (rows + window) and adds a CSV download. Analytics still never presents aggregates as
+financial truth (owning service is the source of truth).
+
+### The gate (fail-closed, own-scope, P5)
+- **Export is Pro-gated at the BFF** (`/api/bff/analytics/me/export`): no live subscription →
+  **403**. Analytics never stores billing (P5) — `resolveProStatus` reads it **live** from
+  commerce (`/api/commerce/subscriptions/status`). Downgrade → export 403s again.
+- Strict own-scope: the BFF forwards only the session Bearer; identity is derived server-side
+  by the analytics service (never a param). RFC-4180 CSV escaping + `attachment` disposition.
+
+### Backend (analytics-service, no schema change)
+- `getRecentEvents(limit, userId, sinceDays?)` gains an optional `created_at ≥ now − sinceDays`
+  window — **backward-compatible** (no `sinceDays` → identical query as before). Only the DEPTH
+  knob; still the caller's OWN events only.
+- `me/activity` accepts `days` (clamped ≤365) + raises the limit cap **25→500** (the export data
+  source). No `db push` — the window is a query filter, not a column.
+
+### The Pro model now (5 real, honest benefits)
+| App | Pro delivers |
+|-----|--------------|
+| **Life** | Unlimited goals (FREE = 3) |
+| **Explorer** | ⭐ Featured — ranks higher in discovery |
+| **Zone** | ⭐ Priority review — jumps the review queue (never the verdict) |
+| **Legend** | 🔖 Embeddable reputation badge — your earned reputation, on any site |
+| **Analytics** | 📁 90-day activity history + CSV export |
+
+### Honest gaps / follow-ups (recorded)
+- The remaining apps' Pro is still the supporter badge — each a follow-up with its own
+  charter-sound benefit (the important five now deliver real value).
+- `[Code Verified]` — `[Runtime Verified]` needs the Vercel redeploy + a real Pro payment.
+- Backend `me/activity` allows depth (500/365d) to any authed caller of their OWN data; the
+  *product* gate (export) is the BFF's 403. No leak — it is always the caller's own data.
+
+### PR ledger
+tec-core-backend **#198** (me/activity `days` window + 500 cap, 50/50) · tec-analytics **#28**
+(Pro-only CSV export + ProHistory, 33/33). All local gates green (build · lint · tests · tsc).
+
+---
+
+## SESSION 29 — LEGEND PRO = EMBEDDABLE REPUTATION BADGE (8 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (PRs open) — becomes `[Runtime Verified]` after `tec-identity-service` `db push` + Vercel redeploy + a real Legend Pro payment. Continues Session 28's "make Pro real" — third app after Explorer + Zone.
+
+### The benefit — reputation that travels the Pi economy
+Session 28 flagged Legend Pro as still "just a supporter badge." Now it delivers a
+**concrete, shareable service**: a public **embeddable reputation badge** — a live SVG a
+member drops on their own website / Pi store / marketplace listing
+(`<img src="https://legend.tecosystem.app/badge/<handle>.svg">`) that always reflects their
+current earned reputation. This is Legend's outward reach into the whole Pi ecosystem (like
+Zone's `/badge` — reputation, not verification).
+
+### The constitutional line held (C-126 — earned, never bought)
+Legend's rule is that reputation comes from source-app outcome events + Analytics-computed
+scores — a user can never author it. This change respects that **completely**: a single
+`showcase` flag gates **only the marketing surface** (the badge). It never touches an
+achievement record, never changes a score, never mints verification. **You pay to
+DISTRIBUTE a reputation you already earned, not to buy one.** Same shape as Explorer
+(featured = visibility, below trust) and Zone (priority = queue, never verdict).
+
+### The gate (fail-safe, leaks no score)
+The `/badge/<handle>.svg` endpoint renders the overall score (or the earned achievement
+count while Analytics scores are still pending) **only** for a `PUBLIC` profile with
+`showcase` on (a live-Pro entitlement). Every other case — not Pro, not public, not found,
+backend unreachable — degrades to a neutral "Pi reputation" wordmark that **leaks no
+score**. Public, no-auth, edge-cached (`s-maxage=300`).
+
+### Sync pattern (identical to Explorer/Zone — P5)
+- Backend: `LegendProfile.showcase` (one boolean) + `setShowcase(owner,on)` + `PATCH
+  /api/identity/legend/own/:owner/showcase` (owner-scoped, P6; never creates a profile —
+  reputation is earned, not toggled). **22/22 backend tests.**
+- Frontend: the profile BFF reads the caller's **live** subscription from commerce
+  (`/api/commerce/subscriptions/status`) and reconciles `showcase` to match — Legend never
+  stores billing truth (P5, commerce-owned). Lapsed Pro → badge falls back on next visit.
+- UI: a Pro-only `ShowcaseCard` (live badge preview + copy-embed HTML/Markdown snippets;
+  nudges Public when needed; honest upsell when not Pro). **29/29 frontend tests · +5 badge-gate tests.**
+
+### The Pro model now (4 real, honest benefits)
+| App | Pro delivers |
+|-----|--------------|
+| **Life** | Unlimited goals (FREE = 3) |
+| **Explorer** | ⭐ Featured — ranks higher in discovery |
+| **Zone** | ⭐ Priority review — jumps the review queue (never the verdict) |
+| **Legend** | 🔖 Embeddable reputation badge — your earned reputation, on any site |
+
+### Honest gaps / follow-ups (recorded)
+- **Analytics Pro** (and the rest) still give only the supporter badge — Analytics next
+  (proposed: deeper/longer merchant data + export). A follow-up per app.
+- **`showcase` lapse:** reconciled on the owner's next profile load via the BFF (same as
+  Explorer/Zone `featured`/`priority`); a background sweep cron is the shared follow-up.
+- `[Code Verified]` — `[Runtime Verified]` needs `tec-identity-service` `prisma db push`
+  (one boolean column, expand-only/non-destructive) + Vercel redeploy + a real Pro payment.
+
+### PR ledger
+tec-core-backend **#197** (LegendProfile.showcase + PATCH endpoint, 22/22) · tec-legend
+**#19** (embeddable badge + sync + ShowcaseCard, 29/29). All local gates green (build · lint · tests · tsc).
+
+---
+
+## SESSION 28 — "DOES PRO GIVE REAL VALUE?" → 2 apps now do (7 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** (merged/queued) — each becomes `[Runtime Verified]` after its Railway `db push` + Vercel redeploy + a real Pro payment.
+
+### The honest finding (audited the code, not the copy)
+The user asked the sharp question: *does the Pro subscription actually give a real service, or just a badge?* Reading the code, the honest answer was **mostly a badge**:
+- **Life** — the only app with a real gated benefit (unlimited goals vs FREE's 3).
+- **Explorer** — the copy claimed "premium visibility" but the ranking had **no Pro signal** — Pro changed nothing.
+- **~18 other apps** — "★ You're on Pro — thanks for supporting TEC": a supporter badge, no gated feature.
+
+This is a real pre-campaign risk (people pay, get nothing → churn + reputation damage). Recorded as the honest state; the fix is to give each Pro a **concrete, charter-sound benefit** — started with two.
+
+### 1. Explorer Pro = FEATURED placement (C-108 §7) — a real discovery boost
+- `ExplorerBusiness` gains `featured` + `featured_until`. Search ranks **featured-first WITHIN the trust tier**: `verification → featured → popularity → pi_accepted → name`.
+- **Featured sits BELOW verification on purpose** — you can pay for *visibility*, never for *trust*. A KYC-verified free business always outranks an unverified Pro one. (Same principle as Zone: "speeds the queue, never the verdict.")
+- The listings BFF re-syncs `featured` from the owner's **live** Pro subscription (commerce-owned, P5 — Explorer never stores subscription truth); lapsed Pro clears on the next owner visit. `⭐ Featured` tags on the listing + search results; honest pitch copy.
+- PRs: tec-core-backend **#195** (22/22 tests) · tec-explorer **#20**.
+
+### 2. Zone Pro = PRIORITY review (C-120 §7) — the charter's own sanctioned benefit
+- The charter says exactly one thing Zone Pro may sell: *"speeds the review queue, never the verdict."* Implemented: `ZoneEntity.priority`; `listPending` orders **priority-first, then FIFO**; `submitRequest` accepts `priority`, set by the BFF from the caller's live subscription.
+- **Queue speed ONLY** — the entity still starts PENDING and a **human still decides**. A spoofed priority buys queue order, never verification (low-stakes by design). Reviewer sees a `⭐ Priority (Pro)` tag.
+- PRs: tec-core-backend **#196** (20/20 tests) · tec-zone **#25**.
+
+### The Pro model now (3 real, honest benefits)
+| App | Pro delivers |
+|-----|--------------|
+| **Life** | Unlimited goals (FREE = 3) |
+| **Explorer** | ⭐ Featured — ranks higher in discovery |
+| **Zone** | ⭐ Priority review — jumps the review queue (never the verdict) |
+
+### Honest gaps / follow-ups (recorded)
+- **Legend Pro · Analytics Pro** (and the rest) still give only the supporter badge — each needs its own concrete benefit (proposed: Legend = embeddable reputation badge; Analytics = deeper/longer merchant data + export). A follow-up per app, not a one-liner.
+- **`featured`/`priority` lapse:** cleared on the owner's next visit via the BFF re-sync; a background sweep cron for owners who don't return is a follow-up — consistent with the existing "no server-side downgrade job yet" stance (Session 26).
+- Both features are **`[Code Verified]`** — `[Runtime Verified]` needs each service's `prisma db push` (adds the columns, expand-only/non-destructive) + a Vercel redeploy + a real Pro payment.
+
+### PR ledger
+tec-core-backend **#195** (Explorer featured), **#196** (Zone priority) · tec-explorer **#20** · tec-zone **#25**. All local gates green (build · lint · tests · tsc).
+
+---
+
+## SESSION 27 — REPUTATION CHAIN RUNTIME-VERIFIED (real user) + ZONE → PI ECOSYSTEM (7 Aug 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** for the Epic → Legend chain (a real user completed an Epic project in prod → the achievement is recorded in Legend, and `epic.project.completed.v1` is visible in the Analytics event log) · **[Code Verified]** (merged) for the new surfaces below (each needs its Vercel/Railway redeploy to be Runtime Verified).
+
+### Headline — the reputation value chain is now proven with REAL DATA
+Sessions 20–21 wired the chain in code; **this session it fired for a real user end-to-end in production.** A pioneer (`yas55eR82`) created an Epic project ("Atlas"), completed it, and: (1) `epic.project.completed.v1` shows in the **Analytics Recent-events** feed (Aug 7), (2) Legend recorded a **verified achievement** ("Completed an Epic project") on their live profile. The `create → earn` edge is **[Runtime Verified]** with genuine user activity, not a seed.
+
+### What shipped (deepening 3 chain apps into real, usable services)
+
+**Epic (Creation) — from read-only preview → a real create+track surface (C-125)**
+- **Create a project** — a signed-in pioneer actually makes a project (DRAFT/unverified/unfunded, unique slug, owner = session identity — P6). `EpicService.createProject` + `POST /identity/epic/project`; a `CreateProject` form on the board. Backend #190 · frontend tec-epic #17/#18.
+- **Milestones** — the owner adds milestones + checks them off on `/project/[id]` (owner-only, server-side gated, terminal-safe, bounded). `addMilestone`/`setMilestoneDone` + `POST/PATCH …/milestone`. Backend #191 · frontend #18.
+- **Epic → Zone verification request (C-121 create → verify)** — the owner asks Zone to verify their project; the BFF forwards the JWT to Zone's own gateway API (a clean service-API seam, C-132 — **no backend change**). Zone starts it PENDING; on VERIFY it emits `zone.badge.issued.v1` → Legend. frontend tec-epic #19.
+- The always-visible fix: `CreateProject` no longer gated on the client-side `usePiAuth` flag (unreliable in Pi Browser — C-123); the BFF fails closed server-side (401). #18.
+
+**Zone (Verification) — now serves the WHOLE Pi ecosystem, not just TEC (C-120)**
+- **Public Trust Check** — a verified-first search over the live registry (backend `ZoneService.search` + `GET /identity/zone/lookup`; frontend `TrustCheck` on `/app`). Anyone (no TEC login) can ask "is X Zone Verified?". Backend #190 · frontend tec-zone #22.
+- **Embeddable "Zone Verified" badge** — `GET /badge/<handle>.svg` renders the **live** verdict (verified · pending · revoked · not verified); a `ShareBadge` panel on `/verify/<handle>` (verified only) gives copy-link + copy-embed-HTML. A verified Pi project embeds it on its **own** site → every badge links back to the evidence → Zone spreads across Pi as the shared trust layer. Constitutionally sound: only an already-verified entity can broadcast (earned, never bought — C-120 §7). No backend. frontend tec-zone #24.
+- **Review panel fix** — the reviewer queue was gated on the client `isAuth` flag (C-123) so a real ADMIN never saw it; now always loads, server decides. tec-zone #23.
+
+**Legend (Reputation) — own & share your reputation (C-126)**
+- **Own-view (bug fix)** — a real user could never see their own profile (only a `publicOnly` endpoint existed, profiles default PRIVATE). `GET /identity/legend/own/:owner` (includes PRIVATE; `{profile:null}` when none earned) + three honest home states (live · empty · sign-in). Backend #193.
+- **Visibility control** — PUBLIC/CONNECTIONS/PRIVATE (the one user-controlled setting, C-126) via `setVisibility` + `PATCH …/visibility`; never creates a profile. Backend #193 · frontend tec-legend #17.
+- **Shareable public CV** — `/u/<handle>` renders a PUBLIC profile ("Pi Professional CV"); a private/missing one is not discoverable. frontend #17.
+- **0-score UX** — a real profile with achievements but no computed scores read as "empty 0"; now it leads with the achievement count + explains scores are Analytics-computed/pending. frontend tec-legend #18.
+
+**Analytics (Intelligence) — scores become timely (ADR-013)**
+- Legend scoring batch **24h → hourly** (`SCORING_INTERVAL_MS`) + `POST /api/analytics/scoring/run` (SOVEREIGN — internal/admin, C-122 §5) for an on-demand recompute. The pipeline was already wired (`epic.project.completed.v1`/`zone.badge.issued.v1` → `AnalyticsEvent` → `computeScores` → `legend.scores.updated.v1`); this makes a freshly-earned score appear within the hour, not the next day. Backend #194 (47/47 tests).
+
+**Identity — admin bootstrap (the missing key, C-47/C-110)**
+- There was **no path to ADMIN** (`findOrCreateUser` grants only USER), so Zone's review queue 403'd for everyone and verifications stuck PENDING. Added an env bootstrap: a Pi username in **`PLATFORM_ADMIN_USERNAMES`** is granted ADMIN on login (idempotent; only-write-if-missing; re-loads roles). The **only** path to ADMIN — no self-serve (P6). Backend #192. Runtime-verified: the operator became ADMIN and the Zone review queue rendered "Atlas".
+
+### Honest gaps / notes
+- **Separation of duties works as designed (not a bug):** a reviewer may not decide their **own** submission (C-120 §7), so the operator can't self-verify "Atlas". A real verification needs a different submitter — correct, and the whole point of Zone.
+- **Scores → non-zero** requires the Analytics redeploy + one batch tick (or the on-demand endpoint). The `creator` dimension maps `epic.project.completed.v1`; the events are already in the log.
+- **Strategic note (recorded):** the reputation apps (Epic/Zone/Legend/Elite/VIP) are chain-linked and mostly serve TEC-internal activity. "Packaging independence" (separate domains/logins) ≠ "value independence" (serving non-TEC Pi users). The apps with genuine outward value are **Zone** (public trust check + badge), **Legend** (public `/u` CV), **Explorer** (Pi-merchant discovery), and **Commerce/Ecommerce**. Direction agreed: make those few genuinely independent; treat the rest as the C-132 modules they already are, surfaced through Hub.
+
+### PR ledger
+Backend `tec-core-backend`: **#190** (Epic create + Zone Trust Check search), **#191** (Epic milestones), **#192** (admin bootstrap), **#193** (Legend own-view + visibility), **#194** (Analytics hourly scoring + recompute). Frontend: **tec-epic #17/#18/#19** · **tec-zone #22/#23/#24** · **tec-legend #17/#18**. All merged.
 
 ---
 
