@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 8 August 2026 (Session 35 — Analytics prod review: admins see Merchant Intelligence + honest charts; dailyMetric-lag surfaced)
+**Last Updated:** 8 August 2026 (Session 35 — Analytics prod review: admins see Merchant Intelligence + honest charts + platform charts read the event log)
 
 ---
 
@@ -24,18 +24,25 @@ The platform `BarChart` drew a row of equal 2px bars (screenshots) that read as 
 Now: all-zero → an honest "No daily totals for this period yet"; nonzero bars get a visible
 6px floor (small days don't vanish next to an outlier); NaN coerced. No fabricated data.
 
-### The operational finding (recorded — ops, not code)
+### The root cause + Fix 3 (backend — charts now read the event log)
 The flat charts surfaced a real gap: **the platform charts read the `dailyMetric` aggregate,
 which lags the live event counts.** Prod showed **Overview = 716 payments** (from
-`analyticsEvent.count`) while the daily chart's `dailyMetric` totals were **~0** — i.e. the
-`updateDailyMetric` path (on the `payment.completed` consumer) is under-populating in prod
-(historic days never aggregated). **Follow-up (ops):** ensure the daily-metric updater runs
-+ optionally backfill; until then the honest empty state is shown. Merchant Intelligence is
-unaffected — it derives its series from the **raw event log**, not `dailyMetric`.
+`analyticsEvent.count`) while the daily chart's `dailyMetric` totals were **~0** — the
+`updateDailyMetric` path (on the `payment.completed` consumer) under-populates in prod
+(historic days never aggregated). **Fixed at the source:** `getPaymentAnalytics` +
+`getUserAnalytics` now build their daily series from the **event log** (bounded scan), the
+same source as Overview + Merchant Intelligence — so the charts match reality regardless of
+the aggregate. `getPaymentAnalytics`: `total_payments`/`total_volume` from
+`payment.completed(.v1)` (amount coerced from the Decimal→string payload).
+`getUserAnalytics`: `new_users`/`kyc_verified`/`active_users` (distinct/day) from one scan.
+Same response shape → frontend unchanged. Eventual-consistency + admin-only + bounded → an
+acceptable event scan (tec-core-backend #200, 74/74).
+> The `dailyMetric` backfill is now an **optional** ops nicety, not a blocker — the dashboard
+> no longer depends on it.
 
 ### PR ledger
-tec-analytics **#30** (admin MI visibility + honest BarChart, 41/41). Frontend-only; no
-backend/schema change.
+tec-analytics **#30** (admin MI visibility + honest BarChart, 41/41) · tec-core-backend
+**#200** (platform charts read the event log, 74/74). No schema change.
 
 ---
 
