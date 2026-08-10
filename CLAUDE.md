@@ -485,3 +485,27 @@ shape and green-lit it. Guard added on **both** sides so it can't recur:
 Companion PRs: Tec-core-backend #204 (producer contract) · tec-template-base #25
 (consumer canonical + guard). Existing apps keep their (now-fixed) per-app resolvers;
 the template guard prevents the NEXT app from regrowing the bug.
+
+### Activation visibility — silent paid-activation failures made observable
+Every failure this session addressed was **silent** (a paid user simply doesn't get Pro).
+Two additions turn paid activation into something you can SEE during the campaign:
+- **`getStats()` + `GET /commerce/subscriptions/stats`** (INTERNAL, x-internal-key) — active
+  paid counts by tier + expired/cancelled/total + a **recent-upgrade feed** from the
+  append-only history (`status=ACTIVE, plan != FREE`). Own-data, read-only, no new infra —
+  poll it to watch paid subs climb or catch a stall.
+- **`recordRejectedActivation()`** — an underpaid/dropped activation (from the amount-floor
+  guard) is written as a **`PAST_DUE` history row** (Invariant #4 — a payment that moved π
+  but granted nothing is a financial event, not just a log line); the consumer calls it
+  best-effort (audit failure never changes the drop). `PAST_DUE` keeps rejections OUT of the
+  "activated Pro" feed while making them queryable per user. Commerce **97/97** green. (#204)
+
+### In-app renewal reminder — reference pattern (Life)
+The Hub shows "expires in N days" (tec-app #138); the app Pro components did not. **Life**
+(the Runtime-Verified reference) now does: `useSubscription` exposes `daysRemaining`/`isExpired`
+and `LifePro`'s active state shows "Expires in N days" (amber + re-subscribe nudge in the last
+week). Pure UI; 21/21 green. **The other app Pro components each have their own hook + component
+— propagate deliberately, not in a rushed pre-campaign sweep.** (Tec-Life #23)
+
+> **Audit note:** prices + Pro benefits are ALREADY shown clearly in every app's Pro
+> component (price = the same const charged, so no mismatch by construction; benefits are
+> described). The only real polish gap was the in-app expiry display above.
