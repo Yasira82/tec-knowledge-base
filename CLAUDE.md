@@ -452,3 +452,18 @@ closes and the user is prompted to renew.
 - **Remaining Session 26 follow-up:** price-vs-plan assertion at activation (`PLANS.PRO=10π`
   vs some 5π surfaces) — deferred (a pricing-policy decision, not a silent code change).
 - Registry unaffected (no C-doc header lines changed).
+
+### Subscription-contract regression guard (both sides of the shape)
+The fleet-wide Pro-detection incident (Session 26 root-cause) was a *consumer* misparse
+of a *correct* backend shape — a BFF read `.data.plan` instead of `.data.subscription.plan`,
+silently resolved FREE, and locked Pro OFF for paying users; the unit tests mocked a FLAT
+shape and green-lit it. Guard added on **both** sides so it can't recur:
+
+| Side | Where | Guard |
+|------|-------|-------|
+| **Producer** (commerce) | `tec-commerce-service/src/__tests__/subscription.contract.spec.ts` | Pins the `GET /subscriptions/status` envelope: `{ success, data: { subscription: { plan, isActive, isExpired, current_period_end, daysRemaining } } }` — asserts it is **NESTED** (`data.plan` is `undefined`) + every fleet-depended field passes through + user derives from the verified JWT (P6). Flattening the envelope now fails in ONE place instead of 19 silent breakages. |
+| **Consumer** (template) | `tec-template-base` `src/lib/subscription/pro-status.ts` + `src/app/api/bff/subscription/route.ts` + `pro-status.test.ts` | The **canonical** `resolveProStatus` / `resolveProState` — unwraps the nested envelope in ONE place, fails closed to FREE (P6), surfaces `daysRemaining`/`isExpired`. Its test mocks the **real nested shape** (the lesson: "a BFF unit test is only as good as the shape it mocks"). Future apps cloned from the template inherit the correct parser — CLAUDE.md says **import it, don't hand-roll another**. |
+
+Companion PRs: Tec-core-backend #204 (producer contract) · tec-template-base #25
+(consumer canonical + guard). Existing apps keep their (now-fixed) per-app resolvers;
+the template guard prevents the NEXT app from regrowing the bug.
