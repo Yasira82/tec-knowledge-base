@@ -449,9 +449,27 @@ closes and the user is prompted to renew.
 - `[Code Verified]`: commerce suite **83/83** green + typecheck clean; Hub typecheck clean.
   Becomes `[Runtime Verified]` when a real Pro period lapses in prod (self-heal on next
   status read) and/or ops wires the Railway cron to `expire-stale`.
-- **Remaining Session 26 follow-up:** price-vs-plan assertion at activation (`PLANS.PRO=10π`
-  vs some 5π surfaces) — deferred (a pricing-policy decision, not a silent code change).
 - Registry unaffected (no C-doc header lines changed).
+
+### Activation floor — last Session 26 follow-up CLOSED (and it was a security gap)
+The "price-vs-plan assertion at activation" follow-up turned out to be a **financial-integrity
+gap**, not a pricing tweak. `SubscriptionConsumer` derived the plan from the payment's own
+**client-set metadata** (`item_id`/`plan`) and activated PRO/ENTERPRISE with **no amount
+check** — a user could complete a **dust payment** tagged `_enterprise_monthly` and be
+granted ENTERPRISE (50π value) for ~0.1π (underpayment / tier-escalation).
+
+- **Why not gate on `PLANS.PRO` (10π):** each app sets its OWN Pro price (Life/Connection/
+  Alert 5π … Titan 25π), all mapping to the single PRO plan — a hard 10π gate would reject a
+  legitimate 5π payment (the "paid-and-got-nothing" bug again).
+- **Fix:** `planFloorPi` / `coversPlanFloor` (commerce `subscription.service.ts`) enforce the
+  LOWEST legit price per tier — **PRO ≥ 5π · ENTERPRISE ≥ 50π** (env-overridable
+  `SUBSCRIPTION_MIN_PI_PRO` / `_ENTERPRISE`; 1e-8 epsilon). The consumer enforces it at the
+  untrusted-event boundary: **underpayment = permanent drop** (log + ack, never grant/retry);
+  **missing amount = fail OPEN** (activate + warn — `payment.completed.v1` carries `amount`, so
+  absence = a legacy/malformed event from a real completed payment, not an attack).
+- The Hub **direct path is unchanged** — its `verifyPiPayment` already checks `amount ≥
+  PLANS.price` (PRO 10 / ENT 50), consistent with the Hub's own PLAN_META. Commerce **94/94**
+  green; typecheck clean; no schema change. (Tec-core-backend #204.)
 
 ### Subscription-contract regression guard (both sides of the shape)
 The fleet-wide Pro-detection incident (Session 26 root-cause) was a *consumer* misparse
