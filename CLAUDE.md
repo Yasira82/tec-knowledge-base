@@ -427,3 +427,28 @@ pay and get no entitlement across ~19 apps.
   no server-side downgrade job (a commerce cron flip expired→FREE); price-vs-plan assertion
   at activation (`PLANS.PRO=10π` vs some 5π surfaces). System intentionally excluded
   (`system_supporter` grants nothing, C-110).
+
+## Session 27 Additions — Subscription expiry: lazy self-heal + downgrade sweep + renewal reminder
+
+Closed **two of the three Session 26 follow-ups** (the largest post-campaign
+revenue-integrity gap): a lapsed paid subscription used to stay `plan=PRO/status=ACTIVE`
+in the DB forever — closed only because every reader also checked `isExpired` (fragile,
+easy to forget) — with **no downgrade and no renewal reminder**. Now the period actually
+closes and the user is prompted to renew.
+
+| Piece | Repo / Path | Purpose |
+|-------|-------------|---------|
+| Lazy expiry (self-heal on read) | `tec-commerce-service/subscription.service.ts::getSubscription` | A paid ACTIVE sub past `current_period_end` is flipped to **EXPIRED** with a `SubscriptionHistory` audit row (Invariant #4), idempotently. `isActive` now = `ACTIVE && !isExpired` → every gate closes uniformly. Read never fails if the downgrade write races (P6). No cron needed — reads keep the DB honest. tec-core-backend PR (branch). |
+| Renewal signal | same `getSubscription` | `daysRemaining` added to the status payload → frontends show a "expires in N days" reminder (Pi U2A is one-time; no auto-renew). |
+| Bulk sweep + internal endpoint | `subscription.service.ts::expireStale` + `POST /commerce/subscriptions/expire-stale` (x-internal-key, constant-time, fail closed) | Downgrades **dormant** lapsed subs nobody reads, one audit row each, fail-safe per row. For an external Railway cron (service-to-service, no user auth). |
+| Hub renewal reminder (UI) | `tec-app` `/hub/subscription/page.tsx` | Surfaces `daysRemaining`/`isExpired`: normal "Expires in N days", amber "⏳" in the last 7 days (+ "one-time payment, re-subscribe" note), red "⚠️ Expired — renew to restore Pro". Pure UI over existing status fields. tec-app PR (branch). |
+
+### Honest status
+- **No schema change** — uses the existing `EXPIRED` status + `SubscriptionHistory`, so
+  **no `prisma db push`** is needed. Subscription stays commerce-owned (C-47).
+- `[Code Verified]`: commerce suite **83/83** green + typecheck clean; Hub typecheck clean.
+  Becomes `[Runtime Verified]` when a real Pro period lapses in prod (self-heal on next
+  status read) and/or ops wires the Railway cron to `expire-stale`.
+- **Remaining Session 26 follow-up:** price-vs-plan assertion at activation (`PLANS.PRO=10π`
+  vs some 5π surfaces) — deferred (a pricing-policy decision, not a silent code change).
+- Registry unaffected (no C-doc header lines changed).
