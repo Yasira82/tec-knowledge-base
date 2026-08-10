@@ -427,3 +427,94 @@ pay and get no entitlement across ~19 apps.
   no server-side downgrade job (a commerce cron flip expired→FREE); price-vs-plan assertion
   at activation (`PLANS.PRO=10π` vs some 5π surfaces). System intentionally excluded
   (`system_supporter` grants nothing, C-110).
+
+## Session 27 Additions — Subscription expiry: lazy self-heal + downgrade sweep + renewal reminder
+
+Closed **two of the three Session 26 follow-ups** (the largest post-campaign
+revenue-integrity gap): a lapsed paid subscription used to stay `plan=PRO/status=ACTIVE`
+in the DB forever — closed only because every reader also checked `isExpired` (fragile,
+easy to forget) — with **no downgrade and no renewal reminder**. Now the period actually
+closes and the user is prompted to renew.
+
+| Piece | Repo / Path | Purpose |
+|-------|-------------|---------|
+| Lazy expiry (self-heal on read) | `tec-commerce-service/subscription.service.ts::getSubscription` | A paid ACTIVE sub past `current_period_end` is flipped to **EXPIRED** with a `SubscriptionHistory` audit row (Invariant #4), idempotently. `isActive` now = `ACTIVE && !isExpired` → every gate closes uniformly. Read never fails if the downgrade write races (P6). No cron needed — reads keep the DB honest. tec-core-backend PR (branch). |
+| Renewal signal | same `getSubscription` | `daysRemaining` added to the status payload → frontends show a "expires in N days" reminder (Pi U2A is one-time; no auto-renew). |
+| Bulk sweep + internal endpoint | `subscription.service.ts::expireStale` + `POST /commerce/subscriptions/expire-stale` (x-internal-key, constant-time, fail closed) | Downgrades **dormant** lapsed subs nobody reads, one audit row each, fail-safe per row. For an external Railway cron (service-to-service, no user auth). |
+| Hub renewal reminder (UI) | `tec-app` `/hub/subscription/page.tsx` | Surfaces `daysRemaining`/`isExpired`: normal "Expires in N days", amber "⏳" in the last 7 days (+ "one-time payment, re-subscribe" note), red "⚠️ Expired — renew to restore Pro". Pure UI over existing status fields. tec-app PR (branch). |
+
+### Honest status
+- **No schema change** — uses the existing `EXPIRED` status + `SubscriptionHistory`, so
+  **no `prisma db push`** is needed. Subscription stays commerce-owned (C-47).
+- `[Code Verified]`: commerce suite **83/83** green + typecheck clean; Hub typecheck clean.
+  Becomes `[Runtime Verified]` when a real Pro period lapses in prod (self-heal on next
+  status read) and/or ops wires the Railway cron to `expire-stale`.
+- Registry unaffected (no C-doc header lines changed).
+
+### Activation floor — last Session 26 follow-up CLOSED (and it was a security gap)
+The "price-vs-plan assertion at activation" follow-up turned out to be a **financial-integrity
+gap**, not a pricing tweak. `SubscriptionConsumer` derived the plan from the payment's own
+**client-set metadata** (`item_id`/`plan`) and activated PRO/ENTERPRISE with **no amount
+check** — a user could complete a **dust payment** tagged `_enterprise_monthly` and be
+granted ENTERPRISE (50π value) for ~0.1π (underpayment / tier-escalation).
+
+- **Why not gate on `PLANS.PRO` (10π):** each app sets its OWN Pro price (Life/Connection/
+  Alert 5π … Titan 25π), all mapping to the single PRO plan — a hard 10π gate would reject a
+  legitimate 5π payment (the "paid-and-got-nothing" bug again).
+- **Fix:** `planFloorPi` / `coversPlanFloor` (commerce `subscription.service.ts`) enforce the
+  LOWEST legit price per tier — **PRO ≥ 5π · ENTERPRISE ≥ 50π** (env-overridable
+  `SUBSCRIPTION_MIN_PI_PRO` / `_ENTERPRISE`; 1e-8 epsilon). The consumer enforces it at the
+  untrusted-event boundary: **underpayment = permanent drop** (log + ack, never grant/retry);
+  **missing amount = fail OPEN** (activate + warn — `payment.completed.v1` carries `amount`, so
+  absence = a legacy/malformed event from a real completed payment, not an attack).
+- The Hub **direct path is unchanged** — its `verifyPiPayment` already checks `amount ≥
+  PLANS.price` (PRO 10 / ENT 50), consistent with the Hub's own PLAN_META. Commerce **94/94**
+  green; typecheck clean; no schema change. (Tec-core-backend #204.)
+
+### Subscription-contract regression guard (both sides of the shape)
+The fleet-wide Pro-detection incident (Session 26 root-cause) was a *consumer* misparse
+of a *correct* backend shape — a BFF read `.data.plan` instead of `.data.subscription.plan`,
+silently resolved FREE, and locked Pro OFF for paying users; the unit tests mocked a FLAT
+shape and green-lit it. Guard added on **both** sides so it can't recur:
+
+| Side | Where | Guard |
+|------|-------|-------|
+| **Producer** (commerce) | `tec-commerce-service/src/__tests__/subscription.contract.spec.ts` | Pins the `GET /subscriptions/status` envelope: `{ success, data: { subscription: { plan, isActive, isExpired, current_period_end, daysRemaining } } }` — asserts it is **NESTED** (`data.plan` is `undefined`) + every fleet-depended field passes through + user derives from the verified JWT (P6). Flattening the envelope now fails in ONE place instead of 19 silent breakages. |
+| **Consumer** (template) | `tec-template-base` `src/lib/subscription/pro-status.ts` + `src/app/api/bff/subscription/route.ts` + `pro-status.test.ts` | The **canonical** `resolveProStatus` / `resolveProState` — unwraps the nested envelope in ONE place, fails closed to FREE (P6), surfaces `daysRemaining`/`isExpired`. Its test mocks the **real nested shape** (the lesson: "a BFF unit test is only as good as the shape it mocks"). Future apps cloned from the template inherit the correct parser — CLAUDE.md says **import it, don't hand-roll another**. |
+
+Companion PRs: Tec-core-backend #204 (producer contract) · tec-template-base #25
+(consumer canonical + guard). Existing apps keep their (now-fixed) per-app resolvers;
+the template guard prevents the NEXT app from regrowing the bug.
+
+### Activation visibility — silent paid-activation failures made observable
+Every failure this session addressed was **silent** (a paid user simply doesn't get Pro).
+Two additions turn paid activation into something you can SEE during the campaign:
+- **`getStats()` + `GET /commerce/subscriptions/stats`** (INTERNAL, x-internal-key) — active
+  paid counts by tier + expired/cancelled/total + a **recent-upgrade feed** from the
+  append-only history (`status=ACTIVE, plan != FREE`). Own-data, read-only, no new infra —
+  poll it to watch paid subs climb or catch a stall.
+- **`recordRejectedActivation()`** — an underpaid/dropped activation (from the amount-floor
+  guard) is written as a **`PAST_DUE` history row** (Invariant #4 — a payment that moved π
+  but granted nothing is a financial event, not just a log line); the consumer calls it
+  best-effort (audit failure never changes the drop). `PAST_DUE` keeps rejections OUT of the
+  "activated Pro" feed while making them queryable per user. Commerce **97/97** green. (#204)
+
+### In-app renewal reminder — reference pattern (Life) → propagated fleet-wide
+The Hub shows "expires in N days" (tec-app #138); the app Pro components did not. **Life**
+(the Runtime-Verified reference) shipped it first: `useSubscription` exposes
+`daysRemaining`/`isExpired` and `LifePro`'s active state shows "Expires in N days" (amber +
+re-subscribe nudge in the last week). Pure UI; 21/21 green. (Tec-Life #23)
+
+**Then propagated to the other 16 app Pro components** — the `<App>Pro.tsx` subscription
+fetch (byte-identical across apps) now also reads `daysRemaining` (with a period-end
+fallback) and the active "★ You're on Pro" card shows the same reminder. Applied via a
+fail-closed script (skips any file whose anchors don't match — none did); **typechecked
+clean on the 8 apps that had deps installed** (Connection · Zone · Nx · Alert · Analytics ·
+Vip · Legend · Epic), and the remaining 8 use the identical edit + confirmed same imports.
+PRs: Zone #27 · Connection #29 · Nx #19 · Alert #18 · Explorer #22 · Estate #20 · FundX #16 ·
+Nexus #20 · Dx #17 · Epic #23 · Legend #21 · Elite #17 · Insure #17 · Vip #17 · Titan #17 ·
+Analytics #31. Every app's Pro card now surfaces its own expiry — no more silent lapse.
+
+> **Audit note:** prices + Pro benefits are ALREADY shown clearly in every app's Pro
+> component (price = the same const charged, so no mismatch by construction; benefits are
+> described). The only real polish gap was the in-app expiry display above.
