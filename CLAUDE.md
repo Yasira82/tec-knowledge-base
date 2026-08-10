@@ -499,12 +499,21 @@ Two additions turn paid activation into something you can SEE during the campaig
   best-effort (audit failure never changes the drop). `PAST_DUE` keeps rejections OUT of the
   "activated Pro" feed while making them queryable per user. Commerce **97/97** green. (#204)
 
-### In-app renewal reminder — reference pattern (Life)
+### In-app renewal reminder — reference pattern (Life) → propagated fleet-wide
 The Hub shows "expires in N days" (tec-app #138); the app Pro components did not. **Life**
-(the Runtime-Verified reference) now does: `useSubscription` exposes `daysRemaining`/`isExpired`
-and `LifePro`'s active state shows "Expires in N days" (amber + re-subscribe nudge in the last
-week). Pure UI; 21/21 green. **The other app Pro components each have their own hook + component
-— propagate deliberately, not in a rushed pre-campaign sweep.** (Tec-Life #23)
+(the Runtime-Verified reference) shipped it first: `useSubscription` exposes
+`daysRemaining`/`isExpired` and `LifePro`'s active state shows "Expires in N days" (amber +
+re-subscribe nudge in the last week). Pure UI; 21/21 green. (Tec-Life #23)
+
+**Then propagated to the other 16 app Pro components** — the `<App>Pro.tsx` subscription
+fetch (byte-identical across apps) now also reads `daysRemaining` (with a period-end
+fallback) and the active "★ You're on Pro" card shows the same reminder. Applied via a
+fail-closed script (skips any file whose anchors don't match — none did); **typechecked
+clean on the 8 apps that had deps installed** (Connection · Zone · Nx · Alert · Analytics ·
+Vip · Legend · Epic), and the remaining 8 use the identical edit + confirmed same imports.
+PRs: Zone #27 · Connection #29 · Nx #19 · Alert #18 · Explorer #22 · Estate #20 · FundX #16 ·
+Nexus #20 · Dx #17 · Epic #23 · Legend #21 · Elite #17 · Insure #17 · Vip #17 · Titan #17 ·
+Analytics #31. Every app's Pro card now surfaces its own expiry — no more silent lapse.
 
 > **Audit note:** prices + Pro benefits are ALREADY shown clearly in every app's Pro
 > component (price = the same const charged, so no mismatch by construction; benefits are
