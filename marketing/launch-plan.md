@@ -1,5 +1,13 @@
 # Launch Plan — Sequence & Cadence
 
+> ⏸️ **ACTIVE DECISION (2026-08-16) — read first:** broad multi-wave publishing below is
+> **paused** pending an acquisition-validation step. See
+> `audits/PIONEER_ACQUISITION_INTERVIEW_FIRST_2026-08-16.md`. Current focus is
+> **interview-first**: understand why the 3 verified non-completers stopped, fix the
+> onboarding on evidence, and validate **independent + KYC + completed** pioneers — *before*
+> scaling distribution. Do **not** run the "1 app/day broadcast" cadence yet. The waves
+> below remain the plan for AFTER genuine independent demand is evidenced.
+
 Turns the scattered posts in `launch-posts.md` into an ordered **campaign**. Governance
 lives in `C-133 §5` (Campaigns) and `§5.1` (Invite & Earn); this is the operational
 schedule. Honesty rules in `README.md` apply — never announce an app as live before
