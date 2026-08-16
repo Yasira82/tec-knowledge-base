@@ -17,6 +17,12 @@ So it can't quietly become a lie.
 > we haven't earned. It means the software is real and works. Numbers are always the real
 > number or nothing (honesty rule #1).
 
+> **Bilingual by default (EN + AR).** Every app in the fleet ships a full **Arabic
+> interface with right-to-left (RTL) layout** — switch language in-app from Settings.
+> One consistent mobile experience across all apps (same navigation, same profile
+> showing your real Pi name, same Pro card). Built for the Pi community, not just an
+> English-first afterthought.
+
 ## The 24 apps
 
 | App | Status | What is real today | Domain |

@@ -15,6 +15,12 @@ real Pi payments.
 reputation, and more — 24 apps sharing one identity and one wallet. Log in once with
 Pi and the whole ecosystem is yours.
 
+**Bilingual (EN):** Every TEC app is fully bilingual — English and Arabic with
+right-to-left support, switchable in-app. Built for the Pi community from day one.
+
+**Bilingual (AR):** كل تطبيقات TEC ثنائية اللغة بالكامل — عربي وإنجليزي مع دعم الكتابة
+من اليمين لليسار، وتقدر تبدّل اللغة جوّه التطبيق. مبني لمجتمع باي من أول يوم.
+
 **Founding 100 (EN):** Be one of the first 100 Founding Pioneers. Open every TEC app in
 Pi Browser, and earn a permanent Founding badge in your reputation. Earned, never bought.
 
