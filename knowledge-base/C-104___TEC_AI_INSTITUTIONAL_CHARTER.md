@@ -220,7 +220,8 @@ called the parser. A third AI surface MUST import these, never re-implement them
 | `src/components/ai/RichText.tsx` | Rendering that markdown (bold · code · bullets · headings) |
 | `src/components/ai/NavChips.tsx` | Rendering a nav intent as a chip |
 | `src/lib/ai/nav-intents.ts` | Parsing the `[[go:slug]]` marker out of the prose |
-| `src/lib/ai-session.ts` | Transcript persistence (load · save · clear) |
+| `src/lib/ai-session.ts` | Transcript persistence (load · save · archive list) + assistant settings |
+| `src/components/ai/AIMenu.tsx` | The assistant's menu — archived chats · starter questions · settings · support (§5.6) |
 
 ### 5.2 The model-pinning law (P0 — earned by a self-inflicted outage)
 
@@ -316,6 +317,17 @@ Three rules the implementation enforces, each from a way this can go wrong:
 - **A reply still streaming is never saved.** A restored half-sentence reads as a broken
   answer.
 
+**"New chat" archives; it does not delete.** Starting a fresh question is not a request
+to lose the previous conversation, so the live thread is pushed onto a bounded archive
+list (most recent first) reachable from the menu (§5.6). Restoring one archives whatever
+is on screen first, so no path through the UI destroys a thread without the user having
+chosen "clear all" — which arms once and confirms before it wipes.
+
+**Settings are `localStorage`; transcripts are `sessionStorage`.** Reply language and
+reply length are *preferences* — they say nothing about the user and are expected to
+persist across tabs. The split is deliberate: the storage a value lives in follows what
+the value reveals, not which API was nearer to hand.
+
 **A greeting is not worth a conversation.** The `/ai` welcome was seeded inside an effect
 keyed on `[user, locale]` that replaced the whole message array — so changing language,
 or the session resolving a beat late (the C-123 server path in Pi Browser flips `user`
@@ -329,10 +341,61 @@ restored thread suppresses it.
 | **Streaming** | The reply bubble is created empty and filled per delta — the answer visibly types out. Never buffer the whole answer and render it at the end. |
 | **Stop** | Cuts the stream via `AbortController` and **KEEPS the partial answer**, marked stopped. Stopping is a user decision, not a failure; replacing a useful partial reply with an error throws away what the user already read. It also guarantees a new question cancels a stream still arriving from the previous one. |
 | **Retry** | An error bubble must never be a dead end. The failed question is remembered and resent verbatim. |
-| **New chat** | Clears the screen **and** the stored transcript, and restores the greeting. |
+| **New chat** | **Archives** the thread, then clears the screen and restores the greeting. It is not a delete — a user who taps it to start a fresh question has not asked to lose the previous one (§5.6). |
+| **Copy** | Every assistant reply is copyable. An answer the user cannot take with them is an answer they retype. |
+| **Rendered markdown** | Bold · inline code · bullets · headings · rules · **tables** · autolinked TEC hosts. A table scrolls **inside** its own container; a bubble is never allowed to widen past the screen, and table cells never wrap mid-token (`hub.tec / osyste / m.app` was a real render). |
+| **Reply settings** | Reply **language** (auto · ar · en) and **length** (detailed · short) are user settings in `localStorage` — a preference, not personal content, so unlike the transcript it survives the tab (§5.4). They are sent as part of `UserContext` and shape the system prompt. |
 | **Bidirectional text** | `dir="auto"` on inputs, bubbles, and **every rendered line** — per line, not per bubble, so an Arabic sentence containing `Pi` or `NX` still resolves. A reply follows the **question's** language, not the UI locale. |
 | **Machine markers** | `[[go:slug]]` is a machine channel. It MUST be parsed out before render — it reached users as literal text on the surface that skipped the parser. |
 | **Accessibility** | `role="log"` + `aria-live="polite"` on the transcript; `aria-label` on every icon-only control; focus the field on open; Escape closes the drawer. |
+
+### 5.6 The assistant's menu — and the boundary it keeps (P1 · C-47 single entry point)
+
+**Truth State:** [Current State] · **Verification:** [Code Verified]
+(`src/components/ai/AIMenu.tsx` + `ai-menu.test.tsx`)
+
+> **The assistant is not a second front door to the platform.** Its menu may hold only
+> what belongs to the assistant — conversations, starter questions, reply settings,
+> support. It must never hold a link to an app page. The Hub — *sign in with Pi* — is
+> the single entry point (C-47).
+
+The `/ai` page shipped with a "SERVICES" panel listing **TEC Hub · Pay with Pi · My
+Dashboard · Digital Assets**. Each was a direct route into the platform reached from a
+page the user had *not yet signed in from* — the assistant quietly became an alternative
+entrance beside the one the constitution names. It was replaced, not relocated.
+
+The assistant still points at an app: through a **nav chip inside a reply**, where the
+destination is the answer to a question the user asked. The difference is the whole
+point — a recommendation is earned by context; a private menu of app links is a bypass.
+
+**The test asserts the boundary, not the symptom.** It walks every tab and checks the
+`href` **scheme/host** of every anchor: only `https://wa.me/…`, `https://t.me/…`,
+`mailto:` and `tel:` pass. A **relative** href — an in-platform destination — fails.
+An earlier version asserted "no `<a>` at all", which broke the moment support gained
+legitimate outbound links; a test that forbids the symptom has to be weakened later,
+a test that forbids the *rule breach* does not.
+
+**One menu, both surfaces — the parity law.** `AIMenu` is a single component rendered by
+the `/ai` page and the Hub drawer. This is the same law as the shared modules in §5.1,
+and it is written down because this feature's two surfaces **drifted three times**: the
+drawer had no welcome, then no menu, then a different support story. A capability that
+exists on one AI surface and not the other is a defect, not a roadmap item.
+
+| Tab | Holds | Notes |
+|-----|-------|-------|
+| Chats | The archive list (most recent first, capped) | Restoring archives the live thread first — no path through the menu destroys a conversation silently |
+| Starter questions | Questions that **fill the composer** | They ask the assistant; they do not navigate |
+| Settings | Reply language · reply length · clear-all | Clear-all arms on first tap and destroys on the second — the only irreversible control |
+| Support | Rating + WhatsApp · Telegram · Email · Call | Real channels, identical on both surfaces |
+
+**Two UI rules earned by screenshots, worth keeping:**
+
+- **A menu row wraps; it never scrolls horizontally.** With `overflow-x` the fourth tab
+  sat off the edge with no affordance — a menu entry that cannot be seen is a menu entry
+  the user does not have.
+- **An open menu owns the screen on a phone.** It used to expand to a fixed `400px` on
+  top of a still-visible chat whose suggestion chips showed underneath: two surfaces
+  competing for one screen, and an archive list that clipped inside the cap.
 
 ---
 
