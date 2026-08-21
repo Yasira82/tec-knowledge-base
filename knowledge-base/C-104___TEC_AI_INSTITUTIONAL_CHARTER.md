@@ -208,12 +208,84 @@ plumbing on purpose:
 | `/ai` full page | Hub landing (nav + floating button) | `src/app/ai/AiClient.tsx` |
 | Hub drawer | `/hub` floating button | `src/app/hub/components/AIDrawer.tsx` |
 
-Both use `src/lib/ai-stream.ts` (line-buffered SSE reader) and
-`src/components/ai/RichText.tsx` (markdown renderer). This is a **hard rule learned by
-repetition**: while they were independent, every fix applied to one had to be
-re-discovered on the other — the SSE chunk-boundary bug that silently truncated answers
-lived in **both** for months. A third AI surface MUST import these, never re-implement
-them.
+Both import the shared modules below. This is a **hard rule learned by repetition**:
+while they were independent, every fix applied to one had to be re-discovered on the
+other — the SSE chunk-boundary bug that silently truncated answers lived in **both** for
+months, and the `[[go:…]]` marker leak lived in the drawer alone because only the page
+called the parser. A third AI surface MUST import these, never re-implement them.
+
+| Shared module | Owns |
+|---------------|------|
+| `src/lib/ai-stream.ts` | Line-buffered SSE reader + the light-markdown tokeniser |
+| `src/components/ai/RichText.tsx` | Rendering that markdown (bold · code · bullets · headings) |
+| `src/components/ai/NavChips.tsx` | Rendering a nav intent as a chip |
+| `src/lib/ai/nav-intents.ts` | Parsing the `[[go:slug]]` marker out of the prose |
+| `src/lib/ai-session.ts` | Transcript persistence (load · save · clear) |
+
+### 5.2 The model-pinning law (P0 — earned by a self-inflicted outage)
+
+**Truth State:** [Current State] · **Verification:** [Code Verified]
+(`models-pinned.test.ts` enforces it in CI)
+
+> **A model id that production has served traffic on must never be removed or demoted
+> from the candidate list.** Add candidates BELOW it. Verify with `/api/ai/health`
+> before reordering. Deleting one is a deliberate decision recorded in the same commit.
+
+This is not a style preference. It is written because the platform broke itself with the
+opposite behaviour:
+
+1. A PR researched the then-current provider models and pinned `gemini-3.6-flash` and
+   `llama-3.1-8b-instant`.
+2. A later PR generalised those single pins into candidate **lists**, so a retired model
+   id could no longer take the assistant down. The lists were filled from recollection —
+   and `gemini-3.6-flash` was **not in them at all**, replaced by four ids that were all
+   **older**. On a free tier the older models are the crowded ones.
+3. Users then got *"This model is currently experiencing high demand"*. The change whose
+   entire purpose was surviving model rotation is what removed the working model.
+
+The trap generalises beyond this platform and beyond AI models: **a value released after
+an author's knowledge cutoff looks wrong, so it gets "corrected" to a familiar older one.
+Recognition is not evidence. Production traffic is.** Any list of external identifiers
+(model ids, API versions, region codes) written from memory carries the same risk.
+
+**Diagnostic:** `GET /api/ai/health` (auth-gated — probes cost money) probes every
+configured provider/model with a one-token request and reports which answer, with the
+failure reason for each that does not. `GROQ_MODEL` / `GEMINI_MODEL` pin a winner without
+a deploy. It exists because the same outage class hit three times, and each time the only
+way to learn which model still answered was to ship a guess and wait for a user to fail.
+
+### 5.3 Failure classification — the server decides, the client words it
+
+Three distinct facts used to be indistinguishable to a user:
+
+| Fact | Was | Now |
+|------|-----|-----|
+| Not signed in | 401 | `code: SIGN_IN` |
+| Too many messages | 429 | `code: RATE_LIMIT` |
+| No provider key configured | **503** | `code: NOT_CONFIGURED` |
+| Every provider momentarily busy | **503** | `code: BUSY` + `Retry-After` |
+| Providers failed for another reason | 502 | `code: PROVIDERS_FAILED` |
+
+Both 503s mapped to one client message, so a **busy** assistant told the user it was
+**switched off**. HTTP status could not carry the distinction; an explicit `code` does.
+The split of responsibility is the point: **the server classifies, the client words it**
+— which also keeps the wording in the reader's own language.
+
+Two related rules, both from the same outage:
+
+- **Read an error body exactly once.** A `Response` body is single-use. The failure
+  reason was read to classify the error and read AGAIN to build the log line; the second
+  read returned an empty string, and production logged `groq 400:` with nothing after it.
+  The one thing needed to diagnose the outage was the one thing destroyed. The reason is
+  now read once, at the point of failure, and carried — with the failing **model named**,
+  since "groq 400" is not actionable across eight candidates.
+- **Overload is not fatal.** `429`/`503`/quota wording means *try the next candidate*,
+  not *give up* — and if every candidate is overloaded, retry the list once. Treating
+  "high demand … usually temporary" as fatal left three healthy fallback models unused.
+
+**Never show the provider's raw payload to a user.** A wall of vendor JSON in a chat
+bubble is not something anyone can act on, and it leaks vendor internals into the
+product. The full reason goes to the log and a `detail` field; the bubble gets a sentence.
 
 **Security posture (V1, matches §6).** Auth-gated with the same HS256 session JWT the BFF
 verifies (no session → 401 — the AI providers cost real money, so an open endpoint is a
@@ -221,6 +293,46 @@ drain). Rate limit: **20 req/min keyed by the VERIFIED user id**, never by IP. C
 own-scope only, assembled server-side, and fail-soft — a missing context degrades the
 answer, never blocks it. Text only: V1 executes nothing, so §6's "cannot initiate
 financial transactions" holds **by construction**, not by policy.
+
+### 5.4 Conversation state — `sessionStorage`, and why not `localStorage`
+
+The transcript survives closing the drawer and reloading the page
+(`src/lib/ai-session.ts`, shared by both surfaces). Without it, asking a question,
+following the app the assistant recommended, and coming back lost the thread — for an
+assistant, the single largest quality gap.
+
+**`sessionStorage`, deliberately.** A transcript is personal content: it can name goals,
+balances, and what the user is trying to do. `sessionStorage` dies with the tab, so a
+borrowed or shared device does not hand the next person a history. It is **not** a token,
+so ADR-001 (session tokens are cookie-only, never storage) is untouched — but it sits
+close enough to that line that the reasoning is recorded rather than assumed.
+
+Three rules the implementation enforces, each from a way this can go wrong:
+
+- **Every access is wrapped.** Pi Browser and private modes can make storage throw on
+  read *or* write. An assistant that crashes because it could not save a draft is worse
+  than one that quietly forgets — fail-soft, never fail-loud.
+- **The stored tail is capped**, so a long-lived tab cannot grow into the storage quota.
+- **A reply still streaming is never saved.** A restored half-sentence reads as a broken
+  answer.
+
+**A greeting is not worth a conversation.** The `/ai` welcome was seeded inside an effect
+keyed on `[user, locale]` that replaced the whole message array — so changing language,
+or the session resolving a beat late (the C-123 server path in Pi Browser flips `user`
+from `null` to an object), **silently wiped the thread**. It is now seeded once, and a
+restored thread suppresses it.
+
+### 5.5 Interaction contract (both surfaces)
+
+| Capability | Rule |
+|-----------|------|
+| **Streaming** | The reply bubble is created empty and filled per delta — the answer visibly types out. Never buffer the whole answer and render it at the end. |
+| **Stop** | Cuts the stream via `AbortController` and **KEEPS the partial answer**, marked stopped. Stopping is a user decision, not a failure; replacing a useful partial reply with an error throws away what the user already read. It also guarantees a new question cancels a stream still arriving from the previous one. |
+| **Retry** | An error bubble must never be a dead end. The failed question is remembered and resent verbatim. |
+| **New chat** | Clears the screen **and** the stored transcript, and restores the greeting. |
+| **Bidirectional text** | `dir="auto"` on inputs, bubbles, and **every rendered line** — per line, not per bubble, so an Arabic sentence containing `Pi` or `NX` still resolves. A reply follows the **question's** language, not the UI locale. |
+| **Machine markers** | `[[go:slug]]` is a machine channel. It MUST be parsed out before render — it reached users as literal text on the surface that skipped the parser. |
+| **Accessibility** | `role="log"` + `aria-live="polite"` on the transcript; `aria-label` on every icon-only control; focus the field on open; Escape closes the drawer. |
 
 ---
 

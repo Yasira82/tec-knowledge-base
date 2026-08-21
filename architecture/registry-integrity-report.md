@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-08-21T13:36:43.634232
+> **Generated:** 2026-08-21T15:42:00.836049
 > **Registry:** `/home/user/tec-knowledge-base/architecture/asset-registry.yaml`
 > **Rules:** `/home/user/tec-knowledge-base/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
