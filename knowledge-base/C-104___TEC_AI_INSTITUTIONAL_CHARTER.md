@@ -162,6 +162,66 @@ Constitutional Boundaries (C-94):
               govern capability execution, bypass audit trail
 ```
 
+### 5.1 V1 runtime — what is actually deployed
+
+**Truth State:** [Current State] · **Verification:** [Code Verified] (`tec-app`
+`src/app/api/ai/chat/route.ts` + the two client surfaces)
+
+The stack above is the **planned V2 target**. V1 shipped on a different — deliberately
+more defensive — shape, and the difference matters operationally, so it is recorded here
+rather than left as drift.
+
+| Aspect | Planned (§5, V2 target) | V1 as deployed |
+|--------|------------------------|----------------|
+| Model | Claude API, single model id | **Three providers in a fallback chain**: Claude → Groq → Gemini, first configured key wins |
+| Model id | pinned (`claude-sonnet-4-6`) | **No single id trusted** — per-provider candidate lists + `GROQ_MODEL`/`GEMINI_MODEL` env override + last-known-good memory |
+| Runtime | Next.js API route | Next.js API route, **`runtime = 'edge'`** |
+| Session/context cache | Redis | Redis for **rate limiting only** (Upstash REST when configured, bounded in-memory fallback) |
+| Context | Context Engine (C-97) | **Own-scope BFF context** (`/api/bff/ai/context`) — username · balance · KYC · goals · activity. An honest partial slice, NOT C-97 |
+
+**Why the fallback chain (an institutional lesson, not a preference).** A hardcoded model
+id is a scheduled outage: the provider retires it and the endpoint answers
+`404 "model does not exist or you do not have access to it"`, which reads to every user as
+"the assistant is down". This happened **twice**. The chain + candidate lists convert a
+retirement into one fast 404 and a transparent fall-through. A dead provider is also
+remembered per edge instance (last-good-first ordering) so it is not re-probed — and
+re-timed-out — on every request.
+
+**Stream contract (both surfaces).** The route normalises all three providers into ONE
+SSE shape, so a client never parses a vendor dialect:
+
+```
+data: {"text":"…"}        one delta of the answer
+data: {"truncated":true}  the provider stopped at its output cap (max_tokens)
+```
+
+`AI_MAX_TOKENS` (default **2048**) caps the answer. The cap is **never silent**: each
+provider's own stop signal (`stop_reason` / `finish_reason` / `finishReason`) is forwarded
+as the `truncated` frame, and both clients append a visible "answer was cut" note — a
+sentence that just ends is an invisible failure (C-96).
+
+**Two surfaces, one implementation.** V1 is reachable in two places and they share their
+plumbing on purpose:
+
+| Surface | Entry point | Component |
+|---------|-------------|-----------|
+| `/ai` full page | Hub landing (nav + floating button) | `src/app/ai/AiClient.tsx` |
+| Hub drawer | `/hub` floating button | `src/app/hub/components/AIDrawer.tsx` |
+
+Both use `src/lib/ai-stream.ts` (line-buffered SSE reader) and
+`src/components/ai/RichText.tsx` (markdown renderer). This is a **hard rule learned by
+repetition**: while they were independent, every fix applied to one had to be
+re-discovered on the other — the SSE chunk-boundary bug that silently truncated answers
+lived in **both** for months. A third AI surface MUST import these, never re-implement
+them.
+
+**Security posture (V1, matches §6).** Auth-gated with the same HS256 session JWT the BFF
+verifies (no session → 401 — the AI providers cost real money, so an open endpoint is a
+drain). Rate limit: **20 req/min keyed by the VERIFIED user id**, never by IP. Context is
+own-scope only, assembled server-side, and fail-soft — a missing context degrades the
+answer, never blocks it. Text only: V1 executes nothing, so §6's "cannot initiate
+financial transactions" holds **by construction**, not by policy.
+
 ---
 
 ## 6. SECURITY MODEL
