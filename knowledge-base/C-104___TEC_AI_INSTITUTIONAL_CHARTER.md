@@ -208,12 +208,85 @@ plumbing on purpose:
 | `/ai` full page | Hub landing (nav + floating button) | `src/app/ai/AiClient.tsx` |
 | Hub drawer | `/hub` floating button | `src/app/hub/components/AIDrawer.tsx` |
 
-Both use `src/lib/ai-stream.ts` (line-buffered SSE reader) and
-`src/components/ai/RichText.tsx` (markdown renderer). This is a **hard rule learned by
-repetition**: while they were independent, every fix applied to one had to be
-re-discovered on the other — the SSE chunk-boundary bug that silently truncated answers
-lived in **both** for months. A third AI surface MUST import these, never re-implement
-them.
+Both import the shared modules below. This is a **hard rule learned by repetition**:
+while they were independent, every fix applied to one had to be re-discovered on the
+other — the SSE chunk-boundary bug that silently truncated answers lived in **both** for
+months, and the `[[go:…]]` marker leak lived in the drawer alone because only the page
+called the parser. A third AI surface MUST import these, never re-implement them.
+
+| Shared module | Owns |
+|---------------|------|
+| `src/lib/ai-stream.ts` | Line-buffered SSE reader + the light-markdown tokeniser |
+| `src/components/ai/RichText.tsx` | Rendering that markdown (bold · code · bullets · headings) |
+| `src/components/ai/NavChips.tsx` | Rendering a nav intent as a chip |
+| `src/lib/ai/nav-intents.ts` | Parsing the `[[go:slug]]` marker out of the prose |
+| `src/lib/ai-session.ts` | Transcript persistence (load · save · archive list) + assistant settings |
+| `src/components/ai/AIMenu.tsx` | The assistant's menu — archived chats · starter questions · settings · support (§5.6) |
+
+### 5.2 The model-pinning law (P0 — earned by a self-inflicted outage)
+
+**Truth State:** [Current State] · **Verification:** [Code Verified]
+(`models-pinned.test.ts` enforces it in CI)
+
+> **A model id that production has served traffic on must never be removed or demoted
+> from the candidate list.** Add candidates BELOW it. Verify with `/api/ai/health`
+> before reordering. Deleting one is a deliberate decision recorded in the same commit.
+
+This is not a style preference. It is written because the platform broke itself with the
+opposite behaviour:
+
+1. A PR researched the then-current provider models and pinned `gemini-3.6-flash` and
+   `llama-3.1-8b-instant`.
+2. A later PR generalised those single pins into candidate **lists**, so a retired model
+   id could no longer take the assistant down. The lists were filled from recollection —
+   and `gemini-3.6-flash` was **not in them at all**, replaced by four ids that were all
+   **older**. On a free tier the older models are the crowded ones.
+3. Users then got *"This model is currently experiencing high demand"*. The change whose
+   entire purpose was surviving model rotation is what removed the working model.
+
+The trap generalises beyond this platform and beyond AI models: **a value released after
+an author's knowledge cutoff looks wrong, so it gets "corrected" to a familiar older one.
+Recognition is not evidence. Production traffic is.** Any list of external identifiers
+(model ids, API versions, region codes) written from memory carries the same risk.
+
+**Diagnostic:** `GET /api/ai/health` (auth-gated — probes cost money) probes every
+configured provider/model with a one-token request and reports which answer, with the
+failure reason for each that does not. `GROQ_MODEL` / `GEMINI_MODEL` pin a winner without
+a deploy. It exists because the same outage class hit three times, and each time the only
+way to learn which model still answered was to ship a guess and wait for a user to fail.
+
+### 5.3 Failure classification — the server decides, the client words it
+
+Three distinct facts used to be indistinguishable to a user:
+
+| Fact | Was | Now |
+|------|-----|-----|
+| Not signed in | 401 | `code: SIGN_IN` |
+| Too many messages | 429 | `code: RATE_LIMIT` |
+| No provider key configured | **503** | `code: NOT_CONFIGURED` |
+| Every provider momentarily busy | **503** | `code: BUSY` + `Retry-After` |
+| Providers failed for another reason | 502 | `code: PROVIDERS_FAILED` |
+
+Both 503s mapped to one client message, so a **busy** assistant told the user it was
+**switched off**. HTTP status could not carry the distinction; an explicit `code` does.
+The split of responsibility is the point: **the server classifies, the client words it**
+— which also keeps the wording in the reader's own language.
+
+Two related rules, both from the same outage:
+
+- **Read an error body exactly once.** A `Response` body is single-use. The failure
+  reason was read to classify the error and read AGAIN to build the log line; the second
+  read returned an empty string, and production logged `groq 400:` with nothing after it.
+  The one thing needed to diagnose the outage was the one thing destroyed. The reason is
+  now read once, at the point of failure, and carried — with the failing **model named**,
+  since "groq 400" is not actionable across eight candidates.
+- **Overload is not fatal.** `429`/`503`/quota wording means *try the next candidate*,
+  not *give up* — and if every candidate is overloaded, retry the list once. Treating
+  "high demand … usually temporary" as fatal left three healthy fallback models unused.
+
+**Never show the provider's raw payload to a user.** A wall of vendor JSON in a chat
+bubble is not something anyone can act on, and it leaks vendor internals into the
+product. The full reason goes to the log and a `detail` field; the bubble gets a sentence.
 
 **Security posture (V1, matches §6).** Auth-gated with the same HS256 session JWT the BFF
 verifies (no session → 401 — the AI providers cost real money, so an open endpoint is a
@@ -221,6 +294,108 @@ drain). Rate limit: **20 req/min keyed by the VERIFIED user id**, never by IP. C
 own-scope only, assembled server-side, and fail-soft — a missing context degrades the
 answer, never blocks it. Text only: V1 executes nothing, so §6's "cannot initiate
 financial transactions" holds **by construction**, not by policy.
+
+### 5.4 Conversation state — `sessionStorage`, and why not `localStorage`
+
+The transcript survives closing the drawer and reloading the page
+(`src/lib/ai-session.ts`, shared by both surfaces). Without it, asking a question,
+following the app the assistant recommended, and coming back lost the thread — for an
+assistant, the single largest quality gap.
+
+**`sessionStorage`, deliberately.** A transcript is personal content: it can name goals,
+balances, and what the user is trying to do. `sessionStorage` dies with the tab, so a
+borrowed or shared device does not hand the next person a history. It is **not** a token,
+so ADR-001 (session tokens are cookie-only, never storage) is untouched — but it sits
+close enough to that line that the reasoning is recorded rather than assumed.
+
+Three rules the implementation enforces, each from a way this can go wrong:
+
+- **Every access is wrapped.** Pi Browser and private modes can make storage throw on
+  read *or* write. An assistant that crashes because it could not save a draft is worse
+  than one that quietly forgets — fail-soft, never fail-loud.
+- **The stored tail is capped**, so a long-lived tab cannot grow into the storage quota.
+- **A reply still streaming is never saved.** A restored half-sentence reads as a broken
+  answer.
+
+**"New chat" archives; it does not delete.** Starting a fresh question is not a request
+to lose the previous conversation, so the live thread is pushed onto a bounded archive
+list (most recent first) reachable from the menu (§5.6). Restoring one archives whatever
+is on screen first, so no path through the UI destroys a thread without the user having
+chosen "clear all" — which arms once and confirms before it wipes.
+
+**Settings are `localStorage`; transcripts are `sessionStorage`.** Reply language and
+reply length are *preferences* — they say nothing about the user and are expected to
+persist across tabs. The split is deliberate: the storage a value lives in follows what
+the value reveals, not which API was nearer to hand.
+
+**A greeting is not worth a conversation.** The `/ai` welcome was seeded inside an effect
+keyed on `[user, locale]` that replaced the whole message array — so changing language,
+or the session resolving a beat late (the C-123 server path in Pi Browser flips `user`
+from `null` to an object), **silently wiped the thread**. It is now seeded once, and a
+restored thread suppresses it.
+
+### 5.5 Interaction contract (both surfaces)
+
+| Capability | Rule |
+|-----------|------|
+| **Streaming** | The reply bubble is created empty and filled per delta — the answer visibly types out. Never buffer the whole answer and render it at the end. |
+| **Stop** | Cuts the stream via `AbortController` and **KEEPS the partial answer**, marked stopped. Stopping is a user decision, not a failure; replacing a useful partial reply with an error throws away what the user already read. It also guarantees a new question cancels a stream still arriving from the previous one. |
+| **Retry** | An error bubble must never be a dead end. The failed question is remembered and resent verbatim. |
+| **New chat** | **Archives** the thread, then clears the screen and restores the greeting. It is not a delete — a user who taps it to start a fresh question has not asked to lose the previous one (§5.6). |
+| **Copy** | Every assistant reply is copyable. An answer the user cannot take with them is an answer they retype. |
+| **Rendered markdown** | Bold · inline code · bullets · headings · rules · **tables** · autolinked TEC hosts. A table scrolls **inside** its own container; a bubble is never allowed to widen past the screen, and table cells never wrap mid-token (`hub.tec / osyste / m.app` was a real render). |
+| **Reply settings** | Reply **language** (auto · ar · en) and **length** (detailed · short) are user settings in `localStorage` — a preference, not personal content, so unlike the transcript it survives the tab (§5.4). They are sent as part of `UserContext` and shape the system prompt. |
+| **Bidirectional text** | `dir="auto"` on inputs, bubbles, and **every rendered line** — per line, not per bubble, so an Arabic sentence containing `Pi` or `NX` still resolves. A reply follows the **question's** language, not the UI locale. |
+| **Machine markers** | `[[go:slug]]` is a machine channel. It MUST be parsed out before render — it reached users as literal text on the surface that skipped the parser. |
+| **Accessibility** | `role="log"` + `aria-live="polite"` on the transcript; `aria-label` on every icon-only control; focus the field on open; Escape closes the drawer. |
+
+### 5.6 The assistant's menu — and the boundary it keeps (P1 · C-47 single entry point)
+
+**Truth State:** [Current State] · **Verification:** [Code Verified]
+(`src/components/ai/AIMenu.tsx` + `ai-menu.test.tsx`)
+
+> **The assistant is not a second front door to the platform.** Its menu may hold only
+> what belongs to the assistant — conversations, starter questions, reply settings,
+> support. It must never hold a link to an app page. The Hub — *sign in with Pi* — is
+> the single entry point (C-47).
+
+The `/ai` page shipped with a "SERVICES" panel listing **TEC Hub · Pay with Pi · My
+Dashboard · Digital Assets**. Each was a direct route into the platform reached from a
+page the user had *not yet signed in from* — the assistant quietly became an alternative
+entrance beside the one the constitution names. It was replaced, not relocated.
+
+The assistant still points at an app: through a **nav chip inside a reply**, where the
+destination is the answer to a question the user asked. The difference is the whole
+point — a recommendation is earned by context; a private menu of app links is a bypass.
+
+**The test asserts the boundary, not the symptom.** It walks every tab and checks the
+`href` **scheme/host** of every anchor: only `https://wa.me/…`, `https://t.me/…`,
+`mailto:` and `tel:` pass. A **relative** href — an in-platform destination — fails.
+An earlier version asserted "no `<a>` at all", which broke the moment support gained
+legitimate outbound links; a test that forbids the symptom has to be weakened later,
+a test that forbids the *rule breach* does not.
+
+**One menu, both surfaces — the parity law.** `AIMenu` is a single component rendered by
+the `/ai` page and the Hub drawer. This is the same law as the shared modules in §5.1,
+and it is written down because this feature's two surfaces **drifted three times**: the
+drawer had no welcome, then no menu, then a different support story. A capability that
+exists on one AI surface and not the other is a defect, not a roadmap item.
+
+| Tab | Holds | Notes |
+|-----|-------|-------|
+| Chats | The archive list (most recent first, capped) | Restoring archives the live thread first — no path through the menu destroys a conversation silently |
+| Starter questions | Questions that **fill the composer** | They ask the assistant; they do not navigate |
+| Settings | Reply language · reply length · clear-all | Clear-all arms on first tap and destroys on the second — the only irreversible control |
+| Support | Rating + WhatsApp · Telegram · Email · Call | Real channels, identical on both surfaces |
+
+**Two UI rules earned by screenshots, worth keeping:**
+
+- **A menu row wraps; it never scrolls horizontally.** With `overflow-x` the fourth tab
+  sat off the edge with no affordance — a menu entry that cannot be seen is a menu entry
+  the user does not have.
+- **An open menu owns the screen on a phone.** It used to expand to a fixed `400px` on
+  top of a still-visible chat whose suggestion chips showed underneath: two surfaces
+  competing for one screen, and an archive list that clipped inside the cap.
 
 ---
 
