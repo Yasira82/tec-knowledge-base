@@ -518,3 +518,84 @@ Analytics #31. Every app's Pro card now surfaces its own expiry — no more sile
 > **Audit note:** prices + Pro benefits are ALREADY shown clearly in every app's Pro
 > component (price = the same const charged, so no mismatch by construction; benefits are
 > described). The only real polish gap was the in-app expiry display above.
+
+## Session 46 Additions — Platform visual identity unified (tec-ui v3.0.0) + one Dependabot policy
+
+Two fleet-wide drifts closed. Both had the same shape: a rule existed, one repo followed
+it, and nobody back-adopted it — so the platform diverged quietly for months. Session
+record: **C-02 Session 46**. Token authority updated: **C-83**.
+
+### 1. WEALTH moved to the Pi amber — and the fleet actually received it
+
+| Item | Detail |
+|------|--------|
+| `@yasser172/tec-ui` **v3.0.0** | `gold #FBBF24 → #FBB44A` (sampled from the Pi app's splash mark), `goldDark → #E8962A`, `goldLight → #FDCF7A`. MAJOR because values move; **nothing renamed or removed**. |
+| `theme-contract.test.ts` | New. Pins the Pi amber **and** the hex-only format. |
+| 23 repos adopted | Hub + 20 domain apps + NBF + Brookfield, each on `^3.0.0` **with its local `tec-design-tokens.css` swept in the same PR**. |
+| Excluded, on purpose | `tec-assets` (104 hardcoded hexes) · `tec-commerce` (149) · `tec-ecommerce` (202) — a re-skin, not an upgrade; separate decision. |
+
+**The semver caret trap (root cause).** 18 apps sat on `^1.1.0`, which can *never* resolve
+to a 2.x. They were frozen out of the EVL palette from the day v2.0.0 shipped. `npm update`
+did exactly what it was told, forever, and nothing warned. **When a shared package takes a
+major, the consumers' ranges are part of the release — auditing them is not optional.**
+
+**An app paints from TWO sources.** Proven on Zone before the sweep: package-only bump →
+one page carrying `#050816` **and** `#020205`, and two golds. `TEC_COLORS.*` (inline styles)
+and `var(--tec-*)` (the app's own token file) must move together, in one change.
+
+**Every token stays a plain 6-digit hex — load-bearing.** Consumers append alpha
+(`` `${TEC_COLORS.gold}33` ``, 216 places). A `var()` there yields `var(--tec-gold)33`:
+invalid CSS, **no error**, borders that silently stop painting fleet-wide.
+
+### 2. Apps stopped introducing themselves as "TEC App"
+
+15 of the SSO landings still carried the `tec-template-base` placeholder `🔷 TEC App` — on
+the one screen where a user decides whether to trust the app they just tapped. Each app now
+names itself in caps (`TEC ZONE`), matching the Hub grid / Portal listing / icon wordmark.
+
+> `sso-callback/route.ts` is **plain HTML served before any stylesheet** — it cannot read a
+> CSS variable, so its colours are hex literals **by necessity**. Same class of constraint
+> as `next/og` (Satori resolves no custom properties). Do not "fix" either into `var()`.
+
+### 3. One Dependabot policy across the fleet — and 112 unmergeable PRs closed
+
+19 repos ran the original config (no `ignore`; a devDependencies-only group). On a platform
+pinning **Next 15 / React 18 / @sentry/nextjs v8** that manufactures work nobody can merge:
+the standing group PR bumped `typescript → ^7.0.2` and `eslint-config-next → 16.3.1`.
+
+> **Next 15 does not recognise TypeScript 7 as a TypeScript install at all** — Typecheck and
+> the build fail before reading a line of source, and **no tsconfig change reaches it**.
+> `eslint-config-next`'s major tracks the Next major → 16 on Next 15 is a mismatch by
+> construction. Dependabot rebuilt the PR after every merge, so a permanent red check
+> followed each repo — which is how a CI signal teaches people to ignore it.
+
+`tec-template-base` had already solved this; NBF and Brookfield inherited it; the fleet never
+back-adopted it. Now copied verbatim to all 19 + the Hub: **ignore ALL majors** · one grouped
+**minor+patch** PR · `github-actions` grouped the same way. Majors are not abandoned — the
+entries come out in the same change that moves an app to Next 16.
+
+**112 stale Dependabot PRs closed** (18 domain apps). Legitimate minors return as one grouped
+PR, so nothing is lost. **Left open deliberately:** `tec-core-backend` (16 real per-service
+patch bumps — different repo, policy not applied there), `tec-assets` #46 / `tec-commerce`
+#54 (excluded repos), and NBF/Brookfield/template-base, whose open PRs are what the new
+policy wants.
+
+### Also this session (Hub, CEO-verified on a phone)
+Gold topbar band → inner pages only · username chip → a real account menu behind a **3-bar**
+glyph (the chevron was rejected) · `Settings` → **Profile** · bottom nav to 5 tabs · wallet
+card compacted with a **24h market** delta — labelled *market*, **never** "PNL": the platform
+does not compute the user's P&L, and a fiat delta on a held balance is not one. Plus the
+traced `TecMark` monogram and the 1024/512/192 + maskable app icons.
+
+### Process rule adopted
+Three times this session the CEO asked *"why is there no open PR?"*. In a workflow where the
+CEO's role **is** to merge, a pushed branch with no PR is invisible work. **Pushing to the
+development branch and opening its PR are one step.**
+
+### Operational follow-ups
+- The palette PRs **deploy together** — a staggered Vercel deploy puts two palettes on
+  screen at once, the exact failure this session existed to end.
+- npm tokens now expire **25 Nov 2026** (the Aug 26 expiry caused a publish `E404`; for a
+  scoped package `E404` on `PUT` means *auth failure*, not "not found"). Consider npm
+  **Trusted Publishing** to remove the expiry class of failure entirely.
+- `tec-assets` / `tec-commerce` / `tec-ecommerce` re-skin: still an open decision.
