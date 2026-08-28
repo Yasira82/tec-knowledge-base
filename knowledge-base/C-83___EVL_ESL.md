@@ -12,32 +12,61 @@
 
 ---
 
-> ## ✅ RUNTIME STATUS — EVL COLOR TOKENS ADOPTED (read first)
+> ## ✅ RUNTIME STATUS — EVL COLOR TOKENS ADOPTED, WEALTH NOW THE Pi AMBER (read first)
 >
-> **The EVL color system is now the LIVE identity**, adopted in `@yasser172/tec-ui`
-> **v2.0.0** (`src/theme.ts`, Code-Verified). The color-token half of C-83 has moved
-> from `[Planned]` to `[Current State]`:
+> **The EVL color system is the LIVE identity**, adopted in `@yasser172/tec-ui` **v2.0.0**
+> and moved to the **Pi amber** in **v3.0.0** (`src/theme.ts`, Code-Verified). The
+> color-token half of C-83 is `[Current State]`:
 >
-> | Token | C-83 EVL | **Live now (`tec-ui` v2.0.0)** | Status |
-> |-------|----------|--------------------------------|--------|
-> | gold / WEALTH | `#FBBF24` | **`#FBBF24`** | ✅ adopted (was `#d4af37`) |
+> | Token | C-83 EVL (v2) | **Live now (`tec-ui` v3.0.0)** | Status |
+> |-------|---------------|--------------------------------|--------|
+> | gold / WEALTH | `#FBBF24` | **`#FBB44A`** | ✅ re-sampled in v3.0.0 (was `#FBBF24`, was `#d4af37`) |
+> | goldDark | `#F59E0B` | **`#E8962A`** | ✅ moved with WEALTH |
+> | goldLight | `#FCD34D` | **`#FDCF7A`** | ✅ moved with WEALTH |
 > | primary background | `#050816` | **`#050816`** | ✅ adopted (was `#020205`) |
 > | surface | `#0B1020` | **`#0B1020`** | ✅ adopted (was `#0d0d14`) |
-> | surface-2 / semantic (purple/green/cyan/red/blue) | per §4–§5 | **present** | ✅ added |
+> | surface-2 / semantic (purple/green/cyan/red/blue) | per §4–§5 | **present** | ✅ unchanged by v3 |
 >
-> The `design/tec-design-system` and `design/ui-patterns` skills are updated to mirror
-> the v2.0.0 tokens. Code remains the source of truth (`… → Code`); this doc and the
-> skills now agree with it.
+> ### Why WEALTH moved again (v3.0.0, Aug 2026)
+>
+> `#FBBF24` is Tailwind's generic amber-400. `#FBB44A` is sampled **from the Pi app
+> itself** — it is the colour of its splash mark — so a TEC app sitting beside Pi Browser
+> chrome reads as part of the same product instead of a near-miss of it. Every TEC app
+> lives inside that chrome, so the accent is not a free aesthetic choice.
+>
+> **v3.0.0 is a MAJOR bump with nothing renamed or removed** — only token VALUES move, so
+> no consumer fails to compile. That is exactly why it is dangerous and why it is a major:
+> the change is invisible to the type checker and total on screen.
+>
+> ### Load-bearing constraint — every token stays a plain 6-digit hex
+>
+> Consumers append alpha to these strings (`` `1px solid ${TEC_COLORS.gold}33` ``, 216
+> places across the fleet). A `var(--tec-gold)` in this object would render
+> `var(--tec-gold)33`: invalid CSS, **no error**, and a border that silently stops
+> painting everywhere at once. Theme-aware colour belongs in a CSS custom property the
+> **app** owns, never in the package's constant — one constant cannot hold both the
+> dark-ground amber and the deeper `#FEA500` a light theme needs.
+> `tec-ui/src/__tests__/theme-contract.test.ts` pins this.
+>
+> ### An app paints from TWO sources — bumping the package alone makes it WORSE
+>
+> Verified on Tec-Zone before the Session 46 sweep: with only the package bumped, the
+> running page carried **`#050816` and `#020205` at the same time**, and two golds. An app
+> reads `TEC_COLORS.*` in inline styles **and** `var(--tec-*)` from its own
+> `src/styles/tec-design-tokens.css`. **The package bump and the app's local token sweep
+> are one change, never two.**
 >
 > **What is STILL `[Planned]`:** the rest of EVL — CSS-variable layer (§ Phase 1),
 > TypeScript domain types, **shapes**, **motion**, and the **ESL** state language.
 > Those sections below keep their `[Planned State]` markers.
 >
-> **App adoption is the remaining coordinated step:** the 4 consumer apps re-skin when
-> they bump `@yasser172/tec-ui` to `^2.0.0` (no compile break — only token VALUES changed;
-> no exports removed). Per tec-ui R5 this is a coordinated deploy — **recommended AFTER
-> Pi Portal submission** to avoid changing the visual identity mid-submission.
-> Evidence/lineage: tec-ui v2.0.0.
+> **App adoption: COMPLETE for 23 of 26 repos** (Session 46) — Hub + the 20 domain apps +
+> NBF + Brookfield are on `^3.0.0` with their local palettes swept to match.
+> **Deliberately excluded:** `tec-assets` (104 hardcoded hexes), `tec-commerce` (149),
+> `tec-ecommerce` (202) — these barely consume `TEC_COLORS`, so moving them is a re-skin,
+> not an upgrade, and is a separate decision. Per tec-ui R5 the adopters deploy together;
+> a staggered deploy puts two palettes on screen at once.
+> Evidence/lineage: tec-ui v2.0.0 → v3.0.0 (tec-ui #22).
 
 ---
 
@@ -126,7 +155,7 @@ No app may override. No user may change.
 
 ```css
 --tec-purple: #8B5CF6;  /* IDENTITY     */
---tec-gold:   #FBBF24;  /* WEALTH       */
+--tec-gold:   #FBB44A;  /* WEALTH       */  /* Pi splash amber — v3.0.0 (was #FBBF24) */
 --tec-green:  #22C55E;  /* GROWTH       */
 --tec-cyan:   #06B6D4;  /* INTELLIGENCE */
 --tec-red:    #EF4444;  /* RISK         */
@@ -140,7 +169,7 @@ No app may override. No user may change.
 | Domain | Color | Shape | Motion | Apps |
 |--------|-------|-------|--------|------|
 | IDENTITY | #8B5CF6 | Circle | Flow | Hub, Connection |
-| WEALTH | #FBBF24 | Hexagon | Pulse | Assets, Wallet, FundX |
+| WEALTH | #FBB44A | Hexagon | Pulse | Assets, Wallet, FundX |
 | GROWTH | #22C55E | Triangle Up | Upward | Commerce, Ecommerce |
 | INTELLIGENCE | #06B6D4 | Grid | Scan | Analytics, Life, Explorer |
 | RISK | #EF4444 | Triangle Alert | Flash | All (P0 override) |
