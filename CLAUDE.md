@@ -592,10 +592,42 @@ Three times this session the CEO asked *"why is there no open PR?"*. In a workfl
 CEO's role **is** to merge, a pushed branch with no PR is invisible work. **Pushing to the
 development branch and opening its PR are one step.**
 
-### Operational follow-ups
-- The palette PRs **deploy together** — a staggered Vercel deploy puts two palettes on
-  screen at once, the exact failure this session existed to end.
-- npm tokens now expire **25 Nov 2026** (the Aug 26 expiry caused a publish `E404`; for a
-  scoped package `E404` on `PUT` means *auth failure*, not "not found"). Consider npm
-  **Trusted Publishing** to remove the expiry class of failure entirely.
-- `tec-assets` / `tec-commerce` / `tec-ecommerce` re-skin: still an open decision.
+### 4. The backend needed a DIFFERENT policy, not the same one (tec-core-backend #213)
+
+`tec-core-backend` is the one repo the app config could not be copied into. Reading it
+first showed the `ignore`-majors half was **already right** in all 13 service blocks —
+which is precisely why this repo never produced the TypeScript 7 PRs the apps drowned in.
+The gaps were elsewhere:
+
+| Gap | Detail |
+|-----|--------|
+| No grouping | One PR per package per service → 16 open PRs a month |
+| Root app invisible | `/package.json` is a real Nest app (NestJS 10 · Prisma 5 · helmet · ioredis) and **no block named `/`** — never updated, security included |
+| No `github-actions` block at all | `actions/setup-node` on **v4** vs the fleet's v6; `checkout@v4` unpatched |
+
+Two deliberate departures from the app policy:
+- **Grouping stops AT the service boundary.** Services deploy independently on Railway, so
+  a PR spanning two would let one red check block eleven unrelated deploys. **Thirteen
+  grouped PRs is correct here — not one.**
+- **Majors ignored for npm, NOT for actions.** Nothing pins an action major, and every
+  workflow pins `node-version: '20'` on `ubuntu-latest`, so a runner-action major cannot
+  change the Node the build runs on.
+
+Monthly, not weekly: this repo heads the release chain, so churn here is the most expensive
+churn on the platform.
+
+**Verified:** #213 merged + 14 of the 16 standing dependency PRs merged, **CI 30/30 green
+on `main`**. The policy proved itself at once — the next Dependabot runs opened **#214/#215**
+as *grouped* PRs. **#175 and #184 conflicted** because an earlier merge touched the same
+service's lockfile — the grouping argument demonstrated live. **#175 wants a read, not a
+merge:** `0.14 → 0.15` on a `0.x` package is breaking under semver, and it is on auth.
+
+### Open after this session (all decisions, nothing blocked)
+
+| # | Item | Why still open |
+|---|------|----------------|
+| 1 | `tec-assets` / `tec-commerce` / `tec-ecommerce` **re-skin** | 104 / 149 / 202 hardcoded hexes — real design work, not a sweep. **3 of 26 repos stay on the old palette**: a known deliberate gap, not drift. |
+| 2 | npm **Trusted Publishing** | Tokens expire **25 Nov 2026**. The Aug 26 expiry caused a publish `E404` — on a scoped package `E404` on `PUT` means *auth failure*, not "not found". Do it before the next expiry, not after. |
+| 3 | Backend **#175 / #184** | Conflicted; rebased by Dependabot or superseded by the grouped PRs. #175 needs a read. |
+| 4 | **Fleet deploy of the palette** | Merged ≠ deployed. The apps deploy together or two palettes are on screen at once. |
+| 5 | **Runtime-verify beyond 3 apps** | Only Life, Zone and Epic were seen on a real device; the other 20 are `[Code Verified]` and nothing more. |
