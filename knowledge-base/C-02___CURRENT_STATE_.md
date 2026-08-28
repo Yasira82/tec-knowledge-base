@@ -157,13 +157,73 @@ breaking under semver, and it sits on the auth path.
 - **The palette PRs must deploy together.** A staggered Vercel deploy puts two palettes on
   screen across the fleet at once — the exact failure this session existed to end.
 
+### 7. Three defects the Dependabot work uncovered in the backend deploy path
+
+Merging the grouped PRs meant watching real CI runs on `main` for the first time in
+a while. That is the only reason any of this became visible — none of it was caused by
+a dependency bump, and none of it would have surfaced from reading the code.
+
+#### (a) The deploy step had never deployed a single service
+
+It derived the Railway name by stripping **both** the repo's `tec-` prefix and the
+`-service` suffix:
+
+```
+tec-auth-service  →  auth-service  →  auth
+```
+
+Railway keeps the suffix (`auth-service`, `kyc-service`, `storage-service`, …), so every
+lookup missed. `api-gateway` has no suffix and was the only name that came out right —
+which is why nobody noticed. **And the miss was swallowed:** `not found` logged a
+`::warning::` and `exit 0`, so the job reported SUCCESS while doing nothing. Eleven
+services had been shipping a green Deploy check that did no work; they are live only
+because Railway deploys from the repo itself.
+
+#### (b) A push to ANY development branch deployed to PRODUCTION
+
+`on.push.branches` includes `'claude/**'`, and the deploy job was guarded on
+`github.event_name == 'push'` with **no branch check** — no pull request, no review.
+
+> **The bug in (a) was acting as the access control.** Every branch deploy asked for the
+> wrong name, got "not found", and exited 0. Fixing the name removed that accidental
+> safety net — and the deploy job in the fix's own PR ran for **45 seconds against
+> production** instead of skipping. That is how it was caught.
+>
+> Nothing harmful shipped (the branch's `src/` was identical to `main`), but this is the
+> sharpest lesson of the session: **a defect can be load-bearing.** Repairing one without
+> looking at what it was silently preventing is how a fix becomes an incident.
+
+Guard is now explicit: `github.ref == 'refs/heads/main'`. `docker-build` deliberately
+still runs on branches — building an image is how a PR proves it builds, and it pushes
+nothing.
+
+#### (c) The auth-service image could not build without the network
+
+`bcrypt` is a native module. On musl it downloads a prebuilt binary from GitHub release
+assets and falls back to compiling from source — but the alpine image has no Python or
+toolchain, so the fallback cannot run. A single `ECONNRESET` on that download killed the
+build. The platform's **identity authority** had a build that any network blip could
+break. The toolchain is now a virtual package removed in the same layer.
+
+**Shipped:** tec-core-backend **#226** (name + Dockerfile) and **#227** (the branch guard).
+#226 squash-merged only its first commit, so the guard had to follow separately — worth
+remembering, because for a while `main` had the name fix *without* the guard, which is the
+most dangerous of the three combinations.
+
+**Also verified, not assumed:** `class-validator 0.14 → 0.15` (a breaking bump under semver
+on a `0.x`, sitting on the auth path) was installed locally and exercised before merging —
+typecheck clean, 47/47 tests, and a purpose-written probe confirming the auth DTOs still
+**reject** empty / non-string / oversized / malformed input. A validation library that
+fails *open* is a P6 violation, and that is not something a passing test suite proves on
+its own.
+
 ### Open after Session 46 (nothing here is blocked — all are decisions)
 
 | # | Item | Why it is still open |
 |---|------|----------------------|
 | 1 | **Assets · Commerce · Ecommerce re-skin** | 104 / 149 / 202 hardcoded hexes. These barely consume `TEC_COLORS`, so this is a re-skin, not a version bump — real design work, and a decision, not a sweep. Until then **3 of 26 repos stay on the old palette**, and that is a known, deliberate gap, not drift. |
 | 2 | **npm Trusted Publishing** | Tokens now expire **25 Nov 2026**. The Aug 26 expiry caused a publish `E404` — on a scoped package, `E404` on `PUT` means *auth failure*, not "not found", which is why it read as a missing package. Trusted Publishing removes this whole class of failure; worth doing before the next expiry rather than after it. |
-| 3 | **Backend #175 / #184** | Conflicted; Dependabot rebases them or the grouped PRs supersede them. #175 (`class-validator` 0.14→0.15 on auth) needs a read, not a merge. |
+| 3 | **Backend grouped PRs** | ✅ 7 of 12 merged (incl. the root app's first update ever) + the actions group. **5 remain** — 217 identity · 220 realtime · 221 kyc · 223 storage · 224 api-gateway — stale against a lockfile the earlier per-package merges moved. They need `@dependabot rebase`; #175/#184 auto-closed, superseded by the groups. |
 | 4 | **Fleet deploy of the palette** | Merged ≠ deployed. Until every app is redeployed on Vercel, the fleet is mid-flight between two palettes. |
 | 5 | **Runtime-verify the palette beyond 3 apps** | Only Life, Zone and Epic were seen on a real device. The other 20 are `[Code Verified]` and nothing more. |
 
