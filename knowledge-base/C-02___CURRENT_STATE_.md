@@ -11,9 +11,10 @@
 ## SESSION 46 — ONE PLATFORM ON SCREEN (28 Aug 2026) ✅
 
 > Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-ui **v3.0.0**
-> published; Hub #185 · #186 and the 20 app palette PRs merged; NBF/Brookfield + the
-> 19 Dependabot-policy PRs open at time of writing. The Hub UI work was
-> **[Runtime Verified]** by the CEO in the Pi Browser, screenshot by screenshot.
+> published; Hub #185 · #186, the 20 app palette PRs, NBF/Brookfield, the 19 app
+> Dependabot-policy PRs and backend **#213** are all **merged**. The Hub UI work was
+> **[Runtime Verified]** by the CEO in the Pi Browser, screenshot by screenshot; the
+> backend merges are **[Runtime Verified]** by a green CI (30/30) on `main`.
 > Token authority: **C-83** (updated this session).
 
 The platform was one product in the architecture and three products on a phone. This
@@ -112,15 +113,59 @@ branch and left there, because the standing instruction is "do not open a PR unl
 In a workflow where the CEO's job **is** to merge, a pushed branch with no PR is invisible
 work. **Rule adopted: pushing to the development branch and opening its PR are one step.**
 
+### 6. The backend got the policy too — and it needed a different one (#213)
+
+`tec-core-backend` was the one repo the app policy could **not** simply be copied into, and
+reading it first is why. The `ignore`-majors half was **already correct** in all 13 service
+blocks — which is exactly why this repo never produced the TypeScript 7 PRs the app fleet
+was drowning in. Three real gaps sat underneath that:
+
+| Gap | Detail |
+|-----|--------|
+| **No grouping** | One PR per package per service → 16 open PRs in a routine month: the same swarm the apps had just escaped, arriving one patch at a time. |
+| **The root app was invisible** | `/package.json` is a real Nest app (NestJS 10 · Prisma 5 · helmet · ioredis · bcrypt) and **no block named `/`**. It had never received an update of any kind, security included. |
+| **No `github-actions` block at all** | Every action across 7 workflows unwatched: `actions/setup-node` on **v4** while the fleet had moved to v6; `checkout@v4` receiving no security updates. |
+
+Two differences from the app policy, chosen rather than inherited:
+- **Grouping stops AT the service boundary.** Each service owns its `package.json` and
+  deploys independently on Railway, so a PR spanning two services would let one red check
+  block eleven unrelated deploys. **Thirteen grouped PRs is the correct shape here, not one.**
+- **Majors stay ignored for npm but NOT for actions.** Nothing here pins an action major,
+  and every workflow already pins `node-version: '20'` on `ubuntu-latest`, so a
+  runner-action major cannot change the Node the build runs on.
+
+Monthly is kept (the fleet is weekly): this repo is the head of the release chain, so churn
+here is the most expensive churn on the platform.
+
+**Outcome, verified:** #213 merged, then 14 of the 16 standing dependency PRs merged —
+**CI 30/30 green on `main`**, no deploy broken. The policy proved itself immediately:
+Dependabot's next runs opened **#214** and **#215** as *grouped* PRs (one per service, 3
+updates in one), not one per package.
+
+**Two did not merge, for a reason worth keeping:** #175 (`class-validator`, auth-service)
+and #184 (`@aws-sdk/client-s3`, storage-service) hit lockfile conflicts because an earlier
+merge touched the *same service*. That is the grouping argument demonstrated live —
+per-package PRs against a shared lockfile conflict with each other by construction.
+**#175 also deserves a look rather than a merge:** `0.14 → 0.15` on a `0.x` package is
+breaking under semver, and it sits on the auth path.
+
 ### Honest status
-- `[Runtime Verified]`: the Hub nav/wallet/icon work, on a phone, by the CEO.
+- `[Runtime Verified]`: the Hub nav/wallet/icon work, on a phone, by the CEO; the backend
+  merges, by a green CI on `main`.
 - `[Code Verified]` only: the palette on the 20 apps + NBF/Brookfield — each passes
   typecheck/lint/tests/build, but only Life, Zone and Epic were seen on a real device.
 - **The palette PRs must deploy together.** A staggered Vercel deploy puts two palettes on
   screen across the fleet at once — the exact failure this session existed to end.
-- **npm tokens now expire 25 Nov 2026.** The Aug 26 expiry caused a publish `E404` (for a
-  scoped package, `E404` on `PUT` means *auth failure*, not "not found"). Worth replacing
-  with npm **Trusted Publishing** before the next expiry.
+
+### Open after Session 46 (nothing here is blocked — all are decisions)
+
+| # | Item | Why it is still open |
+|---|------|----------------------|
+| 1 | **Assets · Commerce · Ecommerce re-skin** | 104 / 149 / 202 hardcoded hexes. These barely consume `TEC_COLORS`, so this is a re-skin, not a version bump — real design work, and a decision, not a sweep. Until then **3 of 26 repos stay on the old palette**, and that is a known, deliberate gap, not drift. |
+| 2 | **npm Trusted Publishing** | Tokens now expire **25 Nov 2026**. The Aug 26 expiry caused a publish `E404` — on a scoped package, `E404` on `PUT` means *auth failure*, not "not found", which is why it read as a missing package. Trusted Publishing removes this whole class of failure; worth doing before the next expiry rather than after it. |
+| 3 | **Backend #175 / #184** | Conflicted; Dependabot rebases them or the grouped PRs supersede them. #175 (`class-validator` 0.14→0.15 on auth) needs a read, not a merge. |
+| 4 | **Fleet deploy of the palette** | Merged ≠ deployed. Until every app is redeployed on Vercel, the fleet is mid-flight between two palettes. |
+| 5 | **Runtime-verify the palette beyond 3 apps** | Only Life, Zone and Epic were seen on a real device. The other 20 are `[Code Verified]` and nothing more. |
 
 ---
 
