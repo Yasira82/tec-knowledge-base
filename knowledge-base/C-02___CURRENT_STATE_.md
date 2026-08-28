@@ -205,7 +205,29 @@ toolchain, so the fallback cannot run. A single `ECONNRESET` on that download ki
 build. The platform's **identity authority** had a build that any network blip could
 break. The toolchain is now a virtual package removed in the same layer.
 
-**Shipped:** tec-core-backend **#226** (name + Dockerfile) and **#227** (the branch guard).
+#### The resolution — and it was one invisible character
+
+Fixing the name turned the silent `exit 0` into a real red run: `identity-service`
+**not found**, while four sibling services deployed. Rather than guess between the
+plausible causes (token scope · wrong project · stale config), the failure branch was made
+to print what the token can actually see. Three services carried a **trailing space** in
+their Railway name — `identity-service `, `commerce-service `, `notification-service ` —
+and the correlation was exact: the four without it deployed, the one with it failed.
+
+Renamed in the Railway dashboard (an owner action, no code change) → **`Deploy
+(tec-identity-service)` went green.** That is the first time this pipeline has ever
+deployed a `-service`; every previous green was the swallowed `exit 0`.
+
+> **When a fix produces a red run, the red run is the deliverable.** The instinct is to
+> explain it away. Printing what the tool actually sees cost four lines and settled it in
+> one run — three plausible theories are worth less than one piece of evidence.
+
+Also hardened: `--service $VAR` was unquoted, so a name containing whitespace could never
+be addressed at all — the shell silently dropped it. Quoted now, so the rename cannot be
+undone later by a shell detail.
+
+**Shipped:** tec-core-backend **#226** (name + Dockerfile), **#227** (the branch guard),
+**#229** (self-diagnosing failure), **#231** (quoting).
 #226 squash-merged only its first commit, so the guard had to follow separately — worth
 remembering, because for a while `main` had the name fix *without* the guard, which is the
 most dangerous of the three combinations.
