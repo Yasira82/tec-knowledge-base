@@ -622,12 +622,40 @@ as *grouped* PRs. **#175 and #184 conflicted** because an earlier merge touched 
 service's lockfile — the grouping argument demonstrated live. **#175 wants a read, not a
 merge:** `0.14 → 0.15` on a `0.x` package is breaking under semver, and it is on auth.
 
+### 5. Three defects the Dependabot work uncovered in the backend deploy path
+
+Merging the grouped PRs meant watching real CI runs on `main`. That is the only reason any
+of this surfaced — none was caused by a dependency bump, and none is visible from reading
+the code. Shipped as tec-core-backend **#226** + **#227**.
+
+| # | Defect |
+|---|--------|
+| a | **The deploy step had never deployed a service.** It stripped the `-service` suffix as well as the `tec-` prefix (`tec-auth-service` → `auth`), and Railway keeps the suffix. Every lookup missed — and `not found` logged a warning and `exit 0`, so the job reported SUCCESS while doing nothing. `api-gateway` has no suffix and was the only name that came out right. |
+| b | **A push to ANY `claude/**` branch deployed to PRODUCTION.** `on.push.branches` includes them and the deploy job checked only `event_name == 'push'` — no PR, no review. |
+| c | **The auth-service image could not build without the network.** `bcrypt` is native; on musl it downloads a prebuilt binary and falls back to source compile, but the alpine image has no Python. One `ECONNRESET` killed the build of the platform's identity authority. |
+
+> **The sharpest lesson: a defect can be load-bearing.** (a) was the access control for (b).
+> Every branch deploy asked for the wrong name, missed, and exited 0. Fixing the name removed
+> that accidental safety net — and the deploy job in the fix's own PR ran **45 seconds against
+> production** instead of skipping. Repairing a bug without asking what it was silently
+> preventing is how a fix becomes an incident.
+>
+> Compounding it: **#226 squash-merged only its first commit**, so `main` briefly carried the
+> name fix *without* the guard — the most dangerous of the three combinations. Check what a
+> squash actually took when a PR carries more than one commit.
+
+**Verified rather than assumed:** `class-validator 0.14 → 0.15` (breaking under semver on a
+`0.x`, on the auth path) was installed and exercised before merging — typecheck clean, 47/47,
+plus a purpose-written probe confirming the auth DTOs still **reject** empty / non-string /
+oversized / malformed input. A validation library that fails *open* is a P6 violation, and a
+green suite does not prove it didn't.
+
 ### Open after this session (all decisions, nothing blocked)
 
 | # | Item | Why still open |
 |---|------|----------------|
 | 1 | `tec-assets` / `tec-commerce` / `tec-ecommerce` **re-skin** | 104 / 149 / 202 hardcoded hexes — real design work, not a sweep. **3 of 26 repos stay on the old palette**: a known deliberate gap, not drift. |
 | 2 | npm **Trusted Publishing** | Tokens expire **25 Nov 2026**. The Aug 26 expiry caused a publish `E404` — on a scoped package `E404` on `PUT` means *auth failure*, not "not found". Do it before the next expiry, not after. |
-| 3 | Backend **#175 / #184** | Conflicted; rebased by Dependabot or superseded by the grouped PRs. #175 needs a read. |
+| 3 | Backend **grouped PRs** | 7 of 12 merged (incl. the root app's first update ever + the actions group). **5 remain** — 217 identity · 220 realtime · 221 kyc · 223 storage · 224 api-gateway — stale against a lockfile the earlier per-package merges moved; they need `@dependabot rebase`. #175/#184 auto-closed, superseded by the groups. |
 | 4 | **Fleet deploy of the palette** | Merged ≠ deployed. The apps deploy together or two palettes are on screen at once. |
 | 5 | **Runtime-verify beyond 3 apps** | Only Life, Zone and Epic were seen on a real device; the other 20 are `[Code Verified]` and nothing more. |
