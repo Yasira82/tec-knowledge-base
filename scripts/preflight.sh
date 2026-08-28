@@ -29,6 +29,7 @@ cd "$(dirname "$0")/.."
 
 WORKFLOW=".github/workflows/knowledge-ci.yml"
 REGISTRY="architecture/asset-registry.yaml"
+REPORT="architecture/registry-integrity-report.md"
 
 if [ ! -f "$WORKFLOW" ]; then
   echo "❌ $WORKFLOW not found — cannot mirror CI without it."
@@ -37,6 +38,7 @@ fi
 
 failed=()
 passed=0
+registry_was_clean=0
 
 echo "Mirroring $WORKFLOW"
 echo
@@ -49,6 +51,7 @@ if python3 scripts/build-asset-registry.py >/dev/null 2>&1; then
   if git diff --quiet -I '^# Generated:' HEAD -- "$REGISTRY"; then
     echo "✅ registry matches the generator"
     passed=$((passed + 1))
+    registry_was_clean=1
   else
     echo "❌ registry is STALE — a C-doc changed and the registry was not rebuilt."
     echo "   It has just been regenerated for you. Commit it alongside the doc:"
@@ -92,6 +95,26 @@ for f in evals/*.sh; do
     *) echo "⚠️  $(basename "$f" .sh) exists but CI does not run it" ;;
   esac
 done
+
+# Leave the tree exactly as it was found.
+#
+# Two steps rewrite a `Generated:` timestamp even when nothing else changed:
+# the rebuild above, and check-registry-integrity.sh which rewrites the report.
+# So merely CHECKING left two modified files behind — noticed as a "you have
+# uncommitted changes" prompt after a run that changed nothing. A tool that
+# dirties your working tree every time you run it is a tool people stop
+# running, and this one only earns its keep by being run before every push.
+#
+# The restore happens HERE, after every gate, not right after the rebuild — an
+# earlier attempt restored too soon and the integrity gate dirtied the report
+# again on its way past.
+#
+# Only when the registry content actually matched. If it did not, the
+# regenerated file is exactly what the user is being told to commit, and
+# discarding it would turn a helpful failure into a baffling one.
+if [ "$registry_was_clean" -eq 1 ]; then
+  git checkout -- "$REGISTRY" "$REPORT" 2>/dev/null || true
+fi
 
 echo
 echo "═════════════════════════════════════════════════════════"
