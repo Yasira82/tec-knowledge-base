@@ -205,7 +205,29 @@ toolchain, so the fallback cannot run. A single `ECONNRESET` on that download ki
 build. The platform's **identity authority** had a build that any network blip could
 break. The toolchain is now a virtual package removed in the same layer.
 
-**Shipped:** tec-core-backend **#226** (name + Dockerfile) and **#227** (the branch guard).
+#### The resolution — and it was one invisible character
+
+Fixing the name turned the silent `exit 0` into a real red run: `identity-service`
+**not found**, while four sibling services deployed. Rather than guess between the
+plausible causes (token scope · wrong project · stale config), the failure branch was made
+to print what the token can actually see. Three services carried a **trailing space** in
+their Railway name — `identity-service `, `commerce-service `, `notification-service ` —
+and the correlation was exact: the four without it deployed, the one with it failed.
+
+Renamed in the Railway dashboard (an owner action, no code change) → **`Deploy
+(tec-identity-service)` went green.** That is the first time this pipeline has ever
+deployed a `-service`; every previous green was the swallowed `exit 0`.
+
+> **When a fix produces a red run, the red run is the deliverable.** The instinct is to
+> explain it away. Printing what the tool actually sees cost four lines and settled it in
+> one run — three plausible theories are worth less than one piece of evidence.
+
+Also hardened: `--service $VAR` was unquoted, so a name containing whitespace could never
+be addressed at all — the shell silently dropped it. Quoted now, so the rename cannot be
+undone later by a shell detail.
+
+**Shipped:** tec-core-backend **#226** (name + Dockerfile), **#227** (the branch guard),
+**#229** (self-diagnosing failure), **#231** (quoting).
 #226 squash-merged only its first commit, so the guard had to follow separately — worth
 remembering, because for a while `main` had the name fix *without* the guard, which is the
 most dangerous of the three combinations.
@@ -223,7 +245,7 @@ its own.
 |---|------|----------------------|
 | 1 | **Assets · Commerce · Ecommerce re-skin** | 104 / 149 / 202 hardcoded hexes. These barely consume `TEC_COLORS`, so this is a re-skin, not a version bump — real design work, and a decision, not a sweep. Until then **3 of 26 repos stay on the old palette**, and that is a known, deliberate gap, not drift. |
 | 2 | **npm Trusted Publishing** | Tokens now expire **25 Nov 2026**. The Aug 26 expiry caused a publish `E404` — on a scoped package, `E404` on `PUT` means *auth failure*, not "not found", which is why it read as a missing package. Trusted Publishing removes this whole class of failure; worth doing before the next expiry rather than after it. |
-| 3 | **Backend grouped PRs** | ✅ 7 of 12 merged (incl. the root app's first update ever) + the actions group. **5 remain** — 217 identity · 220 realtime · 221 kyc · 223 storage · 224 api-gateway — stale against a lockfile the earlier per-package merges moved. They need `@dependabot rebase`; #175/#184 auto-closed, superseded by the groups. |
+| 3 | Backend grouped PRs | ✅ **CLOSED.** 7 of 12 merged directly; the 5 stale ones could not be rebased from here, so their updates were applied against current `main` instead (**#228** — 339 tests green across identity · realtime · kyc · storage · api-gateway) and Dependabot auto-closed all five. One bump deliberately NOT taken: #217 would have **downgraded** identity's `@typescript-eslint/parser` `^8.65.0 → ^8.59.1` (its branch predates #183) — every dep resolved as `max(main, PR)`, never copied. |
 | 4 | **Fleet deploy of the palette** | Merged ≠ deployed. Until every app is redeployed on Vercel, the fleet is mid-flight between two palettes. |
 | 5 | **Runtime-verify the palette beyond 3 apps** | Only Life, Zone and Epic were seen on a real device. The other 20 are `[Code Verified]` and nothing more. |
 

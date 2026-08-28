@@ -644,6 +644,41 @@ the code. Shipped as tec-core-backend **#226** + **#227**.
 > name fix *without* the guard — the most dangerous of the three combinations. Check what a
 > squash actually took when a PR carries more than one commit.
 
+### 6. …and the deploy actually deployed, for the first time (2026-08-28)
+
+Fixing the name (§5a) turned a silent `exit 0` into a real red run: `identity-service`
+**not found**, while four sibling services deployed. The temptation was to guess. Instead
+the failure branch was made to print what the token can see — and the answer was one
+character wide.
+
+Three services carried a **trailing space** in their Railway name:
+
+```
+- identity-service :      ● Online      ← space          - wallet-service:  ● Online
+- commerce-service :      ● Online      ← space          - auth-service:    ● Online
+- notification-service :  ● Online      ← space          - kyc-service:     ● Online
+```
+
+The correlation was exact: of the five services in that run, the four without the space
+deployed and the one with it failed. Renamed in the Railway dashboard (an owner action,
+not a code change) → **`Deploy (tec-identity-service)` went green.** That is the first
+time this pipeline has ever deployed a `-service` — every previous green was the swallowed
+`exit 0`.
+
+> **Two lessons, and the second is the one that generalises.**
+>
+> A whole class of bug can be one invisible character. Nothing in the repo, the Dockerfile
+> or the workflow was wrong; a name had a space nobody could see.
+>
+> And: **when a fix produces a red run, the red run is the deliverable.** The instinct is
+> to explain it away — token scope, wrong project, stale config, all plausible. Printing
+> what the tool actually sees cost four lines and settled it in one run. Three plausible
+> theories are worth less than one piece of evidence.
+
+Also hardened while there: `--service $VAR` was unquoted, so a name containing whitespace
+could never be addressed at all — the shell silently dropped it. Quoted now, so the rename
+cannot be undone later by a shell detail. (tec-core-backend #229 · #230 · #231)
+
 **Verified rather than assumed:** `class-validator 0.14 → 0.15` (breaking under semver on a
 `0.x`, on the auth path) was installed and exercised before merging — typecheck clean, 47/47,
 plus a purpose-written probe confirming the auth DTOs still **reject** empty / non-string /
@@ -656,6 +691,6 @@ green suite does not prove it didn't.
 |---|------|----------------|
 | 1 | `tec-assets` / `tec-commerce` / `tec-ecommerce` **re-skin** | 104 / 149 / 202 hardcoded hexes — real design work, not a sweep. **3 of 26 repos stay on the old palette**: a known deliberate gap, not drift. |
 | 2 | npm **Trusted Publishing** | Tokens expire **25 Nov 2026**. The Aug 26 expiry caused a publish `E404` — on a scoped package `E404` on `PUT` means *auth failure*, not "not found". Do it before the next expiry, not after. |
-| 3 | Backend **grouped PRs** | 7 of 12 merged (incl. the root app's first update ever + the actions group). **5 remain** — 217 identity · 220 realtime · 221 kyc · 223 storage · 224 api-gateway — stale against a lockfile the earlier per-package merges moved; they need `@dependabot rebase`. #175/#184 auto-closed, superseded by the groups. |
+| 3 | Backend grouped PRs | ✅ **CLOSED.** 7 of 12 merged directly; the 5 stale ones (217 · 220 · 221 · 223 · 224) could not be rebased from here, so their updates were applied against current `main` instead (#228, 339 tests green) and Dependabot auto-closed all five. One bump was deliberately NOT taken: #217 would have **downgraded** identity's `@typescript-eslint/parser` `^8.65.0 → ^8.59.1` — resolved as `max(main, PR)`, not copied. |
 | 4 | **Fleet deploy of the palette** | Merged ≠ deployed. The apps deploy together or two palettes are on screen at once. |
-| 5 | **Runtime-verify beyond 3 apps** | Only Life, Zone and Epic were seen on a real device; the other 20 are `[Code Verified]` and nothing more. |
+| 5 | **Runtime-verify beyond 3 apps** | Only Life, Zone and Epic were seen on a real device; the other 20 are `[Code Verified]` and nothing more. `scripts/verify-palette.mjs` now turns this from a per-release chore into one command — it needs running from a machine with network access. |
