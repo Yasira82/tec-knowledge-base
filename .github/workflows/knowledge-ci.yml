@@ -179,6 +179,20 @@ jobs:
       - name: Run C-57 Index Check
         run: bash evals/check-c57-index.sh
 
+  check-header-tokens:
+    name: RULE 2 Header Token Validity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run header token check
+        run: bash evals/check-header-tokens.sh
+
   check-truth-framework:
     name: Truth Framework Adoption (v3.5.0+)
     runs-on: ubuntu-latest
