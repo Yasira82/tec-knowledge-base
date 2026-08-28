@@ -7,7 +7,7 @@
 > Version: 1.0 — June 2026
 > Truth State: [Planned State] — Gate B prerequisite
 > Governance State: [Draft]
-> Verification State: [Unverified]
+> Verification State: [Assumed]
 > Authority Scope: [Platform]
 
 ---

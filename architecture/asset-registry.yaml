@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-08-28T15:27:54.342758
+# Generated: 2026-08-28T15:56:45.513182
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -646,7 +646,7 @@ assets:
     path: knowledge-base/C-48_Engineering_Audit_May2026.md
     constitutional:
       truth_state: current-state
-      governance_state: documentation-verified
+      governance_state: governance-approved
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -682,7 +682,7 @@ assets:
     path: knowledge-base/C-50___SESSION_LOG.md
     constitutional:
       truth_state: current-state
-      governance_state: documentation-verified
+      governance_state: governance-approved
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -772,7 +772,7 @@ assets:
     path: knowledge-base/C-55_Scoring_Audit_Strategy.md
     constitutional:
       truth_state: current-state
-      governance_state: documentation-verified
+      governance_state: governance-approved
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -1132,7 +1132,7 @@ assets:
     path: knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md
     constitutional:
       truth_state: current-state
-      governance_state: documentation-verified
+      governance_state: governance-approved
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
@@ -1929,7 +1929,7 @@ assets:
     constitutional:
       truth_state: future-vision
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-93-institutional-verification-constitution", "c-93-constitutional-question", "c-93-core-constitutional-principle"]
@@ -1947,7 +1947,7 @@ assets:
     constitutional:
       truth_state: future-vision
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-94-governed-capability-constitution", "c-94-constitutional-question", "c-94-core-constitutional-principle"]
@@ -1965,7 +1965,7 @@ assets:
     constitutional:
       truth_state: speculation
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-95-institutional-knowledge-constitution", "c-95-constitutional-question", "c-95-core-constitutional-principle"]
@@ -2001,7 +2001,7 @@ assets:
     constitutional:
       truth_state: speculation
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-97-context-engine-constitution", "c-97-constitutional-question", "c-97-core-constitutional-principle"]
@@ -2019,7 +2019,7 @@ assets:
     constitutional:
       truth_state: speculation
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-98-institutional-construction-constitution", "c-98-constitutional-question", "c-98-core-constitutional-principle"]
@@ -2037,7 +2037,7 @@ assets:
     constitutional:
       truth_state: speculation
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: platform
     owner: yasser
     authoritative_for: ["c-99-institutional-governance-constitution", "c-99-constitutional-question", "c-99-core-constitutional-principle"]
@@ -2113,7 +2113,7 @@ assets:
     constitutional:
       truth_state: speculation
       governance_state: draft
-      verification_state: unverified
+      verification_state: assumed
       authority_scope: experimental
     owner: yasser
     authoritative_for: []
