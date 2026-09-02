@@ -28,6 +28,48 @@ Intelligence (V4). Trust-score computation stays Analytics/TEC AI (§4).
 
 ---
 
+
+## Zone Became Consumable (2026-09-02)
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-core-backend
+> **#264**, Tec-Zone **#36** (both in review). Session 50.
+
+Zone's verdict now reaches the runtimes that display it, and the surface that requests one
+is visible.
+
+**1. A decision is announced in BOTH directions.** `reviewDecision` emitted only on VERIFY.
+A badge could be granted and never withdrawn: Zone would show `REVOKED` while every
+consumer that had acted on the grant kept displaying it. `zone.badge.revoked.v1` closes it.
+
+> A verification that cannot be taken back is worse than one never given, **because it is
+> trusted**.
+
+**2. Four consumers, and the type rule lives HERE.**
+
+| Consumer | Accepts | Because |
+|---|---|---|
+| Explorer | `MERCHANT` | A verified BUILDER is not a verified shop |
+| Connection | `BUILDER` + `MERCHANT` | Both are facts about the PERSON |
+| Epic | `PROJECT` | |
+| NBF | `MERCHANT` | |
+
+Exposed as `hasVerifiedIdentity` (does this person hold one?) and `verifiedNamesFor`
+(which of their things?) — service APIs, never table reads (R-2).
+
+**3. The applicant surface was invisible.** The whole workflow was built and rendering
+nothing: `VerificationPanel` opened with `if (!isAuth) return null`, gated on
+`usePiAuth().isAuthenticated`, which reads `document.cookie` — and **Pi Browser hides
+`tec_user` from client JS (C-123 §3)**, so that value is always false on the only platform
+this ships to. Nobody could request a review of anything.
+
+**4. What Zone still cannot verify.** There is no PROPERTY type (§3: PROJECT · MERCHANT ·
+BUILDER · COMMUNITY). Estate's "🛡️ Zone Verified / Verification pending" therefore promised
+a review that could not be requested; it now reads **"Self-recorded"**. When a badge cannot
+be backed, the fix is saying what is true — not finding a worse data source.
+
+**Honest gap:** L3 is wired but unreached — no merchant has submitted an entity, so every
+listing sits at its lower tier. The chain is `[Code Verified]`, not `[Runtime Verified]`.
+
 ## PREAMBLE
 
 Zone is NOT an app.

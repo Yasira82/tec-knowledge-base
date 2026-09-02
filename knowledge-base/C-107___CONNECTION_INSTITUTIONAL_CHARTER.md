@@ -23,6 +23,34 @@
 
 ---
 
+
+## Verified Badge — WIRED (2026-09-02)
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-core-backend
+> **#264** (in review). Session 50.
+
+`ConnectionProfile.verified` was read, **ranked by**, and rendered with a comment saying it
+is "presented from Zone/kyc" — and **nothing ever wrote it**. Every profile sat at the
+default `false`.
+
+Worse than a missing feature: the directory orders `[{ verified: 'desc' }, { featured:
+'desc' }, … ]`, so with the earned signal pinned false the ranking collapsed onto
+`featured` — Connection Pro, which is **bought**. The directory ranked by the paid signal
+because the earned one was empty. `DirectoryCard`'s own comment warns against exactly that.
+
+**Now driven by `zone.badge.issued.v1` / `.revoked.v1`, for `BUILDER` and `MERCHANT` only.**
+Those two are facts about the PERSON — Zone's own person type, and a reviewer confirming
+this person runs this business. `PROJECT` and `COMMUNITY` are things a person is merely
+associated with: **verifying a community does not vouch for whoever registered it**, and a
+directory of people that said otherwise would make a claim nobody reviewed.
+
+Two properties worth keeping:
+- **Recompute, never toggle.** A person may hold several verifications; revoking one must
+  not clear a badge Zone never withdrew. It also makes at-least-once delivery harmless.
+- **Through `ZoneService`, never Zone's tables** — the R-2-clean seam (Elite → Legend,
+  VIP → Elite). The type rule lives there, not in the consumer: deciding it twice is how
+  two answers start to disagree.
+
 ## 1. MISSION
 
 Model economic relationships between TEC users — trust signals, social graph, business graph, and collaboration context — to enable network-effect-driven economic discovery and coordination.

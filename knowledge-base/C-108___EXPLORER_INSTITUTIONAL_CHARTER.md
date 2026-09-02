@@ -23,6 +23,47 @@
 
 ---
 
+
+## Verification Source — CORRECTED (2026-09-02)
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-core-backend
+> **#264** (in review). Session 50.
+
+**The "Verified business" badge comes from ZONE, not KYC.** §4 of this charter and the
+app's CLAUDE.md both said `tec-kyc-service`; **C-120 §3 lists `Merchants → Pi-accepting
+businesses` among what Zone owns** — word for word what this index holds. Two charters
+disagreed and the code followed the wrong one.
+
+The distinction is not administrative. **KYC verifies a PERSON** (an ID document and a
+selfie) and cannot answer whether a shop exists — which is not a shortcoming of KYC; it is
+simply not its question. Zone reaches a verdict through append-only evidence and a named
+human reviewer, the only process that can back a claim a customer reads before walking
+somewhere.
+
+It was also dead: `kyc.verified` carries `{ userId, level }` — a UUID — while the consumer
+resolves a Pi username, so `applyVerification` was **never called**. No error, no failing
+health check. The zone events carry `piUsername` directly, so the correct source is also
+the simpler one.
+
+**Explorer consumes `zone.badge.issued.v1` / `.revoked.v1` for `MERCHANT` entities only.**
+A verified BUILDER is not a verified shop.
+
+### Trust is a ladder, not a boolean
+
+Every real merchant was labelled *Unverified*, because the only other value required a
+review not reachable end to end. A badge with one attainable value is a warning printed on
+everything.
+
+| | Means | Evidence |
+|---|---|---|
+| **L1** Self-listed | Nobody stands behind it | No owner |
+| **L2** Pi account | A real person with a Mainnet wallet listed this | `owner`, written server-side from a verified session token |
+| **L3** Verified business | A reviewer checked the business | Zone's verdict |
+
+**L2 is not Explorer minting verification (§4)** — it reports a fact the row already holds.
+Derived, never stored: no migration, and no trust column that can drift from what it
+summarises.
+
 ## 1. MISSION
 
 Make the Pi economy discoverable — surfacing Pi-accepting businesses, economic opportunities, and trusted providers to users based on location, intent, and relationship context.

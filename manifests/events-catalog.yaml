@@ -130,11 +130,34 @@ events:
   - name: zone.badge.issued.v1
     owner: tec-identity-service/zone
     subject: piUsername
-    consumers: [tec-identity-service/legend]
+    consumers: [tec-identity-service/legend, tec-identity-service/explorer, tec-identity-service/connection, tec-identity-service/zone-badge]
     status: live
     verified: true
-    binds_to: [C-120, C-126, C-121]
-    note: verify → earn. Emitted by zone.reviewDecision on a confirmed VERIFY.
+    binds_to: [C-120, C-126, C-121, C-108]
+    note: >-
+      verify → earn. Emitted by zone.reviewDecision on a confirmed VERIFY.
+      Explorer consumes it for MERCHANT entities only — a verified BUILDER is
+      not a verified shop. It replaced kyc.verified there: KYC verifies a
+      person, C-120 §3 gives Zone `Merchants → Pi-accepting businesses`, and
+      the kyc payload carried a userId where Explorer needed a piUsername, so
+      the badge could never flip. Connection consumes it too, for the ✅ badge
+      on a person's directory profile — but for BUILDER/MERCHANT only, since
+      verifying a community does not vouch for whoever registered it. The
+      zone-badge consumer serves Epic (PROJECT) and NBF (MERCHANT), whose own
+      zone_verified columns were read and ranked by while nothing wrote them.
+  - name: zone.badge.revoked.v1
+    owner: tec-identity-service/zone
+    subject: piUsername
+    consumers: [tec-identity-service/explorer, tec-identity-service/connection, tec-identity-service/zone-badge]
+    status: live
+    verified: true
+    binds_to: [C-120, C-108]
+    note: >-
+      The withdrawal half. Only VERIFY was emitted before, so a badge could be
+      granted and never taken back: Zone showed REVOKED while every consumer
+      that had acted on the grant kept displaying it. A verification that
+      cannot be withdrawn is worse than one never given, because it is
+      trusted.
   - name: epic.project.completed.v1
     owner: tec-identity-service/epic
     subject: piUsername
