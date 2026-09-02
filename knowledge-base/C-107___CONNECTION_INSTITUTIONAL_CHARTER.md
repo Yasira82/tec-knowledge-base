@@ -404,3 +404,121 @@ The §13.1 two-layer split held throughout: durable graph (follow · trust ·
 collections · notifications) in **tec-identity-service**; the live layer
 (presence) on **tec-realtime-service**. Extraction to a standalone
 `tec-connection-service` remains the §13.2 trigger (~5k–10k users / ~100k nodes).
+
+---
+
+## 14. TEC CONNECT — THE DISTRIBUTION PLAN (2026-09-01)
+
+**Truth State (this section):** [Current State] for §14.2 · [Planned State] for §14.3 · [Future Vision] for §14.4
+**Verification:** [Code Verified] — Tec-Connection #53
+**Governance State:** [Governance Approved] — architectural decision of record
+
+### 14.1 The premise, and why it is not a new idea
+
+The plan is to stop asking anyone to "open Connection". Connection becomes a
+**layer inside the rest of TEC** rather than a destination: a `[Follow]`, `[Message]`
+or `[Connect]` control appears wherever a person is shown — in Explorer, in Life, on
+a business card — and the user never has to know which app performed it.
+
+This is **not a change of direction.** §4 of this charter already says Connection
+OWNS the graph and the other apps READ it. What happened is that the app was built
+and the layer was not. §14 is the layer, finally.
+
+> **The acquisition claim, stated plainly:** the distribution channel is a person
+> sending another person a link — not a campaign. `/u/<handle>` is that link.
+
+### 14.2 SHIPPED — the profile link does the thing (Tec-Connection #53)
+
+`/u/<handle>` already existed, with an OG card that renders the person's name,
+headline and follower count when pasted into WhatsApp or Telegram. Two gaps made it
+inert, and both are now closed:
+
+| Was | Is |
+|---|---|
+| The button was `<Link href="/app">` — literally *"go and open the app"*, the one sentence a shared link exists to avoid. Whoever tapped it landed in an empty app with no memory of who they came to see. | It **follows that person**, signing in on the way if there is no session, and returning to the same profile. |
+| Nothing offered to share the link. The reader had to notice the address bar and copy the URL by hand. | A share control that opens the **native sheet** — straight into WhatsApp / Telegram / Pi Chat — with clipboard, then a visible URL, as fallbacks. |
+
+**The cold-start round trip:**
+
+```
+tap Follow  →  Pi sign-in  →  back to THIS profile  →  followed
+```
+
+Three decisions worth keeping:
+
+- **The intent rides in the URL (`?follow=1`), not in storage.** The Hub already
+  preserves `pathname + search` of the sign-in target and returns it to
+  `/api/auth/sso-callback` as `redirect` — so nothing has to survive a redirect that
+  Pi Browser is known to be rough with (**C-123**).
+- **The intent is spent when it is READ, before the request.** Left in the address
+  bar it replays on every refresh, and a screenshot of that URL would follow on the
+  reader's behalf.
+- **`navigator.share` before clipboard.** On a phone the native sheet *is* the
+  distribution path; the clipboard is the desktop fallback, and a selectable URL is
+  the fallback for both — Pi Browser does not always grant clipboard access, and a
+  share button that appears to do nothing is worse than none.
+
+### 14.3 NEXT — TEC Connect inside other apps, and the constraint that shapes it
+
+> 🔴 **The constraint the plan must be built around: each TEC app is a SEPARATE ORIGIN.**
+>
+> `explorer.tecosystem.app` and `connection.tecosystem.app` do not share a cookie
+> jar. A `[Follow]` button inside Explorer therefore **MUST NOT** call Connection's
+> API from the browser — that is a third-party request with credentials, exactly the
+> case **C-123** documents Pi Browser breaking (`Partitioned` cookies; `Set-Cookie`
+> dropped on XHR and on 3xx).
+>
+> **It goes through the host app's OWN BFF:** `Explorer → /api/bff/connection/follow`
+> → gateway → identity-service. Same origin from the browser's point of view — the
+> two-SDK boundary the platform already has.
+>
+> Built the other way it **works in Chrome and fails in Pi Browser** — the worst kind
+> of failure, because it passes every test.
+
+**Order, and why not an SDK first.** The proposal was a universal
+component/SDK dropped into Explorer and Life together. That is premature abstraction:
+the shape is not known yet, and this platform has already paid for that mistake — the
+`tec-ui` major left **18 apps frozen on a `^1.1.0` caret for months**, unnoticed
+(C-02 Session 46). A shared social component across 24 apps carries the same
+coordination cost.
+
+```
+1. ✅ /u/<handle> follows + shares            — shipped, §14.2
+2. □  Explorer: ONE copy-pasted [Follow], through Explorer's own BFF
+3. □  Life:     the second copy
+4. □  Extract the shared piece — AFTER two call sites show what actually varies
+```
+
+**One unresolved naming decision (blocking step 2).** *Follow* and *Connect* are
+used interchangeably in the proposal, but only **Follow** exists: one-directional, no
+consent. A button labelled *Connect* that performs a Follow is a lie in the UI.
+Mutual connection is a whole feature — request, accept, reject, notify — and the same
+machinery was just built for group join requests. **Recommendation: ship Follow only
+until the graph has users.**
+
+### 14.4 DEFERRED — with the reason, not just the label
+
+| Item | Status | Why it is deferred, not forgotten |
+|---|---|---|
+| **Mutual "Connect" (request → accept)** | Deferred | A second approval queue before the first one has users. Follow answers the same need today. |
+| **`[Message]` from another app** | Deferred | Needs step 2's BFF pattern proven first, plus a decision on what a DM from a stranger costs (spam surface). |
+| **Universal Connect SDK / shared component** | Deferred **by design** | Extract after two call sites, never before — see §14.3. |
+| **"Connect" to someone not yet on TEC** | Deferred | Would create a **half-edge to a principal that may never exist**. The identity anchor is `piUsername` (§4). If built: the invite is a **signed expiring token, not an edge** — the edge is created on redemption, both sides verified. Same discipline as the group invite code. |
+| **Find-me-by-phone (opt-in, OTP)** | Deferred | Coherent only as a user's own opt-in. Never as a lookup. |
+| **Phone → Pi account directory** | 🔴 **Rejected, permanently** | Pi exposes no such directory, and building one would violate §6 privacy regardless of feasibility. Recorded as rejected so it is not re-proposed. |
+
+### 14.5 An open privacy decision this surfaces
+
+`/u/<any handle>` is a **public page at a guessable URL** that states a follower
+count. §4 of this charter says the graph is **sovereign — the user controls what any
+other app may see**, and Legend (C-126) already carries `PUBLIC / CONNECTIONS /
+PRIVATE`. **Connection carries nothing equivalent.**
+
+Today this is mitigated only by the page being opt-in — a profile appears solely
+after the user publishes it — which is a real protection and probably the right
+default. But *published* currently means one thing and cannot be narrowed, and the
+follower count was never separately consented to.
+
+**This needs an explicit decision before §14.3 multiplies the surface**, because every
+new `[Follow]` button in another app is another place that count is read. It is
+recorded here as **open**, not resolved.
