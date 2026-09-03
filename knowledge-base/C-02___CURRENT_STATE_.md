@@ -83,8 +83,38 @@ pinned by VALUE in that repo's `theme.test.ts` (verified to fail when the old gr
 put back), because a guard that only checks "a light override exists" would have passed
 the re-derived amber above.
 
-**Still open:** the other 21 apps have no light theme at all, and 22 are on the old
-ramp. When they move, §5.5 and §5.6 are what they copy from.
+### The table, and the style law (C-83 §5.7 + §5.8)
+
+Asked to write down **all** the colours and the style, because it goes into every app.
+§5.5–5.6 explained the reasoning; §5.7 is now the lookup table (every token, both themes,
+plus radius / spacing / type / shadow / motion / z) and **§5.8 is the component style
+law** — eight rules, each written after the opposite shipped, each naming what went wrong:
+
+| | Rule | What it cost |
+|---|---|---|
+| 5.8.1 | A filled accent is **flat** | 21 buttons in Connection, 10 in Explorer, gradienting `#FEA500 → #E08800` — a dirty patch on every one, in light |
+| 5.8.2 | The accent gets **one meaning per surface** | a gold bubble per message drowned the one gold that meant something (you were **named**) |
+| 5.8.3 | Icons from the set, **never emoji** | 📎🎤➤ carry their own colour, so no token reached them, and each platform drew them differently |
+| 5.8.4 | **One slot** for a mode pair | the primary action sat grey and disabled most of the time, and the input paid for both in width |
+| 5.8.5 | Chrome sits on a **surface** | composer + nav on one ground read as a single thick strip |
+| 5.8.6 | The band's **proportions** are part of the shape | a 22px corner on a 117px band reads heavier than on an 87px one — same token, different curve |
+| 5.8.7 | Three places take hex, and **only** hex | the exemption was one-directional, so a sweep put `var()` into the SSO landing and the share card — no ground, no accent, live |
+| 5.8.8 | What a guard must check | by **value** not presence · **derived** not listed · for the **class** not the last bug |
+
+§5.8.8 is the one that generalises: **five forms of a single silent failure shipped in
+sequence, each past a guard written for the previous one.**
+
+### Explorer joined the ramp
+
+Same session, same values — flat amber, `#101014` ramp, four-step ladder. Two earlier
+Explorer commits (the gold family + darkened status colours) turned out never to have
+landed: **PR #36 merged an earlier state of the branch**, so `#22C55E` on white — ~2.3:1
+— was still shipping there. Rebased onto current `main` rather than re-derived.
+
+**Adopted: Hub · Connection · Explorer.** Remaining: 21.
+
+**Still open:** the other 21 apps have no light theme at all and are on the old ramp.
+When they move, §5.5–§5.8 are what they copy from.
 
 ---
 
