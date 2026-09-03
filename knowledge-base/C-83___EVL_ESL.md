@@ -141,6 +141,18 @@ Rule: Higher priority domain overrides lower visually. P0 RISK always wins — n
 
 # 4. BACKGROUND LAYERS (IMMUTABLE)
 
+> ### ⚠️ SUPERSEDED BY §5.6 — these are the OLD blue-black values
+>
+> The Hub no longer paints `#050816`. It moved to a **neutral** charcoal ramp
+> (`#101014 / #21212a / #2c2c37 / #383844`) and that is what ships. This block was
+> never updated, so it declares "IMMUTABLE" over three values the reference
+> implementation stopped using — which is worse than saying nothing, because an app
+> reading it adopts the wrong ground in good faith. **§5.6 is the authority.**
+>
+> Kept, not deleted: 21 apps still run these values, so this is what most of the fleet
+> looks like today. The *structure* — three layers, apps do not invent their own — is
+> still right. Only the numbers moved.
+
 ```css
 --tec-bg:        #050816;   /* Layer 1 — Primary Background */
 --tec-surface:   #0B1020;   /* Layer 2 — Surface            */
@@ -325,6 +337,120 @@ A `<meta name="theme-color">` is a third: it is read by the browser's own chrome
 outside the document's style resolution. Give it one per scheme instead.
 
 **Do not "fix" any of these into `var()`.**
+
+---
+
+# 5.6 THE NEUTRAL RAMP — GREYS, BLACK, OFF-WHITE, AND THE RADII
+
+> Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
+> Authority: `tec-app/tec-frontend/src/styles/tec-design-tokens.css`.
+> Adopted: **Hub only.** The other 23 apps are on the §4 blue-black. Adopting this is a
+> deliberate per-app change, not a sweep — see §5.6.5.
+
+§4 declares a blue-black ground. The Hub does not paint it any more, and this is the
+ramp it actually ships. Recorded here because **it is going into every app**, and the
+last time a fleet value lived only in the Hub two apps re-derived it wrong within a week
+(C-02 Session 50.1).
+
+## 5.6.1 Dark — a NEUTRAL charcoal, not a blue-black
+
+```css
+--tec-bg:        #101014;   /* Layer 1 — the page */
+--tec-surface-1: #21212a;   /* Layer 2 — a card */
+--tec-surface-2: #2c2c37;   /* Layer 3 — a tile inside a card */
+--tec-surface-3: #383844;   /* Layer 4 — raised, or pressed */
+--tec-border:    rgba(255,255,255,0.07);
+```
+
+**Why neutral.** `#050816` is a blue-black: it reads as *cold*, and beside the Pi amber
+it pushes the amber green. `#101014` is very nearly neutral (R16 G16 B20 — four points
+of blue, enough to avoid a dead grey, not enough to tint). The amber sits on it as the
+same amber the Pi app shows.
+
+**Why four layers and not three.** §4 stopped at three, so "pressed" had nowhere to go
+and every app improvised it — usually by appending alpha to something, which is the
+`var(--tec-gold)33` failure in another costume. Four layers means elevation is a token.
+
+**The steps are deliberate, roughly +11 in lightness each.** Two adjacent surfaces must
+be distinguishable on a phone in daylight without a border doing the work. `#21212a` on
+`#101014` is visible unaided; a 4-point step is not.
+
+## 5.6.2 Light — an OFF-WHITE page, a white card
+
+```css
+--tec-bg:        #f4f3f1;   /* Layer 1 — the page: off-white, WARM */
+--tec-surface-1: #ffffff;   /* Layer 2 — a card: pure white */
+--tec-surface-2: #f1efec;   /* Layer 3 */
+--tec-surface-3: #e7e4df;   /* Layer 4 */
+--tec-border:    rgba(0,0,0,0.09);
+```
+
+**The page is off-white and the card is white — that order, not the reverse.** A pure
+white page with a grey card is the default every framework gives you and it inverts the
+elevation model: the thing you are meant to look at ends up *darker* than its ground.
+Here the card lifts off the page, the same way `--tec-surface-1` lifts off `--tec-bg`
+in dark.
+
+**It is WARM off-white** (`#f4f3f1`, R244 G243 B241), not a cool `#f8f8fc`. The ramp
+runs warmer as it darkens (`#f1efec` → `#e7e4df`) because the accent is amber; a cool
+grey ramp under a warm accent reads as two designs.
+
+## 5.6.3 The ink ladder — four steps, plus icons
+
+| Token | Dark | Light | Use |
+|-------|------|-------|-----|
+| `--tec-text-1` | `rgba(255,255,255,0.92)` | `rgba(0,0,0,0.90)` | body, headings |
+| `--tec-text-2` | `rgba(255,255,255,0.62)` | `rgba(0,0,0,0.62)` | secondary, captions |
+| `--tec-text-3` | `rgba(255,255,255,0.38)` | `rgba(0,0,0,0.42)` | labels, timestamps |
+| `--tec-text-4` | `rgba(255,255,255,0.25)` | `rgba(0,0,0,0.30)` | disabled, watermarks |
+| `--tec-icon` | `rgba(255,255,255,0.80)` | `rgba(0,0,0,0.68)` | icon strokes |
+| `--tec-fill-soft` | `rgba(255,255,255,0.05)` | `rgba(0,0,0,0.05)` | a wash over the page |
+| `--tec-fill-softer` | `rgba(255,255,255,0.02)` | `rgba(0,0,0,0.025)` | a wash over a card |
+
+**Never pure white or pure black.** `#ffffff` ink on a dark ground glares; `#000000` on
+off-white is a hole. The ladder is alpha over the ground, so it composes correctly on
+every layer without a per-surface variant.
+
+**`--tec-icon` is not `--tec-text-1`.** A 1.5px stroke reads lighter than a filled glyph
+at the same alpha, so an icon set to body ink looks faded next to its own label.
+
+**The apps stop at `text-3`.** Anything that needs a fourth step improvises, which is
+how `#3a3a4a` ended up hardcoded on Explorer's bottom nav and went invisible in light.
+
+## 5.6.4 Radii — including the inner-page curve
+
+```css
+--radius-sm:   8px;      /* chips, small controls */
+--radius-md:   14px;     /* buttons, inputs */
+--radius-lg:   20px;     /* cards */
+--radius-xl:   28px;     /* sheets, modals */
+--radius-full: 9999px;   /* pills, avatars */
+
+--tec-topbar-radius: 22px;   /* the inner-page band — see §5.5.6 */
+```
+
+The band's **22px sits deliberately between `lg` and `xl`**: it is wider than a card, so
+it must curve more, but it is chrome rather than a sheet. It has its own token because
+it is a fleet-wide shape — an app that hardcodes `20` here is a screen framed
+differently from the Hub it was tapped in from.
+
+Applied as `borderRadius: '0 0 var(--tec-topbar-radius) var(--tec-topbar-radius)'` —
+**bottom corners only**. The band is anchored to the top edge of the viewport; rounding
+its top corners would float it off an edge it is attached to.
+
+## 5.6.5 Adoption — honest status
+
+**The Hub is the only app on this ramp.** The other 23 run the §4 blue-black with a
+three-layer surface set and a three-step ink ladder.
+
+That is a real difference a user can see when they tap from the Hub into an app: the
+ground shifts from neutral charcoal to blue-black. It is recorded rather than swept,
+for the reason §5.5.3 gives — the previous sweep of this kind is what produced the
+re-derived amber. Each app takes the ramp with its own change, verified on a device,
+and copies the values in §5.6.1–5.6.3 rather than approximating them.
+
+> **The order that matters.** Ramp first, then the band. A band tuned against
+> `#050816` and dropped onto `#101014` is a different band.
 
 ---
 

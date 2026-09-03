@@ -47,8 +47,38 @@ for the gold family.
 > one repo followed it, nobody back-adopted it) and it recurred inside two weeks,
 > because the fix then was to sweep the repos rather than to write the rule down.
 
-**Still open:** the other 21 apps have no light theme at all. When they get one, §5.5 is
-what they copy from.
+### The follow-up question found a bigger gap
+
+*"…the greys and blacks and off-white too, and the curves on the inner pages"* — and
+reading the Hub to answer it turned up that **C-83 §4 declares three background values
+the Hub stopped painting.**
+
+| | C-83 §4 says "IMMUTABLE" | Hub actually ships |
+|---|---|---|
+| Layer 1 | `#050816` blue-black | **`#101014`** neutral charcoal |
+| Layer 2 | `#0B1020` | **`#21212a`** |
+| Layer 3 | `#111627` | **`#2c2c37`** |
+| Layer 4 | *(none — only three layers)* | **`#383844`** |
+
+A doc that declares "no app may override" over values the reference implementation
+abandoned is **worse than saying nothing**: an app reading it adopts the wrong ground in
+good faith, which is what all 23 of them did.
+
+**Recorded as C-83 §5.6:** the neutral dark ramp and why it is neutral (a blue-black
+pushes the Pi amber green); the warm off-white light ramp and why the PAGE is off-white
+while the CARD is white; the four-step ink ladder plus `--tec-icon` and the two fill
+washes; and the radius scale including `--tec-topbar-radius: 22px`, which sits between
+`lg` and `xl` on purpose and applies to the bottom corners only. §4 gets a supersede
+banner — kept, not deleted, because 21 apps still run it and the *structure* is still
+right; only the numbers moved.
+
+**Deliberately NOT swept.** Each app takes the ramp with its own change, verified on a
+device, copying §5.6.1–5.6.3 rather than approximating them — that is the whole lesson
+of 50.1, applied the same day it was written. Ramp first, then the band: a band tuned
+against `#050816` and dropped onto `#101014` is a different band.
+
+**Still open:** the other 21 apps have no light theme at all, and 23 are on the old
+ramp. When they move, §5.5 and §5.6 are what they copy from.
 
 ---
 
