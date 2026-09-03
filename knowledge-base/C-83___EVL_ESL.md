@@ -344,8 +344,8 @@ outside the document's style resolution. Give it one per scheme instead.
 
 > Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
 > Authority: `tec-app/tec-frontend/src/styles/tec-design-tokens.css`.
-> Adopted: **Hub only.** The other 23 apps are on the §4 blue-black. Adopting this is a
-> deliberate per-app change, not a sweep — see §5.6.5.
+> Adopted: **Hub · Connection.** The other 22 apps are on the §4 blue-black. Adopting
+> this is a deliberate per-app change, not a sweep — see §5.6.5.
 
 §4 declares a blue-black ground. The Hub does not paint it any more, and this is the
 ramp it actually ships. Recorded here because **it is going into every app**, and the
@@ -440,8 +440,14 @@ its top corners would float it off an edge it is attached to.
 
 ## 5.6.5 Adoption — honest status
 
-**The Hub is the only app on this ramp.** The other 23 run the §4 blue-black with a
-three-layer surface set and a three-step ink ladder.
+**Adopted: Hub · Connection.** The other 22 run the §4 blue-black with a three-layer
+surface set and a three-step ink ladder.
+
+Connection took it the way this section asks — values copied, not approximated, and
+**pinned by value in `theme.test.ts`** (the exact ramp, the warm light ramp, the
+four-step ladder), because the whole point of §5.6 is that two apps must not end up a
+shade apart. A guard that only checks "a light override exists" would have passed the
+re-derived amber of Session 50.1.
 
 That is a real difference a user can see when they tap from the Hub into an app: the
 ground shifts from neutral charcoal to blue-black. It is recorded rather than swept,

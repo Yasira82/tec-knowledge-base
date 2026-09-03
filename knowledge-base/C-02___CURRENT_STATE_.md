@@ -77,7 +77,13 @@ device, copying §5.6.1–5.6.3 rather than approximating them — that is the w
 of 50.1, applied the same day it was written. Ramp first, then the band: a band tuned
 against `#050816` and dropped onto `#101014` is a different band.
 
-**Still open:** the other 21 apps have no light theme at all, and 23 are on the old
+**First adopter, same session.** Connection took the ramp — `#050816 → #101014`,
+`#0B1020 → #21212a` for the card — plus the four-step ink ladder and `--tec-icon`. It is
+pinned by VALUE in that repo's `theme.test.ts` (verified to fail when the old ground is
+put back), because a guard that only checks "a light override exists" would have passed
+the re-derived amber above.
+
+**Still open:** the other 21 apps have no light theme at all, and 22 are on the old
 ramp. When they move, §5.5 and §5.6 are what they copy from.
 
 ---
