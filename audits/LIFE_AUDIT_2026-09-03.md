@@ -5,6 +5,18 @@
 
 **Truth State:** [Current State] · **Verification:** [Code Verified] · **Governance:** [Draft]
 
+> **Since this audit was written (same day).** The findings below are kept as they were FOUND —
+> an audit that quietly rewrites itself as work lands stops being a record of what was true.
+> What has changed:
+>
+> | Finding | Now |
+> |---|---|
+> | L-1 identity anchor | ✅ Fixed — tec-core-backend #267. Also **re-classified**: shared, not split, and **latent** rather than exploitable. See the correction inside L-1. |
+> | L-2 theme | ✅ Fixed — Tec-Life #44 |
+> | L-3 twelve locales | ✅ Fixed — Tec-Life #44 |
+> | Capability 4, skills | ✅ Built — #267 + #44, **self-declared half only** |
+> | L-4 consent · L-5 purge · capabilities 5–6 | Open |
+
 ---
 
 ## The one-line finding
@@ -24,7 +36,7 @@ C-106 §4 lists six things. Three are built.
 | 1 | Goals and aspirations (self-declared) | ✅ **Built** | `LifeGoal` — CRUD, π target, progress log, auto-complete, Pro insights |
 | 2 | Preferences and settings | ✅ **Built** | `LifePreference` — key/value, per user |
 | 3 | Activity timeline (spending, trading, creating) | ✅ **Built, and built the RIGHT way** | Read live from Analytics (`/analytics/me/activity`); Life stores nothing |
-| 4 | **Skills inventory** (self-declared + activity-inferred) | ❌ **Absent** | no model, no endpoint, no screen |
+| 4 | **Skills inventory** (self-declared + activity-inferred) | ❌ **Absent** *(built since — see the banner)* | no model, no endpoint, no screen |
 | 5 | **Personal trajectory** (where the user is headed) | ❌ **Absent** | — |
 | 6 | **Intent signals** (what the user is trying to do now) | ❌ **Absent** | C-106 §5 specifies Redis with a 30-min TTL. No Redis usage in the module at all. |
 
@@ -43,7 +55,7 @@ no personal-context API to consume, because there is almost no personal context 
 
 ## 2 · Findings that are about correctness, not scope
 
-### L-1 · The identity anchor is one indirection away from the charter — **and can silently split a user** ⚠️ HIGH
+### L-1 · The identity anchor is one indirection away from the charter — **and can silently SHARE a user** ⚠️ HIGH (latent)
 
 C-106 §11 P0-2 is explicit:
 
@@ -72,9 +84,29 @@ orphaned under an id nothing will look up again. `findOrCreateUser`'s own commen
 "a different pi_user_id representation" has already happened once in production (it caused a 500 on
 Life goals/preferences and the username fallback was added for it).
 
-**This is the finding to fix first, and it is small.** Either key Life rows by `pi_username` directly,
-or make the resolution refuse to fall back to `sub` — a Life row written under a guess is worse than a
-request that fails closed (P6).
+### It is worse than "split", and narrower than it first looks
+
+Re-reading the resolution after this audit was written turned up the second half of the fallback:
+
+```ts
+username = pi_username ?? username ?? piUsername ?? 'unknown'
+```
+
+`piUserId` falls back to a value that DIFFERS per person (the auth id), while `username` falls back to
+a literal that is the **SAME for everyone**. `findOrCreateUser` looks up by `pi_user_id` first and by
+`username` second — so the first caller with no Pi username creates a row named `unknown`, and every
+later one misses step 1, **matches it on step 2**, and is handed that person's identity: their goals,
+their follow graph, their profile. That is not a split identity. It is a shared one, and it is an
+Invariant #3 breach.
+
+**Reachability — stated honestly.** The `register()` path that creates a Pi-less account exists in
+`tec-auth-service`, but **sign-in is "Sign in with Pi" only**: such an account cannot get in to reach
+these routes. The defect was therefore **latent, not exploitable in production**. The first write-up
+of this finding overstated that, and the correction belongs in the record next to the finding.
+
+**Fixed (tec-core-backend #267), and it was small.** Both fallbacks removed — a missing claim is a 401
+(P6) — plus a guard inside `findOrCreateUser` that rejects a blank or placeholder username before it
+touches the database, so a fourth caller cannot reintroduce it.
 
 ### L-2 · Light mode is impossible — 49 hardcoded colours in one file ⚠️ MEDIUM
 
@@ -143,9 +175,9 @@ Sequenced so each step makes the next one cheaper, and so nothing is built twice
 
 | # | Work | Why here |
 |---|------|----------|
-| **1** | **L-1 identity anchor** | Small, and everything below writes rows keyed by it. Fixing it after the new models exist means migrating them. |
-| **2** | **L-2 theme + L-3 twelve locales** | The redesign step. Doing it before the new screens exist means Skills/Trajectory are *built* themeable and translated instead of converted later — the fleet has now paid the conversion cost twice. |
-| **3** | **Skills inventory** (capability 4) | The smallest of the three missing ones, self-declared, and the one with an obvious screen. Also the first thing another runtime could actually consume. |
+| **1** | ~~L-1 identity anchor~~ ✅ | Done — tec-core-backend #267. Small, and everything below writes rows keyed by it. |
+| **2** | ~~L-2 theme + L-3 twelve locales~~ ✅ | Done — Tec-Life #44. Doing it before the new screens exist meant Skills was *built* themeable and translated in twelve languages instead of converted later — the fleet has now paid that conversion cost twice. |
+| **3** | ~~Skills inventory~~ ✅ | Done — tec-core-backend #267 + Tec-Life #44. **Self-declared only**: the `ACTIVITY_INFERRED` half is deliberately unbuilt, because inferring a skill means reading activity Analytics owns. `source` exists so an inferred row has an honest place to land. |
 | **4** | **Trajectory** (capability 5) | Derived from goals + activity, both of which already exist. Nothing new to store except the projection. |
 | **5** | **Intent signals** (capability 6) | Needs Redis + TTL (C-106 §5) and is the one that only pays off once a consumer exists. |
 | **6** | **Consent gateway** (P1-2) | **Before** any personal-context API is exposed — not before the capabilities are built, but strictly before the first outbound reader. |
