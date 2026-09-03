@@ -141,6 +141,18 @@ Rule: Higher priority domain overrides lower visually. P0 RISK always wins — n
 
 # 4. BACKGROUND LAYERS (IMMUTABLE)
 
+> ### ⚠️ SUPERSEDED BY §5.6 — these are the OLD blue-black values
+>
+> The Hub no longer paints `#050816`. It moved to a **neutral** charcoal ramp
+> (`#101014 / #21212a / #2c2c37 / #383844`) and that is what ships. This block was
+> never updated, so it declares "IMMUTABLE" over three values the reference
+> implementation stopped using — which is worse than saying nothing, because an app
+> reading it adopts the wrong ground in good faith. **§5.6 is the authority.**
+>
+> Kept, not deleted: 21 apps still run these values, so this is what most of the fleet
+> looks like today. The *structure* — three layers, apps do not invent their own — is
+> still right. Only the numbers moved.
+
 ```css
 --tec-bg:        #050816;   /* Layer 1 — Primary Background */
 --tec-surface:   #0B1020;   /* Layer 2 — Surface            */
@@ -161,6 +173,454 @@ No app may override. No user may change.
 --tec-red:    #EF4444;  /* RISK         */
 --tec-blue:   #3B82F6;  /* GOVERNANCE   */
 ```
+
+---
+
+# 5.5 THEME STATES — THE LIGHT PALETTE, THE CHANNELS, AND THE BAND
+
+> Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
+> Authority: `tec-app/tec-frontend/src/styles/tec-design-tokens.css` (the Hub is the
+> reference implementation). Adopted: Hub · Explorer · Connection. Not yet: the other 21 apps.
+
+Sections 4 and 5 above define the **dark** ground, and for a long time that was the
+only ground there was. It is no longer: the Hub ships a light theme and the apps are
+adopting it. **These values were live in the Hub for months and written down nowhere**,
+which is exactly how the fleet drifts — a rule exists, one repo follows it, and the
+next app re-derives it slightly differently (see C-02 Session 46, and §5.5.3 below,
+which is that mistake happening again).
+
+## 5.5.1 Three states, not two
+
+| State | Expressed as | Meaning |
+|-------|--------------|---------|
+| dark | `[data-theme='dark']` | the reader chose dark |
+| light | `[data-theme='light']` | the reader chose light |
+| **system** (default) | **the ABSENCE of the attribute** | follow the phone, live |
+
+`system` is a real choice and it is the default. It is the absence of the attribute so
+the media query keeps tracking — resolving it in JS would freeze the page at whatever
+the phone happened to be at first launch.
+
+The media query **MUST** be scoped `:root:not([data-theme])`. Unscoped, a light phone
+silently overrules a reader who explicitly picked dark, and they have no way to tell
+the setting is being ignored.
+
+`color-scheme` is stamped on `<html>` by an inline boot script in `<head>`, never
+pinned in CSS or in a `<meta>`. Pinned to `dark` it gave light mode dark scrollbars and
+dark form controls. Deferred instead of inline, the page paints dark and **snaps** to
+light on every load.
+
+## 5.5.2 The light palette (authority)
+
+```css
+[data-theme='light'] {
+  --tec-bg:          #f4f3f1;   /* Layer 1 */
+  --tec-surface-1:   #ffffff;   /* Layer 2 */
+  --tec-surface-2:   #f1efec;   /* Layer 3 */
+  --tec-surface-3:   #e7e4df;
+  --tec-border:      rgba(0,0,0,0.09);
+
+  --tec-gold:        #FEA500;   /* the WEALTH amber, measured on white */
+  --tec-gold-dark:   #E08800;
+  --tec-gold-light:  #FFC04D;
+  --tec-gold-rgb:    254, 165, 0;
+
+  --tec-text-1:      rgba(0,0,0,0.90);
+  --tec-text-2:      rgba(0,0,0,0.62);
+  --tec-text-3:      rgba(0,0,0,0.42);
+  --tec-text-rgb:    0, 0, 0;
+  --tec-fill-soft:   rgba(0,0,0,0.05);
+}
+```
+
+**The amber deepens on white.** `#FBB44A` is sampled from the Pi splash mark and carries
+a dark page; on white it is a pale wash that fails both as text and as a border.
+`#FEA500` is Pi's own *"Welcome to Pi"* headline amber — the same brand measured on a
+light ground. Which one is in play is a THEME decision and lives in the token file.
+
+## 5.5.3 A token is a FAMILY, not a value — the mistake this section exists to stop
+
+Overriding `--tec-gold` alone is not a theme, it is half of one.
+
+Connection and Explorer did exactly that. The gradient companions stayed on their
+dark-ground values, so every primary button in light mode ran `#FEA500 → #E8962A` —
+and `#E8962A` (R232 G150 B42) was chosen to sit on near-black, so it carries a
+desaturated brown cast that reads as a **dirty dark patch** on the light half of a
+button. Twenty-six buttons in one app. It looked like the gradient was broken rather
+than a token being unset.
+
+Worse, the repair **re-derived** `#F08C00`/`#FFC24D` instead of copying the Hub's
+`#E08800`/`#FFC04D` — because the Hub's values were not written down anywhere. Two
+apps a shade apart on the same button, from one undocumented number. That is why this
+section exists, and why the table above is the authority rather than a description.
+
+> **Rule.** A theme block overrides every member of a family it touches, and it copies
+> the authority rather than choosing a near-match.
+> Enforced by `theme.test.ts`, which DERIVES the gold family from `:root` and asserts
+> the light block covers every member — derived rather than listed, so a new token is
+> covered the day it is added.
+
+## 5.5.4 Status colours DARKEN on white — contrast, not taste
+
+The §5 semantic colours were picked to glow on near-black and **fail as text on white**:
+
+| Domain | Dark | on white | Light | on white |
+|--------|------|---------:|-------|---------:|
+| GROWTH | `#22C55E` | ~2.3:1 ❌ | `#15803d` | ~5.0:1 ✅ |
+| RISK | `#EF4444` | ~3.3:1 ❌ | `#b91c1c` | ~5.9:1 ✅ |
+| GOVERNANCE | `#3B82F6` | ~3.1:1 ❌ | `#1d4ed8` | ~6.3:1 ✅ |
+| IDENTITY | `#8B5CF6` | ~3.5:1 ❌ | `#6d28d9` | ~6.7:1 ✅ |
+
+The **meaning** does not change with the theme — green still means GROWTH — only the
+luminance does. The channel tokens move with them (`--tec-green-rgb`), or every
+`rgba(var(--tec-green-rgb), …)` keeps painting the bright one.
+
+## 5.5.5 Channels — and the silent failure they exist to prevent
+
+```css
+--tec-gold-rgb: 251, 180, 74;   --tec-text-rgb: 255, 255, 255;
+--tec-bg-rgb:   5, 8, 22;       --tec-green-rgb / --tec-red-rgb
+```
+
+An app that wants a colour at partial opacity used to append two hex digits to a hex
+string. Pointed at a variable that yields **`var(--tec-gold)33`: invalid CSS that
+raises NO error** — the declaration is dropped and the border silently stops painting.
+
+The channels let `rgba(var(--tec-gold-rgb), .2)` follow the theme instead. This is the
+same constraint §"load-bearing" states for the package: `TEC_COLORS.*` stays plain hex
+because consumers append alpha to it; theme-aware colour belongs in a CSS custom
+property the **app** owns.
+
+**Four shapes of this bug have shipped**, each past a guard written for the last one:
+
+```
+`${C.gold}22`                     an interpolated token
+`${(v ? C.gold : C.subtext)}55`   an expression, not a bare member
+C.subtext + '55'                  concatenation, no template at all
+'1px solid ${goldA(0.25)}'        a placeholder inside SINGLE quotes — a literal
+rgba(5,8,22,0.92)                 a raw colour, matching none of the above
+```
+
+> A guard that knows only the shapes of the bugs already found finds each bug once.
+
+## 5.5.6 The top band
+
+Every inner page is framed by a solid band with rounded **bottom** corners. Without it
+an inner page opens on exactly the same flat ground as the one before, and tapping
+through feels like nothing happened.
+
+```css
+--tec-topbar:        #3f311f;   /* dark: ~20% gold mixed into the page */
+--tec-topbar-radius: 22px;
+--tec-topbar-ink-1 / -ink-2 / -ink-3 / -gold / -fill / -border
+```
+
+`[data-theme='light']` sets `--tec-topbar: #17171d`. **The band is dark in BOTH themes** —
+which is the part that needs care: a control inside it reads the *page* palette, so on
+a light page it paints black ink and a white surface onto a near-black band and
+disappears.
+
+`.tec-on-band` **re-scopes the tokens for that subtree** rather than restyling each
+control, so a component dropped into the header is correct without knowing the band
+exists. That is the only version of this that stays true after the next change.
+
+## 5.5.7 Two exemptions, both structural
+
+Hex literals are correct in exactly two places, and neither is a shortcut:
+
+- **`sso-callback/route.ts`** — plain HTML served *before any stylesheet*; it cannot
+  read a custom property at all.
+- **`opengraph-image.tsx`** (`next/og`) — Satori resolves no custom properties, and a
+  share card is a cached server-composed image with no reader whose theme it could follow.
+
+A `<meta name="theme-color">` is a third: it is read by the browser's own chrome,
+outside the document's style resolution. Give it one per scheme instead.
+
+**Do not "fix" any of these into `var()`.**
+
+---
+
+# 5.6 THE NEUTRAL RAMP — GREYS, BLACK, OFF-WHITE, AND THE RADII
+
+> Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
+> Authority: `tec-app/tec-frontend/src/styles/tec-design-tokens.css`.
+> Adopted: **Hub · Connection · Explorer.** The other 21 apps are on the §4 blue-black.
+> Adopting this is a deliberate per-app change, not a sweep — see §5.6.5.
+
+§4 declares a blue-black ground. The Hub does not paint it any more, and this is the
+ramp it actually ships. Recorded here because **it is going into every app**, and the
+last time a fleet value lived only in the Hub two apps re-derived it wrong within a week
+(C-02 Session 50.1).
+
+## 5.6.1 Dark — a NEUTRAL charcoal, not a blue-black
+
+```css
+--tec-bg:        #101014;   /* Layer 1 — the page */
+--tec-surface-1: #21212a;   /* Layer 2 — a card */
+--tec-surface-2: #2c2c37;   /* Layer 3 — a tile inside a card */
+--tec-surface-3: #383844;   /* Layer 4 — raised, or pressed */
+--tec-border:    rgba(255,255,255,0.07);
+```
+
+**Why neutral.** `#050816` is a blue-black: it reads as *cold*, and beside the Pi amber
+it pushes the amber green. `#101014` is very nearly neutral (R16 G16 B20 — four points
+of blue, enough to avoid a dead grey, not enough to tint). The amber sits on it as the
+same amber the Pi app shows.
+
+**Why four layers and not three.** §4 stopped at three, so "pressed" had nowhere to go
+and every app improvised it — usually by appending alpha to something, which is the
+`var(--tec-gold)33` failure in another costume. Four layers means elevation is a token.
+
+**The steps are deliberate, roughly +11 in lightness each.** Two adjacent surfaces must
+be distinguishable on a phone in daylight without a border doing the work. `#21212a` on
+`#101014` is visible unaided; a 4-point step is not.
+
+## 5.6.2 Light — an OFF-WHITE page, a white card
+
+```css
+--tec-bg:        #f4f3f1;   /* Layer 1 — the page: off-white, WARM */
+--tec-surface-1: #ffffff;   /* Layer 2 — a card: pure white */
+--tec-surface-2: #f1efec;   /* Layer 3 */
+--tec-surface-3: #e7e4df;   /* Layer 4 */
+--tec-border:    rgba(0,0,0,0.09);
+```
+
+**The page is off-white and the card is white — that order, not the reverse.** A pure
+white page with a grey card is the default every framework gives you and it inverts the
+elevation model: the thing you are meant to look at ends up *darker* than its ground.
+Here the card lifts off the page, the same way `--tec-surface-1` lifts off `--tec-bg`
+in dark.
+
+**It is WARM off-white** (`#f4f3f1`, R244 G243 B241), not a cool `#f8f8fc`. The ramp
+runs warmer as it darkens (`#f1efec` → `#e7e4df`) because the accent is amber; a cool
+grey ramp under a warm accent reads as two designs.
+
+## 5.6.3 The ink ladder — four steps, plus icons
+
+| Token | Dark | Light | Use |
+|-------|------|-------|-----|
+| `--tec-text-1` | `rgba(255,255,255,0.92)` | `rgba(0,0,0,0.90)` | body, headings |
+| `--tec-text-2` | `rgba(255,255,255,0.62)` | `rgba(0,0,0,0.62)` | secondary, captions |
+| `--tec-text-3` | `rgba(255,255,255,0.38)` | `rgba(0,0,0,0.42)` | labels, timestamps |
+| `--tec-text-4` | `rgba(255,255,255,0.25)` | `rgba(0,0,0,0.30)` | disabled, watermarks |
+| `--tec-icon` | `rgba(255,255,255,0.80)` | `rgba(0,0,0,0.68)` | icon strokes |
+| `--tec-fill-soft` | `rgba(255,255,255,0.05)` | `rgba(0,0,0,0.05)` | a wash over the page |
+| `--tec-fill-softer` | `rgba(255,255,255,0.02)` | `rgba(0,0,0,0.025)` | a wash over a card |
+
+**Never pure white or pure black.** `#ffffff` ink on a dark ground glares; `#000000` on
+off-white is a hole. The ladder is alpha over the ground, so it composes correctly on
+every layer without a per-surface variant.
+
+**`--tec-icon` is not `--tec-text-1`.** A 1.5px stroke reads lighter than a filled glyph
+at the same alpha, so an icon set to body ink looks faded next to its own label.
+
+**The apps stop at `text-3`.** Anything that needs a fourth step improvises, which is
+how `#3a3a4a` ended up hardcoded on Explorer's bottom nav and went invisible in light.
+
+## 5.6.4 Radii — including the inner-page curve
+
+```css
+--radius-sm:   8px;      /* chips, small controls */
+--radius-md:   14px;     /* buttons, inputs */
+--radius-lg:   20px;     /* cards */
+--radius-xl:   28px;     /* sheets, modals */
+--radius-full: 9999px;   /* pills, avatars */
+
+--tec-topbar-radius: 22px;   /* the inner-page band — see §5.5.6 */
+```
+
+The band's **22px sits deliberately between `lg` and `xl`**: it is wider than a card, so
+it must curve more, but it is chrome rather than a sheet. It has its own token because
+it is a fleet-wide shape — an app that hardcodes `20` here is a screen framed
+differently from the Hub it was tapped in from.
+
+Applied as `borderRadius: '0 0 var(--tec-topbar-radius) var(--tec-topbar-radius)'` —
+**bottom corners only**. The band is anchored to the top edge of the viewport; rounding
+its top corners would float it off an edge it is attached to.
+
+## 5.6.5 Adoption — honest status
+
+**Adopted: Hub · Connection · Explorer.** The other 21 run the §4 blue-black with a
+three-layer surface set and a three-step ink ladder.
+
+Connection took it the way this section asks — values copied, not approximated, and
+**pinned by value in `theme.test.ts`** (the exact ramp, the warm light ramp, the
+four-step ladder), because the whole point of §5.6 is that two apps must not end up a
+shade apart. A guard that only checks "a light override exists" would have passed the
+re-derived amber of Session 50.1.
+
+That is a real difference a user can see when they tap from the Hub into an app: the
+ground shifts from neutral charcoal to blue-black. It is recorded rather than swept,
+for the reason §5.5.3 gives — the previous sweep of this kind is what produced the
+re-derived amber. Each app takes the ramp with its own change, verified on a device,
+and copies the values in §5.6.1–5.6.3 rather than approximating them.
+
+> **The order that matters.** Ramp first, then the band. A band tuned against
+> `#050816` and dropped onto `#101014` is a different band.
+
+---
+
+# 5.7 THE COMPLETE TOKEN TABLE
+
+> Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
+> Authority: `tec-app/tec-frontend/src/styles/tec-design-tokens.css`.
+> Every value below is what the Hub ships. Copy them; do not re-derive them
+> (§5.5.3 is what re-deriving cost).
+
+Sections 5.5 and 5.6 explain the reasoning. This is the lookup table.
+
+## 5.7.1 Colour
+
+| Token | Dark | Light | What it is |
+|-------|------|-------|------------|
+| `--tec-bg` | `#101014` | `#f4f3f1` | Layer 1 — the page |
+| `--tec-bg-rgb` | `16, 16, 20` | `244, 243, 241` | …as channels, for a translucent bar |
+| `--tec-surface-1` | `#21212a` | `#ffffff` | Layer 2 — a card |
+| `--tec-surface-2` | `#2c2c37` | `#f1efec` | Layer 3 — a tile inside a card |
+| `--tec-surface-3` | `#383844` | `#e7e4df` | Layer 4 — raised, or pressed |
+| `--tec-border` | `rgba(255,255,255,.07)` | `rgba(0,0,0,.09)` | hairline |
+| `--tec-border-gold` | `rgba(251,180,74,.28)` | `rgba(224,136,0,.42)` | hairline, accented |
+| **`--tec-gold`** | **`#FBB44A`** | **`#FEA500`** | WEALTH — the Pi amber |
+| `--tec-gold-dark` | `#E8962A` | `#E08800` | the deeper companion |
+| `--tec-gold-light` | `#FDCF7A` | `#FFC04D` | the lighter companion |
+| `--tec-gold-rgb` | `251, 180, 74` | `254, 165, 0` | …as channels |
+| `--tec-gold-dim` | `rgba(251,180,74,.15)` | `rgba(254,165,0,.20)` | a wash |
+| `--tec-gold-glow` | `rgba(251,180,74,.08)` | `rgba(254,165,0,.10)` | a halo |
+| `--tec-on-gold` | `#0a0800` | `#0a0800` | ink ON amber — **fixed in both** |
+| `--tec-green` | `#22C55E` | `#15803d` | GROWTH |
+| `--tec-blue` | `#3b82f6` | `#1d4ed8` | GOVERNANCE |
+| `--tec-red` | `#ef4444` | `#b91c1c` | RISK |
+| `--tec-purple` | `#8b5cf6` | `#6d28d9` | IDENTITY |
+| `--tec-text-1` | `rgba(255,255,255,.92)` | `rgba(0,0,0,.90)` | body, headings |
+| `--tec-text-2` | `rgba(255,255,255,.62)` | `rgba(0,0,0,.62)` | secondary |
+| `--tec-text-3` | `rgba(255,255,255,.38)` | `rgba(0,0,0,.42)` | labels, timestamps |
+| `--tec-text-4` | `rgba(255,255,255,.25)` | `rgba(0,0,0,.30)` | disabled |
+| `--tec-text-rgb` | `255, 255, 255` | `0, 0, 0` | …as channels |
+| `--tec-icon` | `rgba(255,255,255,.80)` | `rgba(0,0,0,.68)` | icon strokes |
+| `--tec-fill-soft` | `rgba(255,255,255,.05)` | `rgba(0,0,0,.05)` | a wash over the page |
+| `--tec-fill-softer` | `rgba(255,255,255,.02)` | `rgba(0,0,0,.025)` | a wash over a card |
+| `--tec-topbar` | `#3f311f` | `#17171d` | the inner-page band — **dark in both** |
+| `--tec-topbar-ink-1/2/3` | `.95 / .60 / .42` white | *(same)* | ink ON the band |
+| `--tec-topbar-gold` | `#FBB44A` | *(same)* | accent ON the band |
+| `--tec-topbar-fill` | `rgba(255,255,255,.07)` | *(same)* | a surface ON the band |
+| `--tec-topbar-border` | `rgba(255,255,255,.12)` | *(same)* | hairline ON the band |
+
+**Two families do NOT flip**, and each for a stated reason: **ink-on-amber**, because
+a filled amber button is a solid object and its label does not follow the page; and
+**the whole `--tec-topbar-*` set**, because the band is dark in both themes (§5.6.4).
+
+## 5.7.2 Geometry, motion, depth
+
+| | |
+|---|---|
+| **Radius** | `sm 8` · `md 14` · `lg 20` · `xl 28` · `full 9999` · **`--tec-topbar-radius 22`** |
+| **Spacing** | 4px base: `--sp-1 4` … `--sp-12 48` |
+| **Type** | `xs 11` · `sm 13` · `base 15` · `lg 17` · `xl 20` · `2xl 24` · `3xl 30` · `4xl 38` |
+| **Shadow** | dark `0 1px 3px/.4`, `0 4px 16px/.5`, `0 8px 32px/.6` — light `.08 / .10 / .12` |
+| **Motion** | `--dur-fast 120ms` · `--dur-base 200ms` · `--dur-slow 350ms` |
+| **Easing** | `--ease-out cubic-bezier(.16,1,.3,1)` · `--ease-spring cubic-bezier(.34,1.56,.64,1)` |
+| **Z** | `sticky 100` · `topbar 150` · `overlay 200` · `modal 300` · `toast 400` |
+
+**Shadows soften on white.** A dark page's shadow on an off-white ground reads as dirt,
+not as depth.
+
+---
+
+# 5.8 COMPONENT STYLE LAW
+
+> Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
+> Every rule below was written after the opposite shipped. Each names what went wrong.
+
+## 5.8.1 A filled accent is FLAT
+
+```css
+background: var(--tec-gold);        /* ✅ the Hub, 33 places */
+background: linear-gradient(135deg, var(--tec-gold), var(--tec-gold-dark));  /* ❌ */
+```
+
+The gradient's dark end is a **different colour**, and in light it is `#E08800` — so
+the lower half of every button reads as a dirty patch rather than as a gradient.
+Connection had 21 of them and Explorer 10; the Hub has one in the entire app. Two apps
+beside the Hub looked like a different product because of this alone.
+
+## 5.8.2 The accent gets ONE meaning per surface
+
+Gold is the platform's most expensive ink. On any given screen it may mark **one** kind
+of thing, and everything else is grey.
+
+The message transcript is the case that proves it: your own bubble was a gold wash with
+a gold border, so a hundred amber rectangles ran down the screen — and the *one* place
+the accent carried real meaning there (**you were named in a group**) could not be seen
+at all. Bubbles are surfaces now; the mention is the only gold in the transcript, and it
+reads.
+
+**Elevation carries identity instead.** Yours is `--tec-surface-3`, theirs is
+`--tec-surface-2`. Side already says who spoke, and the squared corner says it again —
+colour was the third telling of the same thing, spent on the accent.
+
+## 5.8.3 Icons come from the icon set. Never emoji
+
+`📎 🎤 ➤` were the only UI icons in Connection. Three reasons that is not taste:
+
+- an emoji carries **its own colour**, so no token reaches it — every rule in this
+  document stops at that button;
+- it is drawn by the **platform's font**: the same control looked different on Samsung,
+  in Pi Browser and on iOS, while the icon set looked identical everywhere;
+- `➤` **is not a paper plane** in most fonts. It is a triangle.
+
+An icon must inherit `currentColor`. That is the property an emoji can never have.
+
+## 5.8.4 One slot for a mode pair
+
+A composer with a permanent Send **and** a permanent mic leaves the primary action grey
+and disabled for most of the time the screen is open, beside a control rarely wanted —
+and the input pays for both in width. Empty → microphone; a draft → Send. Same slot,
+same 44px, so it does not resize under the thumb at the first keystroke.
+
+## 5.8.5 Chrome sits on a surface
+
+A bar that is chrome (a composer, a nav) belongs on `--tec-surface-1`, not on the page
+with a hairline. Two bars on one ground read as a single thick strip. Chrome bleeds to
+the screen edges — it frames the screen, not the text column — and carries the relevant
+`env(safe-area-inset-*)`.
+
+## 5.8.6 The band's proportions are part of the shape
+
+`12px 20px 16px` around a title of ~18–22px. A **22px corner on a 117px band reads
+heavier than the same corner on an 87px one**, so a band padded generously looks like a
+different radius even when the token is identical. Copy the padding, not only the token.
+
+## 5.8.7 Three places take hex, and they take ONLY hex
+
+| Where | Why |
+|---|---|
+| `sso-callback/route.ts` | plain HTML served **before any stylesheet** |
+| `opengraph-image.tsx` (`next/og`) | Satori resolves no custom property; the card is a cached image with no reader |
+| `<meta name="theme-color">` | read by the browser's chrome, outside style resolution — one per scheme |
+
+**The exemption cuts both ways.** It says these may keep literals; it also says they may
+keep *nothing else*. A `var()` there is not a degraded colour — it is **no colour**. Both
+were converted by a theme sweep and shipped rendering with no ground and no accent,
+because the guard that should have caught it was the one excusing the file. The alpha
+helpers count too: they return `rgba(var(--tec-text-rgb), …)` — the same `var()`, one
+level down.
+
+## 5.8.8 What a guard must check
+
+Every rule here fails **silently**. A wrong colour is not an error, it is a screen nobody
+can read. `theme.test.ts` (Connection, Explorer) pins them, and its history is the
+argument for how:
+
+- **by VALUE, not by presence.** "A light override exists" passes the re-derived amber
+  of §5.5.3. The ramp is asserted digit by digit.
+- **derived, not listed.** The gold-family check reads `:root` and requires the light
+  block to cover every member, so a new token is covered the day it is added.
+- **for the shape of the class, not the shape of the last bug.** Five forms of one
+  silent failure shipped in sequence, each past a guard written for the previous one:
+  `` `${C.gold}22` `` · `` `${(v ? C.gold : C.subtext)}55` `` · `C.subtext + '55'` ·
+  `'1px solid ${goldA(.25)}'` (a placeholder in **single** quotes — a literal) ·
+  `rgba(5,8,22,.92)` (a raw colour, matching none of the above). And `#fff` slipped a
+  check that read six hex digits only.
 
 ---
 

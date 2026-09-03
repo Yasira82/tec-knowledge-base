@@ -4,7 +4,329 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 1 September 2026 (Session 49 — Connection messaging completed; a deploy that took three theories and one log line)
+**Last Updated:** 2 September 2026 (Session 50 — the dead badge: five verification surfaces that could never flip)
+
+---
+
+## SESSION 50.1 — THE HUB'S COLOURS WERE NEVER WRITTEN DOWN (3 Sep 2026) ◐
+
+A one-line question — *"did you document the Hub's colour shades in the KB?"* — and the
+answer was **no**, with a consequence already shipped.
+
+**What C-83 actually had:** the dark WEALTH tokens, and `#FEA500` mentioned once in
+passing inside a note about something else. Nothing on the light palette, the three
+theme states, the channel tokens, the gold-family rule, the status-colour contrast, or
+the top band. All of it live in the Hub for months, in code, in one repo.
+
+**What that cost, the same week:** porting light mode to Explorer and Connection, the
+Hub's values were not available to copy — so they were re-derived. Twice wrong:
+
+| | Hub (authority) | What shipped | Effect |
+|---|---|---|---|
+| `--tec-gold-dark` (light) | `#E08800` | `#F08C00` | two apps a shade apart on the same button |
+| `--tec-gold-light` (light) | `#FFC04D` | `#FFC24D` | " |
+| status colours (light) | darkened (`#15803d` …) | **not overridden** | `#22C55E` on white ≈ **2.3:1** — every success line unreadable as text |
+
+The status-colour miss is the serious one: it is a contrast failure, not a shade
+disagreement, and the gold-family guard did not cover it because that guard was written
+for the gold family.
+
+**Closed:**
+- **C-83 §5.5** — the theme contract, written as the AUTHORITY rather than a
+  description: three states · the light palette table · *a token is a family, not a
+  value* · status colours darken (with the measured ratios) · channels and the four
+  shapes of the silent-failure bug · the top band + `.tec-on-band` · the two structural
+  hex exemptions.
+- Connection + Explorer realigned to the Hub's values, status colours darkened.
+- A new guard in both: the light block must override `--tec-green/blue/red/purple` and
+  their channels.
+
+> **The lesson, and it is the fleet's oldest one.** A value that lives in one repo and
+> nowhere else is not a standard, it is a coincidence — and the next app will re-derive
+> it slightly differently. C-02 Session 46 recorded this exact shape (a rule existed,
+> one repo followed it, nobody back-adopted it) and it recurred inside two weeks,
+> because the fix then was to sweep the repos rather than to write the rule down.
+
+### The follow-up question found a bigger gap
+
+*"…the greys and blacks and off-white too, and the curves on the inner pages"* — and
+reading the Hub to answer it turned up that **C-83 §4 declares three background values
+the Hub stopped painting.**
+
+| | C-83 §4 says "IMMUTABLE" | Hub actually ships |
+|---|---|---|
+| Layer 1 | `#050816` blue-black | **`#101014`** neutral charcoal |
+| Layer 2 | `#0B1020` | **`#21212a`** |
+| Layer 3 | `#111627` | **`#2c2c37`** |
+| Layer 4 | *(none — only three layers)* | **`#383844`** |
+
+A doc that declares "no app may override" over values the reference implementation
+abandoned is **worse than saying nothing**: an app reading it adopts the wrong ground in
+good faith, which is what all 23 of them did.
+
+**Recorded as C-83 §5.6:** the neutral dark ramp and why it is neutral (a blue-black
+pushes the Pi amber green); the warm off-white light ramp and why the PAGE is off-white
+while the CARD is white; the four-step ink ladder plus `--tec-icon` and the two fill
+washes; and the radius scale including `--tec-topbar-radius: 22px`, which sits between
+`lg` and `xl` on purpose and applies to the bottom corners only. §4 gets a supersede
+banner — kept, not deleted, because 21 apps still run it and the *structure* is still
+right; only the numbers moved.
+
+**Deliberately NOT swept.** Each app takes the ramp with its own change, verified on a
+device, copying §5.6.1–5.6.3 rather than approximating them — that is the whole lesson
+of 50.1, applied the same day it was written. Ramp first, then the band: a band tuned
+against `#050816` and dropped onto `#101014` is a different band.
+
+**First adopter, same session.** Connection took the ramp — `#050816 → #101014`,
+`#0B1020 → #21212a` for the card — plus the four-step ink ladder and `--tec-icon`. It is
+pinned by VALUE in that repo's `theme.test.ts` (verified to fail when the old ground is
+put back), because a guard that only checks "a light override exists" would have passed
+the re-derived amber above.
+
+### The table, and the style law (C-83 §5.7 + §5.8)
+
+Asked to write down **all** the colours and the style, because it goes into every app.
+§5.5–5.6 explained the reasoning; §5.7 is now the lookup table (every token, both themes,
+plus radius / spacing / type / shadow / motion / z) and **§5.8 is the component style
+law** — eight rules, each written after the opposite shipped, each naming what went wrong:
+
+| | Rule | What it cost |
+|---|---|---|
+| 5.8.1 | A filled accent is **flat** | 21 buttons in Connection, 10 in Explorer, gradienting `#FEA500 → #E08800` — a dirty patch on every one, in light |
+| 5.8.2 | The accent gets **one meaning per surface** | a gold bubble per message drowned the one gold that meant something (you were **named**) |
+| 5.8.3 | Icons from the set, **never emoji** | 📎🎤➤ carry their own colour, so no token reached them, and each platform drew them differently |
+| 5.8.4 | **One slot** for a mode pair | the primary action sat grey and disabled most of the time, and the input paid for both in width |
+| 5.8.5 | Chrome sits on a **surface** | composer + nav on one ground read as a single thick strip |
+| 5.8.6 | The band's **proportions** are part of the shape | a 22px corner on a 117px band reads heavier than on an 87px one — same token, different curve |
+| 5.8.7 | Three places take hex, and **only** hex | the exemption was one-directional, so a sweep put `var()` into the SSO landing and the share card — no ground, no accent, live |
+| 5.8.8 | What a guard must check | by **value** not presence · **derived** not listed · for the **class** not the last bug |
+
+§5.8.8 is the one that generalises: **five forms of a single silent failure shipped in
+sequence, each past a guard written for the previous one.**
+
+### Explorer joined the ramp
+
+Same session, same values — flat amber, `#101014` ramp, four-step ladder. Two earlier
+Explorer commits (the gold family + darkened status colours) turned out never to have
+landed: **PR #36 merged an earlier state of the branch**, so `#22C55E` on white — ~2.3:1
+— was still shipping there. Rebased onto current `main` rather than re-derived.
+
+**Adopted: Hub · Connection · Explorer.** Remaining: 21.
+
+**Still open:** the other 21 apps have no light theme at all and are on the old ramp.
+When they move, §5.5–§5.8 are what they copy from.
+
+---
+
+## SESSION 50 — THE DEAD BADGE: FIVE VERIFICATION SURFACES THAT COULD NEVER FLIP (2 Sep 2026) ◐
+
+> Truth State: **[Current State]** for what merged · **[Planned State]** for what is in
+> review · Verification: **[Runtime Verified]** only where named below, **[Code Verified]**
+> everywhere else.
+> **Merged:** Tec-Explorer **#31 #32 #34 #35** · tec-core-backend **#261 #262 #263**.
+> **In review:** tec-core-backend **#264** · Tec-Zone **#36** · Tec-Explorer **#36** ·
+> Tec-Estate **#30** · Tec-Epic **#34** · Tec-Nx **#28**.
+
+### 1. The finding that organises the whole session
+
+A `verified` column, read by the app, **ranked by** in the query, rendered as a badge,
+and documented in a comment explaining where it comes from — with **nothing anywhere
+writing it**. Found in **five** places, independently:
+
+| Surface | Column | State before |
+|---|---|---|
+| Explorer | `ExplorerVerification` | Wired to the WRONG EVENT (below) |
+| Connection | `ConnectionProfile.verified` | No writer at all |
+| Epic | `EpicProject.zone_verified` | No writer at all |
+| NBF | `NbfBusiness.zone_verified` | No writer at all |
+| Estate | `zoneVerified` (frontend) | No writer, and none possible |
+
+**Why this is worse than a missing feature.** Each of these lists orders trust-first:
+
+```
+orderBy: [{ verified: 'desc' }, { featured: 'desc' }, … ]
+```
+
+With the earned signal pinned `false` for every row, the ordering collapses onto the
+**next** key — `featured`, which is a Pro placement and is **bought**. Every one of these
+directories was ranking by the paid signal *because the earned one was empty*. Connection's
+own `DirectoryCard` carries a comment warning against exactly that inversion, above code
+that had been doing it since the column was created.
+
+> **The rule this session earned:** a column that is READ and RANKED BY but never WRITTEN
+> does not fail loudly — it silently promotes whatever key sorts after it. Adding a trust
+> field and its writer must be one change, or the field is a lie with a sort order.
+
+### 2. Explorer: the wrong event, not the wrong payload
+
+The consumer listened to `kyc.verified`. Two separate errors, one visible and one not:
+
+- **Constitutionally wrong.** KYC verifies a PERSON — an ID document and a selfie. It
+  answers *"who is this?"* and cannot answer *"does this shop exist?"*. **C-120 §3 (WHAT
+  ZONE OWNS)** lists `Merchants → Pi-accepting businesses` — word for word what the
+  Explorer index holds. Explorer's own CLAUDE.md said KYC. **Two charters disagreed and
+  the code followed the wrong one.**
+- **Mechanically dead.** `kyc.verified` carries `{ userId, level }` — a UUID — while the
+  consumer resolves a Pi username. `ownerOf` returned `undefined` every time, so
+  `applyVerification` was never called. No error was logged, the consumer group existed,
+  and every health check stayed green.
+
+The zone events carry `piUsername` directly, which is the key `applyVerification` already
+used — **the constitutionally correct source turned out to be the simpler one**, with no
+identity translation left to get wrong.
+
+### 3. Zone only ever announced half a decision
+
+`reviewDecision` emitted on VERIFY and said nothing on REVOKE. A badge could be granted and
+**never withdrawn**: Zone would show `REVOKED` while every consumer that had acted on the
+grant kept displaying it. `zone.badge.revoked.v1` closes it.
+
+> A verification that cannot be taken back is worse than one never given, **because it is
+> trusted**.
+
+### 4. Which verification vouches for what — the rule, in one place
+
+Zone verifies four kinds of thing, and collapsing them into one boolean is how a badge
+starts claiming something nobody reviewed:
+
+| Consumer | Accepts | Because |
+|---|---|---|
+| Explorer (shops) | `MERCHANT` | A verified BUILDER is not a verified shop |
+| Connection (people) | `BUILDER` + `MERCHANT` | Both are facts about the PERSON's own economic identity |
+| Epic (projects) | `PROJECT` | |
+| NBF (businesses) | `MERCHANT` | |
+
+`PROJECT` and `COMMUNITY` never vouch for a person: **verifying a community does not vouch
+for whoever registered it.**
+
+The filtering lives in `ZoneService` (`hasVerifiedIdentity`, `verifiedNamesFor`) and
+deliberately **not** in any consumer — deciding it in two places is how two answers start
+to disagree.
+
+### 5. Recompute, never toggle
+
+Every consumer asks Zone for the current answer rather than flipping a boolean from
+whichever event just arrived. Both reasons are correctness, not taste:
+
+- **A person can hold several verifications.** Revoking a MERCHANT badge must not clear the
+  flag while a BUILDER verification stands — a toggle would, and it would look like Zone
+  withdrew something it never did.
+- **Streams are at-least-once.** A recompute is idempotent by construction; only rows whose
+  value actually differs are written, so a redelivery writes nothing.
+
+### 6. Estate: a claim the platform cannot make at all
+
+Estate showed **"🛡️ Zone Verified" / "Verification pending"**, listed **"Unverified"**, and
+counted **"✓ Zone"** on its dashboard. All four were permanent, and no code could change
+them — **Zone has no property type**. Its four kinds are PROJECT, MERCHANT, BUILDER,
+COMMUNITY (C-120 §3). A building is none of them.
+
+So "pending" promised a review that was not queued, could not be requested, and had no
+process behind it. The label now reads **"Self-recorded"**, and the counter is removed
+rather than left pinned at zero.
+
+> When a badge cannot be backed, the fix is not a better data source — it is **saying what
+> is true**. A permanent "pending" is a promise; "self-recorded" is a fact.
+
+### 7. Zone's applicant surface was invisible
+
+The whole verification workflow — submit an entity, attach evidence, watch the status —
+was **built and rendering nothing**. `VerificationPanel` opened with `if (!isAuth) return
+null` and was handed `usePiAuth().isAuthenticated`, which reads `document.cookie`. Pi
+Browser stores `tec_user` so the SERVER can read it and client JS cannot (**C-123 §3**), so
+on the only platform this ships to that value is always `false`.
+
+The page already knew: `useMe()` is a server round-trip and the line declaring it carries
+the C-123 note. Two call sites were missed.
+
+**The identical bug had shipped in Explorer's "My Business" tab weeks earlier** — same
+hook, same `return null`, same platform. It is now pinned by a test in both repos.
+
+`ReviewPanel` is deliberately left NOT gated on the client flag: a genuine ADMIN can be
+signed in with `isAuth=false`, and the backend answers 403 for a non-admin, so
+authorization stays server-side either way (P6).
+
+### 8. Fabricated verifications in fixture data
+
+`PROJECTS` (Epic), `PORTFOLIO` (Estate) and `OPPORTUNITIES` (NX) carried `verified: true` on
+twelve rows between them. A fixture wearing a verification badge is **the platform verifying
+itself** — C-120 and C-108 §4 forbid it, C-135 §4 forbids a fabricated directory reaching a
+screen.
+
+None are rendered today; every page resolves live data. **That is precisely why it mattered:**
+Explorer's seed was dead too, until someone wired it and eight invented businesses appeared
+in production carrying six "Verified" badges. A fixture is one import away from being real.
+
+All twelve are `false` now, with a test in each repo pinning it. In Epic **a test was
+asserting the violation** (`expect(legend?.zoneVerified).toBe(true)`) — a test that requires
+the badge turns the violation into a rule.
+
+### 9. Explorer: trust became a ladder
+
+Every real merchant was labelled **Unverified**, because the only other value required a
+review that is not reachable end-to-end. A badge with one attainable value is not a badge —
+it is a warning printed on everything, and `live · 0 verified` was permanent.
+
+| | Means | Evidence |
+|---|---|---|
+| **L1** Self-listed | Nobody stands behind it | No owner (legacy rows only) |
+| **L2** Pi account | A real person with a Mainnet wallet listed this | `owner`, written server-side from a verified session token |
+| **L3** Verified business | A reviewer checked the business | Zone's verdict |
+
+**L2 is not Explorer verifying anything** (C-108 §4) — it reports a fact already held. It is
+**derived, never stored**: no enum change, no migration, and no trust column that can drift
+from the facts it summarises.
+
+### 10. Also shipped in Explorer (merged)
+
+| | The decision worth keeping |
+|---|---|
+| **Arabic search** | Both the stored text and the query fold through ONE normalizer. ة/ه · أإآ→ا · ى/ي · tashkeel · tatweel · Arabic-Indic digits · `ال`. Folding one side only makes matching *worse*. |
+| **Removing a listing** | A **redaction, not a delete**: `uniqueHandle` frees the slug when the row goes, so the next merchant with a similar name would inherit the previous business's reviews and moderation reports. Reviews and reports survive — otherwise "delete and re-list" clears a record. |
+| **Five listings per owner** | Was one, which refused anyone with two branches. |
+| **Light + dark** | The token file carried a `[data-theme='light']` block from day one that **nothing could reach**: 248 `TEC_COLORS` references are hex baked into inline styles, decided at render. Now `var(--tec-*)`, with CHANNEL tokens (`--tec-gold-rgb`) because `var(--tec-gold)22` is invalid CSS that **raises no error**. |
+| **Map pin without a permission** | `navigator.geolocation` was the ONLY way to set one, and Pi Browser's host app decides whether it reaches the page. Now: tap the map, or paste coordinates. `٫` (U+066B) is the Arabic **decimal** separator — read as a comma it moves a pin thirty degrees, into the sea, in silence. |
+
+### 11. What the audit cleared
+
+| App | Finding |
+|---|---|
+| **Life** | No verification concept, and correctly so — a personal record has no entity to verify. Nothing changed. |
+| **Commerce · Ecommerce · Assets** | `kycVerified` from the JWT is a **personal gate** ("KYC before you sell"), never a trust badge shown to buyers. Correct as-is. |
+| **Nexus · System · Dx · FundX · Vip · Elite · Insure · Titan · Alert · Hub** | No verification claim rendered. Nothing to fix. |
+
+### 12. Guards added, and why each exists
+
+Every rule below fails **silently** when broken, which is why each is pinned rather than
+reviewed:
+
+- **Theme (Explorer, 23 tests)** — the alpha-on-a-token guard was rewritten twice because it
+  only knew the shapes of bugs already found. Four forms shipped past earlier versions:
+  `${C.gold}22`, `${(v ? C.gold : C.subtext)}55`, `C.subtext + '55'`, `rgba(5,8,22,0.92)`.
+  *A guard that chases syntax one form at a time finds each bug once.*
+- **Trust ladder (Explorer, 30)** · **pin fallback (23)** · **removal (12)**
+- **Verification source (backend, 27)** — including that the health sensor moved WITH the
+  subscription: left pointing at `kyc.*` it would report a healthy group on a stream
+  Explorer no longer touches and miss a dead one on the stream it now reads.
+- **Zone visibility (9)** · **fixture honesty (3 repos)**
+
+### 13. Open, and honest about it
+
+- **#264 is not merged.** Until it is, four badges remain unwritable.
+- **L3 is unreachable in practice** even after merge: Zone's applicant surface needed
+  **#36** to be visible at all, and no merchant has submitted anything. Explorer handles
+  this honestly by showing L2 rather than a permanent "Unverified".
+- **The Zone↔Epic join is by owner + NAME**, matching the frontend's existing
+  `zoneStatusForName`. A stored `zone_handle` would be exact and is deliberately NOT added:
+  nothing would write it without a submit-to-Zone flow inside Epic, and **a nullable column
+  no code fills is precisely the failure this session was fixing.**
+- **Runtime Verified** covers only what was seen on a real device: the Arabic search
+  returning a real listing, the light theme, and the map. Everything else is
+  **[Code Verified]**.
+- **Fleet reality:** the Explorer index holds **one real listing** — the owner's own. The
+  subscription-activation gap ran across 19 apps for months before anyone noticed. Both are
+  evidence that the fleet has close to zero users, which is a product question and not an
+  engineering one.
 
 ---
 

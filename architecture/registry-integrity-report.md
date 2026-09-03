@@ -1,6 +1,6 @@
 # Registry Integrity Report
 
-> **Generated:** 2026-09-02T02:19:04.124031
+> **Generated:** 2026-09-03T06:41:57.930035
 > **Registry:** `/home/user/tec-knowledge-base/architecture/asset-registry.yaml`
 > **Rules:** `/home/user/tec-knowledge-base/architecture/registry-integrity-rules.yaml`
 > **Status:** ✅ CLEAN
@@ -14,7 +14,7 @@
 | Coverage | 100.0% |
 | Errors | 0 |
 | Warnings | 1 |
-| Info | 62 |
+| Info | 63 |
 
 ## Per-Tier Breakdown
 

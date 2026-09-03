@@ -130,11 +130,34 @@ events:
   - name: zone.badge.issued.v1
     owner: tec-identity-service/zone
     subject: piUsername
-    consumers: [tec-identity-service/legend]
+    consumers: [tec-identity-service/legend, tec-identity-service/explorer, tec-identity-service/connection, tec-identity-service/zone-badge]
     status: live
     verified: true
-    binds_to: [C-120, C-126, C-121]
-    note: verify → earn. Emitted by zone.reviewDecision on a confirmed VERIFY.
+    binds_to: [C-120, C-126, C-121, C-108]
+    note: >-
+      verify → earn. Emitted by zone.reviewDecision on a confirmed VERIFY.
+      Explorer consumes it for MERCHANT entities only — a verified BUILDER is
+      not a verified shop. It replaced kyc.verified there: KYC verifies a
+      person, C-120 §3 gives Zone `Merchants → Pi-accepting businesses`, and
+      the kyc payload carried a userId where Explorer needed a piUsername, so
+      the badge could never flip. Connection consumes it too, for the ✅ badge
+      on a person's directory profile — but for BUILDER/MERCHANT only, since
+      verifying a community does not vouch for whoever registered it. The
+      zone-badge consumer serves Epic (PROJECT) and NBF (MERCHANT), whose own
+      zone_verified columns were read and ranked by while nothing wrote them.
+  - name: zone.badge.revoked.v1
+    owner: tec-identity-service/zone
+    subject: piUsername
+    consumers: [tec-identity-service/explorer, tec-identity-service/connection, tec-identity-service/zone-badge]
+    status: live
+    verified: true
+    binds_to: [C-120, C-108]
+    note: >-
+      The withdrawal half. Only VERIFY was emitted before, so a badge could be
+      granted and never taken back: Zone showed REVOKED while every consumer
+      that had acted on the grant kept displaying it. A verification that
+      cannot be withdrawn is worse than one never given, because it is
+      trusted.
   - name: epic.project.completed.v1
     owner: tec-identity-service/epic
     subject: piUsername
@@ -175,6 +198,28 @@ events:
       Explorer ranks its listing with it. PRODUCER NOW BUILT (tec-core-backend #161): the
       Analytics daily scoring batch emits it per active owner (popularity = merchant-activity
       count) alongside legend.scores.updated.v1. Ranking degrades gracefully without it.
+
+  # ── Trust → discovery ranking (Connection → Explorer, C-108 §10) ─────────
+  - name: connection.trust.updated.v1
+    owner: tec-identity-service/connection
+    subject: sellerUserId
+    consumers: [tec-identity-service/explorer]
+    status: live
+    verified: true
+    binds_to: [C-107, C-108]
+    note: >
+      A seller's DISTINCT-BUYER count, after Connection applied a paid order to the
+      Trust Graph. Explorer stores it against that owner's listings and ranks with it
+      — above the paid FEATURED slot, so money can never lift a listing out of its
+      trust tier (C-108 §7). Emitted AFTER Connection's transaction commits: Explorer
+      deliberately does NOT read order.paid.v1 itself, which would both re-derive a
+      number Connection owns (C-108 §4) and race it — two consumer groups on one
+      stream, with Explorer able to read the graph one order stale for ever.
+      Payload carries a seller id and a count only: no amounts, no order ids, no buyer
+      identities, because a public ranking signal must not leak who bought what
+      (C-107 — reputation is never presented as financial truth). Last-write-wins, so
+      at-least-once redelivery is a no-op rather than a double increment.
+      Built in tec-core-backend #265.
 
   # ── Legend scoring (Analytics → Legend, ADR-013) ─────────────────────────
   - name: legend.scores.updated.v1
