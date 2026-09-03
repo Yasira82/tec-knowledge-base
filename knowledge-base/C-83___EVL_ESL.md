@@ -164,6 +164,170 @@ No app may override. No user may change.
 
 ---
 
+# 5.5 THEME STATES — THE LIGHT PALETTE, THE CHANNELS, AND THE BAND
+
+> Truth State: [Current State] | Governance State: [Draft] | Verification: [Code Verified]
+> Authority: `tec-app/tec-frontend/src/styles/tec-design-tokens.css` (the Hub is the
+> reference implementation). Adopted: Hub · Explorer · Connection. Not yet: the other 21 apps.
+
+Sections 4 and 5 above define the **dark** ground, and for a long time that was the
+only ground there was. It is no longer: the Hub ships a light theme and the apps are
+adopting it. **These values were live in the Hub for months and written down nowhere**,
+which is exactly how the fleet drifts — a rule exists, one repo follows it, and the
+next app re-derives it slightly differently (see C-02 Session 46, and §5.5.3 below,
+which is that mistake happening again).
+
+## 5.5.1 Three states, not two
+
+| State | Expressed as | Meaning |
+|-------|--------------|---------|
+| dark | `[data-theme='dark']` | the reader chose dark |
+| light | `[data-theme='light']` | the reader chose light |
+| **system** (default) | **the ABSENCE of the attribute** | follow the phone, live |
+
+`system` is a real choice and it is the default. It is the absence of the attribute so
+the media query keeps tracking — resolving it in JS would freeze the page at whatever
+the phone happened to be at first launch.
+
+The media query **MUST** be scoped `:root:not([data-theme])`. Unscoped, a light phone
+silently overrules a reader who explicitly picked dark, and they have no way to tell
+the setting is being ignored.
+
+`color-scheme` is stamped on `<html>` by an inline boot script in `<head>`, never
+pinned in CSS or in a `<meta>`. Pinned to `dark` it gave light mode dark scrollbars and
+dark form controls. Deferred instead of inline, the page paints dark and **snaps** to
+light on every load.
+
+## 5.5.2 The light palette (authority)
+
+```css
+[data-theme='light'] {
+  --tec-bg:          #f4f3f1;   /* Layer 1 */
+  --tec-surface-1:   #ffffff;   /* Layer 2 */
+  --tec-surface-2:   #f1efec;   /* Layer 3 */
+  --tec-surface-3:   #e7e4df;
+  --tec-border:      rgba(0,0,0,0.09);
+
+  --tec-gold:        #FEA500;   /* the WEALTH amber, measured on white */
+  --tec-gold-dark:   #E08800;
+  --tec-gold-light:  #FFC04D;
+  --tec-gold-rgb:    254, 165, 0;
+
+  --tec-text-1:      rgba(0,0,0,0.90);
+  --tec-text-2:      rgba(0,0,0,0.62);
+  --tec-text-3:      rgba(0,0,0,0.42);
+  --tec-text-rgb:    0, 0, 0;
+  --tec-fill-soft:   rgba(0,0,0,0.05);
+}
+```
+
+**The amber deepens on white.** `#FBB44A` is sampled from the Pi splash mark and carries
+a dark page; on white it is a pale wash that fails both as text and as a border.
+`#FEA500` is Pi's own *"Welcome to Pi"* headline amber — the same brand measured on a
+light ground. Which one is in play is a THEME decision and lives in the token file.
+
+## 5.5.3 A token is a FAMILY, not a value — the mistake this section exists to stop
+
+Overriding `--tec-gold` alone is not a theme, it is half of one.
+
+Connection and Explorer did exactly that. The gradient companions stayed on their
+dark-ground values, so every primary button in light mode ran `#FEA500 → #E8962A` —
+and `#E8962A` (R232 G150 B42) was chosen to sit on near-black, so it carries a
+desaturated brown cast that reads as a **dirty dark patch** on the light half of a
+button. Twenty-six buttons in one app. It looked like the gradient was broken rather
+than a token being unset.
+
+Worse, the repair **re-derived** `#F08C00`/`#FFC24D` instead of copying the Hub's
+`#E08800`/`#FFC04D` — because the Hub's values were not written down anywhere. Two
+apps a shade apart on the same button, from one undocumented number. That is why this
+section exists, and why the table above is the authority rather than a description.
+
+> **Rule.** A theme block overrides every member of a family it touches, and it copies
+> the authority rather than choosing a near-match.
+> Enforced by `theme.test.ts`, which DERIVES the gold family from `:root` and asserts
+> the light block covers every member — derived rather than listed, so a new token is
+> covered the day it is added.
+
+## 5.5.4 Status colours DARKEN on white — contrast, not taste
+
+The §5 semantic colours were picked to glow on near-black and **fail as text on white**:
+
+| Domain | Dark | on white | Light | on white |
+|--------|------|---------:|-------|---------:|
+| GROWTH | `#22C55E` | ~2.3:1 ❌ | `#15803d` | ~5.0:1 ✅ |
+| RISK | `#EF4444` | ~3.3:1 ❌ | `#b91c1c` | ~5.9:1 ✅ |
+| GOVERNANCE | `#3B82F6` | ~3.1:1 ❌ | `#1d4ed8` | ~6.3:1 ✅ |
+| IDENTITY | `#8B5CF6` | ~3.5:1 ❌ | `#6d28d9` | ~6.7:1 ✅ |
+
+The **meaning** does not change with the theme — green still means GROWTH — only the
+luminance does. The channel tokens move with them (`--tec-green-rgb`), or every
+`rgba(var(--tec-green-rgb), …)` keeps painting the bright one.
+
+## 5.5.5 Channels — and the silent failure they exist to prevent
+
+```css
+--tec-gold-rgb: 251, 180, 74;   --tec-text-rgb: 255, 255, 255;
+--tec-bg-rgb:   5, 8, 22;       --tec-green-rgb / --tec-red-rgb
+```
+
+An app that wants a colour at partial opacity used to append two hex digits to a hex
+string. Pointed at a variable that yields **`var(--tec-gold)33`: invalid CSS that
+raises NO error** — the declaration is dropped and the border silently stops painting.
+
+The channels let `rgba(var(--tec-gold-rgb), .2)` follow the theme instead. This is the
+same constraint §"load-bearing" states for the package: `TEC_COLORS.*` stays plain hex
+because consumers append alpha to it; theme-aware colour belongs in a CSS custom
+property the **app** owns.
+
+**Four shapes of this bug have shipped**, each past a guard written for the last one:
+
+```
+`${C.gold}22`                     an interpolated token
+`${(v ? C.gold : C.subtext)}55`   an expression, not a bare member
+C.subtext + '55'                  concatenation, no template at all
+'1px solid ${goldA(0.25)}'        a placeholder inside SINGLE quotes — a literal
+rgba(5,8,22,0.92)                 a raw colour, matching none of the above
+```
+
+> A guard that knows only the shapes of the bugs already found finds each bug once.
+
+## 5.5.6 The top band
+
+Every inner page is framed by a solid band with rounded **bottom** corners. Without it
+an inner page opens on exactly the same flat ground as the one before, and tapping
+through feels like nothing happened.
+
+```css
+--tec-topbar:        #3f311f;   /* dark: ~20% gold mixed into the page */
+--tec-topbar-radius: 22px;
+--tec-topbar-ink-1 / -ink-2 / -ink-3 / -gold / -fill / -border
+```
+
+`[data-theme='light']` sets `--tec-topbar: #17171d`. **The band is dark in BOTH themes** —
+which is the part that needs care: a control inside it reads the *page* palette, so on
+a light page it paints black ink and a white surface onto a near-black band and
+disappears.
+
+`.tec-on-band` **re-scopes the tokens for that subtree** rather than restyling each
+control, so a component dropped into the header is correct without knowing the band
+exists. That is the only version of this that stays true after the next change.
+
+## 5.5.7 Two exemptions, both structural
+
+Hex literals are correct in exactly two places, and neither is a shortcut:
+
+- **`sso-callback/route.ts`** — plain HTML served *before any stylesheet*; it cannot
+  read a custom property at all.
+- **`opengraph-image.tsx`** (`next/og`) — Satori resolves no custom properties, and a
+  share card is a cached server-composed image with no reader whose theme it could follow.
+
+A `<meta name="theme-color">` is a third: it is read by the browser's own chrome,
+outside the document's style resolution. Give it one per scheme instead.
+
+**Do not "fix" any of these into `var()`.**
+
+---
+
 # 6. THE 6 ESL DOMAINS
 
 | Domain | Color | Shape | Motion | Apps |

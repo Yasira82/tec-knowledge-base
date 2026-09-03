@@ -8,6 +8,50 @@
 
 ---
 
+## SESSION 50.1 — THE HUB'S COLOURS WERE NEVER WRITTEN DOWN (3 Sep 2026) ◐
+
+A one-line question — *"did you document the Hub's colour shades in the KB?"* — and the
+answer was **no**, with a consequence already shipped.
+
+**What C-83 actually had:** the dark WEALTH tokens, and `#FEA500` mentioned once in
+passing inside a note about something else. Nothing on the light palette, the three
+theme states, the channel tokens, the gold-family rule, the status-colour contrast, or
+the top band. All of it live in the Hub for months, in code, in one repo.
+
+**What that cost, the same week:** porting light mode to Explorer and Connection, the
+Hub's values were not available to copy — so they were re-derived. Twice wrong:
+
+| | Hub (authority) | What shipped | Effect |
+|---|---|---|---|
+| `--tec-gold-dark` (light) | `#E08800` | `#F08C00` | two apps a shade apart on the same button |
+| `--tec-gold-light` (light) | `#FFC04D` | `#FFC24D` | " |
+| status colours (light) | darkened (`#15803d` …) | **not overridden** | `#22C55E` on white ≈ **2.3:1** — every success line unreadable as text |
+
+The status-colour miss is the serious one: it is a contrast failure, not a shade
+disagreement, and the gold-family guard did not cover it because that guard was written
+for the gold family.
+
+**Closed:**
+- **C-83 §5.5** — the theme contract, written as the AUTHORITY rather than a
+  description: three states · the light palette table · *a token is a family, not a
+  value* · status colours darken (with the measured ratios) · channels and the four
+  shapes of the silent-failure bug · the top band + `.tec-on-band` · the two structural
+  hex exemptions.
+- Connection + Explorer realigned to the Hub's values, status colours darkened.
+- A new guard in both: the light block must override `--tec-green/blue/red/purple` and
+  their channels.
+
+> **The lesson, and it is the fleet's oldest one.** A value that lives in one repo and
+> nowhere else is not a standard, it is a coincidence — and the next app will re-derive
+> it slightly differently. C-02 Session 46 recorded this exact shape (a rule existed,
+> one repo followed it, nobody back-adopted it) and it recurred inside two weeks,
+> because the fix then was to sweep the repos rather than to write the rule down.
+
+**Still open:** the other 21 apps have no light theme at all. When they get one, §5.5 is
+what they copy from.
+
+---
+
 ## SESSION 50 — THE DEAD BADGE: FIVE VERIFICATION SURFACES THAT COULD NEVER FLIP (2 Sep 2026) ◐
 
 > Truth State: **[Current State]** for what merged · **[Planned State]** for what is in
