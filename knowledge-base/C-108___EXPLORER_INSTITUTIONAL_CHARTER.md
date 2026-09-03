@@ -184,7 +184,7 @@ Data Governance:
 |---------|-----------|--------|
 | Sponsored Discovery | Paid placement in search results | Primary |
 | Business Profiles | Premium profile features + analytics | Secondary |
-| Verified Badges | KYC-backed trust certification | Secondary |
+| Verified Badges | **Zone**-reviewed business certification (C-120 §3) — earned, never sold | Secondary |
 | Local Promotion | Area-targeted visibility boost | Phase 2 |
 
 ---
@@ -217,10 +217,10 @@ Fake Listing Rate:         < 1% (flagged / total)
 Phase 1 (MVP):
   → Manual business listing submission
   → Category search + location filter
-  → Verified business badge (KYC-backed)
+  → Verified business badge (Zone-reviewed — C-120 §3, NOT KYC)
 
 Phase 2:
-  → Trust-weighted results (Connection integration)
+  → Trust-weighted results (Connection integration)   ✅ SHIPPED — see below
   → Intent-aware search (Life integration)
   → Map view with Pi-accepting locations
 
@@ -265,10 +265,64 @@ This charter (C-108) depends on:
   C-107 CONNECTION → trust signals for result ranking
   C-106 LIFE      → user intent for personalized discovery
   C-110 SYSTEM    → category governance + listing policies
-  tec-kyc-service (4005) → business verification
+  C-120 ZONE      → business (MERCHANT) verification — NOT tec-kyc-service:
+                    KYC verifies a PERSON, a listing is an ENTITY
 
 Other charters depend on this one for:
   C-103 ECOMMERCE → cross-discovery (product → store discovery)
   C-101 COMMERCE  → merchant visibility channel
   C-104 TEC AI    → opportunity signals for recommendations
 ```
+
+---
+
+## Implementation Status
+
+**Truth State:** [Current State] · **Verification:** [Code Verified] · **Governance:** [ADR Approved]
+
+The discovery index is live in the `explorer` module of `tec-identity-service`
+(`@Controller('identity/explorer')`), reached only through the gateway. Search runs in
+the database with an Arabic normalizer applied to the stored text at write time and to
+the query at read time; owners self-list, edit and delete (owner from the session JWT,
+never the body — P6); reviews, reports, photos and coordinates all exist; Explorer Pro
+drives `featured`, re-synced to the owner's live commerce subscription.
+
+### §10 Phase 2 — Trust-weighted results: SHIPPED (tec-core-backend #265)
+
+Connection owns the Trust Graph (C-107) and announces a seller's DISTINCT-BUYER count
+on **`connection.trust.updated.v1`** after its own transaction commits. Explorer stores
+it and ranks with it. Explorer does **not** read `order.paid.v1`: deriving the number
+here would re-implement Connection's dedupe and idempotency ledger (C-108 §4) *and*
+race it — two consumer groups on one stream, with Explorer able to hold a count one
+order stale for ever.
+
+The result order, and the rule it encodes — **everything earned outranks everything
+bought**:
+
+```
+verification  Zone reviewed the business (C-120 §3)   ← earned
+trust_tier    distinct people who actually paid       ← earned  (C-107 → §10)
+featured      Explorer Pro                            ← BOUGHT  (§7)
+popularity    Analytics relevance                      (C-105)
+pi_accepted · name
+```
+
+Trust ranks **above** `featured`. Before this, a paid listing outranked a shop fifty
+real customers had paid — §7 says visibility is purchasable and trust is not, and that
+held for the Zone badge but stopped holding one line lower.
+
+Bucketed into tiers (0 · 1–4 · 5+) rather than ordered by the raw count: a count would
+make the directory a leaderboard where one order outranks a shop with none, and would
+make the paid slot meaningless. Bucketing is Explorer's **ranking** policy (which
+Explorer owns); the number itself stays Connection's. Malformed counts fail closed to
+tier 0 — no evidence must never outrank real evidence.
+
+### Honest gaps
+
+- `[Code Verified]`, **not** `[Runtime Verified]`: the chain fires only with `REDIS_URL`
+  set on `tec-identity-service` and both consumer groups running. The new stream is
+  registered in the consumer-liveness EXPECTED map, so a dropped group is visible.
+- Listings created before the trust seam carry no `owner_user_id` and rank at tier 0
+  until their owner next opens their own listings, which backfills it.
+- §10 Phase 2's other two items — intent-aware search (Life) and the map view — the map
+  is shipped in the app; Life intent is not started.
