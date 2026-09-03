@@ -282,7 +282,89 @@ Pending (this slice → live):
   □ P0-1 privacy: consent schema + [P1-2] consent gateway are NOT built. Not yet needed —
      Life data is self-declared and is NOT exposed to any other app (esp. TEC AI) yet.
      Required BEFORE any OUTBOUND Life-context API (C-106 §4 Interface Points) is opened.
+     → CLOSED in Session 47 (§11b). Left as written: the reasoning is why it was
+       deferred, and the deferral held exactly as far as it claimed to.
 ```
+
+---
+
+## 11b. IMPLEMENTATION STATUS (Session 47 — September 2026)
+
+**Truth State:** [Current State] · **Verification:** [Code Verified] — merged; the parts
+needing a device or a prod read are named as such below.
+
+> **§4 is complete: six of six owned capabilities are built.** Life was the smallest
+> module in `tec-identity-service` carrying the largest charter — three capabilities and
+> both privacy P0s were unbuilt when the audit (`audits/LIFE_AUDIT_2026-09-03.md`) was
+> written that morning.
+
+### The six capabilities
+
+| # | Capability | State |
+|---|------------|-------|
+| 1 | Goals and aspirations | ✅ CRUD · π target · progress log · auto-complete · Pro insights |
+| 2 | Preferences | ✅ key/value per user |
+| 3 | Activity timeline | ✅ read live from Analytics — Life stores nothing (P1-1 satisfied differently, see 11a) |
+| 4 | **Skills inventory** | ✅ **self-declared half.** `LifeSkill` + a LADDER (LEARNING→EXPERT), `source` on every row. The `ACTIVITY_INFERRED` half is deliberately unbuilt: inferring a skill means reading activity Analytics owns and applying a rule about what it implies — Life computing something it does not own (§4). |
+| 5 | **Personal trajectory** | ✅ `LifeGoalProgress` (append-only) + `GET /identity/life/trajectory` — pace per week, active days, per-goal ETAs |
+| 6 | **Intent signals** | ✅ Redis, 30-min TTL, recorded from Life's own writes · `GET /identity/life/intent` |
+
+### Privacy — both P0s closed
+
+- **P0-1 consent** — `LifeConsent { user_id, category, granted, updated_at }` over
+  `LifeDataCategory` (GOALS · SKILLS · PREFERENCES · ACTIVITY · TRAJECTORY · INTENT).
+  Category-level and timestamped, as the charter specifies. **Absence is a NO**: there is
+  no row until someone grants something, so a category added later is denied for everyone
+  with no backfill — which INTENT then demonstrated in the same session.
+- **§5 right to delete** — `DELETE /identity/life/data` purges goals (with their progress
+  log), skills, preferences, the consent grants, and the Redis intent window, in one
+  transaction. The `User` row and every payment record stay: Life does not own them and
+  may not remove them (§4).
+- Consent changes and purges write an `AuditLog` row (§8 data-sovereignty actions). The
+  purge audit survives the purge and carries counts with no content.
+
+### P0-2 identity anchor — a defect found and closed
+
+The anchor was honoured in the normal case and **shared a row** in one edge case. Three
+controllers resolved a token with no Pi claims as
+`piUserId = decoded.sub` (a value that DIFFERS per person) and
+`username = 'unknown'` (the SAME literal for everyone). `findOrCreateUser` looks up by
+`pi_user_id` first and by `username` second — so the first such caller created a row
+named `unknown` and every later one matched it, and was handed that person's goals,
+follow graph and profile. **Invariant #3.**
+
+Both fallbacks are gone (a missing claim is a 401, P6), plus a guard inside
+`findOrCreateUser` that rejects blank and placeholder usernames before touching the
+database. **Reachability, honestly:** the `register()` path that creates a Pi-less account
+exists in `tec-auth-service`, but sign-in is "Sign in with Pi" only — such an account
+could not reach these routes. The defect was **latent, not exploited**.
+
+### Two design decisions worth carrying forward
+
+- **A projection refuses more often than it answers.** `trajectory.projectable` is false
+  unless there are ≥ 2 entries on ≥ 2 different calendar days. A pace from too little data
+  is not a small error — it is a confident sentence with a date in it, and the date is the
+  part a person acts on.
+- **The intent TTL is a privacy guarantee, not a cache.** Everything else Life owns is
+  durable on purpose; what someone is doing *right now* is the most sensitive thing in the
+  app and the least useful an hour later, so it lives somewhere that forgets by itself.
+  Postgres keeps it "until something deletes it", which is not a privacy property.
+  There is deliberately no durable copy: losing Redis loses the signals, and the
+  alternative is a permanent record of every move.
+
+### What is NOT claimed
+
+**Nothing reads Life data across the boundary yet.** There is no TEC AI reader and no
+outbound personal-context API. The consent grants are what the FIRST reader must consult,
+and the app's Privacy screen says exactly that rather than implying a protection already
+being exercised — building the gate before the reader is the whole point of P0-1.
+
+The outbound context API (§4 Interface Points) remains the next step, and it is now
+unblocked: the gate it must pass through exists.
+
+**PRs:** tec-core-backend #267 (anchor + skills) · #268 (trajectory) · #269 (consent ·
+purge · intent) · Tec-Life #44 (theme + 12 locales + skills) · #46 (Home + Pace) · #47
+(Privacy). **Ops:** `prisma db push` for `life_goal_progress` and `life_consents`.
 
 ---
 

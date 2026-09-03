@@ -15,7 +15,21 @@
 > | L-2 theme | ✅ Fixed — Tec-Life #44 |
 > | L-3 twelve locales | ✅ Fixed — Tec-Life #44 |
 > | Capability 4, skills | ✅ Built — #267 + #44, **self-declared half only** |
-> | L-4 consent · L-5 purge · capabilities 5–6 | Open |
+> | Capability 5, trajectory | ✅ Built — #268 + Tec-Life #46 |
+> | Capability 6, intent signals | ✅ Built — #269 + Tec-Life #47 |
+> | L-4 consent | ✅ Built — #269 + #47 |
+> | L-5 purge | ✅ Built — #269 + #47 |
+>
+> **Every finding in this audit is closed, in one day.** That deserves a sentence of
+> caution rather than a victory lap: closed means *merged and tested*, not *seen working
+> on a phone*. What still needs a device or a prod read is named in C-106 §11b.
+>
+> The recommended order held. The identity anchor went first because everything below it
+> writes rows keyed by it; the theme and locales went second, so Skills, Pace and Privacy
+> were **built** themeable and translated instead of converted later — a cost this fleet
+> has already paid twice. What the order did not anticipate is that consent would land
+> **before** the reader it protects, which is the only sequence in which P0-1 means
+> anything at all.
 
 ---
 
