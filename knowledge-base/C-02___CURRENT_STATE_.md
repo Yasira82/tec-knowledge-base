@@ -275,6 +275,24 @@ Three things worth carrying, all of which cost a wrong answer first:
 > The tool was not billing for nothing; it was doing useful work at a price this PR volume
 > cannot carry. Both are true, and the honest record says so.
 
+**Shipped:** `cache: 'npm'` in **24 repos / 114 jobs**, and a separate fix in
+`tec-core-backend` (its `push` trigger listed `claude/**` while `pull_request` covered the
+same commit — **every branch commit ran two identical pipelines**). Three repos excluded on
+purpose, each for a different measured reason. **27 PRs open.**
+
+**And a NEW-A scare that turned out to be nothing — C-78 §13c.** `src/lib/sdk.ts` (14
+repos) hardcodes a Railway host as a fallback, and the import graph appears to carry it
+into the browser via `usePiAuth`. A real `next build` says **0 occurrences** in
+`.next/static` — webpack drops the unused `pi-auth` exports, so `lib/sdk.ts` never enters a
+client chunk. The grep method was validated first against strings known to be there.
+Recorded as a **negative finding** so the investigation is not repeated.
+
+> **The session's own lesson, earned four separate times:** an inference about this
+> platform was confidently wrong, and each time a measurement taking minutes settled it —
+> the concurrency guard that would have saved nothing, the invoice that contained no AI
+> credits, the backend that already had the cache, and the URL that never shipped. **Build
+> it and grep it. An import graph is not evidence about what ships.**
+
 ---
 
 ## SESSION 50.1 — THE HUB'S COLOURS WERE NEVER WRITTEN DOWN (3 Sep 2026) ◐

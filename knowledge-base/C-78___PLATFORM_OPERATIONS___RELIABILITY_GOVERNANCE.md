@@ -366,6 +366,88 @@ deleted, and $19.62 accrued unbounded. Re-establish it. `Git LFS` sits at a $0 b
 
 ---
 
+# 13c. NEW-A RE-CHECKED — THE GATEWAY URL DOES **NOT** REACH THE BROWSER (Sep 2026)
+
+> **Truth State:** `[Current State]` · **Verification:** `[Runtime Verified]` — a real
+> `next build` of `Tec-Explorer`, grepped, with the grep method validated first.
+> **Verdict: not a violation.** Recorded so nobody re-opens this investigation.
+
+Reading a CI file during the §13b work turned up what looked like a live **NEW-A** breach,
+and the inference was wrong. The record is here because *the wrong answer was reasonable*,
+so someone will reach it again.
+
+## What it looked like
+
+`src/lib/sdk.ts` — present in **14 repos** — carries a hardcoded fallback:
+
+```ts
+const gatewayUrl =
+  process.env.NEXT_PUBLIC_API_GATEWAY_URL ??
+  'https://api-gateway-production-6a68.up.railway.app';
+```
+
+and the import graph appears to put it in the browser:
+
+```
+usePiAuth.ts  (a hook — client)
+  → lib-client/pi/pi-auth.ts        ← lib-client/ IS the client side, by our own convention
+    → lib/sdk.ts                    ← NEXT_PUBLIC_* is inlined at BUILD time
+```
+
+Thirteen apps import `usePiAuth` in real `.tsx` components. On paper: an internal Railway
+host shipped to every user's browser, in the app fleet, against a violation recorded as
+**CLOSED**.
+
+## What the build actually says
+
+```
+grep -rl "api-gateway-production-6a68" .next/static   →  0 files
+grep -rl "api-gateway-production-6a68" .next/server   →  0 files
+```
+
+**And the method was validated before the result was trusted** — the same grep over the
+same directory finds `tecosystem` (3 files), `hub.tecosystem` (3), `Explorer` (15). The
+bundle is readable and the string genuinely is not in it.
+
+**Why:** webpack drops the unused exports of `pi-auth`. The functions that touch `sdk`
+(`resolveIncomplete`, `clearAuthToken`) are never imported by anything; the components
+import only `loginWithPi`, `getStoredUser` and `logout`. So `lib/sdk.ts` never enters a
+client chunk, and the literal is never inlined. (The six `railway` hits elsewhere under
+`.next` are manifests and server-files — build metadata, not served.)
+
+## What remains true, and is smaller
+
+- **It is one refactor from becoming real.** Import any `sdk`-touching function from
+  `pi-auth` tomorrow and the URL ships — silently, with no error and no failing test.
+- The literal is still checked in: `src/lib/sdk.ts` in 14 repos, plus **21 CI workflow
+  files** carrying it as a `secrets.… || '<railway host>'` fallback.
+
+**Proportionate fix, when someone chooses to do it:** delete the fallback and let a missing
+`API_GATEWAY_URL` fail loudly (P6). A silent default pointing at a production host is the
+part that makes the hazard invisible. Not swept as part of §13b — the severity does not
+justify a fleet-wide change, and see the rule below.
+
+## 13c.1 The rule this pair of sections earns
+
+Four times in one session an inference about this platform was confidently wrong, and each
+time a measurement that took minutes settled it:
+
+| Inference | Measurement |
+|-----------|-------------|
+| A `concurrency` guard will cut CI cost fleet-wide | Runs average 3.4 min, gaps 7–15 min — **zero** overlapping runs in the last 20 |
+| The unpaid August invoice is more AI credits | The PDF contains **none** — 80% Actions |
+| `tec-core-backend` needs the same npm cache | It already caches per service, and runs one job not four |
+| The gateway URL ships to the browser | **0 occurrences** in `.next/static`, with the grep method validated |
+
+```txt
+✅ Build it and grep it — a bundle question is answered by a bundle, never by an import graph
+✅ Validate the measurement before trusting its result (grep for something you KNOW is there)
+✅ Record a NEGATIVE finding — an investigation that concluded "no" is a result worth keeping
+❌ Never let a plausible import chain stand in for evidence about what ships
+```
+
+---
+
 # 14. FUTURE: TEAM OPERATIONS MODEL
 
 When team grows beyond solo:
