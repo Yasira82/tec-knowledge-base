@@ -20,6 +20,11 @@
 > | L-4 consent | ✅ Built — #269 + #47 |
 > | L-5 purge | ✅ Built — #269 + #47 |
 >
+> | Capability 6 → the outbound context API | ✅ Built — tec-core-backend #271. The reader
+> the six capabilities were built for; consent-gated, ServiceActor-only, and still with **zero
+> consumers**. |
+> | §3 "auto-complete is well-built" | ⚠️ **Corrected** — the auto-complete was removed (#270). See the correction in §3. |
+>
 > **Every finding in this audit is closed, in one day.** That deserves a sentence of
 > caution rather than a victory lap: closed means *merged and tested*, not *seen working
 > on a phone*. What still needs a device or a prod read is named in C-106 §11b.
@@ -178,6 +183,16 @@ Worth stating explicitly, because a redesign is the moment these get broken by a
   non-owner matches nothing rather than being caught by an `if`.
 - **The goal tracker is genuinely well-built.** Progress clamps to `[0, target]`, auto-completes on
   reaching the target, and never resurrects a terminal goal.
+
+  > **Correction (2026-09-04) — this audit was wrong about the auto-complete.** The clamp and the
+  > terminal-state rule stand. The auto-complete was **removed** (tec-core-backend #270): reaching
+  > 100π is a *fact* the app measured; *"this goal is done"* is a **judgement**, and C-106 §4 puts
+  > self-declared data under the user's control. Because "completed" is terminal and nothing in Life
+  > reopens it, the server was making an irreversible decision on the user's behalf. The screen now
+  > states the fact ("Reached") and offers the action; the user closes the goal.
+  >
+  > Recorded here rather than edited above, for the same reason as the L-1 correction: the finding is
+  > what was believed at the time, and the reasoning that changed it is the more useful half.
 - **Pro gating sits at the BFF**, not in the component — the aggregate is the paid value and the list
   stays free (P5).
 

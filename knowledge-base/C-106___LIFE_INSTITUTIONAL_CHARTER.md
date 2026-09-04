@@ -302,7 +302,7 @@ needing a device or a prod read are named as such below.
 
 | # | Capability | State |
 |---|------------|-------|
-| 1 | Goals and aspirations | ✅ CRUD · π target · progress log · auto-complete · Pro insights |
+| 1 | Goals and aspirations | ✅ CRUD · π target · progress log · Pro insights. **The server no longer closes a goal by itself** — see "fact versus judgement" below. |
 | 2 | Preferences | ✅ key/value per user |
 | 3 | Activity timeline | ✅ read live from Analytics — Life stores nothing (P1-1 satisfied differently, see 11a) |
 | 4 | **Skills inventory** | ✅ **self-declared half.** `LifeSkill` + a LADDER (LEARNING→EXPERT), `source` on every row. The `ACTIVITY_INFERRED` half is deliberately unbuilt: inferring a skill means reading activity Analytics owns and applying a rule about what it implies — Life computing something it does not own (§4). |
@@ -339,7 +339,16 @@ database. **Reachability, honestly:** the `register()` path that creates a Pi-le
 exists in `tec-auth-service`, but sign-in is "Sign in with Pi" only — such an account
 could not reach these routes. The defect was **latent, not exploited**.
 
-### Two design decisions worth carrying forward
+### Three design decisions worth carrying forward
+
+- **Fact versus judgement — the server states the first and never the second.** Progress
+  reaching the target used to **auto-complete** the goal. Reaching 100π is a fact the app
+  measured and may assert; *"this goal is done"* is a judgement, and §4 puts self-declared
+  data under the user's control. Someone who hits their number and decides the goal was
+  too small is not finished — and the server had already moved them into a **terminal
+  state** nothing in Life reopens. The screen now shows **"Reached"** the moment the number
+  lands, with "Mark done" beside it. The user closes it.
+
 
 - **A projection refuses more often than it answers.** `trajectory.projectable` is false
   unless there are ≥ 2 entries on ≥ 2 different calendar days. A pace from too little data
@@ -352,19 +361,38 @@ could not reach these routes. The defect was **latent, not exploited**.
   There is deliberately no durable copy: losing Redis loses the signals, and the
   alternative is a permanent record of every move.
 
+### The outbound personal context — built, and defined by its refusals
+
+`GET /identity/life/context/:username` (§4 Interface Points) is the door TEC AI, Connection
+and Ecommerce were always meant to knock on. It is the **first thing in Life that hands one
+person's data to something that is not that person**, so what it will not do is the design:
+
+| Refusal | Why |
+|---|---|
+| Consent gates every category; nothing granted → `context: {}` | The gate shipped a session before the reader. This is the call it was built for. |
+| A denied category is **not** an empty one — the consent map travels with the payload | A reader handed `goals: []` cannot tell "no goals" from "not allowed", and will cache whichever it guessed. |
+| A table is never read for a category that was not granted | Consent applied after the read is a permission check with the data already in memory. |
+| Trajectory is served as a **pace**, never the entry log | "Where is this person headed" does not need every step they logged. Serving more than the question needs is how a consented read becomes an export. |
+| **ACTIVITY is never served, even when granted** | Life does not own it (§4). Handing a reader Life's copy of someone else's truth is the copy nobody keeps correct. It is absent from the payload and from the audit's served-list — while the grant itself is still reported honestly. |
+| Every read is audited, **including one that served nothing** | An attempt is a fact. The row carries the reader and the categories and **no content**: the data is already in this database, and copying it into the log creates a second store with different retention and no consent gate. |
+
+**ServiceActor only** — `x-internal-key`, constant-time, fails closed (C-47's
+service-to-service exception). It is the one Life route where the subject is a parameter
+rather than the session, which is exactly why it is the one route with an internal-key
+gate in front of it.
+
 ### What is NOT claimed
 
-**Nothing reads Life data across the boundary yet.** There is no TEC AI reader and no
-outbound personal-context API. The consent grants are what the FIRST reader must consult,
-and the app's Privacy screen says exactly that rather than implying a protection already
-being exercised — building the gate before the reader is the whole point of P0-1.
-
-The outbound context API (§4 Interface Points) remains the next step, and it is now
-unblocked: the gate it must pass through exists.
+**The door exists; nobody is at it.** There is no TEC AI reader, no Connection reader and
+no Ecommerce reader — the API has **zero consumers**. Nothing is `[Runtime Verified]`: the
+Pace panel in particular needs progress logged on **two different calendar days** before it
+projects at all, by design, and has not yet been seen doing so on a device.
 
 **PRs:** tec-core-backend #267 (anchor + skills) · #268 (trajectory) · #269 (consent ·
-purge · intent) · Tec-Life #44 (theme + 12 locales + skills) · #46 (Home + Pace) · #47
-(Privacy). **Ops:** `prisma db push` for `life_goal_progress` and `life_consents`.
+purge · intent) · #270 (silent Add · auto-close removed) · #271 (personal context) ·
+Tec-Life #44 (theme + 12 locales + skills) · #46 (Home + Pace) · #47 (Privacy) ·
+#48 · #49 · #50 (design passes). **Ops:** `prisma db push` for `life_goal_progress` and
+`life_consents`.
 
 ---
 
