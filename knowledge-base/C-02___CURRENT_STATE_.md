@@ -249,6 +249,32 @@ never been seen working, because it needs progress logged **on two different cal
 days** before it will project at all — by design (Session 51 §2). The context API has
 **no consumer**; it is a door, and TEC AI is not built.
 
+### Also this session — the platform's own bill, read for the first time
+
+A declined card (`$72.04`, twice) sent us to the billing pages, and what was there is a
+finding in its own right. **Full record: C-78 §13b.** In short:
+
+| Cause | Size | Status |
+|-------|------|--------|
+| **Copilot automatic code review** — fired on every **push**, not every PR | $19.62 in 4 days | ✅ Disabled |
+| **Actions overage** — `npm install` runs 4× per CI run, no `cache: 'npm'` | $58.04 in July | ◐ fix identified, not applied |
+
+Three things worth carrying, all of which cost a wrong answer first:
+
+- **The invoice, not the dashboard.** August was assumed to be more AI credits. The PDF
+  says it contains **none** — it is 80% Actions. Two different problems behind one symptom.
+- **A measurement killed the first fix.** A `concurrency` guard was about to be swept to
+  26 repos because the Hub has one. Life's runs average **3.4 min** with **7–15 min**
+  between pushes — zero overlap in the last 20 runs. It would have saved nothing. The
+  Hub's fix is right for the Hub, whose runs are five times longer.
+- **A config file that nothing reads is worse than none.** `tec-app/.github/copilot-code-review.yml`
+  said `enabled: false` for months; GitHub does not read that filename, and the reviews ran.
+
+> And the last review before it was switched off found a **real defect** in this session's
+> own work — a guard test that passes when the thing it guards is deleted (`indexOf` → -1).
+> The tool was not billing for nothing; it was doing useful work at a price this PR volume
+> cannot carry. Both are true, and the honest record says so.
+
 ---
 
 ## SESSION 50.1 — THE HUB'S COLOURS WERE NEVER WRITTEN DOWN (3 Sep 2026) ◐
