@@ -390,10 +390,111 @@ Completion is not the end. Post-`FOUNDING_PIONEER`, the Hub routes into the ecos
 ## 19. Open Questions (need a decision before Phase B/C)
 
 1. **Leaderboard data source & privacy** (§15) — opt-in geo/edu, owned by Analytics? Or drop?
-2. **Founding gate** — completion only (this charter's default) vs. a KYC/Pi-payment gate?
+2. ~~**Founding gate** — completion only vs. a KYC/Pi-payment gate?~~ → **Answered in §20.5**: completion-only stands; the gate that decides anything is Pi's own, on its own records.
 3. **Richer missions (§6)** — confirm the "Phase C" mission per app with each domain team.
 4. **XP weights (§11)** — final values + whether invite/payment XP ship with Phase B.
 5. **Certificate signing** — key custody + verification endpoint owner.
+
+---
+
+## 20. The Commercial Objective — why this runtime exists at all
+
+> **Truth State:** `[Current State]` · **Verification:** `[Runtime Verified]` — read from the
+> Pi Developer Portal's own claim dialogs, 2026-09-05.
+
+Sections 1–19 describe Pioneer as an onboarding runtime. That is what it *is*. This
+section records what it is **for**, which was not written down anywhere and was
+rediscovered from a phone screenshot mid-session — the exact failure mode C-95 exists
+to prevent.
+
+### 20.1 Pi's claim requirement
+
+Every `.pi` domain must be claimed against a connected Pi app, and the Portal refuses
+the claim until:
+
+```
+The connected app must have:
+  • Completed the app setup checklist
+  • At least 5 unique KYC'd approved Pioneers engage with the app
+  • Meet all utility and compliance requirements
+```
+
+The dialog also states the claim is **tentative** and "subject to periodic compliance
+and utility purpose reviews that could lead to the domain being revoked", and that
+ownership "will need to be renewed before it expires". A cleared threshold is therefore
+not a permanent state.
+
+### 20.2 What is at stake
+
+Twenty-four `.pi` domains were **won at auction and paid for** — including `vip.pi`
+(2.8K π), `nexus.pi` and `explorer.pi` (1.4K π each), `commerce.pi` (999 π),
+`estate.pi` (750 π), `elite.pi` (686 π), `titan.pi` (650 π), `life.pi` (561 π).
+
+**`tec.pi` is the only claim accepted so far** (Claim Pending). Every other app returns
+*"Requirements Not Met"*.
+
+So the campaign's objective is not a badge and not a gift:
+
+> **Get 5 KYC'd Pioneers to genuinely engage with each of the 24 apps, so 24 paid-for
+> domains can be claimed before they lapse.**
+
+The Founding badge and the PRO gift are **incentives in service of that**, not the point.
+Anything that raises total sign-ups without raising *per-app verified engagement* is
+motion, not progress.
+
+### 20.3 The KYC word is the whole rule
+
+"5 unique **KYC'd** approved Pioneers". An opened link from a non-verified account moves
+Pi's counter not at all. This is what makes per-app *verified* engagement the only metric
+that matters, and it is why the campaign deliberately does **not** ask users for identity
+documents (see §20.5) — Pi has already verified them; asking again buys nothing and costs
+trust.
+
+### 20.4 Measurement, and its honest limit
+
+`GET /identity/pioneer/coverage` (admin-gated) reports, per roster app: verified
+pioneers, total openers, and how many are still needed.
+
+**It is not Pi's verdict.** `kyc_verified` is TEC's own KYC register (tec-kyc-service);
+Pi checks *its* records, which this platform cannot read. The two are different registers
+of the same word. So:
+
+| Reading | Meaning |
+|---|---|
+| ours **< 5** | Pi's count is very probably below 5 — **reliable, act on it** |
+| ours **≥ 5** | Pi *might* agree — **not a green light** |
+
+Only the first direction is safe to act on. A consumer that mistakes the second for a
+confirmation will declare a domain ready and then watch the claim get refused.
+
+### 20.5 This answers §19 Question 2, from outside
+
+§19 asks whether the Founding gate should be "completion only, or a KYC / Pi-payment
+gate". The Portal requirement settles the shape of the answer:
+
+- **The gate on the badge stays completion-only.** Demanding identity documents from a
+  first-time visitor to earn a badge reads as a scam and suppresses exactly the
+  participation the domains depend on. Pi has already done the KYC.
+- **The gate that matters is not ours at all** — it is Pi's, applied to its own records,
+  and no rule written here can move it.
+
+What the platform controls is *cost of participation*, not identity: the Quest requires
+twenty-four real visits (enforced by the roster, see the code), which is what makes an
+engagement plausibly real rather than asserted.
+
+### 20.6 Known gap — engagement ≠ opening
+
+Pi counts "engage", which is its own definition and is almost certainly stronger than
+"followed a link". The Quest currently records an **open**. Closing that distance — a
+recorded action inside each app, drawn from the events already in
+`manifests/events-catalog.yaml` rather than new per-app instrumentation — is the highest
+-value remaining work on this runtime, and it is not yet built.
+
+**A stronger signal exists and is unused:** a completed Pi **Mainnet** payment implies the
+payer holds a Mainnet wallet, which Pi grants only after its own KYC. Payment records
+already exist in `tec-payment-service`. Wiring that into coverage would turn an inferred
+count into a near-certain one. Recorded here as a candidate, not a claim — the exact Pi
+KYC/Mainnet coupling should be confirmed against Pi's documentation before it is relied on.
 
 ---
 
