@@ -4,7 +4,294 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 2 September 2026 (Session 50 — the dead badge: five verification surfaces that could never flip)
+**Last Updated:** 4 September 2026 (Session 51.1 — the design passes, and the outbound personal context)
+
+---
+
+## SESSION 51 — LIFE COMPLETES ITS CHARTER (3 Sep 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-core-backend
+> **#267 · #268 · #269**; Tec-Life **#44 · #46 · #47**. Charter: **C-106 §11b**.
+> Audit: `audits/LIFE_AUDIT_2026-09-03.md` — **every finding closed, the same day it
+> was written.**
+
+The session began with *"I want to redevelop Zone and Life from scratch"* and the answer
+was to **read the code first**. The audit that came out of that reading is the session:
+Life was **live, correct in what it does, and doing about a third of what its charter
+says it owns** — the smallest module in `tec-identity-service` (168 lines of service,
+against Explorer's 1,560) carrying the largest charter.
+
+### 1. Three of six owned capabilities had no code at all
+
+C-106 §4 names six. Goals, preferences and the activity timeline existed. **Skills,
+trajectory and intent signals did not** — and those three are the ones that make a
+personal context *usable by another runtime*. Goals and preferences are what a person
+**says**; the other three are what makes it worth reading. All three shipped this session.
+
+| # | Capability | Shipped as |
+|---|------------|-----------|
+| 4 | Skills inventory | `LifeSkill` + a LADDER (LEARNING→EXPERT), `source` on every row. **Self-declared half only** — inferring a skill means reading activity Analytics owns and applying a rule about what it implies, which is Life computing something it does not own (§4). The `ACTIVITY_INFERRED` column exists so an inferred row has an honest place to land. |
+| 5 | Personal trajectory | `LifeGoalProgress` (append-only) → pace per week, active days, per-goal ETAs |
+| 6 | Intent signals | Redis, 30-minute TTL, recorded from Life's OWN writes |
+
+### 2. A direction cannot be read from a cumulative number
+
+`LifeGoal.progress` said `40`. It could not say whether that took a week or a year, which
+is the entire question a trajectory answers. So progress now also writes an **append-only
+entry**, in the same transaction as the goal's new total — the total became a *projection
+of* that log rather than a parallel truth, and a half-written pair would leave two numbers
+that disagree with nothing to say which is right.
+
+The entry records what was **credited**, not what was asked for: the last 5π toward a 100π
+goal sitting at 97π credits 3π, and a log that kept the 5 would count π that never landed.
+
+**The interesting part is when it refuses.** `projectable` is false unless there are ≥ 2
+entries on ≥ 2 different calendar days.
+
+> A projection from too little data is not a small error. It is a confident sentence
+> **with a date in it**, and the date is the part a person acts on.
+
+Three sub-decisions that each fix a wrong answer: elapsed time is measured from the FIRST
+entry (not the window start — otherwise someone three days in is averaged over thirty days
+of silence they were never here for, reading 70π/week as 16); days are CALENDAR days (ten
+entries in one sitting are one day of effort); and the ETA **rounds** rather than ceilings
+— 140π over "14 days" is 14 days plus milliseconds, so 20π at that pace is `2.0000004` and
+a bare `ceil` reports **3**, a phantom extra day on every round number.
+
+### 3. The identity anchor did not split a user — it SHARED one
+
+C-106 P0-2 anchors Life on the permanent Pi identity. Three controllers resolved a token
+carrying no Pi claims as:
+
+```
+piUserId = decoded.sub      ← a value that DIFFERS per person
+username = 'unknown'        ← the SAME literal for everyone
+```
+
+`findOrCreateUser` looks up by `pi_user_id` first and by `username` second. The first such
+caller created a row named `unknown`; every later one missed step 1, **matched it on step
+2**, and was handed that person's identity — their goals, their follow graph, their
+profile. **Invariant #3: identity always resolves to ONE principal.**
+
+> A placeholder key satisfies that sentence and violates what it means.
+
+Both fallbacks removed (a missing claim is a 401 — P6), plus a guard inside
+`findOrCreateUser` rejecting blank and placeholder usernames before the database is
+touched, so a fourth caller cannot reintroduce it.
+
+**And the reachability was overstated the first time.** The CEO corrected it: sign-in is
+"Sign in with Pi" only, so a Pi-less account cannot reach these routes at all. The defect
+was **latent, not exploited**. The correction is recorded next to the finding in the audit
+rather than folded silently into it — an audit that quietly rewrites itself stops being a
+record of what was true.
+
+### 4. Both privacy P0s closed — and the gate came BEFORE the reader
+
+Life's own home screen tells every user their data is *"private, and never used without
+your consent."* There was **no consent model in the schema**, and "delete" meant one goal
+at a time. The sentence held only because nothing consumes Life data yet — a
+**circumstance, not a guarantee**.
+
+- **Consent** (§11 P0-1) — `LifeConsent`, category-level and timestamped, over GOALS ·
+  SKILLS · PREFERENCES · ACTIVITY · TRAJECTORY · INTENT. Asked per category because
+  "may TEC AI read my goals" and "may it read my activity" are different questions, and
+  one switch forces the stricter answer onto both.
+- **Right to delete** (§5) — one transaction over goals (with their progress log), skills,
+  preferences, the consent grants **and the Redis intent window**. The `User` row and every
+  payment record stay: Life does not own them and may not remove them. The route is
+  `/data`, not `/` — this is "delete my Life data", not "delete my account".
+
+**Absence is a NO.** There is no consent row until someone grants something. The
+tidier-looking alternative — writing `granted: false` rows at signup — **fails open** the
+first time a category is added without a backfill. That is not hypothetical: `INTENT` was
+added to the enum later **in the same session**, and needed no migration and no backfill,
+because a category nobody has a row for is denied for everybody.
+
+### 5. The intent TTL is a privacy guarantee, not a cache
+
+The one capability the charter names an implementation for ("Redis with TTL"), and the
+detail turns out to be the whole design.
+
+> Everything else Life owns is durable on purpose — a goal written last year is still
+> yours. What someone is doing **right now** is the most sensitive thing in the app and
+> the least useful an hour later, so it lives in a store that forgets by itself. Postgres
+> keeps it "until something deletes it", and that is not a privacy property.
+
+There is deliberately **no durable copy**: losing Redis loses the signals, which is the
+correct failure when the alternative is a permanent record of every move. Signals are
+facts Life already knows — recorded from its own writes, server-side. There is no "report
+my intent" endpoint, because a client-fed signal is a client-controlled claim about a
+person with nothing to verify it against, and the kind is a closed set so a future caller
+cannot write free text about someone into the one store nobody reviews.
+
+**Nothing reads Life data across the boundary yet.** The switches decide what will be
+allowed when something does, and the Privacy screen says exactly that instead of implying
+a protection already being exercised. Building the gate before the reader is the entire
+point of a P0 named "privacy architecture first".
+
+### 6. The UI was showing its own navigation twice
+
+From a phone: *"the interface is ugly, and then it's the same thing — the buttons at the
+bottom."* It was, and the reason was structural. Home was four cards — Goals · Skills ·
+Activity · Preferences — the same four destinations the tab bar already carried, in the
+same order, under the same grey rounded rectangle. **Tapping a card and tapping its tab
+did the identical thing.** And every tab repeated its own band heading ten pixels below
+itself, in a different colour.
+
+Home now shows **state**: a snapshot strip, the goal closest to done with the one action
+worth having there, and the last three events. The band is the heading. A home screen
+earns its place by showing state, not routes.
+
+### 7. Two bugs the new tests caught in their own code
+
+- `Number(null)` is **0**, not `NaN` — so reading `window_days` straight into a clamp
+  turned "no window given" into the **smallest** window: a seven-day pace presented under
+  the thirty-day label. Not a rounding error; a different number wearing the same name.
+- A bar rendered with `width: NaN%` is **dropped silently** by the browser — it looks like
+  a missing feature and logs nothing. `goalPercent` clamps instead.
+
+### Honest status
+
+`[Code Verified]` — merged and tested (**813** identity-service tests, **87** in Life),
+not `[Runtime Verified]`. Skills was seen working on a real device; Pace, Privacy and the
+intent window need `prisma db push` (`life_goal_progress`, `life_consents`) and a look on
+a phone.
+
+**The next step is now unblocked rather than begun:** the outbound personal-context API
+(§4 Interface Points, TEC AI). The gate it must pass through exists.
+
+---
+
+## SESSION 51.1 — THE DESIGN PASSES, AND THE INTERFACE LIFE WAS BUILT FOR (4 Sep 2026) ✅
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — Tec-Life
+> **#48 · #49 · #50**; tec-core-backend **#270 · #271**; fleet radius sweep in tec-app,
+> Tec-Connection, Tec-Explorer. Charter: **C-106 §11b**.
+
+Session 51 closed every finding in the audit. This continuation is what came back **from a
+phone** afterwards, plus the one capability the whole charter is for. Four defects were
+reported in one message, and two of them are lessons the fleet needs, not Life bugs.
+
+### 1. "The curve at the top is still big"
+
+Reported twice. The first fix reduced it; the second found the actual number. The top band
+is painted from `--tec-topbar-radius`, and the value was **22px** — a radius that reads as
+a card floating in the page rather than a band belonging to it. Now **8px**, and swept in
+the same change to the three other repos that had copied the same token file (tec-app,
+Connection, Explorer), because a token duplicated across four repos diverges the moment one
+of them is corrected alone.
+
+> The fleet has now paid this cost twice — once for the palette (Session 46), once for a
+> radius. **A copied token file is a fork with a friendly name.**
+
+### 2. A goal that closed itself — fact versus judgement
+
+Logging progress that reached the target **auto-completed the goal**, server-side. The CEO
+said goals should not be automatic, and asked which reading of that was correct rather than
+choosing one. The answer, and the reason it generalises:
+
+> Reaching 100π is a **fact** — the app measured it and may assert it.
+> "This goal is **done**" is a **judgement**, and C-106 §4 puts self-declared data under
+> the user's control. Someone who hits their number and decides the goal was too small is
+> not finished, and the server had already decided for them — into a **terminal state**,
+> which nothing in Life reopens.
+
+The auto-complete is removed. The screen now says **"Reached"** the moment the number lands
+— the fact, stated plainly — with the "Mark done" action beside it. The user closes it.
+
+### 3. The silent Add button — the general one
+
+*"I press Added on skills and it gives me nothing."* Both halves of the stack required a
+**2-character** name; a one-letter skill (`R`, `C`, `Go`, and every CJK skill name) was
+rejected by a `disabled` attribute on the front and an `if` on the back. Nothing was shown
+because nothing failed — the button simply did not fire.
+
+> **A disabled button is the one form of validation a person cannot read.** An error
+> message says what is wrong; a greyed-out control says only that the app is not listening,
+> and the user's next move is to try the same thing again, then leave.
+
+Fixed at both ends (1 character), and the test that pinned the old rule was **corrected
+with its reasoning written in**, not deleted — a test that encodes a wrong rule should
+record why the rule changed, or the next session re-adds it.
+
+### 4. Pro and Invite were shouting at the bottom of every page
+
+Two full-width cards, stacked, each with its own heading, price, description and a raw
+referral URL printed as body text. They are the last thing on the page in every tab. Both
+are now one row each — label, value, action — and the raw URL is gone: nobody types a
+referral link they can copy.
+
+### 5. The interface Life exists for (tec-core-backend #271)
+
+C-106 §2: *"without Life, TEC AI has no personal context, Connection has no relationship
+baseline, and Ecommerce has no personalization signal."* Every capability built in Session
+51 was for a reader that did not exist. `GET /identity/life/context/:username` is that
+reader's door — and it is the **first thing in this app that hands one person's data to
+something that is not that person**, so it is defined by what it refuses.
+
+| Refusal | Why |
+|---|---|
+| **Consent gates every category** — nothing granted, nothing served | The gate landed a session before the reader. This is the call it was built for. |
+| **A denied category is not an empty one** | The consent map travels with the payload. A reader handed `goals: []` cannot tell "no goals" from "not allowed", and will cache whichever it guessed. |
+| **A table is never read for a category that was not granted** | Consent that filters after the read is a permission check with the data already in memory. |
+| **Trajectory is a pace, never the entry log** | "Where is this person headed" does not need every step they logged. Serving more than the question needs is how a consented read becomes an export. |
+| **ACTIVITY is never served, even when granted** | Life does not own it (§4). It reads it live from Analytics for the user's OWN screen; handing a reader Life's copy of someone else's truth is the copy nobody keeps correct. It is absent from the payload **and** from the audit's served-list, while the grant itself is still reported honestly. |
+| **Every read is audited — including one that served nothing** | An attempt is a fact. The row carries the reader, the categories and nothing else: **no content**. The data is already in this database, and copying it into the log creates a second store with different retention and no consent gate. |
+
+The route is **ServiceActor only** (`x-internal-key`, constant-time, fails closed) — C-47's
+service-to-service exception, and the one Life route where the subject is a parameter
+rather than the session. **824/824** green.
+
+### Honest status
+
+`[Code Verified]`. Nothing here is `[Runtime Verified]`: the Pace panel in particular has
+never been seen working, because it needs progress logged **on two different calendar
+days** before it will project at all — by design (Session 51 §2). The context API has
+**no consumer**; it is a door, and TEC AI is not built.
+
+### Also this session — the platform's own bill, read for the first time
+
+A declined card (`$72.04`, twice) sent us to the billing pages, and what was there is a
+finding in its own right. **Full record: C-78 §13b.** In short:
+
+| Cause | Size | Status |
+|-------|------|--------|
+| **Copilot automatic code review** — fired on every **push**, not every PR | $19.62 in 4 days | ✅ Disabled |
+| **Actions overage** — `npm install` runs 4× per CI run, no `cache: 'npm'` | $58.04 in July | ◐ fix identified, not applied |
+
+Three things worth carrying, all of which cost a wrong answer first:
+
+- **The invoice, not the dashboard.** August was assumed to be more AI credits. The PDF
+  says it contains **none** — it is 80% Actions. Two different problems behind one symptom.
+- **A measurement killed the first fix.** A `concurrency` guard was about to be swept to
+  26 repos because the Hub has one. Life's runs average **3.4 min** with **7–15 min**
+  between pushes — zero overlap in the last 20 runs. It would have saved nothing. The
+  Hub's fix is right for the Hub, whose runs are five times longer.
+- **A config file that nothing reads is worse than none.** `tec-app/.github/copilot-code-review.yml`
+  said `enabled: false` for months; GitHub does not read that filename, and the reviews ran.
+
+> And the last review before it was switched off found a **real defect** in this session's
+> own work — a guard test that passes when the thing it guards is deleted (`indexOf` → -1).
+> The tool was not billing for nothing; it was doing useful work at a price this PR volume
+> cannot carry. Both are true, and the honest record says so.
+
+**Shipped:** `cache: 'npm'` in **24 repos / 114 jobs**, and a separate fix in
+`tec-core-backend` (its `push` trigger listed `claude/**` while `pull_request` covered the
+same commit — **every branch commit ran two identical pipelines**). Three repos excluded on
+purpose, each for a different measured reason. **27 PRs open.**
+
+**And a NEW-A scare that turned out to be nothing — C-78 §13c.** `src/lib/sdk.ts` (14
+repos) hardcodes a Railway host as a fallback, and the import graph appears to carry it
+into the browser via `usePiAuth`. A real `next build` says **0 occurrences** in
+`.next/static` — webpack drops the unused `pi-auth` exports, so `lib/sdk.ts` never enters a
+client chunk. The grep method was validated first against strings known to be there.
+Recorded as a **negative finding** so the investigation is not repeated.
+
+> **The session's own lesson, earned four separate times:** an inference about this
+> platform was confidently wrong, and each time a measurement taking minutes settled it —
+> the concurrency guard that would have saved nothing, the invoice that contained no AI
+> credits, the backend that already had the cache, and the URL that never shipped. **Build
+> it and grep it. An import graph is not evidence about what ships.**
 
 ---
 
@@ -2926,6 +3213,48 @@ Pending PRs:          NONE — all fixes on main ✅
 Latest audit:         ✅ Session 14 (2026-06-20) → ~9.0/10 (was ~6.5–7.0) — all P0 closed (Outbox live + payment-verified)
 NEXT:                 deepen real product functionality one gated app at a time
 ```
+
+---
+
+## SESSION 52 — the Pioneer campaign has a commercial objective, and it was not written down
+
+**The finding, and it reframes the campaign:** Pi will not accept a `.pi` domain claim
+until the connected app has **"at least 5 unique KYC'd approved Pioneers engage with the
+app"**. Twenty-four `.pi` domains were **won at auction and paid for** (vip.pi 2.8K π ·
+nexus.pi and explorer.pi 1.4K π each · commerce.pi 999 π · estate.pi 750 π …), and
+**`tec.pi` is the only claim accepted** — every other app returns *"Requirements Not Met"*.
+
+So the Founding badge and the PRO gift are **incentives**, not the objective. The
+objective is 5 verified pioneers × 24 apps, before the domains lapse. Recorded in full as
+**C-134 §20** (it also closes §19 Open Question 2, from outside).
+
+> This was rediscovered from a phone screenshot, not from the KB — the exact failure mode
+> C-95 exists to prevent. The campaign had been engineered for two sessions without its
+> own purpose written anywhere.
+
+**Shipped this session (all merged unless noted):**
+
+| # | What | Where |
+|---|------|-------|
+| 1 | **The Quest was forgeable.** `app` was any string ≤40 chars, so 24 POSTs of `'a'..'x'` earned a permanent Founding number in seconds. Closed by a campaign-owned roster; `QUEST_TARGET` is now its length, not a literal. | tec-core-backend #274 · tec-app #192 |
+| 2 | **Audited campaign reset** (admin token + confirmation phrase, audits before it deletes) — Founding numbers are non-recyclable by design, so test runs permanently consume advertised places. Also removed a seeded demo pioneer that the public counter was serving as real. | tec-core-backend #274 |
+| 3 | **Founding gift = 6 months PRO, not Pi** — payment-service speaks only the U2A half of the Pi API; there is **no A2U path**, so Pi cannot be paid out at all. PRO is also unsellable, which collapses the incentive to farm the badge. Reuses the referral grant rule rather than adding a second one. | tec-core-backend **#275 — open** |
+| 4 | **Per-app coverage** (`GET /identity/pioneer/coverage`, admin) — which apps are still short of 5 verified pioneers, and by how many. | tec-core-backend **#275 — open** |
+| 5 | **Feedback inbox** — a form in `/hub/profile` and an admin reader at `/hub/admin/feedback`; the table had no reader before. Runtime-verified, including a message from a real external user. | tec-core-backend #273 · tec-app #191 |
+
+**Three comments in `pioneer.service.ts` claimed a KYC gate the code never had.** The code
+was right and the sentences were wrong. There is deliberately **no KYC gate**: Pi has
+already verified the account, and asking a first-time visitor for documents to earn a badge
+reads as a scam.
+
+**Honest limits, recorded rather than smoothed over:**
+- `coverage` counts **TEC's** KYC register; Pi checks its own, which this platform cannot
+  read. Below the threshold is reliable; at or above it is **not** a confirmation from Pi.
+- Pi counts *engagement*; the Quest records an *open*. Closing that gap is the highest-value
+  unbuilt work (C-134 §20.6) — a completed Pi **Mainnet** payment is the strongest available
+  proxy for Pi KYC and is currently unused.
+- **5 Founding places are already consumed by test runs**, and 2 of the 10 pioneers came
+  from a real Reddit link — so a reset is not obviously free. Decide before launch.
 
 ---
 
