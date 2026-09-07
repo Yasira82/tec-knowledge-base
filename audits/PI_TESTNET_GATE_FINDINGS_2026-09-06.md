@@ -62,11 +62,36 @@ parent of `tec-<app>.vercel.app`, so the browser **rejected every `Set-Cookie`**
 `vercel.app` is on the Public Suffix List, so no wildcard cookie could be set there anyway.
 
 **Fix:** `cookieDomainFor(host, configured)` — the configured domain only where it genuinely
-covers the host, host-only otherwise. **On the Mainnet host this is a no-op.** The
-`document.cookie` fallback also lacked `Partitioned` (C-123 LAW 3), and the Testnet host is
-precisely where that fallback is what carries the session.
+covers the host, host-only otherwise. **On the Mainnet host this is a no-op.**
 
 > Host-only is not a downgrade. The alternative is not a broader cookie — it is **no cookie**.
+
+#### ⚠️ The second half of this fix was WRONG, and was reverted
+
+The same change added `Partitioned` to the `document.cookie` fallback, reasoning that
+C-123 LAW 3 requires it and the server response already sets it — so the fallback should
+match. **That broke Mainnet.**
+
+Assets went intermittent the moment it shipped (NFT upload and mint hanging, ~2 successes
+in 12) and steady again the moment it was reverted. Same line, isolated, twice.
+
+What the "consistency fix" actually removed was the **UNPARTITIONED duplicate** the
+fallback had always written *beside* the server's partitioned one. In any context where
+the partitioned copy is not sent — and Pi Browser is a custom WebView — that duplicate was
+the only cookie left.
+
+**The server half stays**: `partitioned: true` on the response is the half LAW 3 governs,
+and nothing about the Testnet host depended on the fallback attribute — that host is
+carried by the server cookie, which is why step 10 passed *with* it and passes *without*.
+
+Reverted across all 21 repos that took it, each with a test pinning the **absence** and the
+reason, so the same "obvious consistency fix" is not reapplied by someone who has not read
+this.
+
+**The lesson is not about cookies.** A redundant-looking duplicate can be load-bearing —
+the same shape as the backend deploy defect recorded in C-02 §5, where a broken name lookup
+was the access control for an unguarded production deploy. *Removing a redundancy without
+asking what it was silently doing is how a tidy-up becomes an incident.*
 
 ### D3 — `sandbox: true` silenced the Pi bridge
 
@@ -122,7 +147,7 @@ Six changes. They must ship together — each one only exposes the next.
 |---|---|---|
 | 1 | `src/lib/pi-network.ts` *(new)* | `isTestnetHost` (anchored to the end of the host) + `networkMetadata` — present **only** when true |
 | 2 | `src/app/api/bff/payment/create/route.ts` | drop the client's `testnet` **before** the spread; add `...networkMetadata(req.headers.get('host'))` |
-| 3 | `src/lib/cookie-domain.ts` *(new)* + `sso-callback` | `cookieDomainFor(req.nextUrl.hostname, …)`; add `partitioned` to the `document.cookie` fallback |
+| 3 | `src/lib/cookie-domain.ts` *(new)* + `sso-callback` | `cookieDomainFor(req.nextUrl.hostname, …)` **only**. Do NOT add `partitioned` to the `document.cookie` fallback — see D2: it broke Mainnet and was reverted fleet-wide |
 | 4 | `src/app/layout.tsx` | `sandbox` from the host, **default false**, `?pi_sandbox=1` override confined to the Testnet host |
 | 5 | `src/app/page.tsx` (login) | SSO return address → `window.location.origin` |
 | 6 | `src/lib/pi-payment.ts` | Hub `return_url` → `location.origin`; `onError` must not read `.message` off a non-Error |
