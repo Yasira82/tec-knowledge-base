@@ -3,12 +3,16 @@
 **Date:** 2026-09-06 · **Scope:** `tec-payment-service` · every app frontend · Pi Developer Portal
 **Companion to:** `audits/PI_PORTAL_TESTNET_GATING_2026-09-06.md` (the plan). **This is the outcome.**
 
-**Truth State:** [Current State] · **Verification:** [Runtime Verified] (Connection Mode 2) · **Governance:** [Draft]
+**Truth State:** [Current State] · **Verification:** [Runtime Verified] (fleet-wide — step 10 complete) · **Governance:** [Draft]
 
 > Read this before touching another app's testnet path. Four separate defects sat between
-> "the plan is right" and "a Test-Pi payment completes". Not one of them was visible in the
-> plan, in a code review, or in any log until the exact moment it was hit. Connection paid
-> for all four; the other 22 apps should not have to.
+> "the plan is right" and "a Test-Pi payment completes" (§2), and a fifth surfaced only
+> once those were fixed (§8). Not one was visible in the plan, in a code review, or in any
+> log until the exact moment it was hit. Connection paid for the first four; the other apps
+> should not have to.
+>
+> **Outcome: step 10 is complete across the fleet** — every app that took these six changes.
+> The five that did not are listed in §9, with the reason.
 
 ---
 
@@ -181,14 +185,64 @@ look identical.
 
 ---
 
-## 7 · Stated as unverified
+## 7 · Answered — this section is now the record, not the open list
+
+Every question this section opened has been closed **by the fleet finishing step 10**,
+not by argument.
 
 | | |
 |---|---|
-| Is `api.minepi.com` correct for a **Testnet app's** Platform calls? | **Strongly indicated, not confirmed by Pi.** The Horizon error body proves the old host was wrong; `pi-a2u.ts`/`pi-tx.ts` show the intended split. Confirmed when a testnet approve returns 200. |
-| Does `sandbox: false` on the Testnet host hold generally? | **One clean A/B, one trial.** Same host, same build, only the flag differed. |
-| The 22 remaining apps | **`[Code Verified]` only.** Each still needs its Testnet key, a redeploy, and its own step 10. |
-| Mainnet regression | Reasoned from the code paths **and** confirmed by one live Mainnet payment after the change. Every app's Mainnet path is unchanged by construction: `testnet` is absent, not `false`, and every consumer tests `=== true`. |
+| Is `api.minepi.com` correct for a **Testnet app's** Platform calls? | ✅ **[Runtime Verified].** A testnet approve returns 200 against `api.minepi.com` under the app's **Testnet key**. The host does not carry the network; the key does. This was the one claim the doc rested on and could not prove. |
+| Does `sandbox: false` on the Testnet host hold generally? | ✅ **Held across the fleet**, not only in the single A/B it was decided on. |
+| The remaining apps | ✅ **Checklist-complete**, except the five in §9. |
+| Mainnet regression | ✅ **None.** Reasoned from the code paths, then confirmed by live Mainnet payments after the change. `testnet` is *absent* from a Mainnet payment rather than `false`, and every consumer tests `=== true`. |
+
+---
+
+## 8 · D5 — the host an app is served from is not the one its name implies
+
+Found **after** the six changes shipped, and only because of them.
+
+Vercel appends a random suffix when a project name is already taken. Two of the
+first apps checked were affected, with **unpredictable** suffixes:
+
+```
+Zone   → tec-zone-mu.vercel.app      (not tec-zone.vercel.app)
+Elite  → tec-elite-bvzb.vercel.app   (not tec-elite.vercel.app)
+```
+
+The Hub's `ALLOWED_TARGETS` had been written **from the naming pattern rather than
+from the deployments**, so those apps answered `{"error":"invalid_target"}`.
+
+**It did not appear today — it stopped being silent today.** Before D1 was fixed, the
+login sent the build-time constant `<app>.tecosystem.app`, which *is* allowlisted: the
+check passed and the visitor was quietly returned to the **Mainnet** host while the
+Testnet one never got a session. The fix converted a silent wrong-host login into a
+loud refusal.
+
+**The allowlist must never become a pattern.** Anyone can deploy
+`tec-<app>-<anything>.vercel.app` on their own Vercel account, and `/api/auth/sso`
+hands the target a signed token carrying the user's access token. A wildcard there is
+an account-takeover primitive. **Explicit hosts, read off the deployments.**
+
+What made the rest cheap: the rejection now **names the origin it refused** and says
+what to do. A screenshot of the error became the fix — the same lesson as this repo's
+`E404`-on-publish note: *an error that sends the next person the wrong way costs more
+than the bug it reports.* The allowlist itself is deliberately not echoed.
+
+Both hosts stay listed per app. An allowlist entry that resolves to nothing is inert,
+and the unsuffixed name may become the project's alias later.
+
+---
+
+## 9 · Not done, and why
+
+| App | Why |
+|---|---|
+| **Assets · Commerce · Ecommerce** | Older than the template — different `layout.tsx`, different BFF create route, different login call sites. The porting script is anchored and **fail-closed**, so it stopped at them rather than guessing. They need a hand-written port. |
+| **NBF · Brookfield** | Outside this engineering session's repository scope; not examined. |
+
+Each also still needs its own `PI_API_KEY_<SLUG>_TESTNET` before step 10.
 
 ---
 
