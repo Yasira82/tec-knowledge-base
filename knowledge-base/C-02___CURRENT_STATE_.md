@@ -3258,6 +3258,61 @@ reads as a scam.
 
 ---
 
+## SESSION 53 — the Testnet gate is closed on all 24 apps, and it exposed a guard one consumer wide
+
+Pi Portal checklist **step 10** (one U2A Test-Pi payment on each app's paired Testnet
+app) is **complete across the fleet**. Full engineering record:
+`audits/PI_TESTNET_GATE_FINDINGS_2026-09-06.md`.
+
+### What closed
+The five apps left open at the last write-up now carry the port:
+
+| App | How |
+|---|---|
+| Assets · Commerce · Ecommerce | hand-written — older than the template, each needed a genuinely different edit |
+| NBF · Brookfield | attached to the session, then ported from the reference app unchanged |
+
+### The three things worth carrying forward
+
+**A host is read off the deployment or it is not known.** Vercel appends a suffix when
+a project name is taken, and the suffixes are arbitrary: `tec-zone-mu`,
+`tec-elite-bvzb` — and `commerce-app`, with no `tec-` prefix at all. The Hub's
+`ALLOWED_TARGETS` had been written from the naming pattern. It must never become a
+wildcard: `/api/auth/sso` hands the target a signed token carrying the user's access
+token, and anyone can deploy on `*.vercel.app`.
+
+**A branch that is nearly unreachable in production is not a tested branch.** Commerce
+and Ecommerce sent an unauthenticated visitor to the Hub with **no `target=` at all** —
+a one-way trip. The shared `.tecosystem.app` cookie means that branch is almost never
+taken on Mainnet; on a host-only `*.vercel.app` host it is taken *every* time. Both had
+shipped for months. Ecommerce had the constant redeclared in **eight** files, and in
+Commerce two copies of the same rule had already drifted apart inside one repo.
+
+**Overwriting is not removing.** `metadata.testnet` decides which Pi network the π
+settles on and whether commerce grants PRO — so it must be derived from the request
+host and a client-sent value **stripped**, not spread over. The host-derived value is
+*absent* on Mainnet (present only when true, deliberately), so an overwrite there
+overwrites nothing and the caller's claim survives.
+
+### Recorded, not fixed — the next change
+
+Fleet audit of every payment-create route: 22 apps + the template derive the marker and
+strip the client claim; Assets and Commerce accept no client metadata at all. **The Hub
+is the only app with neither** — `grep -ri testnet tec-frontend/src/` returns zero — and
+its `metadata` is `.passthrough()`. Its sandbox default is also **inverted** against the
+fleet (`!== 'false'` → defaults **true**).
+
+Worse, one level down: **`tec-wallet-service` credits a real balance on
+`payment.completed` with no `testnet` check.** All eight consumers of that event were
+read; exactly one has the guard. A Test-Pi payment is refused a PRO subscription and
+credited to a real wallet in the same breath. The `.v1` outbox payload carries
+`metadata`, so the guard is implementable — the open decision is the legacy
+direct-publish path, which carries none.
+
+**Order for the next session: wallet-service first — it is the one that moves money.**
+
+---
+
 ## UPDATE PROTOCOL
 
 ```

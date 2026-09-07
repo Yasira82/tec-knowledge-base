@@ -232,9 +232,14 @@ Vercel appends a random suffix when a project name is already taken. Two of the
 first apps checked were affected, with **unpredictable** suffixes:
 
 ```
-Zone   → tec-zone-mu.vercel.app      (not tec-zone.vercel.app)
-Elite  → tec-elite-bvzb.vercel.app   (not tec-elite.vercel.app)
+Zone      → tec-zone-mu.vercel.app       (not tec-zone.vercel.app)
+Elite     → tec-elite-bvzb.vercel.app    (not tec-elite.vercel.app)
+Commerce  → commerce-app.vercel.app      (no `tec-` prefix AT ALL)
 ```
+
+Commerce is the one that settles the argument. Zone and Elite at least *look* like
+the pattern with something appended; Commerce does not begin with `tec-`. There is
+no rule to infer — **a host is read off the deployment or it is not known.**
 
 The Hub's `ALLOWED_TARGETS` had been written **from the naming pattern rather than
 from the deployments**, so those apps answered `{"error":"invalid_target"}`.
@@ -260,14 +265,127 @@ and the unsuffixed name may become the project's alias later.
 
 ---
 
-## 9 · Not done, and why
+## 10 · The variant D1 hid: a bounce with no return address at all
 
-| App | Why |
+Commerce and Ecommerce did not have D1 in the form the other apps had it. Their
+landing page's "no session" branch was not a *wrong* return address — it was **no
+return address**:
+
+```
+window.location.href = 'https://tec-app-frontend.vercel.app';   // Commerce, /
+ssoRedirect(HUB_URL, `${APP_URL}/`)                              // Ecommerce, /
+```
+
+The first hands the Hub nothing to sign a token back to. The user signs in, lands on
+the Hub, and the app they tapped is never reached again — a one-way trip.
+
+**Why it never showed on Mainnet.** The shared `.tecosystem.app` cookie means a
+visitor almost always arrives already carrying a token, so that branch is almost
+never taken. On a `*.vercel.app` host cookies are host-only, so a visitor **never**
+arrives with one and **every** visit took it. The bug had been there the whole time;
+the Testnet host is simply the only place it is reachable.
+
+> **A branch that is nearly unreachable in production is not a tested branch.**
+> Both of these had shipped for months.
+
+Ecommerce carried the worse shape of it: `APP_URL` was a module constant **redeclared
+in eight files**, serving both the login bounce *and* the `return_url` of a Mode-1
+payment. So the same constant that stranded a login also landed a buyer on the wrong
+host after the π had moved.
+
+And the drift is not hypothetical. In Commerce, `/app` was fixed in the first pass and
+the landing page was not — the two copies of one rule diverged inside a single repo,
+in a single session. Both apps now read the origin from **one** file
+(`lib/sso.ts` · `lib-client/app-origin.ts`) and every call site imports it.
+
+---
+
+## 11 · The network flag is a claim, and a claim needs an owner
+
+`metadata.testnet` is not decoration. Two live systems branch on it:
+
+| Reader | Behaviour when `testnet === true` |
 |---|---|
-| **Assets · Commerce · Ecommerce** | Older than the template — different `layout.tsx`, different BFF create route, different login call sites. The porting script is anchored and **fail-closed**, so it stopped at them rather than guessing. They need a hand-written port. |
-| **NBF · Brookfield** | Outside this engineering session's repository scope; not examined. |
+| `payment-service` `getPiApiKey` | selects `PI_API_KEY_<SLUG>_TESTNET` — i.e. which network the π settles on |
+| `commerce` `SubscriptionConsumer` | **refuses** to activate PRO |
 
-Each also still needs its own `PI_API_KEY_<SLUG>_TESTNET` before step 10.
+So whoever sets that field decides whether a payment is free. It must be derived from
+the **request host**, server-side, and a client-sent value must be **removed** — not
+merely overwritten.
+
+> **Overwriting is not removing, and on Mainnet it is nothing at all.** The
+> host-derived value is *absent* on a Mainnet host (present only when true, by
+> design — a `testnet: false` on 100% of real payments is a field about the test
+> network sitting on real money, wrong the first day someone writes it backwards).
+> `{ ...clientMetadata, ...networkMetadata(host) }` therefore overwrites **nothing**
+> there, and the caller's claim survives intact. Strip it *before* the spread, so a
+> later edit that reorders the object cannot hand the network back.
+
+Fleet audit at the close of this session — every app's payment-create route read, not
+inferred:
+
+| Group | Marker derived from Host | Client claim stripped |
+|---|---|---|
+| 22 domain apps + template (incl. NBF · Brookfield · Ecommerce) | ✅ | ✅ |
+| **Assets · Commerce** | ✅ | n/a — their schema accepts **no** client metadata, so there is nothing to strip |
+| **Hub (`tec-app`)** | ❌ **absent** | ❌ **absent**, and its schema is `.passthrough()` |
+
+---
+
+## 12 · The Hub is the last app with none of this — and one consumer below it is worse
+
+Recorded here rather than fixed, because it is a separate change on a financial path.
+
+**In `tec-app`.** `grep -ri testnet src/` returns **zero**. Three consequences:
+
+1. Its BFF create sets no marker, so a payment made on the Hub's own Testnet host is
+   approved with the **Mainnet** key — a real payment made from a Testnet host, not a
+   Testnet payment.
+2. Its `metadata` is `.passthrough()` with no strip, so a caller *can* set the flag —
+   and the Hub is the Mode-1 path for **all 24 apps**.
+3. Its sandbox default is **inverted** relative to the entire fleet:
+   `NEXT_PUBLIC_PI_SANDBOX !== 'false'` defaults to **true**, where every other app
+   reads `=== 'true'`. Unset or misspelled, the Hub comes up in sandbox — D3 by
+   default rather than by mistake.
+
+**Below it, the one that moves money.** `tec-wallet-service` consumes
+`payment.completed` and credits a real balance —
+`balance: { increment: amount }` plus a ledger row and an audit row — with **no
+`testnet` check**. All eight consumers of that event were read: exactly one
+(`subscription.consumer.ts:135`) has the guard.
+
+> So the guard the platform *thinks* it has is one consumer wide. A Test-Pi payment
+> is refused a PRO subscription and credited to a real wallet in the same breath.
+
+The `.v1` outbox payload does carry `metadata` (`payment.controller.ts:519`), so the
+guard is implementable. The open question is the **legacy** direct-publish path, which
+carries none: refusing there fails closed against real Mainnet credits, and allowing
+there leaves the hole open. That is a decision, not a patch — which is why it is
+written down here instead of being guessed at.
+
+---
+
+## 9 · Closed — all 24 apps carry the port
+
+The five that were open at the time of writing are done.
+
+| App | How |
+|---|---|
+| **Assets · Commerce · Ecommerce** | Hand-written. Older than the template: different `layout.tsx`, different BFF create route, different login call sites. The anchored script had stopped at them rather than guessing — which was the right outcome, because each needed a genuinely different edit (see §10). |
+| **NBF · Brookfield** | Attached to the session, then ported from the reference app. Structurally identical to the template, so the six-file recipe applied unchanged. |
+
+**Their guard suites were rewritten, not the code bent to fit them.** The copied
+tests asserted the template's inline layout script; Ecommerce has no such script
+(`Pi.init` lives in `PiSdkLoader`) and Commerce's create route accepts no client
+metadata. In each case the assertion was rewritten against the shape the app really
+has. *A test copied along with a fix is a claim about a file that may not exist.*
+
+Each app still needs its own `PI_API_KEY_<SLUG>_TESTNET` on `tec-payment-service`
+before step 10 — there is **no fallback** to the Mainnet key by design, so a missing
+Testnet key fails loudly rather than quietly charging real π.
+
+Remaining, and tracked in §12 rather than here: the **Hub itself**, and the
+**wallet-service credit guard** below it.
 
 ---
 
