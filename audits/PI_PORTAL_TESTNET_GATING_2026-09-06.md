@@ -5,6 +5,10 @@
 
 **Truth State:** [Current State] · **Verification:** [Documentation Verified] · **Governance:** [Draft]
 
+> ▶ **This is the PLAN. The OUTCOME is `audits/PI_TESTNET_GATE_FINDINGS_2026-09-06.md`.**
+> The plan was right and still cost four separate defects to execute — none of them visible
+> here. Read the findings before touching another app's testnet path.
+
 > **Why this is written down at all.** The work is not "make the apps better" — the apps
 > are live and working. The work is a **checklist in somebody else's product**, and the
 > cost of getting it wrong is measured in weeks of review time, not in bugs. A plan that
