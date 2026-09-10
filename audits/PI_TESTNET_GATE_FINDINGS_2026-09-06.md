@@ -178,7 +178,14 @@ Making it work needs the Hub to take changes 1–5 **and** `redirectToHubPayment
 Testnet visitor to the Hub's Testnet host. That is **the same build-time-constant bug a third
 time** (`APP_URL`, `sandbox`, now `HUB_URL`).
 
-**Deliberately not done.** It is not on the Portal checklist and blocks no domain.
+**Deliberately not done at the time.** It was not on the Portal checklist and blocked no
+domain — a correct call for the gate, and the honest answer to "why does no app pay through
+the Hub on the Testnet?": *because this half was never built*, not because it broke.
+
+> **CLOSED — see §13.** Both halves shipped once the question was actually asked out loud.
+> The deferral is left standing above rather than edited away: the reasoning was sound for
+> the deliverable it was scoped against, and a record that quietly rewrites its own earlier
+> judgement teaches nothing.
 
 ---
 
@@ -386,6 +393,55 @@ Testnet key fails loudly rather than quietly charging real π.
 
 Remaining, and tracked in §12 rather than here: the **Hub itself**, and the
 **wallet-service credit guard** below it.
+
+---
+
+## 13 · Mode 1 on the Testnet — closed, and the guard was on a route nothing calls
+
+Two halves, and the second only surfaced because the first was being wired.
+
+### The app half — `HUB_URL`, the fourth instance
+
+```ts
+window.location.href = `${HUB_URL}/hub?${params}`;   // 33 files, 24 repos
+```
+
+Mode 1 hands the payment to the **Hub**, which creates *and approves* it — so the **Hub's
+own host** decides which Pi app, and therefore which key, that payment is approved under. A
+Testnet visitor sent to the Mainnet Hub gets a Mainnet approval, and a Test-Pi wallet cannot
+pay it. The modal hangs on "Confirm in Pi…" forever.
+
+`hubPaymentOrigin(HUB_URL)` reads the live host. On a custom domain it returns the
+configured value untouched; on `*.vercel.app` it returns the Hub's Testnet host.
+
+**Login is deliberately NOT routed this way.** SSO is identity, not payment, and the Mainnet
+Hub already signs sessions for Testnet hosts correctly — that is how all 24 apps completed
+their Testnet login. Changing a flow that works, to fix one that does not, is how a fix
+becomes an incident (the §5a/§5b lesson in C-02 Session 46, again).
+
+The sweep matched **only** `${HUB_URL}/hub?` — the Mode-1 payment redirect — so the login
+call sites were out of range *by construction* rather than by care.
+
+### The Hub half — a guard on a route no production code calls
+
+The network marker and the client-claim strip had been added to
+`/api/bff/payment/create`. It is the ADR-009-shaped sibling and it is **called by nothing**
+but tests. Every real Hub payment — `pi-payment.ts`, `useExternalPayment` (Mode 1 for all 24
+apps), mint, checkout — posts to `/api/payment/create`, which forwarded `{ ...body, userId }`
+verbatim: **no marker, and a client-sent `metadata.testnet` passing straight through.**
+
+> **A guard's coverage is a fact about call sites, not about file names.** The route with the
+> canonical name looked like the payment route; the route doing the work had a shorter one.
+> `grep` for the *callers* before believing a guard is in place.
+
+Both send sites in that route (the second is the 401-refresh retry) now build **one** payload:
+two body literals is how a retry quietly stops carrying what the first attempt carried.
+
+### Why the fleet symptom was the thing that found it
+Nothing in either half was visible from reading a diff. What surfaced it was the plain
+observation that **no app had ever paid through the Hub on the Testnet** — a fact about the
+system nobody had stated, because each app's own Mode-2 payment worked and step 10 only ever
+needed Mode 2.
 
 ---
 
