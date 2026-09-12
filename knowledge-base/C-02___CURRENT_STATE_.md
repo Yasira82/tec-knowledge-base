@@ -3646,6 +3646,52 @@ worse. #232 is what makes the gate *possible* — with claims verified server-si
 `plan` field in the signed context is enforceable; without it any gate is bypassable by
 editing one fetch body (C-110 §5 P0-1: gating is server-side, never client-trusted).
 
+### A2U — the Mainnet App Wallet gate, and it is ONE app not twenty-four
+
+The Pi Portal gates the Mainnet App Wallet on: *"The paired Testnet app needs App to
+User transactions to 5 unique wallets."* Full record: `audits/PI_TESTNET_HOST_OWNERSHIP_2026-09-12.md` §11.
+
+**A2U could not make those payouts.** `sendA2uPayment` took `source?: string`, which
+`targetOf` widens to `{ source, testnet: false }` — so every payout resolved the
+Mainnet key, Horizon, passphrase and wallet, whatever it was for. Same shape as
+`APP_URL` / `sandbox` / `HUB_URL` / reconciliation's `targetOf` before it, except
+**here it decides which chain gets signed**. Fixed: all four now come from ONE flag on
+the payout (tec-core-backend **#297**, merged).
+
+**The wallet rule, stated in the file:** `PI_A2U_WALLET_SEED_TESTNET` has **no
+fallback** to the Mainnet seed. A missing *key* makes Pi reject a request; a missing
+*seed* that fell back would load the wallet holding real Pi and sign with it. The
+passphrase mismatch would reject it — so no money moves — but that would be an
+accident of the chain, not a property of the code.
+
+> The wallet that can spend real Pi is never reached by a payout that did not ask for it.
+
+**Scope — answered from the code, not assumed.** The fear was that all 24 apps would
+need this. They do not:
+
+1. it is the **OUTGOING** wallet — the Mainnet TEC-APP reads `Connected Outgoing
+   Wallet: None` while all 24 apps take real Pi today. **Receiving needs no wallet.**
+2. A2U has **exactly one caller** in the whole backend — the campaign
+   (`memo: 'TEC Pi Reward Campaign'`), sending no `source`, so it is the Hub's app.
+3. every other reward is deliberately not Pi — the referral reward carries the comment
+   *"A referral reward is a GIFT SUBSCRIPTION month — never raw Pi"*; the Founding-100
+   gift is six months of PRO.
+
+This agrees with platform law rather than convenience: **C-47 Invariant #8** and
+**C-132** make `payment-service` the only Pi custodian, so 24 app wallets would be a
+violation of the design, not an achievement inside it. **One round, for the Hub.**
+
+**Honest caveat:** Pi's A2U *is* per-app (a `uid` is app-scoped), so an app that ever
+pays its own users needs its own wallet and its own five-payout round. Only FundX,
+Insure and Brookfield could reach that, and all three are hard-gated on **legal
+review** — not on a wallet. If those gates open, C-132 routes distribution through
+payment-service anyway.
+
+**State:** #297 merged · `PI_API_KEY_HUB_TESTNET` + `PI_A2U_WALLET_SEED_TESTNET` set on
+`tec-payment-service`. **Remaining, and it is not an engineering task:** five *distinct*
+Pi accounts must authenticate with the paired **Testnet** app — a `uid` for an app
+exists only once that account has signed into that app, so it needs four other people.
+
 ### Open after this session
 
 `order.paid.v1` is still emitted fire-and-forget with no retry (`Stream isn't writeable`,

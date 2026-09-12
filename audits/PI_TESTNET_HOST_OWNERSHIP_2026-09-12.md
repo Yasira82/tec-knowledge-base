@@ -365,6 +365,128 @@ inside the signed context is enforceable. Without it, any gate is bypassable by 
 one fetch body — which **C-110 §5 P0-1** forbids: subscription gating is checked
 server-side in BFF routes, never on the client.
 
+---
+
+## 11 · A2U — the Mainnet App Wallet gate, and how many apps it actually applies to
+
+The Pi Developer Portal gates the **Mainnet App Wallet** on one sentence, shown on
+the Mainnet app's own "Apply for Mainnet App Wallet" form:
+
+> *"The paired Testnet app needs App to User transactions to 5 unique wallets."*
+
+### 11a · A2U could not make those payouts (tec-core-backend #297)
+
+`sendA2uPayment` took `source?: string`. `targetOf` widens a bare string to
+`{ source, testnet: false }` — so **every** payout resolved the Mainnet key, Mainnet
+Horizon, the Mainnet passphrase and the Mainnet wallet, whatever it was for. The
+Testnet half of the question had no way to be asked.
+
+Same shape as `APP_URL`, `sandbox`, `HUB_URL`, the Hub's app-grid routes and
+reconciliation's `targetOf` before it — a value fixed at build or process scope
+answering a question only the individual payment can answer. **Here it decides which
+chain gets signed.**
+
+Four decisions now come from ONE flag on the payout, resolved once:
+
+| Decision | Source |
+|---|---|
+| Pi API key | the `{source, testnet}` pair → `getPiApiKey`, which already refuses to fall back from Testnet to the Mainnet key |
+| Horizon node | per-network (`PI_HORIZON_URL_TESTNET` beside the existing override) |
+| Network passphrase | per-payout — it is part of what gets **signed** |
+| Payout wallet | `PI_A2U_WALLET_SEED_TESTNET`, **no fallback** |
+
+**The wallet rule is the sharpest, and it is stated in the file.** A missing *key*
+makes Pi reject a request. A missing *seed*, if it fell back, would load the wallet
+that holds real Pi and sign with it. The passphrase mismatch would get that rejected
+— so no money moves — but the guarantee would be an accident of the chain rather than
+a property of the code.
+
+> The wallet that can spend real Pi is never reached by a payout that did not ask
+> for it.
+
+Also folded in: the Pi **Platform host** is the one thing that does *not* vary with
+the network, and this file carried its own copy of that derivation — the same rule in
+two places (P1). It now uses the shared `getPiBaseUrlFor`, where the reasoning lives.
+
+`testnet` is strictly `=== true` at the controller boundary, as on the U2A path. A
+bare source string, and no target at all, still mean Mainnet: every existing caller is
+unchanged by construction.
+
+### 11b · The scope question, answered from the code
+
+The reasonable fear was: *"every one of the 24 apps will need this."*
+
+**No — one app does.** Three pieces of evidence, none of them an assurance:
+
+1. **The wallet is the OUTGOING wallet.** The Mainnet TEC-APP shows
+   `Connected Outgoing Wallet: None` and `Completed Steps: 10 of 10` — and all 24 apps
+   are taking real Pi on Mainnet today. **Receiving Pi needs no app wallet at all.**
+2. **A2U has exactly one caller.** Across the whole backend,
+   `POST /api/payment/internal/a2u` is invoked from one place —
+   `tec-identity-service/.../campaign.service.ts`, `memo: 'TEC Pi Reward Campaign'` —
+   and it sends **no `source`**, so it resolves to the Hub's Pi app.
+3. **Every other reward is deliberately not Pi.** The referral reward carries its own
+   comment: *"A referral reward is a GIFT SUBSCRIPTION month — never raw Pi"*. The
+   Founding-100 gift is six months of PRO, for the same reason. The other 23 apps sell
+   Pro — the money flows **in**.
+
+This also agrees with platform law rather than merely with convenience: **C-47
+Invariant #8** and **C-132** make `tec-payment-service` the only Pi custodian. Two
+dozen app wallets would be a violation of the design, not an achievement inside it.
+
+**So: one round of five payouts, for the Hub. Not twenty-four.**
+
+### 11c · The honest caveat
+
+Pi's A2U **is** per-app: a `uid` is app-scoped, and a payout is created under that
+app's key from that app's wallet. So **if** a specific app ever needs to pay its own
+users, it needs its own wallet and its own five-payout round.
+
+Only three apps could ever reach that, and all three are hard-gated today:
+
+| App | Outgoing flow | Blocked on |
+|---|---|---|
+| FundX | pool distributions | legal review · payment-service custody · SYSTEM (C-113) |
+| Insure | escrow release | the same three (C-129) |
+| Brookfield | investment returns | the same three (C-131) |
+
+Their blocker is a **legal review**, not a wallet. And if those gates ever open, C-132
+routes the distribution through `payment-service` — not through three new wallets.
+
+### 11d · Where the Testnet seed comes from, and the rule about it
+
+From the Pi Developer Portal, on the **paired Testnet app** (the form is on the
+Mainnet app; the wallet it asks about is the Testnet one). `payoutKeypair` accepts
+either form the Portal hands out:
+
+- a **24-word passphrase** — derived at Pi's own path `m/44'/314159'/0'` (the digits
+  of π, which is how you can tell it is the right path);
+- a **secret key** — `S…`, exactly 56 characters.
+
+Anything else is refused with a sentence naming what was expected, because
+`Keypair.fromSecret` throwing *"invalid encoded string"* at somebody who pasted
+exactly what the Portal gave them tells them nothing about what to do next.
+
+> **A wallet seed is never pasted into a chat, a log, a screenshot or a commit.** It
+> goes straight into the service's environment. If it appears anywhere else, treat it
+> as burned and make a new wallet.
+
+And the setup error is built to be the diagnosis: a seed that resolves to a wallet
+that does not exist prints the **public key it resolved to**, so it can be compared
+against the wallet that was actually funded — a seed cannot be read back, a public key
+can.
+
+### 11e · State, and the part no code removes
+
+**Done:** #297 merged. `PI_API_KEY_HUB_TESTNET` and `PI_A2U_WALLET_SEED_TESTNET` set
+on `tec-payment-service`.
+
+**Remaining, and it is not an engineering task:** five *distinct* Pi accounts must have
+authenticated with the paired **Testnet** app. A2U pays by `uid`, and a `uid` for an
+app exists only once that account has signed into **that** app — so it needs four other
+people to open the Testnet app. No amount of code removes that, and this record says so
+rather than leaving it to be rediscovered.
+
 ## Related Documents
 
 - `C-47_Kernel_Spec_Architecture_Binding.md` — P6 fail closed; Invariant #4 audit trail;
@@ -381,4 +503,10 @@ server-side in BFF routes, never on the client.
   reads is the caller's own, derived from the session, never from a param or body
 - `C-110___SYSTEM_INSTITUTIONAL_CHARTER.md` — §5 P0-1: subscription gating is checked
   server-side in BFF routes, never client-trusted
+- `C-71___FINANCIAL_INTEGRITY_SPEC.md` · `C-132___SERVICE_EXTRACTION_MODULAR_ARCHITECTURE_POLICY.md`
+  — Invariant #8 and the Financial Hard-Gate: `tec-payment-service` is the only Pi
+  custodian, which is why §11b's answer is one wallet and not twenty-four
+- `C-113___FUNDX_INSTITUTIONAL_CHARTER.md` · `C-129___INSURE_RISK_PROTECTION_RUNTIME.md`
+  · `C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md` — the three apps with an outgoing
+  flow, all hard-gated on legal review (§11c)
 - `audits/PI_TESTNET_PAYMENT_LATENCY_2026-09-11.md` — the session this one continues
