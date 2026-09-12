@@ -1,0 +1,275 @@
+# The Commerce tile pointed off the platform — and the comment said it was verified
+
+**Date:** 2026-09-12
+**Truth State:** [Current State]
+**Governance State:** [Draft]
+**Verification:** [Runtime Verified] — every finding below was read from production logs,
+a Vercel Domains page, or a Railway dashboard. Nothing here is inferred from code alone.
+
+**Scope:** one session. Six merged PRs across four repos. One root cause, three wrong
+diagnoses before it, and two unrelated fail-open defects found on the way.
+
+---
+
+## 1 · The headline
+
+Entering **Commerce** from the Testnet Hub returned a blank `500 Internal Server Error`.
+Every other app worked. The app itself worked when opened directly.
+
+The cause was one line in the Hub:
+
+```ts
+// tec-app/src/domains/testnet-hosts.ts
+commerce:   'https://commerce-app.vercel.app',      // WRONG — someone else's account
+commerce:   'https://tec-commerce-app.vercel.app',  // the project's actual host
+```
+
+The Commerce Vercel project's **Domains** page reads `commerce.tecosystem.app` and
+`tec-commerce-app.vercel.app`. The prefix-less spelling belongs to a **different Vercel
+account**. The Testnet grid had been handing every visitor to a stranger's deployment,
+which was alive enough to serve a favicon and answered **500** for every function.
+
+Fixed in tec-app **#231**.
+
+### The security half, which is worse than the routing half
+
+`commerce-app.vercel.app` was **also** in `ALLOWED_APP_ORIGINS` — the Hub's SSO
+allowlist. `/api/auth/sso` signs a token carrying the user's **access token** and
+redirects to the target. That line was standing permission to hand a foreign origin a
+live session.
+
+> An allowlist entry is not a hint about where an app might live. Every line in it is
+> permission to hand over a session.
+
+---
+
+## 2 · Why it took three wrong diagnoses
+
+Each theory fitted the evidence available at the time, and each was about the wrong host.
+
+| # | Theory | Why it looked right | Why it was wrong |
+|---|--------|---------------------|------------------|
+| 1 | Commerce's Vercel deployment is broken | `/api/health` returned 500, and that route catches everything and *cannot* 500 from its own code | it was a different project's `/api/health` |
+| 2 | The access token had expired, so the Hub's unbounded refresh hop hung | explained the timing exactly: 21 apps tapped with a fresh token worked, Commerce came last | merging the timeout fix changed nothing for Commerce |
+| 3 | `crypto.randomUUID()` as a bare global — a Node-version dependency | explained **every** observation at once: works standalone (`pi-login` imports it), fails from the Hub (`sso-callback` did not), other apps fine (newer projects) | it was diagnosing a route on a host that was never ours |
+
+**Theory 3 is the instructive one.** It was internally consistent, matched a real
+asymmetry inside the repo, and was *still* wrong — because a theory that explains
+everything about the wrong subject explains nothing about the right one.
+
+### What actually settled it
+
+The Vercel logs for the Commerce project showed **no 500s at all**: `Error 0 · Warning 0
+· Fatal 0`, error rate `0%`. A healthy project cannot be the source of a 500 someone is
+looking at. That single negative result ended the hunt — after three positive-sounding
+theories had not.
+
+Then the Domains page named the host in one line.
+
+> **Three plausible theories are worth less than one piece of evidence.** This is the
+> second time this session's record has had to write that sentence down.
+
+---
+
+## 3 · The part that generalises: a comment that had already been believed
+
+The value was not merely wrong. It was **documented as verified**. The file's own header
+cited it as proof that hosts cannot be guessed:
+
+> *"NOT invented, and not derived from a name … `commerce-app` has no `tec-` prefix at
+> all"*
+
+The example offered as evidence **against** guessing was a guess. And because it read
+like someone had already done the checking, it survived every round of this intact —
+it is what a reader consults **instead of** the source.
+
+**The fix is not a better guess. It is a named source.** The header now says the only
+authority for a value in that file is the **Vercel project's Domains page** — explicitly
+not the app's `ALLOWED_AUDIENCES`, not the project name, and not the comment itself.
+
+That matters because the original rule *was* "read it from the app's own
+`ALLOWED_AUDIENCES`". An allowlist answers *"may this host sign in?"*, never *"is this
+host ours?"*, and it happily lists names we wanted and do not own.
+
+### Third occurrence of one shape
+
+| App | Wrong host | What it served |
+|---|---|---|
+| Zone | `tec-zone.vercel.app` | a stranger's pink shop, then 404 |
+| Elite | `tec-elite.vercel.app` | (caught before release; real host is `tec-elite-bvzb`) |
+| **Commerce** | `commerce-app.vercel.app` | a favicon, and 500 for every function |
+
+Now guarded: a `NOT_OURS` list — hosts disproved by reading a Domains page — is asserted
+absent from both Testnet maps **and** the SSO allowlist, and every Testnet target must
+be allowlisted so an entry cannot drift into an `invalid_target` 400 the grid gives no
+hint about.
+
+---
+
+## 4 · Two fail-open defects found on the way
+
+Neither caused the Commerce failure. Both are the same shape: **a component answering
+"fine" while doing nothing.**
+
+### 4a · The reconciliation cron resolved nothing, on schedule
+
+Production, 12:00:04:
+
+```
+Stale payments found: 10
+Pi API get payment failed  status: 404  "payment_not_found"   x10
+Reconcile: Pi read failed — skipping (will retry)             x10
+Reconciliation complete   reconciledCount: 0  skipped: 10
+```
+
+The catch treated *"Pi says there is no such payment"* and *"Pi is unreachable"* as one
+event. Those rows were re-read hourly, forever — the orphan-payment path C-47 requires
+ran on time and resolved nothing — while the comment directly above it read *"a 404 here
+CANCELS the payment"*.
+
+A `payment_not_found` is now **final**: the row is cancelled with its reason in the audit
+log (Invariant #4). Narrow by construction — three facts required, each a different way
+to be wrong without the others: a `PiApiError`, `PI_FETCH_ERROR` + HTTP **404**, and Pi's
+own `payment_not_found` in the body. A 404 from a moved endpoint is *our* bug and must
+keep retrying.
+
+**Recorded in the code as a safety dependency:** this is sound *only* because `targetOf`
+carries the **network** as well as the source. Reading a Testnet payment with the Mainnet
+key also answers `payment_not_found` — indistinguishable from here — and would cancel a
+payment the user really made. (tec-core-backend **#295**)
+
+### 4b · A gateway routing NOTHING reported itself healthy
+
+A second Railway service, built from the repo **root**, ran a copy of the gateway with
+no service URLs:
+
+```
+[env] Gateway environment failed validation ... STILL RUNNING
+  - AUTH_SERVICE_URL: Required
+  - WALLET_SERVICE_URL: Required
+  - PAYMENT_SERVICE_URL: Required
+[ProxyService] All 0 microservice routes mapped
+```
+
+…and `/health` answered `status: "ok"`.
+
+Every line is true and not one is an alarm. *"All 0 microservice routes mapped"* reads
+like a status line. `buildServiceRegistry` skips any service whose env var is unset —
+correct, since a fallback URL is the NEW-A violation that file exists to avoid — but it
+skipped **silently**.
+
+**And the isolation that protects the real gateway is what hid this one.** NEW-W
+registers `/health` before every middleware so a load blip can never cause a false
+"Backend Offline" (C-96). That same isolation means a gateway with zero routes reports
+perfectly healthy while 404-ing the platform — the broken copy and the working one are
+indistinguishable by the only signal anyone checks. That is fail-**open** (P6): up and
+useless.
+
+- the registry now **names** what it skipped (warn for some, error for none);
+- `/health` still answers **200** — NEW-W untouched — but the body carries `routes`,
+  lists `unroutedServices`, and reports `degraded` unless auth + payment + wallet are
+  routable;
+- `/ready` is allowed to say **no**, gated strictly on **zero** routes so it can never
+  affect the real gateway. (tec-core-backend **#296**)
+
+---
+
+## 5 · The login handoff could hang
+
+`/api/auth/sso` is the only way into every app in the fleet, and it makes an outbound
+call of its own. The chain is three hops deep and **not one had a timeout**:
+
+```
+sso  ->  /api/auth/refresh  ->  gateway  ->  auth-service
+```
+
+An unbounded `fetch` does not fail, it **waits**, and the invocation waits with it until
+the platform kills it. A killed function never reaches its `catch` — so the route that
+had just been changed to *say why it failed* could not say anything at all.
+
+Bounded now (6s inner, 8s outer, inner shorter so this route decides what the user sees).
+The SSO hop **degrades** — it carries on with the un-refreshed token exactly as it already
+did when the refresh returned `!ok`, because a stale token produces a login screen a user
+can act on and a hung handoff produces a blank page nobody can read. The refresh hop
+answers **502 `gateway_unreachable`** with the reason. (tec-app **#230**)
+
+> **Naming an error is worthless if the handler is the thing being killed.** The bound
+> has to exist before the message can ever be written. (C-96)
+
+This was merged before the real Commerce cause was found, and it did **not** fix
+Commerce. It is kept because the defect is real: the gateway's own logs show
+`socket hang up` / `ECONNRESET` against services it proxies.
+
+---
+
+## 6 · Commerce's `crypto` global — merged, correct, and NOT the cause
+
+Recorded plainly so the causal claim does not drift (C-95).
+
+Commerce's two login paths disagreed:
+
+```
+/api/auth/pi-login       import { randomUUID } from 'crypto'    works everywhere
+/api/auth/sso-callback   crypto.randomUUID()   (bare global)    needs Node >= 19
+```
+
+`globalThis.crypto` only exists from Node 19. CI never sees it — CI runs a current Node —
+so the exposure lives only on the deployed runtime.
+
+Fixed on every **route handler** (Node runtime). **`middleware.ts` deliberately keeps the
+global**: middleware runs on the **Edge** runtime, where `crypto` is the standard Web
+Crypto global and `node:crypto` is not available — applying the same fix there breaks
+*every* request instead of one. Two runtimes, opposite rules; the test pins **both**
+halves. (Tec-Commerce **#65**)
+
+> It is a real latent defect and worth keeping. It was **not** what made Commerce return
+> 500, and this record says so rather than letting a merged fix imply a resolved cause.
+
+---
+
+## 7 · Two stray Railway services, deleted
+
+| Service | What it was | Risk |
+|---|---|---|
+| `pacific-adaptation` | Railway's random name generator; no root directory, so it built the repo **root** — which has no `src/`, no `nest-cli.json`, no Prisma schema, and a leftover `package.json` that can never build | noise only — the build failed from day one, so it never served a request |
+| `Tec-core-backend` | Railway's default name when a GitHub repo is connected; root directory set to `tec-api-gateway` → a **second gateway**, with no env vars → zero routes, `/health: ok` | the §4b case, live |
+
+Neither is a folder in the repo, and neither needs to be: a Railway service is
+`(repo) + (root directory) + (env vars) + a label`. The label is chosen in Railway.
+
+---
+
+## 8 · What is still open
+
+| Item | State |
+|---|---|
+| `order.paid.v1` emitted fire-and-forget, no retry — one Redis blip loses it permanently (`Stream isn't writeable and enableOfflineQueue options is false`, seen 05:16) | recorded, not fixed |
+| `commerce-app.vercel.app` still listed in Commerce's own `ALLOWED_AUDIENCES` | inert without `SSO_SECRET`, but a foreign origin as an acceptable audience |
+| The repo-root `package.json` in `tec-core-backend` | unused by every CI step (all run under `working-directory: ${{ matrix.service }}` or `shared/`) and unbuildable; it is what made Railway believe the root was deployable |
+| `-test.tecosystem.app` pairing | **cancelled by the owner.** The fleet stays on the `*.vercel.app` pairing, with the public-suffix consequences recorded in `PI_TESTNET_PAYMENT_LATENCY_2026-09-11.md` |
+
+---
+
+## 9 · Merged this session
+
+| PR | Repo | What |
+|---|---|---|
+| **#295** | tec-core-backend | `payment_not_found` is final — reconciliation stops retrying an answer |
+| **#296** | tec-core-backend | a gateway with zero routes no longer reports healthy |
+| **#230** | tec-app | every hop in the login handoff is bounded |
+| **#231** | tec-app | **the Commerce host — the actual cause** + a foreign origin removed from the SSO allowlist |
+| **#65** | Tec-Commerce | `crypto` imported rather than assumed (Node-version exposure) |
+
+---
+
+## Related Documents
+
+- `C-47_Kernel_Spec_Architecture_Binding.md` — P6 fail closed; Invariant #4 audit trail;
+  Invariant #7 terminal states; the orphan-payment reconciliation path
+- `C-96___PLATFORM_RUNTIME_CONSTITUTION.md` — no silent failure; a failure with no
+  alternative path must name itself
+- `C-92___PLATFORM_HEALTH_MODEL.md` — what a health signal is allowed to claim
+- `C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md` — a document that lags reality gets
+  built on; §3 above is an instance of exactly that
+- `C-76___ADR-007.md` · `C-12_Dual_Mode_Payment.md` — the Hub/app payment boundary
+- `audits/PI_TESTNET_PAYMENT_LATENCY_2026-09-11.md` — the session this one continues

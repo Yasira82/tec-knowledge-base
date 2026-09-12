@@ -238,10 +238,35 @@ for line in rb.splitlines():
     if "□" in s and section in ("ENG", "OPS"):
         errors.append(f"[RUNBOOK] unchecked {section} item before submission: {s}")
 
-# ── 6. No stale Commerce Vercel domain anywhere in the three docs ──
+# ── 6. Commerce's Vercel host is never presented as its PORTAL domain ──
+#
+# What this rule protects: Commerce is registered in the Pi Portal under
+# `commerce.tecosystem.app`. A reader who finds a `*.vercel.app` host in one of
+# these three documents and submits THAT is the failure this gate exists for.
+#
+# It used to ban the string ANYWHERE in the three docs. That was right while the
+# host was purely stale — and wrong from 2026-09-12, when it became a fact worth
+# recording: `tec-commerce-app.vercel.app` is Commerce's real TESTNET host, and
+# the Hub had been pointing at `commerce-app.vercel.app` (no prefix) which is on
+# somebody else's Vercel account. See audits/PI_TESTNET_HOST_OWNERSHIP_2026-09-12.
+#
+# A blanket ban would have forced C-02 to omit the single most important fact of
+# that incident, so the rule now bans the UNQUALIFIED mention: the host may be
+# named as a Testnet host, never as a Portal/Mainnet domain. The qualification
+# must be on the same line or the one above it, so it is visible to a reader at
+# exactly the point the string is — which is the whole purpose.
+STALE_COMMERCE = "tec-commerce-app.vercel.app"
 for name, text in (("C-01", c01), ("C-02", c02), ("RUNBOOK", rb)):
-    if "tec-commerce-app.vercel.app" in text:
-        errors.append(f"[{name}] stale Commerce domain tec-commerce-app.vercel.app present")
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
+        if STALE_COMMERCE not in line:
+            continue
+        window = " ".join(lines[max(0, i - 1):i + 1]).lower()
+        if "testnet" not in window:
+            errors.append(
+                f"[{name}] Commerce Vercel host named without a Testnet qualifier "
+                f"(line {i + 1}) — the Portal domain is commerce.tecosystem.app: {line.strip()[:90]}"
+            )
 
 # ── Report ──
 print(f"  Apps audited:        {len(APPS)} (full app fleet)")

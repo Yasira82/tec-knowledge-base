@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 4 September 2026 (Session 51.1 — the design passes, and the outbound personal context)
+**Last Updated:** 12 September 2026 (Session 55 — the Commerce tile pointed off the platform)
 
 ---
 
@@ -3472,6 +3472,120 @@ instead of Pi *because* "Pi cannot be paid out at all". The decision still stand
 own merits (PRO is unsellable, so it cannot be farmed), but it was taken for a reason
 that was already false. That is precisely the failure C-95 exists to prevent: a document
 that lags the code does not sit quietly, it gets built on.
+
+## SESSION 55 — the Commerce tile pointed off the platform, and the comment said it was verified
+
+Full engineering record: `audits/PI_TESTNET_HOST_OWNERSHIP_2026-09-12.md`.
+
+Session 54 left 21 apps unmerged. They merged, and **every app then worked from the
+Testnet Hub except Commerce**, which returned a blank `500` — while opening fine when
+typed directly.
+
+### The cause was one line in the Hub
+
+```
+TESTNET_ORIGINS in the Hub grid — Testnet hosts only, never the Portal domain:
+  commerce: 'https://commerce-app.vercel.app'       WRONG — a different Vercel account
+  commerce: 'https://tec-commerce-app.vercel.app'   the Testnet host the project serves
+```
+
+> Commerce's **Portal / Mainnet** domain is unchanged and remains
+> `commerce.tecosystem.app`. The host above is the Testnet pairing only.
+
+The Commerce project's **Domains** page names the second. The first is somebody else's
+deployment — alive enough to serve a favicon, and `500` for every function. The Testnet
+grid had been handing every visitor to it. (tec-app **#231**)
+
+**The security half is worse than the routing half.** That host was also in
+`ALLOWED_APP_ORIGINS`. `/api/auth/sso` signs a token carrying the user's **access token**
+and redirects to the target — so that line was standing permission to hand a foreign
+origin a live session. Removed.
+
+> An allowlist entry is not a hint about where an app might live.
+
+### Three wrong diagnoses first, and why the third one matters
+
+Broken deployment → expired token + an unbounded refresh hop → `crypto.randomUUID()` as a
+Node-version global. The third explained **every** observation at once and was still
+wrong, because a theory that explains everything about the wrong subject explains nothing
+about the right one.
+
+What ended it was a **negative** result: the Commerce project's Vercel logs showed
+`Error 0 · Warning 0 · Fatal 0`, error rate `0%`. A healthy project cannot be the source
+of a 500 someone is looking at. Then the Domains page named the host in one line.
+
+### The lesson worth keeping — a comment that had already been believed
+
+The wrong value was **documented as verified**. The file header cited it as proof that
+hosts cannot be guessed: *"NOT invented, and not derived from a name … `commerce-app` has
+no `tec-` prefix at all"*. The example offered as evidence **against** guessing was a
+guess, and because it read as already-checked it survived every round intact — it is what
+a reader consults **instead of** the source.
+
+The fix is not a better guess but a **named source**: the only authority for a value in
+that file is now the Vercel project's **Domains** page — explicitly not the app's
+`ALLOWED_AUDIENCES` (the old rule, and an allowlist never answers "is this host ours?"),
+not the project name, and not the comment.
+
+**Third occurrence of this shape** — Zone (`tec-zone.vercel.app` → a stranger's pink
+shop), Elite (caught pre-release), Commerce. Now guarded by a `NOT_OURS` list asserted
+absent from both the Testnet maps and the SSO allowlist.
+
+### Two fail-open defects found on the way — same shape, unrelated cause
+
+Both were **a component answering "fine" while doing nothing**:
+
+- **Reconciliation resolved nothing, on schedule.** `404 payment_not_found` was treated
+  as "Pi unreachable" and retried hourly forever — 10 stale rows, 10 reads, 10 x 404,
+  `reconciledCount: 0` — while the comment above it said a 404 cancels the payment. It is
+  now final, with its reason in the audit log (Invariant #4), under three required facts
+  so a 404 from *our* bug still retries. Sound **only** because `targetOf` carries the
+  network: a Testnet payment read with the Mainnet key answers the same thing.
+  (tec-core-backend **#295**)
+- **A gateway routing NOTHING reported `status: "ok"`.** A stray Railway service ran a
+  second gateway with no service URLs → zero routes, healthy `/health`. *"All 0
+  microservice routes mapped"* reads like a status line. And **the isolation that
+  protects the real gateway (NEW-W) is what hid this one** — liveness is deliberately
+  decoupled from the pipeline, so a gateway serving nothing is indistinguishable from the
+  working one by the only signal anyone checks. `/health` still returns 200 but now
+  carries `routes` + `unroutedServices` and reports `degraded`; `/ready` says **no** at
+  zero routes. (tec-core-backend **#296**)
+
+### The login handoff could hang
+
+`sso -> /api/auth/refresh -> gateway -> auth-service`, and **not one hop had a timeout**.
+An unbounded fetch waits until the platform kills the invocation — and a killed function
+never reaches its `catch`, so the route changed last session to *say why it failed* could
+not say anything. Bounded now, degrading to the un-refreshed token rather than failing.
+(tec-app **#230**)
+
+> **Naming an error is worthless if the handler is the thing being killed.**
+
+### Recorded honestly: the `crypto` fix was NOT the cause
+
+Commerce's `sso-callback` used the bare `crypto` global (Node 19+) while its `pi-login`
+imported it. Real latent defect, fixed on every **route handler** — `middleware.ts`
+deliberately keeps the global, because Edge has Web Crypto and no `node:crypto`. But it
+did **not** produce the 500, and this entry says so rather than letting a merged fix
+imply a resolved cause (C-95). (Tec-Commerce **#65**)
+
+### Also this session
+
+Two stray Railway services deleted — `pacific-adaptation` (built the repo root, which is
+unbuildable; failed from day one, never served a request) and `Tec-core-backend` (the
+zero-route gateway above). Neither is a folder in the repo and neither needs to be: a
+Railway service is `(repo) + (root directory) + (env vars) + a label`.
+
+The **`-test.tecosystem.app` pairing was cancelled by the owner** — the fleet stays on
+the `*.vercel.app` pairing, with the public-suffix consequences as recorded in Session 54.
+
+### Open after this session
+
+`order.paid.v1` is still emitted fire-and-forget with no retry (`Stream isn't writeable`,
+seen 05:16 — one Redis blip loses it permanently) · `commerce-app.vercel.app` is still in
+Commerce's own `ALLOWED_AUDIENCES` (inert, but a foreign origin listed as acceptable) ·
+the repo-root `package.json` in `tec-core-backend` is unused by every CI step and
+unbuildable, and is what made Railway believe the root was deployable.
 
 ## UPDATE PROTOCOL
 
