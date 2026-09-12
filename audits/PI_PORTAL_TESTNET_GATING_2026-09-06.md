@@ -60,6 +60,15 @@ Mainnet wallet application is still blocked.
 
 ## 3 · Why it has not simply been done
 
+> ⚠️ **STALE — corrected 2026-09-12.** The blocker described below was real when this was
+> written and is **fixed**: the Pi network is now chosen **per payment**, from the same
+> target that picks the key (tec-core-backend #290 · #291), so a Testnet payment no longer
+> requires flipping a global switch. And A2U itself **is built and merged**
+> (`pi-a2u.ts` · `POST /payment/internal/a2u`). What still blocks the Mainnet App Wallet
+> is §2's people requirement — 5 payouts to 5 distinct Pi accounts, each of which must
+> have authenticated with the Testnet app first. Left in place rather than deleted,
+> because the reasoning is still the record of why it waited.
+
 `tec-payment-service` chooses the Pi network **globally**, from `PI_SANDBOX`. It is
 `false`, because 24 apps take real Pi through it.
 

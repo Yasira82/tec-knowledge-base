@@ -3238,7 +3238,7 @@ objective is 5 verified pioneers × 24 apps, before the domains lapse. Recorded 
 |---|------|-------|
 | 1 | **The Quest was forgeable.** `app` was any string ≤40 chars, so 24 POSTs of `'a'..'x'` earned a permanent Founding number in seconds. Closed by a campaign-owned roster; `QUEST_TARGET` is now its length, not a literal. | tec-core-backend #274 · tec-app #192 |
 | 2 | **Audited campaign reset** (admin token + confirmation phrase, audits before it deletes) — Founding numbers are non-recyclable by design, so test runs permanently consume advertised places. Also removed a seeded demo pioneer that the public counter was serving as real. | tec-core-backend #274 |
-| 3 | **Founding gift = 6 months PRO, not Pi** — payment-service speaks only the U2A half of the Pi API; there is **no A2U path**, so Pi cannot be paid out at all. PRO is also unsellable, which collapses the incentive to farm the badge. Reuses the referral grant rule rather than adding a second one. | tec-core-backend **#275 — open** |
+| 3 | **Founding gift = 6 months PRO, not Pi.** PRO is unsellable, which collapses the incentive to farm the badge, and it reuses the referral grant rule rather than adding a second one. ⚠️ **The reason originally recorded here — "payment-service speaks only the U2A half; there is no A2U path, so Pi cannot be paid out at all" — is NO LONGER TRUE** (see the correction below). The decision still stands on its own merits; the justification does not. | tec-core-backend **#275 — open** |
 | 4 | **Per-app coverage** (`GET /identity/pioneer/coverage`, admin) — which apps are still short of 5 verified pioneers, and by how many. | tec-core-backend **#275 — open** |
 | 5 | **Feedback inbox** — a form in `/hub/profile` and an admin reader at `/hub/admin/feedback`; the table had no reader before. Runtime-verified, including a message from a real external user. | tec-core-backend #273 · tec-app #191 |
 
@@ -3257,6 +3257,221 @@ reads as a scam.
   from a real Reddit link — so a reset is not obviously free. Decide before launch.
 
 ---
+
+## SESSION 53 — the Testnet gate is closed on all 24 apps, and it exposed a guard one consumer wide
+
+Pi Portal checklist **step 10** (one U2A Test-Pi payment on each app's paired Testnet
+app) is **complete across the fleet**. Full engineering record:
+`audits/PI_TESTNET_GATE_FINDINGS_2026-09-06.md`.
+
+### What closed
+The five apps left open at the last write-up now carry the port:
+
+| App | How |
+|---|---|
+| Assets · Commerce · Ecommerce | hand-written — older than the template, each needed a genuinely different edit |
+| NBF · Brookfield | attached to the session, then ported from the reference app unchanged |
+
+### The three things worth carrying forward
+
+**A host is read off the deployment or it is not known.** Vercel appends a suffix when
+a project name is taken, and the suffixes are arbitrary: `tec-zone-mu`,
+`tec-elite-bvzb` — and `commerce-app`, with no `tec-` prefix at all. The Hub's
+`ALLOWED_TARGETS` had been written from the naming pattern. It must never become a
+wildcard: `/api/auth/sso` hands the target a signed token carrying the user's access
+token, and anyone can deploy on `*.vercel.app`.
+
+**A branch that is nearly unreachable in production is not a tested branch.** Commerce
+and Ecommerce sent an unauthenticated visitor to the Hub with **no `target=` at all** —
+a one-way trip. The shared `.tecosystem.app` cookie means that branch is almost never
+taken on Mainnet; on a host-only `*.vercel.app` host it is taken *every* time. Both had
+shipped for months. Ecommerce had the constant redeclared in **eight** files, and in
+Commerce two copies of the same rule had already drifted apart inside one repo.
+
+**Overwriting is not removing.** `metadata.testnet` decides which Pi network the π
+settles on and whether commerce grants PRO — so it must be derived from the request
+host and a client-sent value **stripped**, not spread over. The host-derived value is
+*absent* on Mainnet (present only when true, deliberately), so an overwrite there
+overwrites nothing and the caller's claim survives.
+
+### Recorded, not fixed — the next change
+
+Fleet audit of every payment-create route: 22 apps + the template derive the marker and
+strip the client claim; Assets and Commerce accept no client metadata at all. **The Hub
+is the only app with neither** — `grep -ri testnet tec-frontend/src/` returns zero — and
+its `metadata` is `.passthrough()`. Its sandbox default is also **inverted** against the
+fleet (`!== 'false'` → defaults **true**).
+
+Worse, one level down: **`tec-wallet-service` credits a real balance on
+`payment.completed` with no `testnet` check.** All eight consumers of that event were
+read; exactly one has the guard. A Test-Pi payment is refused a PRO subscription and
+credited to a real wallet in the same breath. The `.v1` outbox payload carries
+`metadata`, so the guard is implementable — the open decision is the legacy
+direct-publish path, which carries none.
+
+**Order for the next session: wallet-service first — it is the one that moves money.**
+
+### …and then the CEO asked the question that found two more
+
+> *"But no app works on the Testnet from the Hub."*
+
+Not a bug report — an observation about the system nobody had stated, because every app's own
+Mode-2 payment worked and Portal step 10 only ever needed Mode 2. It found two things.
+
+**1. `HUB_URL` — the fourth build-time constant.** Mode 1 hands the payment to the Hub, which
+creates *and approves* it, so the **Hub's own host** picks the key. Every app sent every
+visitor to `NEXT_PUBLIC_HUB_URL` — one of the Hub's two hosts, baked at build time. A Testnet
+visitor got a Mainnet approval and a Test-Pi wallet could not pay it. `APP_URL` · `sandbox` ·
+`HUB_URL`: the same shape, a fourth time. Swept across 24 repos (33 files), matching **only**
+the Mode-1 payment redirect so login — which works — was out of range by construction.
+
+**2. The guard was on a route nothing calls.** The network marker and client-claim strip had
+gone into `/api/bff/payment/create`, the ADR-009-shaped sibling that **no production code
+calls**. Every real Hub payment posts to `/api/payment/create`, which forwarded the body
+verbatim.
+
+> **A guard's coverage is a fact about call sites, not about file names.** `grep` for the
+> callers before believing a guard is in place.
+
+Both closed. Full record: `audits/PI_TESTNET_GATE_FINDINGS_2026-09-06.md` §13 — and §4, which
+had deferred this, is left standing rather than edited away: its reasoning was right for the
+gate it was scoped against, and a record that quietly rewrites its own earlier judgement
+teaches nothing.
+
+---
+
+## SESSION 54 — the Testnet gate was closed; then someone actually used it
+
+Session 53 proved each app could take **one** Test-Pi payment. This session was what
+happened when the owner used the Testnet the way a person does — pay in the Hub, walk
+into an app, pay there — and it did not work. Full engineering record:
+`audits/PI_TESTNET_PAYMENT_LATENCY_2026-09-11.md`.
+
+### Where the fleet actually stands
+
+| Repo | Merged | Testnet payment |
+|---|---|---|
+| `tec-app` (Hub) | **#209 → #226** (18) | works, both modes |
+| `tec-system` | **#29 → #34** (6) | works, both modes — the reference app |
+| `tec-core-backend` | **#293** | reconciliation reads Testnet payments with the Testnet key |
+| **the other 21 apps** | **none merged** | **still broken on Testnet, both modes** |
+
+> The last row is the headline. Each of those 21 carries 2–4 commits on
+> `claude/tec-knowledge-base-review-6wzngc` with an **open PR**. Until they merge, only
+> the Hub and System can take a Testnet payment at all. Mainnet is unaffected throughout.
+
+### The five defects, in the order each exposed the next
+
+1. **ADR-007 was blind to the Testnet Hub.** The guard tested a substring of the
+   *Mainnet* Hub only, so every hop from `tec-app-frontend.vercel.app` read as
+   standalone: the app ran `Pi.init()` inside a Hub-owned session and sat in
+   `Pi.authenticate` forever. **No error is raised — the bridge simply never replies.**
+   Now `HUB_HOSTS` + hostname matching (the substring form also matched
+   `hub.tecosystem.app.attacker.com`, and that fails **open**).
+2. **The Mode-1 chain on the Hub was a straight line** — navigate → auth settles →
+   create → modal mounts → *then* warm the Pi session. Four serial steps before the
+   handshake began; it now runs beside them.
+3. **Two concurrent `Pi.authenticate` calls, produced by the guard against them.**
+   `withAuthGate` serialized the two call sites and a login is adopted, not repeated —
+   then the *tap* threw away a healthy 1.2-second-old handshake to start a fresh one,
+   because it had been written to avoid inheriting a stalled warm-up. It now joins.
+4. **Cancel returned to the Hub, and `return_url` was an open redirect** carrying
+   `payment_id` + `txid` to any origin named. Now allowlisted against the SSO list
+   (extracted so the two consumers cannot drift), matched on **origin**, not prefix.
+5. **`/pi-test` paid under a key source that exists nowhere**, so it reported a failure
+   production would never have. *A diagnostic that tests a different path from the one
+   it is diagnosing sends you hunting the wrong bug.*
+
+### What is still slow — and the decision NOT to fix it
+
+Pay in the Hub, then in an app: the **first** payment after arriving takes tens of
+seconds. The reverse order is instant. The trace shows our side is clean — one
+handshake, at 0.0s, joined by the tap — so **the wait is inside `Pi.authenticate`**
+itself, a Pi app-context switch, paid **once**. **Testnet only; Mainnet is instant.**
+
+The structural cause is the shape of the environment, not the code:
+
+```
+Mainnet   hub.tecosystem.app          <->  <app>.tecosystem.app    ONE domain
+Testnet   tec-app-frontend.vercel.app <->  tec-<app>.vercel.app    TWO unrelated sites
+```
+
+`vercel.app` is on the **public suffix list** — separate cookie jars, separate
+partitions, nothing shared. A `-test.tecosystem.app` pairing would give Testnet
+Mainnet's shape; **the code is written and open in a PR on all 25 repos, and the
+domains are deliberately NOT being created**: it is not a diagnosed cause, the pain is
+confined to a test environment, and the cost is ~48 manual Vercel + Pi Portal steps that
+can break Testnet payments which currently work. Merging the code is additive and free,
+so the option stays open. **Revisit only if it is seen on Mainnet.**
+
+### The recurring shape — sixth instance
+
+A **build-time constant answering a question only the request can answer**:
+`APP_URL` · `sandbox` · `HUB_URL` · `appId` · the Hub's app-grid routes · ADR-007's hub
+referrer. One build, two hosts. And three axes that keep being conflated: the **host**
+picks the Pi *app*, the app's **key** picks the *network*, **`sandbox`** points at Pi's
+*Sandbox environment* — a third thing.
+
+### Process
+
+- **A merged PR cannot carry new work.** A commit landed on a branch whose PR had
+  already merged and was invisible. Pushing and opening the PR are **one step**.
+- **A fleet sweep must check what it overwrites.** A stash-and-switch dropped an
+  unmerged commit in two repos; found by auditing all 25 for the expected content, and
+  restored. Prove each branch holds only merged history *before* a force-push.
+
+## CORRECTION — A2U EXISTS. Two recorded reasons for not building it are stale.
+
+Found while reviewing "the A2U plan" on request. There is no plan to review: **the
+payout path is built, merged and wired.** Two documents say otherwise, and one of them
+was used as the justification for a product decision.
+
+### 1. C-02 said there is no A2U path. There is.
+
+| | |
+|---|---|
+| `tec-payment-service/src/services/pi-a2u.ts` | create → **sign + submit on Stellar** → complete |
+| `controllers/a2u.controller.ts` | `POST /payment/internal/a2u` · `GET /payment/internal/a2u/limits` |
+| `routes/payment.routes.ts` | both mounted behind `validateInternalKey` |
+| `__tests__/pi-a2u.test.ts` | covered |
+| Consumer | the Pioneer campaign — self-withdrawal, payout queue, **and a chain lookup before a payout is recorded as paid** |
+
+It is not a sketch. The bounds are written as reasons, not decoration:
+
+1. **One dedicated wallet** (`PI_A2U_WALLET_SEED`) holding only what payouts need — explicitly *not* the wallet that holds the platform's Pi.
+2. **A hard per-payment ceiling** (`PI_A2U_MAX_PI`, default 10 π), enforced **inside the code that signs** — not by the caller, because the caller is the thing that might be wrong.
+3. **Idempotent by the caller's own key**, so a retry that already sent cannot pay twice.
+4. **Never silent**, and the `txid` is returned even when `complete` fails — the chain is the truth, and a failed bookkeeping call must never look like a failed payment.
+
+> **This is a custody change, not a feature.** To sign an outgoing transfer the service
+> must hold the app wallet's PRIVATE SEED. Every other flow in that service moves Pi a
+> user authorised, holding no key that can spend. A2U is the first time the platform
+> holds one (C-71 · Invariant #8).
+
+### 2. The Portal audit's "why it has not simply been done" is stale
+
+`audits/PI_PORTAL_TESTNET_GATING_2026-09-06.md` §3 records the blocker as
+`tec-payment-service` choosing the Pi network **globally** from `PI_SANDBOX`, so a
+Testnet payment could not be approved without taking every live payment down.
+
+**That was fixed** — the network is now chosen **per payment**, from the target that also
+picks the key (tec-core-backend #290 · #291). The constraint that paragraph describes no
+longer exists.
+
+### 3. What IS still blocking — and it is not code
+
+Pi grants a **Mainnet App Wallet** only after **5 A2U payouts to 5 distinct Pi accounts**
+from the paired **Testnet** app's wallet. A2U pays by `uid`, and a `uid` for an app only
+exists once that account has **authenticated with that app**. So it needs **four other
+people** to open the Testnet app. No amount of engineering removes that.
+
+### Why this correction matters more than the two lines
+
+The stale sentence was not inert — it was **used**. The Founding gift was made PRO
+instead of Pi *because* "Pi cannot be paid out at all". The decision still stands on its
+own merits (PRO is unsellable, so it cannot be farmed), but it was taken for a reason
+that was already false. That is precisely the failure C-95 exists to prevent: a document
+that lags the code does not sit quietly, it gets built on.
 
 ## UPDATE PROTOCOL
 

@@ -3,12 +3,16 @@
 **Date:** 2026-09-06 · **Scope:** `tec-payment-service` · every app frontend · Pi Developer Portal
 **Companion to:** `audits/PI_PORTAL_TESTNET_GATING_2026-09-06.md` (the plan). **This is the outcome.**
 
-**Truth State:** [Current State] · **Verification:** [Runtime Verified] (Connection Mode 2) · **Governance:** [Draft]
+**Truth State:** [Current State] · **Verification:** [Runtime Verified] (fleet-wide — step 10 complete) · **Governance:** [Draft]
 
 > Read this before touching another app's testnet path. Four separate defects sat between
-> "the plan is right" and "a Test-Pi payment completes". Not one of them was visible in the
-> plan, in a code review, or in any log until the exact moment it was hit. Connection paid
-> for all four; the other 22 apps should not have to.
+> "the plan is right" and "a Test-Pi payment completes" (§2), and a fifth surfaced only
+> once those were fixed (§8). Not one was visible in the plan, in a code review, or in any
+> log until the exact moment it was hit. Connection paid for the first four; the other apps
+> should not have to.
+>
+> **Outcome: step 10 is complete across the fleet** — every app that took these six changes.
+> The five that did not are listed in §9, with the reason.
 
 ---
 
@@ -58,11 +62,36 @@ parent of `tec-<app>.vercel.app`, so the browser **rejected every `Set-Cookie`**
 `vercel.app` is on the Public Suffix List, so no wildcard cookie could be set there anyway.
 
 **Fix:** `cookieDomainFor(host, configured)` — the configured domain only where it genuinely
-covers the host, host-only otherwise. **On the Mainnet host this is a no-op.** The
-`document.cookie` fallback also lacked `Partitioned` (C-123 LAW 3), and the Testnet host is
-precisely where that fallback is what carries the session.
+covers the host, host-only otherwise. **On the Mainnet host this is a no-op.**
 
 > Host-only is not a downgrade. The alternative is not a broader cookie — it is **no cookie**.
+
+#### ⚠️ The second half of this fix was WRONG, and was reverted
+
+The same change added `Partitioned` to the `document.cookie` fallback, reasoning that
+C-123 LAW 3 requires it and the server response already sets it — so the fallback should
+match. **That broke Mainnet.**
+
+Assets went intermittent the moment it shipped (NFT upload and mint hanging, ~2 successes
+in 12) and steady again the moment it was reverted. Same line, isolated, twice.
+
+What the "consistency fix" actually removed was the **UNPARTITIONED duplicate** the
+fallback had always written *beside* the server's partitioned one. In any context where
+the partitioned copy is not sent — and Pi Browser is a custom WebView — that duplicate was
+the only cookie left.
+
+**The server half stays**: `partitioned: true` on the response is the half LAW 3 governs,
+and nothing about the Testnet host depended on the fallback attribute — that host is
+carried by the server cookie, which is why step 10 passed *with* it and passes *without*.
+
+Reverted across all 21 repos that took it, each with a test pinning the **absence** and the
+reason, so the same "obvious consistency fix" is not reapplied by someone who has not read
+this.
+
+**The lesson is not about cookies.** A redundant-looking duplicate can be load-bearing —
+the same shape as the backend deploy defect recorded in C-02 §5, where a broken name lookup
+was the access control for an unguarded production deploy. *Removing a redundancy without
+asking what it was silently doing is how a tidy-up becomes an incident.*
 
 ### D3 — `sandbox: true` silenced the Pi bridge
 
@@ -118,7 +147,7 @@ Six changes. They must ship together — each one only exposes the next.
 |---|---|---|
 | 1 | `src/lib/pi-network.ts` *(new)* | `isTestnetHost` (anchored to the end of the host) + `networkMetadata` — present **only** when true |
 | 2 | `src/app/api/bff/payment/create/route.ts` | drop the client's `testnet` **before** the spread; add `...networkMetadata(req.headers.get('host'))` |
-| 3 | `src/lib/cookie-domain.ts` *(new)* + `sso-callback` | `cookieDomainFor(req.nextUrl.hostname, …)`; add `partitioned` to the `document.cookie` fallback |
+| 3 | `src/lib/cookie-domain.ts` *(new)* + `sso-callback` | `cookieDomainFor(req.nextUrl.hostname, …)` **only**. Do NOT add `partitioned` to the `document.cookie` fallback — see D2: it broke Mainnet and was reverted fleet-wide |
 | 4 | `src/app/layout.tsx` | `sandbox` from the host, **default false**, `?pi_sandbox=1` override confined to the Testnet host |
 | 5 | `src/app/page.tsx` (login) | SSO return address → `window.location.origin` |
 | 6 | `src/lib/pi-payment.ts` | Hub `return_url` → `location.origin`; `onError` must not read `.message` off a non-Error |
@@ -149,7 +178,14 @@ Making it work needs the Hub to take changes 1–5 **and** `redirectToHubPayment
 Testnet visitor to the Hub's Testnet host. That is **the same build-time-constant bug a third
 time** (`APP_URL`, `sandbox`, now `HUB_URL`).
 
-**Deliberately not done.** It is not on the Portal checklist and blocks no domain.
+**Deliberately not done at the time.** It was not on the Portal checklist and blocked no
+domain — a correct call for the gate, and the honest answer to "why does no app pay through
+the Hub on the Testnet?": *because this half was never built*, not because it broke.
+
+> **CLOSED — see §13.** Both halves shipped once the question was actually asked out loud.
+> The deferral is left standing above rather than edited away: the reasoning was sound for
+> the deliverable it was scoped against, and a record that quietly rewrites its own earlier
+> judgement teaches nothing.
 
 ---
 
@@ -181,14 +217,231 @@ look identical.
 
 ---
 
-## 7 · Stated as unverified
+## 7 · Answered — this section is now the record, not the open list
+
+Every question this section opened has been closed **by the fleet finishing step 10**,
+not by argument.
 
 | | |
 |---|---|
-| Is `api.minepi.com` correct for a **Testnet app's** Platform calls? | **Strongly indicated, not confirmed by Pi.** The Horizon error body proves the old host was wrong; `pi-a2u.ts`/`pi-tx.ts` show the intended split. Confirmed when a testnet approve returns 200. |
-| Does `sandbox: false` on the Testnet host hold generally? | **One clean A/B, one trial.** Same host, same build, only the flag differed. |
-| The 22 remaining apps | **`[Code Verified]` only.** Each still needs its Testnet key, a redeploy, and its own step 10. |
-| Mainnet regression | Reasoned from the code paths **and** confirmed by one live Mainnet payment after the change. Every app's Mainnet path is unchanged by construction: `testnet` is absent, not `false`, and every consumer tests `=== true`. |
+| Is `api.minepi.com` correct for a **Testnet app's** Platform calls? | ✅ **[Runtime Verified].** A testnet approve returns 200 against `api.minepi.com` under the app's **Testnet key**. The host does not carry the network; the key does. This was the one claim the doc rested on and could not prove. |
+| Does `sandbox: false` on the Testnet host hold generally? | ✅ **Held across the fleet**, not only in the single A/B it was decided on. |
+| The remaining apps | ✅ **Checklist-complete**, except the five in §9. |
+| Mainnet regression | ✅ **None.** Reasoned from the code paths, then confirmed by live Mainnet payments after the change. `testnet` is *absent* from a Mainnet payment rather than `false`, and every consumer tests `=== true`. |
+
+---
+
+## 8 · D5 — the host an app is served from is not the one its name implies
+
+Found **after** the six changes shipped, and only because of them.
+
+Vercel appends a random suffix when a project name is already taken. Two of the
+first apps checked were affected, with **unpredictable** suffixes:
+
+```
+Zone      → tec-zone-mu.vercel.app       (not tec-zone.vercel.app)
+Elite     → tec-elite-bvzb.vercel.app    (not tec-elite.vercel.app)
+Commerce  → commerce-app.vercel.app      (no `tec-` prefix AT ALL)
+```
+
+Commerce is the one that settles the argument. Zone and Elite at least *look* like
+the pattern with something appended; Commerce does not begin with `tec-`. There is
+no rule to infer — **a host is read off the deployment or it is not known.**
+
+The Hub's `ALLOWED_TARGETS` had been written **from the naming pattern rather than
+from the deployments**, so those apps answered `{"error":"invalid_target"}`.
+
+**It did not appear today — it stopped being silent today.** Before D1 was fixed, the
+login sent the build-time constant `<app>.tecosystem.app`, which *is* allowlisted: the
+check passed and the visitor was quietly returned to the **Mainnet** host while the
+Testnet one never got a session. The fix converted a silent wrong-host login into a
+loud refusal.
+
+**The allowlist must never become a pattern.** Anyone can deploy
+`tec-<app>-<anything>.vercel.app` on their own Vercel account, and `/api/auth/sso`
+hands the target a signed token carrying the user's access token. A wildcard there is
+an account-takeover primitive. **Explicit hosts, read off the deployments.**
+
+What made the rest cheap: the rejection now **names the origin it refused** and says
+what to do. A screenshot of the error became the fix — the same lesson as this repo's
+`E404`-on-publish note: *an error that sends the next person the wrong way costs more
+than the bug it reports.* The allowlist itself is deliberately not echoed.
+
+Both hosts stay listed per app. An allowlist entry that resolves to nothing is inert,
+and the unsuffixed name may become the project's alias later.
+
+---
+
+## 10 · The variant D1 hid: a bounce with no return address at all
+
+Commerce and Ecommerce did not have D1 in the form the other apps had it. Their
+landing page's "no session" branch was not a *wrong* return address — it was **no
+return address**:
+
+```
+window.location.href = 'https://tec-app-frontend.vercel.app';   // Commerce, /
+ssoRedirect(HUB_URL, `${APP_URL}/`)                              // Ecommerce, /
+```
+
+The first hands the Hub nothing to sign a token back to. The user signs in, lands on
+the Hub, and the app they tapped is never reached again — a one-way trip.
+
+**Why it never showed on Mainnet.** The shared `.tecosystem.app` cookie means a
+visitor almost always arrives already carrying a token, so that branch is almost
+never taken. On a `*.vercel.app` host cookies are host-only, so a visitor **never**
+arrives with one and **every** visit took it. The bug had been there the whole time;
+the Testnet host is simply the only place it is reachable.
+
+> **A branch that is nearly unreachable in production is not a tested branch.**
+> Both of these had shipped for months.
+
+Ecommerce carried the worse shape of it: `APP_URL` was a module constant **redeclared
+in eight files**, serving both the login bounce *and* the `return_url` of a Mode-1
+payment. So the same constant that stranded a login also landed a buyer on the wrong
+host after the π had moved.
+
+And the drift is not hypothetical. In Commerce, `/app` was fixed in the first pass and
+the landing page was not — the two copies of one rule diverged inside a single repo,
+in a single session. Both apps now read the origin from **one** file
+(`lib/sso.ts` · `lib-client/app-origin.ts`) and every call site imports it.
+
+---
+
+## 11 · The network flag is a claim, and a claim needs an owner
+
+`metadata.testnet` is not decoration. Two live systems branch on it:
+
+| Reader | Behaviour when `testnet === true` |
+|---|---|
+| `payment-service` `getPiApiKey` | selects `PI_API_KEY_<SLUG>_TESTNET` — i.e. which network the π settles on |
+| `commerce` `SubscriptionConsumer` | **refuses** to activate PRO |
+
+So whoever sets that field decides whether a payment is free. It must be derived from
+the **request host**, server-side, and a client-sent value must be **removed** — not
+merely overwritten.
+
+> **Overwriting is not removing, and on Mainnet it is nothing at all.** The
+> host-derived value is *absent* on a Mainnet host (present only when true, by
+> design — a `testnet: false` on 100% of real payments is a field about the test
+> network sitting on real money, wrong the first day someone writes it backwards).
+> `{ ...clientMetadata, ...networkMetadata(host) }` therefore overwrites **nothing**
+> there, and the caller's claim survives intact. Strip it *before* the spread, so a
+> later edit that reorders the object cannot hand the network back.
+
+Fleet audit at the close of this session — every app's payment-create route read, not
+inferred:
+
+| Group | Marker derived from Host | Client claim stripped |
+|---|---|---|
+| 22 domain apps + template (incl. NBF · Brookfield · Ecommerce) | ✅ | ✅ |
+| **Assets · Commerce** | ✅ | n/a — their schema accepts **no** client metadata, so there is nothing to strip |
+| **Hub (`tec-app`)** | ❌ **absent** | ❌ **absent**, and its schema is `.passthrough()` |
+
+---
+
+## 12 · The Hub is the last app with none of this — and one consumer below it is worse
+
+Recorded here rather than fixed, because it is a separate change on a financial path.
+
+**In `tec-app`.** `grep -ri testnet src/` returns **zero**. Three consequences:
+
+1. Its BFF create sets no marker, so a payment made on the Hub's own Testnet host is
+   approved with the **Mainnet** key — a real payment made from a Testnet host, not a
+   Testnet payment.
+2. Its `metadata` is `.passthrough()` with no strip, so a caller *can* set the flag —
+   and the Hub is the Mode-1 path for **all 24 apps**.
+3. Its sandbox default is **inverted** relative to the entire fleet:
+   `NEXT_PUBLIC_PI_SANDBOX !== 'false'` defaults to **true**, where every other app
+   reads `=== 'true'`. Unset or misspelled, the Hub comes up in sandbox — D3 by
+   default rather than by mistake.
+
+**Below it, the one that moves money.** `tec-wallet-service` consumes
+`payment.completed` and credits a real balance —
+`balance: { increment: amount }` plus a ledger row and an audit row — with **no
+`testnet` check**. All eight consumers of that event were read: exactly one
+(`subscription.consumer.ts:135`) has the guard.
+
+> So the guard the platform *thinks* it has is one consumer wide. A Test-Pi payment
+> is refused a PRO subscription and credited to a real wallet in the same breath.
+
+The `.v1` outbox payload does carry `metadata` (`payment.controller.ts:519`), so the
+guard is implementable. The open question is the **legacy** direct-publish path, which
+carries none: refusing there fails closed against real Mainnet credits, and allowing
+there leaves the hole open. That is a decision, not a patch — which is why it is
+written down here instead of being guessed at.
+
+---
+
+## 9 · Closed — all 24 apps carry the port
+
+The five that were open at the time of writing are done.
+
+| App | How |
+|---|---|
+| **Assets · Commerce · Ecommerce** | Hand-written. Older than the template: different `layout.tsx`, different BFF create route, different login call sites. The anchored script had stopped at them rather than guessing — which was the right outcome, because each needed a genuinely different edit (see §10). |
+| **NBF · Brookfield** | Attached to the session, then ported from the reference app. Structurally identical to the template, so the six-file recipe applied unchanged. |
+
+**Their guard suites were rewritten, not the code bent to fit them.** The copied
+tests asserted the template's inline layout script; Ecommerce has no such script
+(`Pi.init` lives in `PiSdkLoader`) and Commerce's create route accepts no client
+metadata. In each case the assertion was rewritten against the shape the app really
+has. *A test copied along with a fix is a claim about a file that may not exist.*
+
+Each app still needs its own `PI_API_KEY_<SLUG>_TESTNET` on `tec-payment-service`
+before step 10 — there is **no fallback** to the Mainnet key by design, so a missing
+Testnet key fails loudly rather than quietly charging real π.
+
+Remaining, and tracked in §12 rather than here: the **Hub itself**, and the
+**wallet-service credit guard** below it.
+
+---
+
+## 13 · Mode 1 on the Testnet — closed, and the guard was on a route nothing calls
+
+Two halves, and the second only surfaced because the first was being wired.
+
+### The app half — `HUB_URL`, the fourth instance
+
+```ts
+window.location.href = `${HUB_URL}/hub?${params}`;   // 33 files, 24 repos
+```
+
+Mode 1 hands the payment to the **Hub**, which creates *and approves* it — so the **Hub's
+own host** decides which Pi app, and therefore which key, that payment is approved under. A
+Testnet visitor sent to the Mainnet Hub gets a Mainnet approval, and a Test-Pi wallet cannot
+pay it. The modal hangs on "Confirm in Pi…" forever.
+
+`hubPaymentOrigin(HUB_URL)` reads the live host. On a custom domain it returns the
+configured value untouched; on `*.vercel.app` it returns the Hub's Testnet host.
+
+**Login is deliberately NOT routed this way.** SSO is identity, not payment, and the Mainnet
+Hub already signs sessions for Testnet hosts correctly — that is how all 24 apps completed
+their Testnet login. Changing a flow that works, to fix one that does not, is how a fix
+becomes an incident (the §5a/§5b lesson in C-02 Session 46, again).
+
+The sweep matched **only** `${HUB_URL}/hub?` — the Mode-1 payment redirect — so the login
+call sites were out of range *by construction* rather than by care.
+
+### The Hub half — a guard on a route no production code calls
+
+The network marker and the client-claim strip had been added to
+`/api/bff/payment/create`. It is the ADR-009-shaped sibling and it is **called by nothing**
+but tests. Every real Hub payment — `pi-payment.ts`, `useExternalPayment` (Mode 1 for all 24
+apps), mint, checkout — posts to `/api/payment/create`, which forwarded `{ ...body, userId }`
+verbatim: **no marker, and a client-sent `metadata.testnet` passing straight through.**
+
+> **A guard's coverage is a fact about call sites, not about file names.** The route with the
+> canonical name looked like the payment route; the route doing the work had a shorter one.
+> `grep` for the *callers* before believing a guard is in place.
+
+Both send sites in that route (the second is the 401-refresh retry) now build **one** payload:
+two body literals is how a retry quietly stops carrying what the first attempt carried.
+
+### Why the fleet symptom was the thing that found it
+Nothing in either half was visible from reading a diff. What surfaced it was the plain
+observation that **no app had ever paid through the Hub on the Testnet** — a fact about the
+system nobody had stated, because each app's own Mode-2 payment worked and step 10 only ever
+needed Mode 2.
 
 ---
 
