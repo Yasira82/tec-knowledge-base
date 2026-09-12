@@ -3579,6 +3579,73 @@ Railway service is `(repo) + (root directory) + (env vars) + a label`.
 The **`-test.tecosystem.app` pairing was cancelled by the owner** — the fleet stays on
 the `*.vercel.app` pairing, with the public-suffix consequences as recorded in Session 54.
 
+### TEC AI — the assistant's picture of the user travelled through the browser
+
+Asked what was left with no payment path, the answer was **TEC AI** — and C-104 §7
+already settles that: FREE/PRO/API, monetized through the **Hub PRO subscription**,
+not a payment of its own. Nothing missing there. What IS missing is the gate itself
+(`requiresPro: false`; `/ai` treats FREE and PRO identically).
+
+Scoping that gate found a defect underneath it that has nothing to do with money.
+
+**`/api/bff/ai/context`** resolves the caller's real state from the gateway — Life
+goals, focus, Analytics activity, KYC — server-side from the session identity, exactly
+as C-106 sovereignty requires. It then returned that object to the **browser**, and the
+browser posted it back to `/api/ai/chat`:
+
+```
+const userContext = body.userContext;   // taken whole, unvalidated
+const systemPrompt = buildSystemPrompt(userContext);
+```
+
+Every platform **claim** about the user made a round trip through the one place that
+cannot be trusted. Editing one fetch body was enough to tell the assistant you were
+KYC-verified, or to hand it goals you do not have.
+
+**Nothing executes on these** — the AI guides, it never acts (C-104 §4) — so no money
+moves. It answers the user from premises the platform never asserted, **in the
+platform's voice**. That is the damage, and it is enough: the whole value of the
+assistant is that its picture of you is real.
+
+**Fixed** (tec-app **#232**) with a token the server signs — three properties, each
+load-bearing:
+
+| Property | Without it |
+|---|---|
+| **Signed** (HS256 / `JWT_SECRET`) | the browser rewrites any field |
+| **Subject-bound** (`sub` checked against the independently verified session) | a lifted token is a portable identity claim |
+| **Short-lived** (15 min) | a user pins a stale KYC or an old goal list |
+
+A **token rather than a second fetch**: `/api/ai/chat` runs on the **Edge** runtime
+while context assembly is a Node BFF fanning out to three gateway endpoints —
+re-resolving there would put that fan-out on *every message*. Same primitive the SSO
+handoff already uses.
+
+> **The boundary is CLAIMS vs PREFERENCES, not server vs client.** Reply language and
+> length stay in the body: they are the user's own choice from the assistant's settings
+> menu, assert nothing about them, and signing them would mean a round trip every time
+> someone toggles "short answers". Stated that way, the next field added lands on the
+> correct side on its own.
+
+No fallback to the body when verification fails — failing closed costs a less personal
+answer; falling open puts unchecked statements in the prompt (P6).
+
+**Two things the fix surfaced:**
+- **Two call sites, not one** — the Hub drawer hook and the `/ai` page each had their
+  own copy of the body. Fixing only the drawer would have left the page open, and the
+  page was worse: it also sent a `username` read from client state.
+- **That username was never real anywhere.** The drawer's test mocked a BFF field the
+  BFF never returned, so the greeting was personalized *in the test* and generic in
+  production. It is now a signed claim from the `tec_user` cookie — so the feature both
+  works and is trustworthy. *A test can be the only place a feature exists.*
+
+**Deliberately NOT done — the FREE/PRO gate (C-104 §7).** It is a product decision (what
+the FREE limits are), and it is a trade: the personal-context injection IS the
+"advanced planning" the table sells, so gating it makes the FREE assistant noticeably
+worse. #232 is what makes the gate *possible* — with claims verified server-side, a
+`plan` field in the signed context is enforceable; without it any gate is bypassable by
+editing one fetch body (C-110 §5 P0-1: gating is server-side, never client-trusted).
+
 ### Open after this session
 
 `order.paid.v1` is still emitted fire-and-forget with no retry (`Stream isn't writeable`,

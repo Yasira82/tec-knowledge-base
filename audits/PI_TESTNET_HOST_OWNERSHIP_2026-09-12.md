@@ -262,6 +262,109 @@ Neither is a folder in the repo, and neither needs to be: a Railway service is
 
 ---
 
+---
+
+## 10 · TEC AI — claims about the user travelled through the browser
+
+Separate thread, same day, and a different class of defect: not a wrong value, a
+**wrong trust boundary**.
+
+### How it came up
+
+The question was which domain still has no payment path. Answer: **TEC AI** — and
+C-104 §7 already settles that as intended (FREE / PRO / API, monetized through the
+**Hub PRO subscription**, no payment of its own). What is genuinely missing is the
+*gate*: `requiresPro: false`, and `/ai` treats FREE and PRO identically.
+
+Scoping that gate is what surfaced the defect. It has nothing to do with money.
+
+### The defect
+
+`/api/bff/ai/context` resolves the caller's real state from the gateway — Life goals,
+stated focus, Analytics activity, KYC — **server-side, from the session identity**,
+exactly as C-106 sovereignty requires.
+
+It then returned that object to the **browser**, and the browser posted it back to
+`/api/ai/chat`:
+
+```ts
+const userContext = body.userContext;          // whole, unvalidated
+const systemPrompt = buildSystemPrompt(userContext);
+```
+
+Every platform **claim** about the user made a round trip through the one place that
+cannot be trusted. Editing one fetch body was enough to assert KYC verification, or to
+hand the assistant goals the user does not have.
+
+**Nothing executes on these.** The AI guides and never acts (C-104 §4 — decision
+SUPPORT, not decision maker), so no money moves and no state changes. What it does is
+answer the user from premises the platform never asserted, **in the platform's voice**.
+That is the damage, and it is sufficient: the entire value of the assistant is that its
+picture of the user is real.
+
+### The fix (tec-app #232)
+
+Claims come only from a token the server signs. Three properties, each load-bearing:
+
+| Property | What it prevents |
+|---|---|
+| **Signed** — HS256 over `JWT_SECRET` | the browser rewriting a field |
+| **Subject-bound** — `sub` checked against the independently verified session | a lifted token becoming a portable identity claim |
+| **Short-lived** — 15 minutes | pinning a stale KYC status or an old goal list |
+
+**A token rather than a second fetch.** `/api/ai/chat` runs on the **Edge** runtime
+while context assembly is a Node BFF fanning out to three gateway endpoints; having the
+route re-resolve would put that fan-out on *every message*. The same primitive the SSO
+handoff already uses — `jose`, Edge-safe via Web Crypto.
+
+**Audience matters more than it looks.** The session cookie is signed with this same
+`JWT_SECRET`. Without an `aud` check, an access token would verify here and its payload
+be read as context.
+
+### The rule worth keeping
+
+> **The boundary is CLAIMS vs PREFERENCES — not server vs client.**
+
+Reply language and length stay in the request body: they are the user's own choice from
+the assistant's settings menu, they assert nothing *about* the user, and signing them
+would mean a round trip every time someone toggles "short answers". Preferences are
+narrowed against a closed set so the body cannot introduce a field the prompt renders.
+
+Drawing the line as "server vs client" would have signed the preferences too — more
+ceremony, no more safety, and a worse experience. Drawing it as "claims vs preferences"
+means **the next field added lands on the correct side without anyone having to decide
+again.**
+
+There is deliberately **no fallback to the body** when verification fails: failing
+closed costs a less personal answer, falling open puts unchecked statements into the
+prompt (P6).
+
+### Two findings from the fix itself
+
+- **Two call sites, not one.** The Hub drawer hook and the `/ai` page each carried their
+  own copy of the request body. A fix applied to the drawer alone would have left the
+  page wide open — and the page was the worse of the two, because it also sent a
+  `username` read from client state.
+- **That username was never real anywhere.** The drawer's test mocked a BFF field the
+  BFF never returned, so the greeting was personalized *in the test* and generic in
+  production. It is now a signed claim sourced from the `tec_user` session cookie.
+
+> **A test can be the only place a feature exists.** This one asserted a behaviour the
+> product never had, and it passed for as long as nobody looked — the mirror image of
+> §3, where a comment asserted a fact the platform never had.
+
+### Not done, and why
+
+The **FREE/PRO gate** (C-104 §7) is deliberately out of scope. It is a product decision
+— what the FREE limits are — and a real trade: the personal-context injection **is** the
+"advanced planning" the table sells, so gating it makes the FREE assistant noticeably
+worse.
+
+#232 is what makes the gate *possible*. With claims verified server-side, a `plan` field
+inside the signed context is enforceable. Without it, any gate is bypassable by editing
+one fetch body — which **C-110 §5 P0-1** forbids: subscription gating is checked
+server-side in BFF routes, never on the client.
+
 ## Related Documents
 
 - `C-47_Kernel_Spec_Architecture_Binding.md` — P6 fail closed; Invariant #4 audit trail;
@@ -272,4 +375,10 @@ Neither is a folder in the repo, and neither needs to be: a Railway service is
 - `C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md` — a document that lags reality gets
   built on; §3 above is an instance of exactly that
 - `C-76___ADR-007.md` · `C-12_Dual_Mode_Payment.md` — the Hub/app payment boundary
+- `C-104___TEC_AI_INSTITUTIONAL_CHARTER.md` — §4 the AI guides and never acts; §7 the
+  FREE/PRO/API revenue model, monetized through the Hub subscription (§10 above)
+- `C-106___LIFE_INSTITUTIONAL_CHARTER.md` — own-data sovereignty: the context the AI
+  reads is the caller's own, derived from the session, never from a param or body
+- `C-110___SYSTEM_INSTITUTIONAL_CHARTER.md` — §5 P0-1: subscription gating is checked
+  server-side in BFF routes, never client-trusted
 - `audits/PI_TESTNET_PAYMENT_LATENCY_2026-09-11.md` — the session this one continues
