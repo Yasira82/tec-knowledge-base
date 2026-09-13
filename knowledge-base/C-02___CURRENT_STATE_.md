@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 12 September 2026 (Session 55 — the Commerce tile pointed off the platform)
+**Last Updated:** 13 September 2026 (Session 56 — the first payout round: four defects, gate closed)
 
 ---
 
@@ -3699,6 +3699,77 @@ seen 05:16 — one Redis blip loses it permanently) · `commerce-app.vercel.app`
 Commerce's own `ALLOWED_AUDIENCES` (inert, but a foreign origin listed as acceptable) ·
 the repo-root `package.json` in `tec-core-backend` is unused by every CI step and
 unbuildable, and is what made Railway believe the root was deployable.
+
+---
+
+## SESSION 56 — the first time the platform tried to pay anybody, four things were wrong
+
+Full engineering record: `audits/A2U_FIRST_PAYOUT_ROUND_2026-09-13.md`.
+
+Session 55 left one thing outstanding, and it was not an engineering task: five distinct
+Pi accounts had to sign into the paired **Testnet** Hub so the app would have five `uid`s
+to pay. Five people did. Then the payouts ran — and **every one of the five attempts
+failed, for a different reason each round.**
+
+### The gate is closed
+
+```
+FAARSS876  ·  mord886  ·  gzer0023  ·  YAs5er2030  ·  magy888
+5 unique wallet(s) paid, of 5 the Portal wants.
+```
+
+Counted off **Horizon**, not off successful API calls — the Portal counts *wallets*, and
+five payouts to one person count once. Mainnet App Wallet applied for the same night, as
+an Individual; `Connected Outgoing Wallet: None` until Pi answers.
+
+### The four defects, each found only by trying
+
+| # | Defect | Why nothing caught it |
+|---|--------|-----------------------|
+| 1 | `Pi.authenticate` asked for `['username','payments']`. **`wallet_address` was never requested**, so Pi refuses every create with `401 missing_scope` before anything is signed. | Permission is negotiated at runtime with a third party. No test, lint or review asks "does this request the permission it needs?" |
+| 2 | Pi allows **one open server payment per APP**, not per user. One payout left hanging blocked every other payout the platform could make. | A single-recipient test never produces a second recipient to be blocked. |
+| 3 | The transaction fee came from Stellar's `BASE_FEE` constant (100 stroops). **Pi is not Stellar** → `tx_insufficient_fee`. | Only visible in Horizon's `extras.result_codes`, which the error handling was discarding — see 4. |
+| 4 | Failures threw away their own reasons: Pi's `error_message` and Horizon's `result_codes` never reached the log or the caller. | A generic message is not a failing test. It reviews fine. |
+
+> **The one worth carrying past this session is #1.** The Hub's home screen advertises a
+> reward campaign — *"visit a few apps, claim real Pi"* — paid through this exact path.
+> **It could never have paid a single person, on Mainnet either.** A feature can be
+> shipped, visible, advertised, and structurally incapable of working, and nothing says
+> so until the first real attempt. Three of the four defects would have waited for the
+> first real reward on Mainnet to announce themselves.
+
+### And one error of mine
+
+I read a payment identifier off a screenshot and transcribed a `0` as an `O`. Pi answered
+`payment not found`, and I built an architectural theory on it — *"app payments live in a
+different namespace"* — which cost two rounds and two PRs. What ended it was making the
+tooling print **Pi's own raw response, unreshaped**: the correct identifier was in it. The
+audit records this as §7 rather than quietly dropping it, because the fix is structural —
+`resume` should take the identifier from Pi's list, not from a person's eyes.
+
+### The tooling is a button, because the CEO works from a phone
+
+`workflow_dispatch` in `tec-core-backend`, with four guards, because it moves money:
+owner-only · an explicit `step` (`preflight`/`list`/`dry-run`/`incomplete` send nothing) ·
+`confirm: SEND` typed in capitals · and `usernames` as an explicit allowlist that **fails**
+when a named person has no uid rather than quietly paying four. Two boundaries held:
+`pi_uid` is read by auth's own script (Forbidden Behavior #3), and the payout goes over
+HTTP to the running service — never by importing `sendA2uPayment` into a script, which
+would be a second unreviewed way to move Pi.
+
+**Merged:** tec-app **#233** · tec-core-backend **#298 · #299 · #300 · #301 · #302 ·
+#303 · #304 · #305**.
+
+### Open after this session
+
+- **Mainnet App Wallet under review** — nothing to do but wait for Pi.
+- **The `wallet_address` re-consent has not reached Mainnet users.** The fix is deployed;
+  the consent is not collected. Until each user signs in again, the reward campaign
+  *still* cannot pay them. Pi cannot widen a consent already given.
+- **`resume` still takes a hand-typed identifier** — it should read Pi's own incomplete
+  list. This removes the step that produced the §7 error.
+- **`PI_A2U_FEE` is unset**, so every payout costs one extra Horizon round trip to ask
+  the network its fee. Correct, and only worth revisiting at volume.
 
 ## UPDATE PROTOCOL
 
