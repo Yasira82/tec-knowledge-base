@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-09-04T07:38:21.652949
+# Generated: 2026-09-13T07:06:25.089952
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -1501,7 +1501,7 @@ assets:
       authority_scope: app
     owner: yasser
     authoritative_for: ["c-115-dx-developer-institutional-charter"]
-    depends_on: []
+    depends_on: [C-47]
     supersedes: []
     superseded_by: null
     last_verified: "2026-06-20"
