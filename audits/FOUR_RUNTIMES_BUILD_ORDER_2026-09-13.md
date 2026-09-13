@@ -24,8 +24,8 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **0.2** | Re-consent reaches Mainnet users | ✅ | backend #307 · Hub #235 · `db push` run. **Caused a ~20min login outage — C-02 Session 56c** |
 | — | *Prevention from that outage* | ✅ | #308 — `npm run db:push` in all 10 services + runbook |
 | **0.3** | `Implementation Status` on C-109 · C-115 · C-110 | ✅ | headers untouched — registry stable. **PHASE 0 COMPLETE** |
-| **1.1** | Collapse the duplicate capability registry | ◐ | tec-core-backend **#309** — SYSTEM owns `status`/`owner`; DX serves them via the service API |
-| **1.2** | `capability-registry.yaml` + CI gate | ☐ | |
+| **1.1** | Collapse the duplicate capability registry | ✅ | tec-core-backend **#309** — SYSTEM owns `status`/`owner`; DX serves them via the service API |
+| **1.2** | `capability-registry.yaml` + CI gate | ◐ | `manifests/capability-registry.yaml` + `evals/check-capability-registry.sh` — **20th KB gate**, single-authority rule. Preflight 21/21 |
 | **1.3** | `/api/ready` separate from `/api/health` | ☐ | template first, then fleet |
 | **2.1** | **Nexus steps call their services** | ☐ | **the bottleneck** |
 | **3.1** | Nexus workflow history + templates 2–3 | ☐ | needs 2.1 |
@@ -42,7 +42,13 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 1.2 — `capability-registry.yaml` + CI gate, so a THIRD copy cannot appear.
+**Next action:** 1.3 — `/api/ready`, separate from `/api/health`, in `tec-template-base` first.
+
+> 1.2 closed the duplicate-registry story the way it had to be closed. #309 stopped DX
+> from *reading* its copy; the manifest + gate stop a *third* copy from being written.
+> The rule is one line and it is mechanical: every entry's `status_source` must equal
+> `meta.status_authority`, so a capability whose status lives somewhere else is a red
+> check, not a discovery six months later.
 
 ---
 
