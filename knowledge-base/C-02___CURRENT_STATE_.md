@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 13 September 2026 (Session 56j — CI economics: one deploy path, one concurrency rule, 29 repos)
+**Last Updated:** 13 September 2026 (Session 56k — three credentials out of CI; the payout asks the service instead of its database)
 
 ---
 
@@ -4578,6 +4578,111 @@ even if set it would be harmless.)
   that skips and reports any file not matching the expected shape rather than guessing.
 - **Ops, when billing is fixed:** revoke `RAILWAY_TOKEN` + `RAILWAY_PROJECT_ID` (now unused),
   and decide on **Wait for CI = ON** per service.
+
+
+## Session 56k — Three credentials out of CI, and a uniqueness assumption that would have paid the wrong person
+
+Follow-on from 56j. That session removed `RAILWAY_TOKEN` as a side effect of
+deleting a racing deploy job; this one went looking on purpose and found two more
+things in the same shape.
+
+### What was in GitHub Secrets, and what is left
+
+| Secret | Was | Now |
+|--------|-----|-----|
+| `RAILWAY_TOKEN` · `RAILWAY_PROJECT_ID` | production-write, on every push (56j) | **deleted** |
+| **`AUTH_DATABASE_URL`** | a connection string to the **identity authority's database**, injected into a GitHub Actions runner | **deleted** (#317 → #318) |
+| `API_GATEWAY_URL` · `INTERNAL_SECRET` · `NPM_TOKEN` | in use | kept — each verified to have exactly one consumer |
+
+**Three credentials left CI in one day, two of them production access.** The audit
+that found them was four greps: for each secret, which workflow actually references
+it. A secret nothing references is pure attack surface; a secret ONE workflow
+references tells you where to look.
+
+### The Testnet A2U payout read auth-service's database from a runner
+
+`list-pi-uids.mjs` resolved usernames → Pi uids with `prisma.user.findMany` over
+`AUTH_DATABASE_URL`. Read-only, and still two violations: reading that table from
+outside the service is **Forbidden Behavior #1**, and auth owns Identity
+(**Invariant #8**), so the lookup was in the wrong place.
+
+Replaced by `GET /api/auth/uids-by-usernames` behind `x-internal-key`. **No new
+secret** — the gateway accepts a matching internal key in place of a user JWT
+(`jwt-auth.ts`, `timingSafeEqual`), which is the sanctioned service-to-service
+path, so the two secrets the payout already held were enough.
+
+### It is not a relocation of the query. It is a better one.
+
+| | the DB script | the endpoint |
+|---|---|---|
+| Read scope | **every** row with a uid, filtered in memory | only the names asked, capped at 50 — **cannot become a dump** |
+| A name on two accounts | — | **every** matching row |
+| A row with no `pi_uid` | returned | omitted |
+| Cost of one query | `npm ci` + `prisma generate` | Node built-ins, no install |
+
+> **THE FINDING, and it was hiding in the schema:**
+>
+> ```prisma
+> pi_uid       String?  @unique
+> pi_username  String?            ← no @unique
+> ```
+>
+> **A Pi username can belong to two accounts.** `findFirst` — the natural shape
+> for "resolve a name to a uid", and what any reasonable person writes — would
+> have picked one **by row order** and paid a person the operator never looked at.
+> Silently. With real Pi.
+>
+> The payout script already had a `duplicate` marker for exactly this, and it only
+> works if both rows reach it. The endpoint returns all of them and a test pins it,
+> with the reason written next to the code so nobody "simplifies" it later.
+
+### The distinction the database could not make
+
+A DB query that returns nothing and a network that never answered look identical
+to a caller — an empty list. On a run about to pay people, those are opposite
+facts. The resolver separates them:
+
+```
+a named person with no account  → exit 1, "NOT FOUND: ghost … has not signed in yet"
+wrong INTERNAL_SECRET           → exit 1, "that is a KEY mismatch, not a missing user"
+gateway unreachable             → exit 1, "this says nothing about whether these accounts exist"
+```
+
+Same family as C-135 §4 (Explorer returns `source:'unavailable'` rather than a
+fixture) and the Session 46 `exit 0` deploy: **an absence must never be reported
+as a finding.**
+
+### Order, and why it was three PRs and not one
+
+`expand → migrate → contract`, the sequence used for the `user.created.v1` rename
+(Sessions 23–24):
+
+| | PR | Gate before the next step |
+|---|---|---|
+| expand | **#317** — endpoint added, nothing calls it | merged **and deployed** — proven by auth-service's boot log: `Mapped {/uids-by-usernames, GET}` |
+| migrate | **#318** — the payout calls it; the DB step is gone | verified on `main` itself (not the branch) that no step still consumes the secret |
+| contract | — | `AUTH_DATABASE_URL` deleted from repository secrets |
+
+**#317 was split out of #316 onto its own branch, deliberately.** #316 migrates
+`identity-service`'s schema and is waiting for an attended window; the auth change
+had no such constraint. Bundled, one merge would have deployed the schema migration
+AND the platform's login authority together — and left no way to tell which caused
+a problem.
+
+> **A deploy that does NOT happen can be the correct outcome.** #318 touched only
+> the workflow and a payment-service script, so auth-service did not redeploy —
+> its Watch Path (`/tec-auth-service/**`) saw nothing. Reading that as "the merge
+> failed" would have been the wrong conclusion; it is the Watch Paths working.
+
+### Honest status
+
+- `[Runtime Verified]` for the endpoint (it is answering in production).
+- `[Code Verified]` for the payout switch: the resolver was exercised against a
+  **stub** gateway, not prod. It becomes Runtime Verified the next time a real
+  `step: list` is run.
+- auth 77/77 · payment 295/295 · both typecheck clean · mutation-tested (dropping
+  the uid filter fails exactly one test; removing the cap fails exactly one other).
+  All local — Actions has not run since 13:20 on 2026-09-13.
 
 
 ## UPDATE PROTOCOL
