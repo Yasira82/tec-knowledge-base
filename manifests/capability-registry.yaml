@@ -1,0 +1,118 @@
+# TEC Capability Registry — canonical machine-readable registry of governed capabilities
+# ---------------------------------------------------------------------------
+# Authority: C-94 Governed Capability Constitution (the LAW: what a capability is,
+#            its lifecycle Proposed → Designed → Verified → Governed → Certified →
+#            Deprecated, and that only CERTIFIED capabilities may enter the
+#            institutional runtime) + C-110 SYSTEM (the runtime that holds the
+#            registry) + C-115 DX (the runtime that DISTRIBUTES it, never certifies).
+# Truth State: [Current State] — sourced from the running backend code, not planned.
+# Verification: [Code Verified] — every entry below is a row in `CAPABILITY_SEED` in
+#               tec-identity-service/src/modules/system/system.service.ts.
+#
+# ── WHY THIS FILE EXISTS ────────────────────────────────────────────────────
+# There were TWO registries. SYSTEM held one (`SystemCapability`, enum
+# `SystemGovernanceStatus`) and DX held a second, hand-typed one (`DxCapability`,
+# enum `DxCapStatus`) — two tables, two enums, nothing syncing them. They had
+# already diverged on `main`, and `status` was among the fields that differed.
+#
+# A stale description is a bad doc. A stale `status` is a builder told that an
+# UNCERTIFIED capability is CERTIFIED, depending on which copy they happened to
+# open. That is P2 (no rule defined differently in more than one layer), live in
+# production. tec-core-backend #309 made DX ask SYSTEM at read time; this file and
+# its gate exist so a THIRD copy cannot quietly appear in the first place.
+#
+# C-94 GOVERNS capabilities (the rules); this file CATALOGS them (the instances) —
+# the same split as C-70 ↔ manifests/events-catalog.yaml.
+#
+# ── THE ONE RULE THIS FILE ENFORCES ─────────────────────────────────────────
+# `meta.status_authority` names the SINGLE place a capability's `governance_status`
+# and `owner` may come from. Every entry repeats it, and the gate fails if any
+# entry names a different one. Adding a capability whose status lives somewhere
+# else is therefore not something you can do quietly — it is a red CI check.
+#
+# Validated by: evals/check-capability-registry.sh
+# ---------------------------------------------------------------------------
+
+meta:
+  version: 1
+  last_updated: "2026-09-13"
+  governed_by: knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md
+
+  # The single source of truth for `owner` + `governance_status`. SYSTEM is the
+  # C-94 authority (C-110 §5); every other runtime READS from it. DX distributes
+  # the catalog and owns only how a builder consumes a capability (`builder_use`).
+  status_authority: tec-identity-service/src/modules/system/system.service.ts
+
+  # The lifecycle from C-94, mirrored by the Prisma enum `SystemGovernanceStatus`.
+  # Anything not CERTIFIED is not approved for institutional runtime use.
+  lifecycle: [PROPOSED, DESIGNED, VERIFIED, CERTIFIED, DEPRECATED]
+
+  # Read path in production: SYSTEM owns it, DX serves it, nobody copies it.
+  read_path: "DxService.listCapabilities() → SystemService.listCapabilities() (service API, R-2-clean seam — C-132 §7.5)"
+
+capabilities:
+  - cap_id: payment
+    owner: tec-payment-service
+    governance_status: CERTIFIED
+    note: "Pi payment lifecycle — outbox + state machine (ADR-004)."
+    builder_use: "Accept Pi (U2A) via the dual-mode flow — createPaymentRecord → createU2APayment."
+    rank: 0
+    status_source: tec-identity-service/src/modules/system/system.service.ts
+    binds_to: [C-94, C-110, C-71]
+
+  - cap_id: authentication
+    owner: tec-auth-service
+    governance_status: CERTIFIED
+    note: "Pi identity + JWT issuance (ADR-002)."
+    builder_use: "Hub SSO — usePiAuth() + cookie session; never handle Pi tokens yourself."
+    rank: 1
+    status_source: tec-identity-service/src/modules/system/system.service.ts
+    binds_to: [C-94, C-110, C-47]
+
+  - cap_id: asset-transfer
+    owner: tec-asset-service
+    governance_status: VERIFIED
+    note: "Ownership transfer requires verified payment."
+    builder_use: "Provision/transfer an asset after a verified payment."
+    rank: 2
+    status_source: tec-identity-service/src/modules/system/system.service.ts
+    binds_to: [C-94, C-110, C-68]
+
+  - cap_id: order-creation
+    owner: tec-commerce-service
+    governance_status: VERIFIED
+    note: "Order created only after payment approved."
+    builder_use: "Create an order once payment is approved."
+    rank: 3
+    status_source: tec-identity-service/src/modules/system/system.service.ts
+    binds_to: [C-94, C-110, C-68]
+
+  - cap_id: analytics-query
+    owner: tec-analytics-service
+    governance_status: DESIGNED
+    note: "Read-only aggregates; eventual consistency (C-47 §6)."
+    # DESIGNED, not CERTIFIED — and the DX copy called it CERTIFIED. This is the
+    # exact row the two registries disagreed on, kept here as the worked example.
+    builder_use: "Read own-scope aggregates (eventual consistency)."
+    rank: 4
+    status_source: tec-identity-service/src/modules/system/system.service.ts
+    binds_to: [C-94, C-110, C-105]
+
+# ── Known consumers (read-only) ─────────────────────────────────────────────
+# Runtimes that PRESENT this registry. None of them may store a status of its own.
+consumers:
+  - runtime: tec-dx
+    reads_via: "DxService.listCapabilities() — joins SYSTEM's owner/status onto DX's builder_use"
+    stores_status: false
+    binds_to: [C-115]
+
+# ── Dead columns, on purpose (expand-contract) ──────────────────────────────
+# `DxCapability.owner` and `DxCapability.status` still EXIST in the Prisma schema
+# and are still WRITTEN by the DX seed, because dropping a column is destructive
+# and expand-contract says stop READING first, drop later. Nothing reads them as
+# of tec-core-backend #309. The contract half is an open follow-up.
+deprecated_copies:
+  - location: "tec-identity-service — DxCapability.owner / DxCapability.status (+ enum DxCapStatus)"
+    read_by: none
+    removed_from_read_path: "tec-core-backend #309"
+    status: awaiting-contract-migration
