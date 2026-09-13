@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 13 September 2026 (Session 56i — the gate: the intent layer starts refusing)
+**Last Updated:** 13 September 2026 (Session 56j — CI economics: one deploy path, one concurrency rule, 29 repos)
 
 ---
 
@@ -4435,6 +4435,114 @@ version serving — the failure mode it was designed for.
   (13-09, $29.00) rather than by anything in the diff.
 - **Next: 3.4 (`dx doctor`) or the `/api/ready` fleet rollout** — 21 of the 22 apps lack
   `/api/ready`. 4.3 stays parked until 3.3 has collected a month of real asks.
+
+## Session 56j — CI economics: one deploy path, one concurrency rule (29 repos)
+
+GitHub Actions is **disabled account-wide** — a **$29.00 payment declined on 2026-09-13**,
+with the Actions budget standing at **$56.95 of $65**. Both halves matter: fixing the card
+alone would not settle it, because the cap closes it again within days. So the session's
+work was chosen to be the kind that *makes the bill smaller* rather than the kind that
+waits for it — and none of it needs CI to verify, because none of it ships product code.
+
+> An earlier theory blamed a Cursor integration for CI stopping. That was a **timing
+> correlation, not a cause**; the Billing page settled it. Recorded because the wrong
+> diagnosis was held confidently for two exchanges.
+
+### 1. Railway owns deploy — the racing second path is gone (tec-core-backend)
+
+Every service has Railway's GitHub integration connected (Source Repo · Root Directory ·
+Watch Paths `/tec-<service>/**` · production branch `main`) — **confirmed by the owner for
+all services**. `ci.yml` *also* ran `railway up` on the same commit: **two independent
+writers to one production service, racing.** Not redundancy that adds safety; a race that
+doubles build spend on both sides and makes "which build won" unanswerable from the logs.
+
+**The job's one advantage was an illusion, and this is the transferable part.** It was
+gated on `docker-build` — but **"Wait for CI" is OFF on every service**, so Railway shipped
+the commit regardless of whether the pipeline was red, or (as now) whether it ran at all.
+
+> **A gate standing beside an ungated path is not a gate.** Keeping it was false comfort,
+> and false comfort is worse than a known gap, because nobody goes looking for it. Same
+> family as the `exit 0` deploy that reported success for four months (Session 46 §5a) and
+> the `|| true` job below.
+
+Removed with it: **`RAILWAY_TOKEN` / `RAILWAY_PROJECT_ID`** — a production-write credential
+— out of a workflow that runs on every push (no workflow references either secret now;
+they can be revoked), and `permissions.id-token: write`, which existed only for that job.
+`push: [main]` **stays**: it is the status Railway reads once Wait-for-CI is ON, and the
+only run that tests the *merged* tree rather than the PR head.
+
+**To restore the gate: Railway → each service → Settings → Deploy → Wait for CI = ON.**
+That gates the deploy that actually happens instead of adding one that races it. It means
+nothing while Actions is disabled, so it belongs with the billing fix — not before it.
+
+### 2. `concurrency` — the same rule, in the same spelling, in 29 repos
+
+A second push to a PR branch used to leave the first pipeline running to completion beside
+it: five CI jobs, a CodeQL analysis, and a Playwright install-build-and-run, all answering
+a question about a commit nobody would look at again.
+
+```yaml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+```
+
+`main` is **excluded on purpose** — a run there is the post-merge record and the status a
+deploy gate reads.
+
+> **The rule already existed in this platform, twice, spelled two different ways.**
+> `tec-knowledge-base/knowledge-ci.yml` had the form above. `tec-app/ci.yml` had
+> `cancel-in-progress: true`, which also cancels `main` runs. **Every other repo had
+> neither** — and the root cause is one line long: **`tec-template-base` did not have it**,
+> so all 23 apps cloned from it were born without it.
+
+**This is the third instance of the identical failure** (C-02 Session 46: the `^1.1.0`
+caret trap froze 18 apps out of the palette; the Dependabot policy solved in the template
+and never back-adopted). The pattern is now explicit enough to name:
+
+> **A rule that lives in one repo and not in the template is a rule the fleet does not
+> have.** Propagating it to the repos that exist fixes today; writing it into
+> `tec-template-base` is the only step that stops the next app from needing the sweep.
+> Both were done — the CLAUDE.md rule is the more important half.
+
+### 3. Two jobs that could not fail, and one that duplicated another
+
+| Removed | Why |
+|---|---|
+| CodeQL `push: [main]` (28 repos) | The `pull_request` run analysed that exact code; merging re-analysed it minutes later for the same answer. The weekly `schedule` run still covers the default branch, so the Security-tab baseline — what ages and closes alerts — keeps refreshing, **weekly rather than per-merge**. PR coverage unchanged, main coverage coarser: written into the file, not left to be discovered. |
+| `weekly-scan.yml` schedule → `workflow_dispatch` only | Every Sunday: install + audit + lint + build + test across the full service matrix **against code that had not changed since the last run** — a duplicate of `ci.yml`. Its one unique step (`npm audit --audit-level=high`, unguarded) is covered by Dependabot across all 15 configured ecosystems, natively, at **zero Actions cost**. The capability is kept on demand; only the recurrence is removed. |
+| `dependency-update.yml` **deleted** | `npm outdated \|\| true` and `npm audit \|\| true` — **the job could not fail under any circumstance.** A green tick every Monday, gating nothing. **A check that cannot fail is not a check**; it is a check-shaped thing that teaches people the signal is noise. |
+
+Tag-triggered workflows (`release.yml`, `publish.yml`) deliberately get **no**
+`concurrency`: a release or an npm publish must never be cancellable mid-flight.
+
+### 4. A settings reading that closed an open question — and corrected a runbook line
+
+The identity-service Settings screen showed Custom Start Command `npm start` and
+Pre-deploy Command `npm run migrate`. **Both are Railway's grey placeholder text, not set
+values**, and the proof is one grep: **no `package.json` in tec-core-backend defines a
+`migrate` script**, so a Pre-deploy actually set to `npm run migrate` would fail every
+deploy with `Missing script: migrate` — and deploys succeed. (`npm start` resolves to
+`node scripts/migrate.cjs && node dist/main.js`, byte-identical to the Dockerfile CMD, so
+even if set it would be harmless.)
+
+> Session 56i's rule stands and is now **verified rather than asserted**: for
+> `tec-identity-service`, leave the start command empty and let the image migrate itself.
+> A placeholder is not a value — and a screenshot cannot tell you which it is. The
+> repository can.
+
+### Status
+
+- **29 PRs**: 28 fleet PRs (`chore(ci): stop paying for runs nobody reads`) + the backend's
+  two `chore(ci)` commits riding on #316, which is also the IIC 4.1/4.2/4.4 PR.
+- **Verification without CI**: every touched workflow re-parsed with `yaml.safe_load` after
+  editing **and again after each branch was repositioned onto `main`** — 0 failures across
+  every workflow in every repo; every `ci`/`e2e`/`codeql` file carries the canonical
+  expression; no `codeql.yml` retains a `push` trigger. Applied by a fail-closed script
+  that skips and reports any file not matching the expected shape rather than guessing.
+- **Ops, when billing is fixed:** revoke `RAILWAY_TOKEN` + `RAILWAY_PROJECT_ID` (now unused),
+  and decide on **Wait for CI = ON** per service.
+
 
 ## UPDATE PROTOCOL
 
