@@ -4685,6 +4685,111 @@ a problem.
   All local — Actions has not run since 13:20 on 2026-09-13.
 
 
+### The sweep continued across the fleet — and Tec-App was the only real exposure
+
+Having found one, the same question was asked of every repo: **for each stored
+secret, which workflow actually references it?** Workflows are readable from the
+repo; the stored list is a Settings page, so this was CEO-screenshot + local grep.
+
+| Repo | Stored | Verdict |
+|------|--------|---------|
+| **`Tec-App`** | 6 | 🔴 **`INTERNAL_SECRET`** · `AUTH_SERVICE_URL` · `PAYMENT_SERVICE_URL` + 3 public — **CI referenced exactly one of the six**. All deleted. |
+| `tec-core-backend` | 4 → 3 | `AUTH_DATABASE_URL` deleted (above); the rest each verified to have one consumer |
+| `Tec-Assets` | 2 | `NEXT_PUBLIC_API_GATEWAY_URL` dead in BOTH workflow and source → deleted |
+| `Tec-Commerce` · `Tec-Ecommerce` | **0** | Correct as-is — every reference has a written fallback |
+
+**`INTERNAL_SECRET` in the Hub's CI was the find.** The platform generates ONE value
+for the gateway and every service (`CLAUDE.md`: *"generate once, same value for ALL 4
+services"*), and the gateway accepts it **in place of a user JWT** — verified this same
+session in `jwt-auth.ts`. A copy in a frontend repo's CI is a copy of the key to the
+entire backend. It had sat there five months, referenced by nothing.
+
+> **A correction to something claimed earlier in this session.** `Tec-Ecommerce`'s
+> `ci.yml` *references* `secrets.INTERNAL_SECRET`, which was read as "the one frontend
+> repo where the master key is used in CI". Its secret store is **empty** — the workflow
+> has always fallen through to `'ci-test-secret-minimum-32-chars!!'`, which is the
+> correct shape for a build. **A reference is not a possession.**
+
+**The pattern:** every one of these dates to repo creation ~5 months ago — added
+"just in case" before anyone asked what CI needed. The runtime consumer is **Vercel**,
+a separate store. Deleting from GitHub cannot affect a running app, and saying so was
+what made the deletions safe to do from a phone.
+
+### NEW-A: a false alarm, settled by a build rather than a grep
+
+The sweep surfaced `NEXT_PUBLIC_API_GATEWAY_URL` read by source in **17 repos**, and a
+hardcoded Railway host committed in **32 source files**:
+
+```ts
+// src/lib/sdk.ts — in tec-template-base, therefore in every app cloned from it
+const gatewayUrl = process.env.NEXT_PUBLIC_API_GATEWAY_URL
+  ?? 'https://api-gateway-production-6a68.up.railway.app';
+```
+
+`NEXT_PUBLIC_*` is inlined into the browser bundle at build time, so this read as
+**NEW-A reopened across 17 apps live on Mainnet** — a finding recorded as ✅ CLOSED.
+It was raised as exactly that, and then checked instead of reported:
+
+```
+Tec-Explorer (has the literal, reads the var in 3 files)
+  grep -rl "railway.app" .next/static/   →  0
+  grep -rl "railway.app" .next/server/   →  0
+  grep -rl "tec-sdk"     .next/*         →  0
+```
+
+**`src/lib/sdk.ts` is dead code** — imported only by `lib-client/pi/pi-auth.ts`, and
+that chain reaches no bundle, so tree-shaking removes it entirely. **NEW-A is genuinely
+still closed.**
+
+> **The lesson, and it generalises past this file:** a `grep` over SOURCE proves the
+> line exists. It does not prove the line ships. **Only the build knows** — and the
+> check cost one command against an artifact that was already on disk.
+>
+> This is the mirror of the same session's other trap (reading a red run beside a
+> change as caused by it). Both are answered the same way: measure the thing you are
+> actually claiming, not the thing that is easy to measure.
+
+**What remains is real but small:** dead code carrying a production hostname is not a
+leak today; it is a loaded gun. The moment a client component imports `sdk`, the host
+ships. It also crosses the Two-SDK boundary inside one file (`@yasser172/tec-sdk` is
+server-only by its own rules, beside browser auth helpers). **Delete it from the
+template and the 17 apps** — not urgent, but unjustified.
+
+### npm token expiry — not mandatory, and the workaround is to remove the token
+
+Session 46 left "npm Trusted Publishing" open with a deadline: `NPM_TOKEN` in
+`Tec-ui` · `TEC-SDK` · `tec-auth` expires **25 Nov 2026**. The question asked was
+whether that expiry can simply be made longer. It can be removed instead.
+
+**The objection that had to be checked first** is written in the repos' own
+`publish.yml`:
+
+> *npm provenance is intentionally NOT used — this source repo is PRIVATE, and npm
+> provenance only supports PUBLIC source repos (422 "Unsupported source repository
+> visibility: private").*
+
+That comment is correct, and it is about **provenance**. **Trusted Publishing is a
+different mechanism and is available for private and public packages alike** — so the
+constraint that blocks one does not block the other. Confirmed against npm's docs
+rather than assumed, because if the restriction had been shared the whole plan was void.
+
+**The gap is one line per repo:** Trusted Publishing needs npm CLI ≥ 11.5.1 and Node
+≥ 22.14.0; all three `publish.yml` pin `node-version: '20'`. `permissions: id-token:
+write` is already present in all three.
+
+**Order matters — npmjs.com FIRST:**
+
+```
+1. npmjs.com → each package → Trusted Publisher → GitHub Actions + repo + publish.yml
+2. PR: node-version 20 → 22, drop NODE_AUTH_TOKEN / NPM_TOKEN from the workflow
+3. after one successful publish → delete NPM_TOKEN from the three repos
+```
+
+Doing 2 before 1 fails the publish with 401. And from the record: when the token last
+lapsed (26 Aug) the failure was **`E404`** — on a scoped package, `E404` on `PUT` means
+**auth failure**, not "package not found". If that appears again, it is the token.
+
+
 ## UPDATE PROTOCOL
 
 ```
