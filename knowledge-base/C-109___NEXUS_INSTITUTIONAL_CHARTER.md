@@ -34,34 +34,64 @@
 
 | §5 concept | In code | Where |
 |---|---|---|
-| Workflow definition | `TemplateDef` — 3 governed templates (`checkout-saga`, `asset-transfer-saga`, `subscription-renewal`), each step naming its owning service, whether it moves Pi, and its compensating action | `templates.ts` |
+| Workflow definition | `TemplateDef` — 3 governed templates (`checkout-saga`, `asset-transfer-saga`, `subscription-renewal`), each step naming its owning service, whether it moves Pi, its compensating action, and — since #310 — its **callable target** (`call` / `compensationCall`) or the endpoint it waits on (`needs`) | `templates.ts` |
+| Step execution | `NexusDispatcher` — the one place a step becomes a real call. Host from env (NEW-A), `x-internal-key` for the service + `x-actor-*` for the **original human** (P1-1), bounded timeout, typed outcome, never throws | `nexus.dispatcher.ts` |
+| Saga data flow | `NexusRun.input` (the workflow's parameters) + `NexusStep.output` + `CallDef.capture` — how step 2 confirms the order step 0 opened | `schema.prisma` · `nexus.dispatcher.ts` |
 | Workflow state + history | `NexusRun` (status · cursor · error) + ordered `NexusStep[]`, `@@unique([run_id, idx])` | `schema.prisma` |
 | Step execution gate | `advance()` — acts only from `PENDING`/`RUNNING`, at the exact cursor | `nexus.service.ts` |
-| **Saga compensation** | `fail()` — every already-`DONE` step that declares a compensation is `COMPENSATED` in **reverse order**, run ends `COMPENSATED` | `nexus.service.ts` |
+| **Saga compensation** | `fail()` — every already-`DONE` step that declares a compensation has it **dispatched** in reverse order, and only then is it `COMPENSATED`. A compensation that cannot run leaves its step `FAILED` and ends the run `FAILED`, naming what was left behind | `nexus.service.ts` |
 | Human-in-the-loop | A U2A payment step **halts** at `AWAITING_PAYMENT`. The engine never fakes a payment (Invariant #8 / §6) | `nexus.service.ts` |
 | Resume after the human acts | `payment.completed.v1` consumer reads `metadata.nexusRunId` → `resumeByPayment`, state-guarded and idempotent | `nexus.consumer.ts` |
 | Owner scope (P6) | Every read and write is scoped to the session identity; another owner's run is 403 | `nexus.service.ts` |
 
-### NOT built — and this is the platform's current bottleneck
+### The bottleneck this section used to name — CLOSED (2026-09-13)
 
-**The engine advances its own state. It does not call any service.** The schema says so
-in as many words:
+This section previously read: *"the engine advances its own state. It does not call any
+service… there is no external side effect."* That was true, and it was the platform's
+single largest gap. It is closed, in three merged increments.
+
+| Increment | What changed | PR |
+|---|---|---|
+| **Dispatcher + refusal** | A step is DISPATCHED to its owning service (env-resolved host, `x-internal-key`, original-actor headers, bounded timeout, typed outcome, never throws). A step with no callable target is **REFUSED** — it can no longer reach `DONE`. Compensations are dispatched too, and `COMPENSATED` is only reported when they actually ran. | tec-core-backend **#310** |
+| **First real workflow** | `NexusRun.user_id` + commerce's internal renewability check → `subscription-renewal` runs end to end, with real Pi in the middle. | **#311** |
+| **The remaining two** | `NexusRun.input` + `NexusStep.output` + `capture`, commerce `reserve`/`release`, asset `lock`/`unlock` → `checkout-saga` and `asset-transfer-saga` run. | **#312** |
+
+> **The finding that mattered most.** The catalog said four endpoints were missing, and
+> they were — but adding them alone would have changed nothing. A run carried **no
+> parameters** (which products? which listing?) and no step could see what an earlier step
+> produced (which order?). *You cannot reserve inventory for an order that does not exist.*
+> The gap was an engine capability wearing an endpoint's clothes, and only building it
+> showed that.
 
 ```prisma
-service String // owning service that WOULD execute it
+service String // owning service that executes it   ← was: "that WOULD execute it"
 ```
 
-and the engine's own header records it as the next increment. So **there is no external
-side effect** — no order is reserved, no asset is locked, nothing is dispatched.
+### Two corrections the build forced into the catalog
 
-> **The consequence reaches past this charter.** An execution gate, TEC AI's *Action*
-> mode, and the whole intent-integrity layer all need something to gate. Built before the
-> dispatcher exists, any of them would pass every test — because nothing on the other side
-> can fail. That is the exact condition under which the A2U payout path shipped unable to
-> pay anyone (`audits/A2U_FIRST_PAYOUT_ROUND_2026-09-13.md`).
+1. **Both sagas ended with a second payment step** ("Complete the payment"). U2A
+   create → approve → complete is **one** user action and payment-service's outbox owns
+   the rest, so that step modelled a payment nobody would ever be asked to make — the run
+   would have halted at `AWAITING_PAYMENT` forever. Removed; a test now pins **exactly one
+   payment step per template**.
 
-Also still `[Future Vision]`: parallel workflows, conditional branching beyond the linear
+2. **"Cancel the payment" as a compensation is FORBIDDEN, not merely unimplemented.**
+   `completed` is terminal (Invariant #7) and transitioning out of it is Forbidden
+   Behavior #9. The reversal is an **A2U refund** — a new payment, owned by
+   payment-service. So a payment step declares its compensation with **no callable**, and
+   a run that fails after the money moved ends **FAILED**, naming the payment that stands.
+   A person then decides what happens next.
+
+   > `COMPENSATED` means *"no partial state is left"*. Claiming it over a payment that
+   > actually moved is worse than FAILED: FAILED sends a human to look, COMPENSATED tells
+   > them not to bother. It would be a lie about money.
+
+**Still `[Future Vision]`:** parallel workflows, conditional branching beyond the linear
 cursor, AI-agent workflows, and merchant-authored templates.
+
+**Honest status:** `[Code Verified]`, not `[Runtime Verified]`. The chain fires when
+`tec-identity-service` has its schema pushed and redeployed, the four services hold each
+other's `*_SERVICE_URL` + `INTERNAL_SECRET`, and a real run is driven end to end.
 
 ---
 
