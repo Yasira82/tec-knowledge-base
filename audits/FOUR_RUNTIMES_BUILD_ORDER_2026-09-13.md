@@ -24,7 +24,7 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **0.2** | Re-consent reaches Mainnet users | ✅ | backend #307 · Hub #235 · `db push` run. **Caused a ~20min login outage — C-02 Session 56c** |
 | — | *Prevention from that outage* | ✅ | #308 — `npm run db:push` in all 10 services + runbook |
 | **0.3** | `Implementation Status` on C-109 · C-115 · C-110 | ✅ | headers untouched — registry stable. **PHASE 0 COMPLETE** |
-| **1.1** | Collapse the duplicate capability registry | ☐ | |
+| **1.1** | Collapse the duplicate capability registry | ◐ | tec-core-backend **#309** — SYSTEM owns `status`/`owner`; DX serves them via the service API |
 | **1.2** | `capability-registry.yaml` + CI gate | ☐ | |
 | **1.3** | `/api/ready` separate from `/api/health` | ☐ | template first, then fleet |
 | **2.1** | **Nexus steps call their services** | ☐ | **the bottleneck** |
@@ -42,7 +42,7 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 1.1 — collapse the duplicate capability registry (C-115 Implementation Status records the drift).
+**Next action:** 1.2 — `capability-registry.yaml` + CI gate, so a THIRD copy cannot appear.
 
 ---
 
