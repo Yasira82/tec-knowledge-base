@@ -44,6 +44,26 @@ marketing/          # Marketing Assets Kit — launch posts, one-liners, Portal 
 
 For full index → `knowledge-base/C-57___MASTER_CONTENTS_INDEX.md`
 
+## Before you push — run the preflight, not the gates
+
+```bash
+bash scripts/preflight.sh      # runs EXACTLY what CI runs, in CI's order
+```
+
+**Not `bash evals/*.sh`.** Running every eval is not the same as running CI: the
+Registry Integrity job first **regenerates** `architecture/asset-registry.yaml` and
+diffs it against what you committed, and no eval does that. A full local eval run
+therefore reports success without having performed the check that fails.
+
+That has now happened twice — `preflight.sh` was written after the first time and
+this line exists because the second session did not know the script was there. A
+tool nothing points at is a tool nobody runs.
+
+> **If you edit a C-doc, the registry is part of your change.** Its `depends_on` is
+> derived from the document BODY, not only its header — so citing another `C-NN`
+> anywhere in the text changes the generated registry. `preflight.sh` catches it;
+> "the headers are untouched" does not.
+
 ## Authority Hierarchy
 
 C-00 → C-67 → ADRs (C-64) → Current State docs → Runtime Evidence → Code

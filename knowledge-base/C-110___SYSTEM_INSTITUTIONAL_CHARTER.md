@@ -23,6 +23,53 @@
 
 ---
 
+## Implementation Status (2026-09-13)
+
+> **Verification:** `[Code Verified]` — read from `tec-identity-service/src/modules/system/`.
+> The header's `[Future Vision]` is **correct and should stay**: what is deployed is a
+> read-only projection of the constitution, not the governance runtime described below.
+> Audit: `audits/NEXUS_IIC_ENGINEERING_REPORT_2026-09-13.md` §1.
+
+### Built — the constitution became queryable
+
+`system.service.ts` seeds and serves three read catalogs:
+
+- **Policy registry** — the 10 C-47 Forbidden Behaviors as machine-readable policies
+  (`FB-01`…`FB-10`), each with domain, enforcement level and violation response.
+- **Tier map** — FREE / PRO / ENTERPRISE and the capabilities each carries.
+- **Capability registry** — the C-94 list with its governance status.
+
+That is a real thing and worth having: the constitution is no longer only prose.
+
+### NOT built — and the source says so, deliberately
+
+> *"READ-ONLY. Policy/tier/capability WRITES require an AdminActor + immutable audit trail
+> (2-person approval for destructive ops) in the governance service — **there is NO write
+> method here, by design**."* — `system.service.ts`
+
+So there is no policy versioning, no actor activation or deactivation, no capability
+certification, no governance-workflow execution, no violation-response authority. Those
+are §5's substance and none of it exists yet.
+
+### The consequence other designs must not assume away
+
+**SYSTEM cannot answer an authority question at runtime.** It can tell you the ten
+Forbidden Behaviors and the tier map *as data*. It cannot answer *"may this actor spend
+250π right now?"* — there is no endpoint, no activation table, and no write path to
+maintain one.
+
+> This matters because the natural architecture diagram puts SYSTEM in the *Authority*
+> box under any future gate. Until a write path and an actor-activation table exist, a
+> gate must enforce against **C-47 directly** — which is fine, because C-47 is already
+> enforced in code and in Policy CI. Recorded so nobody wires a decision path to a box
+> that cannot reply.
+
+§4's boundary is unchanged and still correct: **SYSTEM defines and audits; it does not
+enforce.** Each service self-enforces. Nothing above weakens that — it only says which
+half is built.
+
+---
+
 ## 1. MISSION
 
 Be the constitutional authority of the TEC ecosystem — defining, enforcing, and auditing the policies, rules, and activation logic that govern every actor and every system in the platform.

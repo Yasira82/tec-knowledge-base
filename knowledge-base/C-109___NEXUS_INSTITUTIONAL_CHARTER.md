@@ -23,6 +23,48 @@
 
 ---
 
+## Implementation Status (2026-09-13)
+
+> **Verification:** `[Code Verified]` — read from `tec-identity-service/src/modules/nexus/`.
+> This section exists because the charter **understated** what is built: a persisted saga
+> engine with compensation is running, and nothing here said so. Audit:
+> `audits/NEXUS_IIC_ENGINEERING_REPORT_2026-09-13.md` §1.
+
+### Built — the §5 workflow engine's CONTROL PLANE is real
+
+| §5 concept | In code | Where |
+|---|---|---|
+| Workflow definition | `TemplateDef` — 3 governed templates (`checkout-saga`, `asset-transfer-saga`, `subscription-renewal`), each step naming its owning service, whether it moves Pi, and its compensating action | `templates.ts` |
+| Workflow state + history | `NexusRun` (status · cursor · error) + ordered `NexusStep[]`, `@@unique([run_id, idx])` | `schema.prisma` |
+| Step execution gate | `advance()` — acts only from `PENDING`/`RUNNING`, at the exact cursor | `nexus.service.ts` |
+| **Saga compensation** | `fail()` — every already-`DONE` step that declares a compensation is `COMPENSATED` in **reverse order**, run ends `COMPENSATED` | `nexus.service.ts` |
+| Human-in-the-loop | A U2A payment step **halts** at `AWAITING_PAYMENT`. The engine never fakes a payment (Invariant #8 / §6) | `nexus.service.ts` |
+| Resume after the human acts | `payment.completed.v1` consumer reads `metadata.nexusRunId` → `resumeByPayment`, state-guarded and idempotent | `nexus.consumer.ts` |
+| Owner scope (P6) | Every read and write is scoped to the session identity; another owner's run is 403 | `nexus.service.ts` |
+
+### NOT built — and this is the platform's current bottleneck
+
+**The engine advances its own state. It does not call any service.** The schema says so
+in as many words:
+
+```prisma
+service String // owning service that WOULD execute it
+```
+
+and the engine's own header records it as the next increment. So **there is no external
+side effect** — no order is reserved, no asset is locked, nothing is dispatched.
+
+> **The consequence reaches past this charter.** An execution gate, TEC AI's *Action*
+> mode, and the whole intent-integrity layer all need something to gate. Built before the
+> dispatcher exists, any of them would pass every test — because nothing on the other side
+> can fail. That is the exact condition under which the A2U payout path shipped unable to
+> pay anyone (`audits/A2U_FIRST_PAYOUT_ROUND_2026-09-13.md`).
+
+Also still `[Future Vision]`: parallel workflows, conditional branching beyond the linear
+cursor, AI-agent workflows, and merchant-authored templates.
+
+---
+
 ## 1. MISSION
 
 Orchestrate economic coordination between TEC actors — users, merchants, services, and AI agents — through governed workflows, execution routing, and asynchronous coordination primitives.
