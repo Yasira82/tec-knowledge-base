@@ -29,22 +29,64 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **1.3** | `/api/ready` separate from `/api/health` | ✅ | tec-template-base **#33**. **Fleet rollout to the 20+ apps still open** |
 | **2.1** | **Nexus steps call their services** | ✅ | **#310** dispatcher + refusal · **#311** `subscription-renewal` real · **#312** the other two · **#313** the `/api` prefix. **THE BOTTLENECK IS CLOSED — and DEPLOYED** (C-02 Session 56f) |
 | — | *What 2.1 actually cost* | — | 1 schema push (all 3 columns) · 4 new endpoints (2 of the "missing four" already existed) · 2 template corrections · 1 404 found only in the callee's boot log |
-| **3.1** | Nexus workflow history + templates 2–3 | ☐ | **unblocked** — 2.1 done |
-| **3.2** | Analytics emits → Alert classifies | ☐ | |
-| **3.3** | TEC AI emits unused recommendation intents | ☐ | **start early — it collects the data 4.3 needs** |
+| **3.1** | Nexus workflow history + templates 2–3 | ✅ | Tec-Nexus **#33** — and the app's THIRD copy of the workflow definitions deleted |
+| **3.2** | Analytics emits → Alert classifies | ✅ | tec-core-backend **#314** · KB **#143**. **Deployed** — sweep scheduled, `identity-alert` consumer live |
+| **3.3** | TEC AI emits unused recommendation intents | ✅ | tec-core-backend **#315** (sink) · tec-app **#236** (compiler). **Every user turn, not only routed replies** — see below |
 | **3.4** | DX console + `dx doctor` | ☐ | |
-| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ☐ | **no dependency — startable today** |
-| **4.2** | `intent.delta.ts` (pure, root-compared) | ☐ | **no dependency — startable today** |
-| **4.3** | Rules-first compiler, human confirms `v1` | ☐ | best after 3.3 has run a month |
-| **4.4** | `intent.gate.ts` | ☐ | **unblocked** — 2.1 done; there is now something to gate |
+| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ✅ | tec-core-backend **#316** — DRAFT authorizes nothing; a revision is a NEW ROW. Schema arrives with the deploy (identity self-migrates) |
+| **4.2** | `intent.delta.ts` (pure, root-compared) | ✅ | tec-core-backend **#316** — 32 tests, no infrastructure. The asymmetry holds in both directions |
+| **4.3** | Rules-first compiler, human confirms `v1` | ☐ | **still best after 3.3 has run a month** — the store's `confirm()` is the half that already exists |
+| **4.4** | `intent.gate.ts` | ✅ | tec-core-backend **#316** — ships INERT (no run cites an intent yet); runs BEFORE the payment halt |
 | **4.5** | Proof + HMAC | ☐ | |
 | **5.1** | SoloHost edition = BYO-key, in writing | ☐ | |
 | **5.2** | Secret-leak gate on package files | ☐ | **before the first publish, not after** |
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 3.1 — Nexus workflow history + the templates surfaced in the app. Phases 1
-and 2 are done; 3.1 and 4.4 were both waiting on 2.1 and are now unblocked.
+**Next action:** **3.4** (`dx doctor`) or the **`/api/ready` fleet rollout** — both are
+conformance work across the 24 apps, and both are cheap to do and expensive to defer. 4.3
+(the compiler) stays parked until 3.3 has collected a month of real asks; 4.5 (proof + HMAC)
+is last by design, because it records what 4.1–4.4 decided.
+
+> **4.4 is done, and the two decisions worth keeping are both about PLACEMENT.**
+>
+> The gate runs **before the payment halt**, not beside the dispatcher. Halting for payment
+> is itself an act: it puts a request for real Pi in front of a person, and asking somebody
+> to pay under a mandate that has lapsed or been revoked is not a neutral pause. Moving the
+> call one branch later fails exactly one test and nothing else — which is what a placement
+> test is for.
+>
+> And expiry is checked **per step**, not once at start. A run authorized at 10:00 by an
+> intent lapsing at 12:00 must stop mid-saga at 12:01; checking only at `startRun` would
+> make the expiry a formality that the longest runs always outlive — and a long run is
+> precisely what an expiry is for.
+>
+> **A run citing no intent is ALLOWED, and that is not fail-open.** §6 property 3: this
+> layer can only ever NARROW. It narrows what a HUMAN authorized; where nobody authorized
+> anything through it, there is nothing to narrow and C-47 governs as always. Denying those
+> would be the intent layer ADDING a restriction the constitution does not have. The
+> fail-closed rule lives one step in — a run that DOES cite an intent, and cannot produce
+> it, is refused.
+>
+> **Three absences, each pinned by a test:** no amount ceiling (no step declares an amount,
+> so the check could never fire), no exclusions (the gate sees a service name, never the
+> product), no delta (nothing proposes a revised intent yet). *A gate whose surface suggests
+> it checks budgets is worse than one that says it doesn't.*
+
+> **4.1 and 4.2 are done, and the plan under-described 4.2 in a useful way.** It reads
+> *"pure, root-compared"* — which is right, and skips the part that took the thinking: the
+> function has to be honest about what it CANNOT compare. A hard constraint whose value is
+> a string has no ordering, so `zone_verified → any_seller` cannot be shown to be a
+> tightening; a changed operator is a different relation, not a narrowing; `null` on a
+> ceiling means unlimited, which is the largest widening there is. Each of those is
+> CRITICAL by refusal rather than by comparison. A delta that only knew how to compare
+> numbers would have passed every one of them.
+>
+> **`fingerprintOf` was hashing preferences** — TypeScript's structural typing accepted the
+> whole normalized intent for a `BindingFields` parameter, so it compiled and quietly
+> included them. Every legitimate re-ranking would have moved the fingerprint, and a drift
+> signal that fires constantly is one nobody reads. §4.2 says preferences are excluded; the
+> function now picks its five fields instead of trusting its parameter type.
 
 > **2.1 is closed, and the plan was wrong about it in a way worth recording.** This table
 > said "Nexus steps call their services" and the catalog named four missing endpoints.
@@ -58,8 +100,23 @@ and 2 are done; 3.1 and 4.4 were both waiting on 2.1 and are now unblocked.
 > right, and the order is what mattered. But the size of a step is only knowable from
 > inside it.
 
-**Outstanding from earlier phases:** the `/api/ready` fleet rollout (1.3 shipped in the
-template; the 20+ apps have not adopted it).
+**Outstanding from earlier phases:** the `/api/ready` fleet rollout — **21 of the 22 apps
+lack it** (counted 2026-09-13; only `tec-template-base` has it).
+
+> **A correction worth carrying, because it contradicts this repo's own runbook.**
+> `tec-core-backend/CLAUDE.md` says a schema change needs a Custom Start Command of
+> `npm run db:push && node dist/main`. That is right for **nine** of the ten services with a
+> schema — and **wrong for `tec-identity-service`**, the one this phase keeps touching. Its
+> Dockerfile CMD is already `node scripts/migrate.cjs && node dist/main.js`: a wrapper with a
+> wall-clock deadline and a Postgres `lock_timeout`, written after a 2026-09-01 deploy hung
+> on a migration lock and failed the healthcheck at 04:44 **with no error message**.
+>
+> Setting the Custom Start Command on that service **overrides the CMD** and reinstates the
+> unbounded push — which is exactly what happened on 2026-09-13: `Network › Healthcheck ✗
+> (04:41)`, same shape, same silence. Production was unaffected only because the wrapper's
+> non-zero exit leaves the previous version serving.
+>
+> **For identity-service: leave the start command empty and let the image migrate itself.**
 
 **Phase 2.1 is deployed** (C-02 Session 56f): schema pushed, all three services live on
 the right paths, verified from the dashboard rather than inferred from a merge. What
@@ -172,6 +229,23 @@ order, one at a time.*
 after a month it is the only honest way to design the compiler's closed objective set —
 from intents users actually expressed, rather than from imagination.
 
+> **3.3 shipped, and the trigger changed on purpose.** This row said *"on every
+> Recommendation"*. A recommendation is a reply carrying a nav marker — which means
+> filtering to them would have sampled **only the objectives the system prompt already
+> knows how to route**. That is precisely the wrong sample for discovering which ones are
+> MISSING, and the missing ones are the entire reason this step exists. The trigger is
+> every user turn: the ask is the intent; the reply is the platform's answer to it.
+>
+> Two more things the build settled, neither of which was in this plan:
+>
+> - **The sink cannot hold the vocabulary.** `tec-analytics-service` validates shape and
+>   bounds only; the closed set lives in the Hub's compiler alone. A server-side allowlist
+>   would be a second definition of one rule (P2) **and** would reject exactly the rows
+>   that prove the set incomplete. `objective: null` is a first-class, accepted answer.
+> - **Research is not activity.** `ai.intent.observed` had to be excluded from
+>   `getRecentEvents`, or an inference about what somebody ASKED would appear in Life's
+>   timeline as something they DID.
+
 **3.4's `dx doctor` is conformance, not generation.** It reads the 24 apps that already
 exist and reports drift from the current template — unresolvable dependency ranges,
 missing CI guards, a placeholder app name, a hand-rolled Pro parser. A generator would
@@ -184,6 +258,18 @@ evidence.
 
 *IIC 4.1 and 4.2 are pure functions with no dependencies. **They can be written at any
 point from today onward**, including during Phase 0, because they touch nothing live.*
+
+> **Done (tec-core-backend #316).** The "touch nothing live" claim held for 4.2 exactly —
+> it is a pure function with 32 tests and no infrastructure. It was *nearly* true for 4.1:
+> the schema is additive and `NexusRun.intent_id` is nullable, so every existing run is
+> unaffected — but the column is inert unless something enforces what may be written into
+> it, so `startRun` now asks the store whether a cited intent is the caller's own,
+> CONFIRMED and unexpired, and creates nothing if it is not. **A nullable foreign key with
+> no rule is a comment in a table.**
+>
+> What the store deliberately does NOT do is decide anything: `/check` returns a verdict,
+> it does not enforce one. Enforcement is 4.4, in front of the dispatcher, and putting it
+> in two places is the duplication the last several sessions were spent removing.
 
 | # | Step | Note |
 |---|---|---|

@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 13 September 2026 (Session 56f — Phase 2.1 deployed; the 404 only the callee’s log could show)
+**Last Updated:** 13 September 2026 (Session 56i — the gate: the intent layer starts refusing)
 
 ---
 
@@ -4215,6 +4215,226 @@ failed.
   are live and reachable on the right paths; no run has been driven end to end. That last
   step is a real `checkout-saga` or `subscription-renewal` against production.
 - `/api/ready` fleet rollout (1.3) still open across the 20+ apps.
+
+## SESSION 56g — Phase 3: the runtimes start talking, and one of them starts listening to people
+
+Three steps closed. They look unrelated and are the same move three times: a fact that
+already existed inside one runtime was made available to the runtime whose job it is.
+
+| # | Step | Shipped |
+|---|---|---|
+| 3.1 | Nexus workflow history + the templates surfaced in the app | Tec-Nexus **#33** — and the app's THIRD copy of the workflow definitions deleted |
+| 3.2 | Analytics computes the finding → Alert classifies it | tec-core-backend **#314** · KB **#143**. **Deployed**: the sweep is scheduled and the `identity-alert` consumer is live on `analytics.finding.raised.v1` |
+| 3.3 | TEC AI compiles an intent object, and does nothing with it | tec-core-backend **#315** (sink) · tec-app **#236** (compiler) |
+
+### 3.2 — the split that keeps one inbox one inbox
+
+Analytics emits a FINDING with **no severity and no recommended action**: what was
+measured, what was expected, over what window. Alert decides severity, category and
+wording. The moment a producer grades its own findings, the platform has two runtimes
+answering the same question on two scales — the C-96 dual-poller (NEW-K) in a new
+costume. A unit test pins the absence of a `severity` key on the producer side.
+
+The detector's interesting rules are its **refusals**: fewer than three baseline days is
+an anecdote, and a baseline at or below 3 means you cannot drop from nothing. A detector
+that fires readily produces a stream nobody reads, and the first real finding then
+arrives in a feed already full of noise — which is the same as not having raised it.
+
+### 3.3 — the instrument, and why `null` is the point of it
+
+IIC 4.3 needs a **closed** objective set, because a free-text goal cannot be compared
+between versions and drift on the goal is the one thing that must never go unmeasured.
+The only honest way to design that set is from asks people actually made — so TEC AI now
+compiles every user turn into the intent object it *would* hand to a gate, and **nothing
+reads it**. No routing change, no prompt change, no visible product difference.
+
+> **The unmatched rows are the deliverable.** When nothing in the closed set matches, the
+> observation carries `objective: null` and a capped excerpt of the ask. That row says
+> the vocabulary is incomplete AND what it is missing. A compiler that always found
+> something to return would report a complete set on day one and be wrong in a way nobody
+> could see — the same failure shape as a detector that always fires.
+
+Three decisions worth keeping:
+
+- **The vocabulary lives in ONE place** (the Hub's compiler). `tec-analytics-service`
+  holds no copy and validates *shape and bounds* only. A server-side allowlist would have
+  been a second definition of the same rule (P2) **and** would have rejected exactly the
+  rows that prove the set incomplete.
+- **Research is not activity.** `ai.intent.observed` is an inference about what somebody
+  ASKED, not something they DID, so `getRecentEvents` excludes it at the single read every
+  activity surface goes through. Listing it in Life's timeline would tell a user they did
+  something they did not do.
+- **Constraints come from the user, never from the compiler.** A budget is recorded only
+  when stated, with the span it came from. An inferred budget is a number the platform
+  made up about somebody's money.
+
+**One deliberate deviation from the plan.** It said *"on every Recommendation"*. Filtering
+to replies that carried a nav marker would sample only the objectives the system prompt
+already knows how to route — precisely the wrong sample for finding the ones that are
+missing. The trigger is every user turn: the ask is the intent, the reply is the
+platform's answer to it.
+
+The emit is fire-and-forget and every failure path is swallowed, which is the one place in
+that codebase where a silent catch is correct: a research instrument that can fail a chat
+is a bad trade at any price.
+
+### Status
+
+- 3.1 · 3.2 merged and **deployed**. 3.3 merged-pending — no schema change in either half,
+  so **no `db push`** is required; analytics-service + the Hub redeploy and it runs.
+- 3.3 becomes useful in about a month. Until then it produces rows and no conclusions, and
+  reading it early would be the mistake it exists to prevent.
+- Still open from earlier phases: the `/api/ready` fleet rollout (1.3), and no Nexus run
+  has been driven end to end in production (2.1 execution).
+
+## SESSION 56h — Phase 4 begins: what a human authorized, and a delta that only narrows
+
+`tec-core-backend #316` — IIC **4.1 + 4.2** in `tec-identity-service`. A module beside the
+engine it extends, not a new service (C-132; no T1–T4 trigger exists).
+
+> ⚠️ **SCHEMA PUSH REQUIRED.** `npm run db:push && node dist/main` as the Railway start
+> command on `tec-identity-service`, redeploy, then put it back. Two additions: the
+> `intents` table + `IntentStatus`, and `nexus_runs.intent_id`. Push BEFORE deploying the
+> code that reads them — the reverse is an outage, not a warning (Session 56c).
+
+### 4.2 — one asymmetry does all the work
+
+```
+Narrowing is always allowed.  Widening never is.
+```
+
+An agent may spend less, exclude more, trust a narrower set or finish sooner without
+asking. It may not spend more, reach a service it was not given, remove a human
+checkpoint, or buy itself time. Every widening is CRITICAL, and CRITICAL means a new
+human signature — not an agent's assertion that it is fine.
+
+**The comparand is the human-signed ROOT, and there is no variant that takes a
+predecessor.** No single step widens a budget from 250 to 400; five steps widen it by 30
+each and every one looks reasonable beside the step before it. A test walks that exact
+path.
+
+**Where the thinking actually went: being honest about what cannot be compared.**
+
+| Case | Verdict, and why |
+|---|---|
+| A hard constraint whose value is a **string** | CRITICAL. There is no ordering on strings, so `zone_verified → any_seller` cannot be shown to be a tightening. A trust LADDER would let this be ordered — invented silently, it would be a ranking nobody signed. |
+| The **operator** changed | CRITICAL. A different relation is not a narrowing. |
+| `hard` re-classed to `soft` at the same value | CRITICAL. The subtlest widening in the spec: nothing moved, and the limit stopped being a limit. A diff comparing values alone reports "no change". |
+| A ceiling set to `null` | CRITICAL. `null` means unlimited — the largest widening there is, and the one an off-by-one would let through because no number in the file ever showed it. |
+
+A delta that only knew how to compare numbers would have passed every one of those.
+
+### 4.1 — a DRAFT authorizes nothing
+
+Only `confirm()` — an explicit act by the owner — makes an intent citable. A revision is
+a NEW ROW under the same `root_id`, never an edit, which is what keeps the signed root
+reachable at version 6. Someone else's intent is NOT FOUND rather than forbidden: telling
+a caller an id exists but is not theirs answers a question they had no right to ask.
+
+`NexusRun.intent_id` is nullable and additive — every run today has none and behaves
+exactly as before. **But a nullable foreign key with no rule is a comment in a table**, so
+`startRun` asks `IntentService` (a service API — the R-2-clean seam, C-132 §7.5) whether
+the cited intent is the caller's own, CONFIRMED and unexpired, and creates nothing if not.
+
+This **records**; it does not gate. `/check` returns a verdict rather than enforcing one —
+enforcement is 4.4, in front of the dispatcher, and two places answering "may this
+proceed" is the duplication the last several sessions were spent removing.
+
+### The bug the tests caught
+
+`fingerprintOf()` was hashing **preferences**. TypeScript's structural typing accepts a
+wider object for a `BindingFields` parameter, so passing the whole normalized intent
+compiled cleanly and quietly included `preferences` and `temporal`.
+
+> Every legitimate re-ranking would have moved the fingerprint — making the one signal
+> that detects real drift fire constantly. **A signal that fires constantly is one nobody
+> reads**, which is the same failure as the detector in 3.2 that fires on noise. §4.2 says
+> preferences are excluded; the function now PICKS its five fields instead of trusting its
+> parameter type.
+
+### Status
+
+- 1154/1154 green (55 new), typecheck + build clean. `[Code Verified]`; it becomes
+  `[Runtime Verified]` after the schema push and a deploy.
+- **Next: 4.4** — `intent.gate.ts`. Everything it needs now exists: 2.1 made the
+  dispatcher real, 4.1 gave a run an intent to cite, 4.2 produces the verdict. It is the
+  first step where this layer stops recording and starts refusing.
+
+## SESSION 56i — the gate: the intent layer stops recording and starts refusing
+
+`tec-core-backend #316` grows to **4.1 + 4.2 + 4.4**. The gate is pure, deterministic, and
+**ships inert** — no run cites an intent today, and a run that cites none passes through
+untouched.
+
+### Why "no intent → allow" is not fail-open
+
+Spec §6 property 3: this layer can only ever **narrow**. It narrows what a HUMAN
+authorized; where nobody authorized anything through it, there is nothing to narrow and
+C-47 governs as it always has. Denying those runs would be the intent layer **adding** a
+restriction the constitution does not have — the opposite of its job, and it would stop
+every workflow in production on the day it shipped.
+
+The fail-closed rule lives one step in: a run that **does** cite an intent, and cannot
+produce it — unreadable, not CONFIRMED, revoked, superseded, lapsed — is refused. That is
+genuine doubt, and doubt denies (P6).
+
+### Two placement decisions, and both are the whole value
+
+**The gate runs BEFORE the payment halt**, not beside the dispatcher.
+
+> Halting for payment is itself an act: it puts a request for real Pi in front of a
+> person. Asking somebody to pay under a mandate that has lapsed or been revoked is not a
+> neutral pause. Moving the call one branch later fails **exactly one test and nothing
+> else** — which is what a placement test is for.
+
+**Expiry is checked per step, not once at start.** A run authorized at 10:00 by an intent
+lapsing at 12:00 must stop mid-saga at 12:01. Checking only at `startRun` would make the
+expiry a formality that the longest runs always outlive — and a long run is precisely what
+an expiry is for.
+
+A denial changes **nothing**: no FAILED marker, no rollback. Nobody was asked to do
+anything, so there is no partial state to undo — the same reasoning as the
+no-callable-target refusal.
+
+### Three absences, each pinned by a test
+
+| Not checked | Why |
+|---|---|
+| Amount ceilings | No step declares a Pi amount — the figure is set in the Hub's payment modal and arrives on `payment.completed.v1`. The check could never fire. |
+| Exclusions | The gate sees a service name and a payment flag, never the product. Whether a listing is an auction is commerce's fact about commerce's data. |
+| The delta | §5's Δ compares a *proposed* intent against the root; nothing proposes one yet. `/intent/:id/check` serves it for when an agent does. |
+
+> **A gate whose surface suggests it checks budgets is worse than one that says it
+> doesn't** — it answers "is spending limited?" with a yes nobody earned. The same failure
+> family as a detector that fires on noise, and as a step that reached DONE having called
+> nothing.
+
+An empty `authority.services` authorizes **nothing** rather than everything: the
+permissive reading is the one an absent-minded intent would accidentally choose.
+
+### A runbook correction this session earned the hard way
+
+`tec-core-backend/CLAUDE.md` says a schema change needs a Custom Start Command of
+`npm run db:push && node dist/main`. That is right for **nine** of the ten services with a
+schema — and **wrong for `tec-identity-service`**, the one Phase 4 keeps touching. Its
+Dockerfile CMD is already `node scripts/migrate.cjs && node dist/main.js`, a wrapper with
+a deadline and a Postgres `lock_timeout`, written after a 2026-09-01 deploy hung on a
+migration lock and failed the healthcheck **with no error message**.
+
+Setting the start command there **overrides that CMD** and reinstates the unbounded push.
+Which is what happened: `Network › Healthcheck ✗ (04:41)`, same shape, same silence.
+Production was untouched only because the wrapper's non-zero exit leaves the previous
+version serving — the failure mode it was designed for.
+
+> **For identity-service: leave the start command empty and let the image migrate itself.**
+
+### Status
+
+- 1180/1180 green (81 new across 4.1·4.2·4.4), typecheck + lint + build + policy-check
+  clean — **all run locally**, because Actions is blocked by a declined account payment
+  (13-09, $29.00) rather than by anything in the diff.
+- **Next: 3.4 (`dx doctor`) or the `/api/ready` fleet rollout** — 21 of the 22 apps lack
+  `/api/ready`. 4.3 stays parked until 3.3 has collected a month of real asks.
 
 ## UPDATE PROTOCOL
 
