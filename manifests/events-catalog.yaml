@@ -199,6 +199,25 @@ events:
       Analytics daily scoring batch emits it per active owner (popularity = merchant-activity
       count) alongside legend.scores.updated.v1. Ranking degrades gracefully without it.
 
+  # ── Decision Signals (Analytics → Alert, C-111 §4) ────────────────────────
+  - name: analytics.finding.raised.v1
+    owner: tec-analytics-service
+    subject: finding.metric
+    consumers: [tec-identity-service/alert]
+    status: live
+    verified: true
+    binds_to: [C-105, C-111]
+    note: >
+      Analytics COMPUTES a platform finding from its OWN DailyMetric counters (an
+      activity drop against the trailing 7-day baseline) and emits it; Alert
+      CLASSIFIES it — category + severity + wording — and files it in the unified
+      inbox. The payload deliberately carries NO severity and NO recommended action:
+      Alert owns classification (C-111 §4), and a producer that graded its own
+      findings would give the platform two incomparable scales — the C-96
+      dual-poller failure (NEW-K) in a new costume. Delivery is at-least-once;
+      Alert dedupes on eventId so a replay never becomes two inbox entries.
+      Shipped tec-core-backend #314.
+
   # ── Trust → discovery ranking (Connection → Explorer, C-108 §10) ─────────
   - name: connection.trust.updated.v1
     owner: tec-identity-service/connection
