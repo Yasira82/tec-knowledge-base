@@ -13,6 +13,38 @@
 
 ---
 
+## STATUS — update this table in the same PR as the work
+
+This is the execution record. A plan with no state is a plan that gets re-derived.
+Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ dropped, with a reason.
+
+| # | Step | Status | Evidence |
+|---|---|---|---|
+| **0.1** | Merge #306 · #234 · #137 | ◐ | three PRs open |
+| **0.2** | Re-consent reaches Mainnet users | ☐ | needs a notification or a one-time login interstitial |
+| **0.3** | `Implementation Status` on C-109 · C-115 · C-110 | ☐ | |
+| **1.1** | Collapse the duplicate capability registry | ☐ | |
+| **1.2** | `capability-registry.yaml` + CI gate | ☐ | |
+| **1.3** | `/api/ready` separate from `/api/health` | ☐ | template first, then fleet |
+| **2.1** | **Nexus steps call their services** | ☐ | **the bottleneck** |
+| **3.1** | Nexus workflow history + templates 2–3 | ☐ | needs 2.1 |
+| **3.2** | Analytics emits → Alert classifies | ☐ | |
+| **3.3** | TEC AI emits unused recommendation intents | ☐ | **start early — it collects the data 4.3 needs** |
+| **3.4** | DX console + `dx doctor` | ☐ | |
+| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ☐ | **no dependency — startable today** |
+| **4.2** | `intent.delta.ts` (pure, root-compared) | ☐ | **no dependency — startable today** |
+| **4.3** | Rules-first compiler, human confirms `v1` | ☐ | best after 3.3 has run a month |
+| **4.4** | `intent.gate.ts` | ☐ | needs 2.1 |
+| **4.5** | Proof + HMAC | ☐ | |
+| **5.1** | SoloHost edition = BYO-key, in writing | ☐ | |
+| **5.2** | Secret-leak gate on package files | ☐ | **before the first publish, not after** |
+| **5.3** | Dockerfile · config_options · publish one | ☐ | |
+| **5.4** | `dx solohost` | ☐ | |
+
+**Next action:** 0.1 — merge the three open PRs.
+
+---
+
 ## 0 · The order is forced, not chosen
 
 Four facts, each verified in the previous reports, remove almost all the freedom:
