@@ -299,6 +299,8 @@ Consequences that cost time here:
 | tec-core-backend | #303 | An open payout is finished, not cancelled |
 | tec-core-backend | #304 | Ask Pi what it is holding · stderr reaches the summary |
 | tec-core-backend | #305 | The fee is asked of the network |
+| tec-core-backend | #306 | `resume` finds its own identifier · a refused payout leaves a record (open) |
+| tec-app | #234 | The Hub shows a pioneer why their payout is waiting on them (open) |
 
 ---
 
@@ -306,13 +308,75 @@ Consequences that cost time here:
 
 - **The Mainnet App Wallet application is under review.** `Connected Outgoing Wallet:
   None` until Pi answers.
-- **`resume` still takes a hand-typed identifier.** It should take the one open payment
-  from Pi's own list — the transcription error in §7 is a step that should not exist.
 - **`PI_A2U_FEE` is unset**, so every payout now costs one extra Horizon round trip to
   read the fee. Correct, and worth revisiting if payout volume ever makes it matter.
-- **The `wallet_address` re-consent has not reached Mainnet users.** Until they sign in
-  again, the reward campaign still cannot pay them — the fix is deployed, the consent is
-  not collected.
+
+### Two of these were closed the same day (§13)
+
+- ~~**`resume` still takes a hand-typed identifier.**~~ → tec-core-backend **#306**.
+- ~~**Nothing tells a Mainnet user to re-consent.**~~ → tec-core-backend **#306** +
+  tec-app **#234**. The re-consent itself is still uncollected — that is a fact about
+  people, not about code — but the platform now asks for it.
+
+---
+
+## 13 · The follow-up, and the thing it found
+
+Both remaining code items were taken the same day. The second one changed shape on
+contact with the code, and that is the part worth recording.
+
+### 13.1 · `resume` asks Pi which payout is open (tec-core-backend #306)
+
+`--resume` with no `--identifier` now reads the open payment out of Pi's own listing.
+The step that produced §7 no longer exists.
+
+The design decision inside it is the one to keep: the id-extractor returns **`null`**
+for a shape it does not recognise and **`[]`** only for a shape it does. Collapsing
+those two would let an unfamiliar answer read as *"nothing is open"* — the exact state
+a blocked queue must never be mistaken for. Four outcomes are kept apart (one open ·
+none · more than one · unreadable), and only the first one acts.
+
+More than one is a refusal, not a choice. Pi allows the app a single open payment, so
+two would mean the assumption the whole flow rests on is wrong — and picking one of
+them would submit a transfer for a payout nobody chose (P6).
+
+### 13.2 · The claim-time scope check that could not be built — and what was built instead
+
+The plan was to refuse a claim when the user had not granted `wallet_address`. Reading
+the code first killed it: **nothing records what Pi granted.** Auth's `verifyPiToken`
+keeps `uid` and `username` from `/v2/me` and nothing else, and no column holds a scope.
+Gating on a field whose presence had not been verified would have been §7 again, in a
+place where it decides whether a person gets paid.
+
+Reading further found something worse, and certain:
+
+> A payout refused by Pi threw a sentence at whichever admin tapped the button, and then
+> it was gone. Nothing on the row. Nothing on the claimant's screen. They saw a seat that
+> never moved, under the words *"a person sends the Pi by hand, so this is not instant."*
+
+That sentence is true and, for everyone who signed in before 2026-09-13, misleading: the
+wait has no end unless they act, and nothing was going to tell them. **Forbidden Behavior
+#6 — silent failure in a financial flow — in a form that had passed review**, exactly like
+§5, one layer further out.
+
+| Change | Why it is the honest version |
+|---|---|
+| The refusal is written onto the claim as `PAYOUT_BLOCKED: <Pi's own reason>` | Pi's answer is the only thing that knows whose problem it is. Status does not move — the payout was refused, not the person, and the seat stays theirs. Best-effort: a claim that cannot be annotated must still report its ORIGINAL refusal, not a second one about bookkeeping |
+| `payoutBlockedMessage` returns an instruction, or **null** | The null half is the point. "Your payout failed" with no action makes a person assume they did something wrong and wait. Only `missing_scope` and `user_not_found` are things they can fix; everything else stays with the admin |
+| The claimant is shown notes **this service wrote**, never an admin's | `reject` and `unmarkPaid` write free text meant for the record. The prefix is what keeps it there. There is a test asserting exactly that |
+| `claim()` refuses someone with no Pi identity on record | Pi pays a uid, so that claim could never be addressed. Checked at payout time it cost the person a seat and a wait and told them nothing; checked at claim time it is a sentence they can act on |
+
+No schema change: `note` already existed, and the prefix is what makes one column carry
+two audiences safely.
+
+**The generalisable lesson.** The check that was planned could not be built on evidence,
+and the check that could be built was better — because it triggers on **Pi's actual
+refusal** rather than on a prediction of one. A gate that fires on what happened needs no
+assumption about a field nobody has seen.
+
+**Status:** `[Code Verified]` — 295/295 (payment) · 1041/1041 (identity) · 2578/2578 (Hub),
+all typechecks clean. Not `[Runtime Verified]`: that needs a real blocked claim in prod,
+which is what #306 creates the record for.
 
 ---
 

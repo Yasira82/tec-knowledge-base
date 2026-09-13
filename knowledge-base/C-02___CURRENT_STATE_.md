@@ -3758,16 +3758,54 @@ HTTP to the running service — never by importing `sendA2uPayment` into a scrip
 would be a second unreviewed way to move Pi.
 
 **Merged:** tec-app **#233** · tec-core-backend **#298 · #299 · #300 · #301 · #302 ·
-#303 · #304 · #305**.
+#303 · #304 · #305**. **Open:** tec-core-backend **#306** · tec-app **#234**.
+
+### The follow-up, same day — and the check that could not be built
+
+Both remaining code items were taken immediately. **tec-core-backend #306 · tec-app #234**
+(open at time of writing). Audit §13.
+
+**`resume` reads the id from Pi's own listing.** The step that produced the transcription
+error no longer exists. The design decision worth keeping: the extractor returns `null`
+for a shape it does not recognise and `[]` only for a shape it does — collapsing those two
+would let an unfamiliar answer read as *"nothing is open"*, the exact state a blocked queue
+must never be mistaken for.
+
+**The planned claim-time scope check was abandoned, on evidence.** Reading the code first
+showed that **nothing records what Pi granted** — auth keeps `uid` and `username` from
+`/v2/me` and no column holds a scope. Gating on a field whose presence had not been
+verified would have been the §7 mistake again, in a place where it decides whether a
+person gets paid.
+
+Reading further found something certain, and worse:
+
+> A payout refused by Pi threw a sentence at whichever admin tapped the button, and then
+> it was gone. Nothing on the row, nothing on the claimant's screen — a seat that never
+> moved, under the words *"a person sends the Pi by hand, so this is not instant."*
+
+True, and for everyone who signed in before 13 Sep, misleading: the wait has no end unless
+they act. **Forbidden Behavior #6 — silent failure in a financial flow — in a form that had
+passed review.** Now Pi's own reason is written onto the claim, translated into one
+instruction the person can act on (and **null** for anything they cannot — a failure notice
+with no action just makes someone think they did something wrong), shown only from a note
+the service wrote so an admin's rejection wording can never reach the person it is about,
+and the Hub renders it above the reassurance rather than under it.
+
+> **The generalisable half:** the check that was planned could not be built on evidence,
+> and the check that could be built was better — it fires on Pi's **actual refusal**
+> instead of on a prediction of one, so it needs no assumption about a field nobody has
+> seen.
+
+Also moved earlier: `claim()` refuses someone with no Pi identity on record. Pi pays a uid,
+so that claim could never be addressed — caught at payout time it cost a person a seat and
+a silent wait.
 
 ### Open after this session
 
 - **Mainnet App Wallet under review** — nothing to do but wait for Pi.
-- **The `wallet_address` re-consent has not reached Mainnet users.** The fix is deployed;
-  the consent is not collected. Until each user signs in again, the reward campaign
-  *still* cannot pay them. Pi cannot widen a consent already given.
-- **`resume` still takes a hand-typed identifier** — it should read Pi's own incomplete
-  list. This removes the step that produced the §7 error.
+- **The `wallet_address` re-consent is still uncollected.** The platform now *asks* for it
+  (above), but a consent is a fact about people, not about code. Until each user signs in
+  again the campaign cannot pay them, and Pi cannot widen a consent already given.
 - **`PI_A2U_FEE` is unset**, so every payout costs one extra Horizon round trip to ask
   the network its fee. Correct, and only worth revisiting at volume.
 
