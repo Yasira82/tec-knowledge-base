@@ -4731,15 +4731,20 @@ const gatewayUrl = process.env.NEXT_PUBLIC_API_GATEWAY_URL
 It was raised as exactly that, and then checked instead of reported:
 
 ```
-Tec-Explorer (has the literal, reads the var in 3 files)
-  grep -rl "railway.app" .next/static/   →  0
-  grep -rl "railway.app" .next/server/   →  0
-  grep -rl "tec-sdk"     .next/*         →  0
+Tec-Explorer (has the literal, reads the var in 3 files, build newer than source)
+  grep -rl  "railway.app"       .next/static/  →  0
+  grep -rhoE "https://…"        .next/static/  →  hub.tecosystem.app ×5 · explorer.tecosystem.app ×1
+  grep -rl  "gatewayUrl"        .next/static/  →  0
+  grep -rl  "resolveIncomplete" .next/static/  →  0
+  (control: "hub.tecosystem.app" →  3 files, so client strings DO survive)
 ```
 
-**`src/lib/sdk.ts` is dead code** — imported only by `lib-client/pi/pi-auth.ts`, and
-that chain reaches no bundle, so tree-shaking removes it entirely. **NEW-A is genuinely
-still closed.**
+**No gateway URL of any kind reaches the browser. NEW-A is genuinely still closed.**
+
+`resolveIncomplete` is the load-bearing zero: it is a property name on `sdk.payment`,
+and minifiers do not rename external property names — had that code been bundled, the
+string would be there. The control line matters as much: a grep returning 0 across a
+build proves nothing unless you first show the build contains strings you expect.
 
 > **The lesson, and it generalises past this file:** a `grep` over SOURCE proves the
 > line exists. It does not prove the line ships. **Only the build knows** — and the
@@ -4749,11 +4754,51 @@ still closed.**
 > change as caused by it). Both are answered the same way: measure the thing you are
 > actually claiming, not the thing that is easy to measure.
 
-**What remains is real but small:** dead code carrying a production hostname is not a
-leak today; it is a loaded gun. The moment a client component imports `sdk`, the host
-ships. It also crosses the Two-SDK boundary inside one file (`@yasser172/tec-sdk` is
-server-only by its own rules, beside browser auth helpers). **Delete it from the
-template and the 17 apps** — not urgent, but unjustified.
+#### A correction: `src/lib/sdk.ts` is NOT dead code
+
+This block first called it dead and proposed deleting it from the template and the 17
+apps. **Reading it before acting showed three live call sites in `pi-auth.ts`:**
+
+```
+sdk.clearAuthToken()                    pi-auth.ts:67
+sdk.payment.resolveIncomplete(id)       pi-auth.ts:131
+sdk.payment.resolveIncomplete(id)       pi-auth.ts:230   ← a PAYMENT path
+```
+
+The file is absent from the *client bundle*; that is not the same as being unused.
+**Deleting it would have broken incomplete-payment resolution.** The word "dead" came
+from one grep (`who imports it`) that returned a single file, and the reflex was to
+treat a short answer as a complete one.
+
+#### What was actually wrong, and it was P6 rather than NEW-A
+
+```diff
+- const gatewayUrl = process.env.NEXT_PUBLIC_API_GATEWAY_URL
+-   ?? 'https://api-gateway-production-6a68.up.railway.app';
++ const gatewayUrl = '';
+```
+
+The fallback made a **missing configuration silent**. An app that does not know where
+its gateway is would quietly talk to a hardcoded Railway host instead of failing —
+doubt about configuration must deny, not guess. Now a stray client→gateway call fails
+loudly. Nothing regresses: every real gateway call already goes through the server-only
+BFF (`/api/bff/*` → `API_GATEWAY_URL`).
+
+**And the fix already existed.** Six repos (Connection · Life · Zone · Estate · FundX ·
+Nexus) carried `gatewayUrl = ''` with a comment citing NEW-A; **fourteen did not,
+including `tec-template-base`** — which is why every app cloned from it was born with
+the fallback. The correct version was copied **verbatim** rather than rewritten.
+
+> **Fourth instance this session of one rule, solved in one repo, never back-adopted**
+> — after the `^1.1.0` caret trap, the Dependabot policy, and CI `concurrency`. Three
+> of the four were fixed in the template only after the fleet had already diverged.
+> The pattern is no longer a coincidence worth noting; it is the platform's
+> characteristic failure, and the template is where it starts every time.
+
+Applied by a fail-closed script that refused any file not byte-identical to the
+known-bad version: 14/14 changed, typecheck clean, zero `railway.app` left in any
+`src/lib/sdk.ts` in the fleet. Shipped as a second commit on the 14 already-open CI
+PRs rather than 14 new ones.
 
 ### npm token expiry — not mandatory, and the workaround is to remove the token
 
