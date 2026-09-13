@@ -33,20 +33,35 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **3.2** | Analytics emits → Alert classifies | ✅ | tec-core-backend **#314** · KB **#143**. **Deployed** — sweep scheduled, `identity-alert` consumer live |
 | **3.3** | TEC AI emits unused recommendation intents | ✅ | tec-core-backend **#315** (sink) · tec-app **#236** (compiler). **Every user turn, not only routed replies** — see below |
 | **3.4** | DX console + `dx doctor` | ☐ | |
-| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ☐ | **no dependency — startable today** |
-| **4.2** | `intent.delta.ts` (pure, root-compared) | ☐ | **no dependency — startable today** |
-| **4.3** | Rules-first compiler, human confirms `v1` | ☐ | best after 3.3 has run a month |
-| **4.4** | `intent.gate.ts` | ☐ | **unblocked** — 2.1 done; there is now something to gate |
+| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ✅ | tec-core-backend **#316** — DRAFT authorizes nothing; a revision is a NEW ROW. **Needs a `db push`** |
+| **4.2** | `intent.delta.ts` (pure, root-compared) | ✅ | tec-core-backend **#316** — 32 tests, no infrastructure. The asymmetry holds in both directions |
+| **4.3** | Rules-first compiler, human confirms `v1` | ☐ | **still best after 3.3 has run a month** — the store's `confirm()` is the half that already exists |
+| **4.4** | `intent.gate.ts` | ☐ | **fully unblocked** — 2.1 gave it something to gate, 4.2 gave it the verdict to gate on |
 | **4.5** | Proof + HMAC | ☐ | |
 | **5.1** | SoloHost edition = BYO-key, in writing | ☐ | |
 | **5.2** | Secret-leak gate on package files | ☐ | **before the first publish, not after** |
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 4.1 + 4.2 — the `Intent` model and `intent.delta.ts`. Both are additive and
-dependency-free, 4.2 is a pure function testable with no infrastructure, and 4.4 (the gate)
-is unblocked behind them. 3.4 (`dx doctor`) is the alternative and is conformance work, not
-invention.
+**Next action:** **4.4** — `intent.gate.ts` in front of the dispatcher. Everything it needs
+now exists: 2.1 made the dispatcher real, 4.1 gave a run an intent to cite, and 4.2 produces
+the verdict. It is the first step where the intent layer stops recording and starts
+refusing. 3.4 (`dx doctor`) is the alternative and is conformance work, not invention.
+
+> **4.1 and 4.2 are done, and the plan under-described 4.2 in a useful way.** It reads
+> *"pure, root-compared"* — which is right, and skips the part that took the thinking: the
+> function has to be honest about what it CANNOT compare. A hard constraint whose value is
+> a string has no ordering, so `zone_verified → any_seller` cannot be shown to be a
+> tightening; a changed operator is a different relation, not a narrowing; `null` on a
+> ceiling means unlimited, which is the largest widening there is. Each of those is
+> CRITICAL by refusal rather than by comparison. A delta that only knew how to compare
+> numbers would have passed every one of them.
+>
+> **`fingerprintOf` was hashing preferences** — TypeScript's structural typing accepted the
+> whole normalized intent for a `BindingFields` parameter, so it compiled and quietly
+> included them. Every legitimate re-ranking would have moved the fingerprint, and a drift
+> signal that fires constantly is one nobody reads. §4.2 says preferences are excluded; the
+> function now picks its five fields instead of trusting its parameter type.
 
 > **2.1 is closed, and the plan was wrong about it in a way worth recording.** This table
 > said "Nexus steps call their services" and the catalog named four missing endpoints.
@@ -203,6 +218,18 @@ evidence.
 
 *IIC 4.1 and 4.2 are pure functions with no dependencies. **They can be written at any
 point from today onward**, including during Phase 0, because they touch nothing live.*
+
+> **Done (tec-core-backend #316).** The "touch nothing live" claim held for 4.2 exactly —
+> it is a pure function with 32 tests and no infrastructure. It was *nearly* true for 4.1:
+> the schema is additive and `NexusRun.intent_id` is nullable, so every existing run is
+> unaffected — but the column is inert unless something enforces what may be written into
+> it, so `startRun` now asks the store whether a cited intent is the caller's own,
+> CONFIRMED and unexpired, and creates nothing if it is not. **A nullable foreign key with
+> no rule is a comment in a table.**
+>
+> What the store deliberately does NOT do is decide anything: `/check` returns a verdict,
+> it does not enforce one. Enforcement is 4.4, in front of the dispatcher, and putting it
+> in two places is the duplication the last several sessions were spent removing.
 
 | # | Step | Note |
 |---|---|---|
