@@ -33,20 +33,45 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **3.2** | Analytics emits → Alert classifies | ✅ | tec-core-backend **#314** · KB **#143**. **Deployed** — sweep scheduled, `identity-alert` consumer live |
 | **3.3** | TEC AI emits unused recommendation intents | ✅ | tec-core-backend **#315** (sink) · tec-app **#236** (compiler). **Every user turn, not only routed replies** — see below |
 | **3.4** | DX console + `dx doctor` | ☐ | |
-| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ✅ | tec-core-backend **#316** — DRAFT authorizes nothing; a revision is a NEW ROW. **Needs a `db push`** |
+| **4.1** | `Intent` model + `intent_id` on `NexusRun` | ✅ | tec-core-backend **#316** — DRAFT authorizes nothing; a revision is a NEW ROW. Schema arrives with the deploy (identity self-migrates) |
 | **4.2** | `intent.delta.ts` (pure, root-compared) | ✅ | tec-core-backend **#316** — 32 tests, no infrastructure. The asymmetry holds in both directions |
 | **4.3** | Rules-first compiler, human confirms `v1` | ☐ | **still best after 3.3 has run a month** — the store's `confirm()` is the half that already exists |
-| **4.4** | `intent.gate.ts` | ☐ | **fully unblocked** — 2.1 gave it something to gate, 4.2 gave it the verdict to gate on |
+| **4.4** | `intent.gate.ts` | ✅ | tec-core-backend **#316** — ships INERT (no run cites an intent yet); runs BEFORE the payment halt |
 | **4.5** | Proof + HMAC | ☐ | |
 | **5.1** | SoloHost edition = BYO-key, in writing | ☐ | |
 | **5.2** | Secret-leak gate on package files | ☐ | **before the first publish, not after** |
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** **4.4** — `intent.gate.ts` in front of the dispatcher. Everything it needs
-now exists: 2.1 made the dispatcher real, 4.1 gave a run an intent to cite, and 4.2 produces
-the verdict. It is the first step where the intent layer stops recording and starts
-refusing. 3.4 (`dx doctor`) is the alternative and is conformance work, not invention.
+**Next action:** **3.4** (`dx doctor`) or the **`/api/ready` fleet rollout** — both are
+conformance work across the 24 apps, and both are cheap to do and expensive to defer. 4.3
+(the compiler) stays parked until 3.3 has collected a month of real asks; 4.5 (proof + HMAC)
+is last by design, because it records what 4.1–4.4 decided.
+
+> **4.4 is done, and the two decisions worth keeping are both about PLACEMENT.**
+>
+> The gate runs **before the payment halt**, not beside the dispatcher. Halting for payment
+> is itself an act: it puts a request for real Pi in front of a person, and asking somebody
+> to pay under a mandate that has lapsed or been revoked is not a neutral pause. Moving the
+> call one branch later fails exactly one test and nothing else — which is what a placement
+> test is for.
+>
+> And expiry is checked **per step**, not once at start. A run authorized at 10:00 by an
+> intent lapsing at 12:00 must stop mid-saga at 12:01; checking only at `startRun` would
+> make the expiry a formality that the longest runs always outlive — and a long run is
+> precisely what an expiry is for.
+>
+> **A run citing no intent is ALLOWED, and that is not fail-open.** §6 property 3: this
+> layer can only ever NARROW. It narrows what a HUMAN authorized; where nobody authorized
+> anything through it, there is nothing to narrow and C-47 governs as always. Denying those
+> would be the intent layer ADDING a restriction the constitution does not have. The
+> fail-closed rule lives one step in — a run that DOES cite an intent, and cannot produce
+> it, is refused.
+>
+> **Three absences, each pinned by a test:** no amount ceiling (no step declares an amount,
+> so the check could never fire), no exclusions (the gate sees a service name, never the
+> product), no delta (nothing proposes a revised intent yet). *A gate whose surface suggests
+> it checks budgets is worse than one that says it doesn't.*
 
 > **4.1 and 4.2 are done, and the plan under-described 4.2 in a useful way.** It reads
 > *"pure, root-compared"* — which is right, and skips the part that took the thinking: the
@@ -75,8 +100,23 @@ refusing. 3.4 (`dx doctor`) is the alternative and is conformance work, not inve
 > right, and the order is what mattered. But the size of a step is only knowable from
 > inside it.
 
-**Outstanding from earlier phases:** the `/api/ready` fleet rollout (1.3 shipped in the
-template; the 20+ apps have not adopted it).
+**Outstanding from earlier phases:** the `/api/ready` fleet rollout — **21 of the 22 apps
+lack it** (counted 2026-09-13; only `tec-template-base` has it).
+
+> **A correction worth carrying, because it contradicts this repo's own runbook.**
+> `tec-core-backend/CLAUDE.md` says a schema change needs a Custom Start Command of
+> `npm run db:push && node dist/main`. That is right for **nine** of the ten services with a
+> schema — and **wrong for `tec-identity-service`**, the one this phase keeps touching. Its
+> Dockerfile CMD is already `node scripts/migrate.cjs && node dist/main.js`: a wrapper with a
+> wall-clock deadline and a Postgres `lock_timeout`, written after a 2026-09-01 deploy hung
+> on a migration lock and failed the healthcheck at 04:44 **with no error message**.
+>
+> Setting the Custom Start Command on that service **overrides the CMD** and reinstates the
+> unbounded push — which is exactly what happened on 2026-09-13: `Network › Healthcheck ✗
+> (04:41)`, same shape, same silence. Production was unaffected only because the wrapper's
+> non-zero exit leaves the previous version serving.
+>
+> **For identity-service: leave the start command empty and let the image migrate itself.**
 
 **Phase 2.1 is deployed** (C-02 Session 56f): schema pushed, all three services live on
 the right paths, verified from the dashboard rather than inferred from a merge. What
