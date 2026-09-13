@@ -23,7 +23,7 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **0.1** | Merge #306 · #234 · #137 · #138 | ✅ | all merged |
 | **0.2** | Re-consent reaches Mainnet users | ✅ | backend #307 · Hub #235 · `db push` run. **Caused a ~20min login outage — C-02 Session 56c** |
 | — | *Prevention from that outage* | ✅ | #308 — `npm run db:push` in all 10 services + runbook |
-| **0.3** | `Implementation Status` on C-109 · C-115 · C-110 | ☐ | **next** |
+| **0.3** | `Implementation Status` on C-109 · C-115 · C-110 | ✅ | headers untouched — registry stable. **PHASE 0 COMPLETE** |
 | **1.1** | Collapse the duplicate capability registry | ☐ | |
 | **1.2** | `capability-registry.yaml` + CI gate | ☐ | |
 | **1.3** | `/api/ready` separate from `/api/health` | ☐ | template first, then fleet |
@@ -42,7 +42,7 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 0.3 — `Implementation Status` on C-109 · C-115 · C-110.
+**Next action:** 1.1 — collapse the duplicate capability registry (C-115 Implementation Status records the drift).
 
 ---
 

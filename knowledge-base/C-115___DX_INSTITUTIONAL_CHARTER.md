@@ -23,6 +23,49 @@
 
 ---
 
+## Implementation Status (2026-09-13)
+
+> **Verification:** `[Code Verified]` — read from `tec-identity-service/src/modules/dx/`.
+> The header's `[Future Vision]` is **correct and should stay**: what is deployed is a
+> read-only catalog, not the Developer Platform this charter describes. Audit:
+> `audits/FOUR_RUNTIMES_ENGINEERING_REPORT_2026-09-13.md` §1.
+
+### Built — four seeded read catalogs
+
+`dx.service.ts` serves, read-only: the **SDK registry** (`@yasser172/tec-sdk` · `tec-auth`
+· `tec-ui` · `tec-core-sdk`), the **template** entry (`tec-template-base` and what it
+ships), a **capability catalog**, and **quickstart guides**. Its own header states the
+boundary this charter sets in §4 — *"DX DISTRIBUTES; it does NOT certify capabilities
+(SYSTEM/C-94 does)"*.
+
+### NOT built — named in the source, not inferred
+
+> *"Read-only catalog; API-key issuance + rate-limit tiers are Phase 1+ and **NOT modeled
+> here**."* — `dx.service.ts`
+
+So: no API keys, no per-builder rate limits, no playground, no builder analytics, no CLI,
+no certification pipeline. There is no write path of any kind.
+
+### ⚠️ The capability catalog is a SECOND copy, and it has already drifted
+
+`dx.service.ts` and `system.service.ts` each hand-maintain the same five capability ids,
+in two Prisma models, with two enums (`DxCapStatus` / `SystemGovernanceStatus`), and the
+descriptions **already differ**. Nothing syncs them — no shared constant, no test, no gate.
+
+§4 says capabilities **mirror** the System registry. **The code does not mirror; it
+re-types.** That is a live **P2** violation (no rule defined differently in more than one
+layer), and it matters more than a stale sentence: the fields a future agent would *act*
+on — authority required, risk level, input/output schema — would be read from whichever
+copy the caller happened to open.
+
+The fix is smaller than it sounds: every governed field already has an owner elsewhere —
+`status` → SYSTEM (C-110/C-94) · schemas → `@yasser172/tec-sdk` (C-47 §14) · dependencies
+→ `architecture/asset-registry.yaml`. DX keeps what is genuinely its own: the install line,
+the example, the guide. Tracked as step **1.1** in
+`audits/FOUR_RUNTIMES_BUILD_ORDER_2026-09-13.md`.
+
+---
+
 ## 1. MISSION
 
 Enable ecosystem construction — providing the SDKs, APIs, templates, documentation, and governed capability access that allow external builders, AI agents, enterprise teams, and partner platforms to create new economic value on top of TEC infrastructure.
