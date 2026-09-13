@@ -25,30 +25,42 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | — | *Prevention from that outage* | ✅ | #308 — `npm run db:push` in all 10 services + runbook |
 | **0.3** | `Implementation Status` on C-109 · C-115 · C-110 | ✅ | headers untouched — registry stable. **PHASE 0 COMPLETE** |
 | **1.1** | Collapse the duplicate capability registry | ✅ | tec-core-backend **#309** — SYSTEM owns `status`/`owner`; DX serves them via the service API |
-| **1.2** | `capability-registry.yaml` + CI gate | ◐ | `manifests/capability-registry.yaml` + `evals/check-capability-registry.sh` — **20th KB gate**, single-authority rule. Preflight 21/21 |
-| **1.3** | `/api/ready` separate from `/api/health` | ☐ | template first, then fleet |
-| **2.1** | **Nexus steps call their services** | ☐ | **the bottleneck** |
-| **3.1** | Nexus workflow history + templates 2–3 | ☐ | needs 2.1 |
+| **1.2** | `capability-registry.yaml` + CI gate | ✅ | KB **#141** — **20th KB gate**, single-authority rule. Preflight 21/21 |
+| **1.3** | `/api/ready` separate from `/api/health` | ✅ | tec-template-base **#33**. **Fleet rollout to the 20+ apps still open** |
+| **2.1** | **Nexus steps call their services** | ✅ | **#310** dispatcher + refusal · **#311** `subscription-renewal` real · **#312** the other two. **THE BOTTLENECK IS CLOSED** |
+| — | *What 2.1 actually cost* | — | 2 schema pushes (`user_id`; `input`+`output`) · 4 new endpoints (2 of the "missing four" already existed) · 2 template corrections |
+| **3.1** | Nexus workflow history + templates 2–3 | ☐ | **unblocked** — 2.1 done |
 | **3.2** | Analytics emits → Alert classifies | ☐ | |
 | **3.3** | TEC AI emits unused recommendation intents | ☐ | **start early — it collects the data 4.3 needs** |
 | **3.4** | DX console + `dx doctor` | ☐ | |
 | **4.1** | `Intent` model + `intent_id` on `NexusRun` | ☐ | **no dependency — startable today** |
 | **4.2** | `intent.delta.ts` (pure, root-compared) | ☐ | **no dependency — startable today** |
 | **4.3** | Rules-first compiler, human confirms `v1` | ☐ | best after 3.3 has run a month |
-| **4.4** | `intent.gate.ts` | ☐ | needs 2.1 |
+| **4.4** | `intent.gate.ts` | ☐ | **unblocked** — 2.1 done; there is now something to gate |
 | **4.5** | Proof + HMAC | ☐ | |
 | **5.1** | SoloHost edition = BYO-key, in writing | ☐ | |
 | **5.2** | Secret-leak gate on package files | ☐ | **before the first publish, not after** |
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 1.3 — `/api/ready`, separate from `/api/health`, in `tec-template-base` first.
+**Next action:** 3.1 — Nexus workflow history + the templates surfaced in the app. Phases 1
+and 2 are done; 3.1 and 4.4 were both waiting on 2.1 and are now unblocked.
 
-> 1.2 closed the duplicate-registry story the way it had to be closed. #309 stopped DX
-> from *reading* its copy; the manifest + gate stop a *third* copy from being written.
-> The rule is one line and it is mechanical: every entry's `status_source` must equal
-> `meta.status_authority`, so a capability whose status lives somewhere else is a red
-> check, not a discovery six months later.
+> **2.1 is closed, and the plan was wrong about it in a way worth recording.** This table
+> said "Nexus steps call their services" and the catalog named four missing endpoints.
+> Adding those four alone would have changed nothing: a run carried no parameters and no
+> step could see what an earlier step produced. *You cannot reserve inventory for an order
+> that does not exist.* Two of the four turned out to already exist (`orders/checkout`,
+> `marketplace/:id/buy`), and two of the things actually needed were engine capabilities
+> (`NexusRun.input`, `NexusStep.output`) that appeared nowhere in this plan.
+>
+> A plan that names the visible half of a gap is still worth having — it got the order
+> right, and the order is what mattered. But the size of a step is only knowable from
+> inside it.
+
+**Outstanding from earlier phases:** the `/api/ready` fleet rollout (1.3 shipped in the
+template; the 20+ apps have not adopted it), and two schema pushes on
+`tec-identity-service` before #311/#312 can run — push, then deploy.
 
 ---
 
