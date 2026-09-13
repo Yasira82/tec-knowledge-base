@@ -27,8 +27,8 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **1.1** | Collapse the duplicate capability registry | ✅ | tec-core-backend **#309** — SYSTEM owns `status`/`owner`; DX serves them via the service API |
 | **1.2** | `capability-registry.yaml` + CI gate | ✅ | KB **#141** — **20th KB gate**, single-authority rule. Preflight 21/21 |
 | **1.3** | `/api/ready` separate from `/api/health` | ✅ | tec-template-base **#33**. **Fleet rollout to the 20+ apps still open** |
-| **2.1** | **Nexus steps call their services** | ✅ | **#310** dispatcher + refusal · **#311** `subscription-renewal` real · **#312** the other two. **THE BOTTLENECK IS CLOSED** |
-| — | *What 2.1 actually cost* | — | 2 schema pushes (`user_id`; `input`+`output`) · 4 new endpoints (2 of the "missing four" already existed) · 2 template corrections |
+| **2.1** | **Nexus steps call their services** | ✅ | **#310** dispatcher + refusal · **#311** `subscription-renewal` real · **#312** the other two · **#313** the `/api` prefix. **THE BOTTLENECK IS CLOSED — and DEPLOYED** (C-02 Session 56f) |
+| — | *What 2.1 actually cost* | — | 1 schema push (all 3 columns) · 4 new endpoints (2 of the "missing four" already existed) · 2 template corrections · 1 404 found only in the callee's boot log |
 | **3.1** | Nexus workflow history + templates 2–3 | ☐ | **unblocked** — 2.1 done |
 | **3.2** | Analytics emits → Alert classifies | ☐ | |
 | **3.3** | TEC AI emits unused recommendation intents | ☐ | **start early — it collects the data 4.3 needs** |
@@ -59,8 +59,11 @@ and 2 are done; 3.1 and 4.4 were both waiting on 2.1 and are now unblocked.
 > inside it.
 
 **Outstanding from earlier phases:** the `/api/ready` fleet rollout (1.3 shipped in the
-template; the 20+ apps have not adopted it), and two schema pushes on
-`tec-identity-service` before #311/#312 can run — push, then deploy.
+template; the 20+ apps have not adopted it).
+
+**Phase 2.1 is deployed** (C-02 Session 56f): schema pushed, all three services live on
+the right paths, verified from the dashboard rather than inferred from a merge. What
+remains is **execution** — no run has been driven end to end in production yet.
 
 ---
 
