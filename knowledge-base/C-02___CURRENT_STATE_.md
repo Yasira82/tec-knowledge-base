@@ -4438,15 +4438,51 @@ version serving — the failure mode it was designed for.
 
 ## Session 56j — CI economics: one deploy path, one concurrency rule (29 repos)
 
-GitHub Actions is **disabled account-wide** — a **$29.00 payment declined on 2026-09-13**,
-with the Actions budget standing at **$56.95 of $65**. Both halves matter: fixing the card
-alone would not settle it, because the cap closes it again within days. So the session's
-work was chosen to be the kind that *makes the bill smaller* rather than the kind that
-waits for it — and none of it needs CI to verify, because none of it ships product code.
+GitHub Actions stopped running some time after **13:20 on 2026-09-13** — a **$29.00 payment
+declined that day**, with the Actions budget standing at **$56.95 of $65**. Both halves
+matter: fixing the card alone would not settle it, because the cap closes it again within
+days. So the session's work was chosen to be the kind that *makes the bill smaller* rather
+than the kind that waits for it — and none of it needs CI to verify, because none of it
+ships product code.
 
-> An earlier theory blamed a Cursor integration for CI stopping. That was a **timing
-> correlation, not a cause**; the Billing page settled it. Recorded because the wrong
-> diagnosis was held confidently for two exchanges.
+> **Two diagnoses corrected here, both stated more confidently than the evidence allowed.**
+>
+> **(a)** An earlier theory blamed a Cursor integration. That was a **timing correlation,
+> not a cause**; the Billing page settled it.
+>
+> **(b)** This block first said Actions was "disabled account-wide". The run history says
+> otherwise: `tec-core-backend` `ci.yml` **#1009 (12:50, pull_request) and #1010 (13:20,
+> push→main) both SUCCEEDED**, as did `knowledge-ci` #493 at 13:01 — the same day, after
+> the decline. **Nothing has run since 13:20.** "Blocked account-wide" and "stopped
+> mid-afternoon" lead to the same decisions here, but they are not the same fact, and a
+> current-state doc that rounds one to the other is the thing this file exists to prevent.
+
+### The `startup_failure` runs are NOT this, and NOT the workflow edits
+
+Every push after 13:20 produced a run with an **empty name**, `path: "BuildFailed"`, and
+conclusion `startup_failure`. It is tempting to read that as "the edited workflow is
+broken". The workflow IDs say it is neither:
+
+| Repo | The repo's own workflow IDs | The ID that fails |
+|------|------------------------------|-------------------|
+| tec-core-backend | `267506050–058` · `269818770` · `356608251` | **`357122187`** — in no listing, and already at `run_number 15` |
+| Tec-Zone | `307100294` (ci) · `307100296` (e2e) | **`357260488`** |
+
+Two facts settle it: the failing workflow is **not one of the repo's files** (all of them
+are listed, `state: active`, with their own IDs), and in tec-core-backend it had **already
+failed ten times before any workflow was edited today** — it is the "(Unnamed workflow) /
+Startup failure" the CEO screenshotted this morning, hours earlier. A per-repo ID created
+2026-09-13 that appears in no listing is GitHub-side (an agent/dynamic workflow), not ours.
+
+> **The trap this avoids is the mirror of Session 46 §5's.** There, a fix produced a red
+> run and the instinct was to explain it away. Here, a red run appeared *beside* a change
+> and the instinct is to assume the change caused it. Both instincts are answered the same
+> way: read the identifiers the tool prints. The workflow ID is four characters of evidence
+> and it is worth more than the coincidence in timing.
+
+**What remains genuinely unverified:** no run has *executed* any edited workflow, so GitHub's
+workflow parser (stricter than YAML) has not accepted them. The `concurrency` expression is
+the exception — it is the one `knowledge-ci.yml` has carried through **492 successful runs**.
 
 ### 1. Railway owns deploy — the racing second path is gone (tec-core-backend)
 
