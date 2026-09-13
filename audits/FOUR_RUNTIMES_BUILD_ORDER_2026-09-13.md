@@ -29,9 +29,9 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **1.3** | `/api/ready` separate from `/api/health` | ✅ | tec-template-base **#33**. **Fleet rollout to the 20+ apps still open** |
 | **2.1** | **Nexus steps call their services** | ✅ | **#310** dispatcher + refusal · **#311** `subscription-renewal` real · **#312** the other two · **#313** the `/api` prefix. **THE BOTTLENECK IS CLOSED — and DEPLOYED** (C-02 Session 56f) |
 | — | *What 2.1 actually cost* | — | 1 schema push (all 3 columns) · 4 new endpoints (2 of the "missing four" already existed) · 2 template corrections · 1 404 found only in the callee's boot log |
-| **3.1** | Nexus workflow history + templates 2–3 | ☐ | **unblocked** — 2.1 done |
-| **3.2** | Analytics emits → Alert classifies | ☐ | |
-| **3.3** | TEC AI emits unused recommendation intents | ☐ | **start early — it collects the data 4.3 needs** |
+| **3.1** | Nexus workflow history + templates 2–3 | ✅ | Tec-Nexus **#33** — and the app's THIRD copy of the workflow definitions deleted |
+| **3.2** | Analytics emits → Alert classifies | ✅ | tec-core-backend **#314** · KB **#143**. **Deployed** — sweep scheduled, `identity-alert` consumer live |
+| **3.3** | TEC AI emits unused recommendation intents | ✅ | tec-core-backend **#315** (sink) · tec-app **#236** (compiler). **Every user turn, not only routed replies** — see below |
 | **3.4** | DX console + `dx doctor` | ☐ | |
 | **4.1** | `Intent` model + `intent_id` on `NexusRun` | ☐ | **no dependency — startable today** |
 | **4.2** | `intent.delta.ts` (pure, root-compared) | ☐ | **no dependency — startable today** |
@@ -43,8 +43,10 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
 | **5.4** | `dx solohost` | ☐ | |
 
-**Next action:** 3.1 — Nexus workflow history + the templates surfaced in the app. Phases 1
-and 2 are done; 3.1 and 4.4 were both waiting on 2.1 and are now unblocked.
+**Next action:** 4.1 + 4.2 — the `Intent` model and `intent.delta.ts`. Both are additive and
+dependency-free, 4.2 is a pure function testable with no infrastructure, and 4.4 (the gate)
+is unblocked behind them. 3.4 (`dx doctor`) is the alternative and is conformance work, not
+invention.
 
 > **2.1 is closed, and the plan was wrong about it in a way worth recording.** This table
 > said "Nexus steps call their services" and the catalog named four missing endpoints.
@@ -171,6 +173,23 @@ order, one at a time.*
 **3.3 is the highest value-per-hour step in this document.** Zero risk, no new surface, and
 after a month it is the only honest way to design the compiler's closed objective set —
 from intents users actually expressed, rather than from imagination.
+
+> **3.3 shipped, and the trigger changed on purpose.** This row said *"on every
+> Recommendation"*. A recommendation is a reply carrying a nav marker — which means
+> filtering to them would have sampled **only the objectives the system prompt already
+> knows how to route**. That is precisely the wrong sample for discovering which ones are
+> MISSING, and the missing ones are the entire reason this step exists. The trigger is
+> every user turn: the ask is the intent; the reply is the platform's answer to it.
+>
+> Two more things the build settled, neither of which was in this plan:
+>
+> - **The sink cannot hold the vocabulary.** `tec-analytics-service` validates shape and
+>   bounds only; the closed set lives in the Hub's compiler alone. A server-side allowlist
+>   would be a second definition of one rule (P2) **and** would reject exactly the rows
+>   that prove the set incomplete. `objective: null` is a first-class, accepted answer.
+> - **Research is not activity.** `ai.intent.observed` had to be excluded from
+>   `getRecentEvents`, or an inference about what somebody ASKED would appear in Life's
+>   timeline as something they DID.
 
 **3.4's `dx doctor` is conformance, not generation.** It reads the 24 apps that already
 exist and reports drift from the current template — unresolvable dependency ranges,
