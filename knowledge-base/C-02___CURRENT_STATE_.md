@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 13 September 2026 (Session 56k — three credentials out of CI; the payout asks the service instead of its database)
+**Last Updated:** 17 September 2026 (Session 56m — the whole backend was on the open internet; global x-internal-key on all 11 services)
 
 ---
 
@@ -4507,9 +4507,20 @@ they can be revoked), and `permissions.id-token: write`, which existed only for 
 `push: [main]` **stays**: it is the status Railway reads once Wait-for-CI is ON, and the
 only run that tests the *merged* tree rather than the PR head.
 
-**To restore the gate: Railway → each service → Settings → Deploy → Wait for CI = ON.**
+**To restore the gate: Railway → the SERVICE → Settings → `Source` → Wait for CI = ON.**
 That gates the deploy that actually happens instead of adding one that races it. It means
 nothing while Actions is disabled, so it belongs with the billing fix — not before it.
+
+> **Corrected 2026-09-17, on the CEO's screen.** This line read `Settings → Deploy` from
+> the day it was written, and it is not there. The toggle sits under **Source**, directly
+> below "Branch connected to production". The owner went looking in the project's own
+> Settings first — which has no such toggle at all, only Environments / Shared Variables /
+> Tokens / Danger — then in the service's Deploy section, and found it in neither.
+>
+> Two levels of "Settings" exist in Railway and the note named neither: the PROJECT's and
+> the SERVICE's. **A path written from memory reads exactly like a path someone verified**,
+> and this one was carried verbatim into `ci.yml` and a PR body before anyone stood in
+> front of the screen. Both are corrected.
 
 ### 2. `concurrency` — the same rule, in the same spelling, in 29 repos
 
@@ -4938,6 +4949,142 @@ Zone passed the same Portal step the ordinary way — by paying while still on F
 sequence is what matters, not an extra control. Trading fleet consistency for one
 checklist step is the wrong trade, and fleet consistency is exactly what this platform
 keeps losing by letting one repo solve something its own way.
+
+
+## Session 56m — the whole backend was on the open internet, and nine services had no door
+
+Started as log noise on `identity-service`: a 500 reading `Body cannot be empty when
+content-type is set to 'application/json'`. It fired at **06:37:29** on 14 September and
+**06:37:29** on 17 September — the same second, three days apart. That is scheduled, and
+nothing inside the service schedules anything.
+
+Following the caller instead of the message is what opened the rest of this.
+
+### What was actually true
+
+| Question | Answer | How it was settled |
+|---|---|---|
+| Are the services reachable from the internet? | **Yes, all of them** | `identity-service-production-fe57.up.railway.app/health` answered JSON in a phone browser |
+| Does the gateway call them publicly or privately? | **Publicly** (`up.railway.app`) | Read from the gateway's own Railway variable |
+| Did nine services enforce `x-internal-key` globally? | **No** | Three had it; five checked per route; **three had nothing at all** |
+
+So every internal call between the gateway and a service was leaving the platform and
+coming back over the open internet, and on nine of eleven services the only thing
+standing in front of a business route was whether that particular route remembered to
+check. ADR-005 says *"Services must NOT be exposed directly to the internet."*
+
+The 500 was a scanner walking the public domain. It was never the problem — it was the
+symptom that happened to be visible.
+
+### Why the exposure existed — and a WRONG answer, corrected the same session
+
+The first explanation given here was confident and wrong, and the way it was wrong is
+worth more than the finding it was attached to.
+
+**What was claimed:** Railway's private network routes over IPv6 only; six services bound
+`'0.0.0.0'` (IPv4 alone) and so were unreachable at their `*.railway.internal` address;
+therefore the public URLs were the only ones that *could* have been configured; therefore
+moving the URLs private before fixing the binds would take six services off the air.
+
+**What the Railway console actually shows.** The private domain on `tec-auth-service` is
+badged **`IPv4 & IPv6`**. Railway private networking resolves both. The six were reachable
+privately all along.
+
+So the real answer is the boring one: **nobody ever changed the variables.** No constraint,
+no trap — just a default that outlived the reason for it.
+
+**Where the wrong answer came from, which is the lesson.** `tec-identity-service`'s
+`main.ts` carries this, and it is genuine:
+
+> `'::' accepts BOTH IPv6 and IPv4 (public edge), so the public URL keeps working too.`
+
+Somebody really did hit IPv6-only private networking and really did fix it that way. The
+note was true when it was written. It was then read as a statement about **how Railway
+works** rather than **how Railway worked on the day someone fought it**, and a months-old
+in-repo comment was promoted to current platform behaviour without opening the console
+that would have settled it in one screen.
+
+> **Same family as the Wait-for-CI path in Session 56l.** There, a path written from
+> memory read exactly like a path somebody had verified. Here, a comment describing the
+> platform *as it was* read exactly like a comment describing the platform *as it is*.
+> **A repo note is evidence about the past, not about the present** — and the console,
+> the dashboard, the actual screen, is one tap away in both cases.
+
+### The order still stands — for a weaker, honest reason
+
+```
+1. global x-internal-key guard        ← closes the door NOW, no risk
+2. bind '::' on the six               ← correct and harmless; NOT a prerequisite
+3. move *_SERVICE_URL to private      ← service by service
+4. remove the public domains          ← last, only after 3 is proven
+```
+
+Step 2 shipped and stays: `'::'` covers IPv4 and IPv6, so it is right under either
+behaviour and costs nothing. What it is **not** is the gate the first write-up made it —
+step 3 would not have broken anything without it.
+
+Steps 3 and 4 remain ordered for their own reasons: a variable change rolls back in
+seconds, and removing a public domain does not — Railway issues a **new, differently
+named** domain if you regenerate it.
+
+### Shipped (tec-core-backend #320) — steps 1 and 2
+
+| Service | Before | After |
+|---|---|---|
+| auth · payment · wallet | global guard already | unchanged |
+| identity · commerce · analytics · asset · storage | per-route only | **global guard** |
+| kyc · notification · realtime | **nothing** | **global guard** |
+| commerce · kyc · asset · analytics · notification · storage | bound `0.0.0.0` | **bound `'::'`** |
+
+Exempt everywhere, each for a stated reason rather than by habit: `/health` + `/ready`
+(Railway's healthcheck has no header to give), `/metrics` (the C-78 Prometheus pull),
+and `OPTIONS` (preflight carries no custom headers by definition).
+
+Two exemptions were found by reading rather than by pattern, and either would have been
+a silent outage:
+
+- **`/health/streams` on identity** — the consumer-liveness sensor (C-96 / NEW-W). The
+  gateway reads it with a bare `fetch` that sends **no headers at all**. Guarding it
+  would not have failed loudly; it would have left the platform's nervous-system sensor
+  permanently `'unavailable'` — the exact silent sensor death that sensor exists to
+  detect.
+- **`/socket.io/` on realtime** — the browser connects to it **directly**, because the
+  gateway's proxy has no `ws: true` and `onProxyReq` (which injects the key) fires for
+  HTTP only. A socket client has no key to present and no way to be given one. The same
+  guard pasted in would have disconnected every live client on the platform.
+
+> **The generalisable bit:** a fleet-wide rule applied uniformly is not the same as a
+> fleet-wide rule applied correctly. Nine services took the same guard; two needed a
+> carve-out that only reading them revealed, and in both cases the failure mode was
+> silence, not an error.
+
+Registered as a Fastify `onRequest` hook (Express middleware on realtime), so refusal
+happens **before the body parser** — which is also what retires the daily 500: the
+scanner's bodiless JSON POST is now answered 403 before Fastify is ever asked to parse
+it. (`FST_ERR_CTP_EMPTY_JSON_BODY` is a 400, but it is not an `HttpException`, so Nest's
+default filter was turning it into a 500.)
+
+Neither guard imports its framework's types. Identity carries **two copies of fastify**
+(`4.29.1` top-level, `4.28.1` under `@nestjs/platform-fastify`) which TypeScript treats
+as unrelated nominal types; realtime has no `@types/express`. Both declare only the
+surface they use — one hook, a path, a method, headers, and a way to answer 403.
+
+**Verified per service, built and run, not taken on CI's word:** identity 1215/1215 ·
+commerce 137/137 · analytics 117/117 · asset 48/48 · storage 34/34 · realtime 29/29 ·
+notification 29/29 · kyc 27/27. `kyc` and `notification` had no `node_modules` in the
+work environment and were installed to run them. No schema change.
+
+### A correction recorded, because the method matters more than the finding
+
+The first audit of this reported `payment-service` as unguarded. It was wrong: the guard
+is in `app.ts`, not `main.ts`, and the grep only read `main.ts`. The table above is the
+audited result, not the first guess. **A one-file grep is an answer about one file.**
+
+### Still open — ops, and the decision is the CEO's
+
+Steps **3** and **4** are Railway variable changes, service by service, and they are what
+actually closes ADR-005. #320 makes deferring them materially safer; it does not replace
+them. Nothing in the repo can do it — the variables live in Railway.
 
 
 ## UPDATE PROTOCOL
