@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 13 September 2026 (Session 56k — three credentials out of CI; the payout asks the service instead of its database)
+**Last Updated:** 17 September 2026 (Session 56m — the whole backend was on the open internet; global x-internal-key on all 11 services)
 
 ---
 
@@ -4949,6 +4949,124 @@ Zone passed the same Portal step the ordinary way — by paying while still on F
 sequence is what matters, not an extra control. Trading fleet consistency for one
 checklist step is the wrong trade, and fleet consistency is exactly what this platform
 keeps losing by letting one repo solve something its own way.
+
+
+## Session 56m — the whole backend was on the open internet, and nine services had no door
+
+Started as log noise on `identity-service`: a 500 reading `Body cannot be empty when
+content-type is set to 'application/json'`. It fired at **06:37:29** on 14 September and
+**06:37:29** on 17 September — the same second, three days apart. That is scheduled, and
+nothing inside the service schedules anything.
+
+Following the caller instead of the message is what opened the rest of this.
+
+### What was actually true
+
+| Question | Answer | How it was settled |
+|---|---|---|
+| Are the services reachable from the internet? | **Yes, all of them** | `identity-service-production-fe57.up.railway.app/health` answered JSON in a phone browser |
+| Does the gateway call them publicly or privately? | **Publicly** (`up.railway.app`) | Read from the gateway's own Railway variable |
+| Did nine services enforce `x-internal-key` globally? | **No** | Three had it; five checked per route; **three had nothing at all** |
+
+So every internal call between the gateway and a service was leaving the platform and
+coming back over the open internet, and on nine of eleven services the only thing
+standing in front of a business route was whether that particular route remembered to
+check. ADR-005 says *"Services must NOT be exposed directly to the internet."*
+
+The 500 was a scanner walking the public domain. It was never the problem — it was the
+symptom that happened to be visible.
+
+### Why the exposure existed, which is the part worth keeping
+
+**Railway's private network routes over IPv6 only.** Six services bound `'0.0.0.0'` —
+IPv4 alone — so they are unreachable at their `*.railway.internal` address. Not a
+preference, a physical constraint: the private URLs could not have worked, so the public
+ones were the only ones that could be configured.
+
+`tec-identity-service` is the proof. Its `main.ts` has carried this note for months:
+
+> `'::' accepts BOTH IPv6 and IPv4 (public edge), so the public URL keeps working too.`
+
+Someone hit exactly this, fixed that one service, and the other six kept the bind they
+were born with. Same shape as the `^1.1.0` caret trap and the Dependabot config in
+Session 46: **learned once, never propagated.**
+
+### The trap in the obvious fix
+
+Pointing `*_SERVICE_URL` at the private network is the correct move — and doing it first
+takes six services off the air the instant they deploy. The order is not optional:
+
+```
+1. global x-internal-key guard        ← closes the door NOW, no risk
+2. bind '::' on the six               ← preparation; IPv4 keeps working, nothing changes
+3. move *_SERVICE_URL to private      ← service by service, only after 2
+4. remove the public domains          ← last, only after 3 is proven
+```
+
+This is the August deploy lesson again, from the other side: there, a broken name was
+load-bearing and fixing it removed an accidental safety net. Here, a broken bind is
+load-bearing — it is *why* the public path exists — and removing the public path before
+fixing the bind is the same mistake with the pieces swapped. **Ask what a defect is
+holding up before you take it away.**
+
+### Shipped (tec-core-backend #320) — steps 1 and 2
+
+| Service | Before | After |
+|---|---|---|
+| auth · payment · wallet | global guard already | unchanged |
+| identity · commerce · analytics · asset · storage | per-route only | **global guard** |
+| kyc · notification · realtime | **nothing** | **global guard** |
+| commerce · kyc · asset · analytics · notification · storage | bound `0.0.0.0` | **bound `'::'`** |
+
+Exempt everywhere, each for a stated reason rather than by habit: `/health` + `/ready`
+(Railway's healthcheck has no header to give), `/metrics` (the C-78 Prometheus pull),
+and `OPTIONS` (preflight carries no custom headers by definition).
+
+Two exemptions were found by reading rather than by pattern, and either would have been
+a silent outage:
+
+- **`/health/streams` on identity** — the consumer-liveness sensor (C-96 / NEW-W). The
+  gateway reads it with a bare `fetch` that sends **no headers at all**. Guarding it
+  would not have failed loudly; it would have left the platform's nervous-system sensor
+  permanently `'unavailable'` — the exact silent sensor death that sensor exists to
+  detect.
+- **`/socket.io/` on realtime** — the browser connects to it **directly**, because the
+  gateway's proxy has no `ws: true` and `onProxyReq` (which injects the key) fires for
+  HTTP only. A socket client has no key to present and no way to be given one. The same
+  guard pasted in would have disconnected every live client on the platform.
+
+> **The generalisable bit:** a fleet-wide rule applied uniformly is not the same as a
+> fleet-wide rule applied correctly. Nine services took the same guard; two needed a
+> carve-out that only reading them revealed, and in both cases the failure mode was
+> silence, not an error.
+
+Registered as a Fastify `onRequest` hook (Express middleware on realtime), so refusal
+happens **before the body parser** — which is also what retires the daily 500: the
+scanner's bodiless JSON POST is now answered 403 before Fastify is ever asked to parse
+it. (`FST_ERR_CTP_EMPTY_JSON_BODY` is a 400, but it is not an `HttpException`, so Nest's
+default filter was turning it into a 500.)
+
+Neither guard imports its framework's types. Identity carries **two copies of fastify**
+(`4.29.1` top-level, `4.28.1` under `@nestjs/platform-fastify`) which TypeScript treats
+as unrelated nominal types; realtime has no `@types/express`. Both declare only the
+surface they use — one hook, a path, a method, headers, and a way to answer 403.
+
+**Verified per service, built and run, not taken on CI's word:** identity 1215/1215 ·
+commerce 137/137 · analytics 117/117 · asset 48/48 · storage 34/34 · realtime 29/29 ·
+notification 29/29 · kyc 27/27. `kyc` and `notification` had no `node_modules` in the
+work environment and were installed to run them. No schema change.
+
+### A correction recorded, because the method matters more than the finding
+
+The first audit of this reported `payment-service` as unguarded. It was wrong: the guard
+is in `app.ts`, not `main.ts`, and the grep only read `main.ts`. The table above is the
+audited result, not the first guess. **A one-file grep is an answer about one file.**
+
+### Still open — ops, and the decision is the CEO's
+
+Steps **3** and **4** are Railway variable changes, service by service, and they are what
+actually closes ADR-005. #320 makes deferring them materially safer; it does not replace
+them. Nothing in the repo can do it — the variables live in Railway.
 
 
 ## UPDATE PROTOCOL
