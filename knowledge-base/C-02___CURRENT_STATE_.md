@@ -4507,9 +4507,20 @@ they can be revoked), and `permissions.id-token: write`, which existed only for 
 `push: [main]` **stays**: it is the status Railway reads once Wait-for-CI is ON, and the
 only run that tests the *merged* tree rather than the PR head.
 
-**To restore the gate: Railway → each service → Settings → Deploy → Wait for CI = ON.**
+**To restore the gate: Railway → the SERVICE → Settings → `Source` → Wait for CI = ON.**
 That gates the deploy that actually happens instead of adding one that races it. It means
 nothing while Actions is disabled, so it belongs with the billing fix — not before it.
+
+> **Corrected 2026-09-17, on the CEO's screen.** This line read `Settings → Deploy` from
+> the day it was written, and it is not there. The toggle sits under **Source**, directly
+> below "Branch connected to production". The owner went looking in the project's own
+> Settings first — which has no such toggle at all, only Environments / Shared Variables /
+> Tokens / Danger — then in the service's Deploy section, and found it in neither.
+>
+> Two levels of "Settings" exist in Railway and the note named neither: the PROJECT's and
+> the SERVICE's. **A path written from memory reads exactly like a path someone verified**,
+> and this one was carried verbatim into `ci.yml` and a PR body before anyone stood in
+> front of the screen. Both are corrected.
 
 ### 2. `concurrency` — the same rule, in the same spelling, in 29 repos
 
