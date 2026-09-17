@@ -5087,6 +5087,54 @@ actually closes ADR-005. #320 makes deferring them materially safer; it does not
 them. Nothing in the repo can do it — the variables live in Railway.
 
 
+### Post-merge verification — and a deadline the deploy logs handed over
+
+**The deploy scope was right, and that is a check, not a coincidence.** #320 + #321
+touched exactly eight service directories — identity · commerce · analytics · asset ·
+storage · kyc · notification · realtime — and exactly those eight redeployed. The four
+that did not (**auth · payment · wallet · api-gateway**) still show the deployment from
+`#316`, a day older, because not one byte in the change belonged to them: auth, payment
+and wallet already carried the guard, and the gateway is the service that *sends* the
+header rather than one that checks it.
+
+That is Railway's per-service **Watch Paths** (`/tec-<service>/**`) doing its job. Worth
+recording because the same screen, read without the file list beside it, looks exactly
+like four services that failed to deploy. **"It didn't deploy" and "it had nothing to
+deploy" are the same picture** — the diff is what tells them apart.
+
+`storage-service` came up clean on the new bind (`📦 Storage Service running on port
+5007` · `PrismaService Connected to database`), which is step 2 verified in production
+rather than in a test.
+
+> Its actual port is **5007**, while the code's fallback reads `PORT ?? 5010`. Railway
+> sets `PORT` per service and the fallback is never reached, so a private URL built from
+> the source would point at the wrong port. **Read the port off the Railway screen; the
+> constant in `main.ts` is not it.**
+
+### NEW — Node 20 vs the AWS SDK, January 2027 (open, dated, not urgent)
+
+`storage-service`'s own boot log:
+
+```
+NodeVersionSupportWarning: The AWS SDK for JavaScript (v3) versions published
+after the first week of January 2027 will require node >=22.
+You are running node v20.0.2.
+```
+
+The whole backend is on **Node 20**, pinned in three places at once: the Dockerfiles, the
+`node-version: '20'` in every workflow, and whatever Railway resolves at build time. So
+this is a **fleet migration**, not a service upgrade — and the deadline is external and
+fixed, which is the rare kind this platform cannot negotiate with.
+
+Nothing breaks in January. What stops is *new* AWS SDK releases being installable — which
+means the next security patch on the R2/S3 client is the first thing that cannot be
+taken. That is the date that matters, not the one in the warning.
+
+Not scheduled here. Recorded with its source (a real production log, not a changelog
+someone remembered) so the next session finds it before a Dependabot PR fails for a
+reason nobody connects to a Node version.
+
+
 ## UPDATE PROTOCOL
 
 ```
