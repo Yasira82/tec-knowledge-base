@@ -4976,38 +4976,56 @@ check. ADR-005 says *"Services must NOT be exposed directly to the internet."*
 The 500 was a scanner walking the public domain. It was never the problem — it was the
 symptom that happened to be visible.
 
-### Why the exposure existed, which is the part worth keeping
+### Why the exposure existed — and a WRONG answer, corrected the same session
 
-**Railway's private network routes over IPv6 only.** Six services bound `'0.0.0.0'` —
-IPv4 alone — so they are unreachable at their `*.railway.internal` address. Not a
-preference, a physical constraint: the private URLs could not have worked, so the public
-ones were the only ones that could be configured.
+The first explanation given here was confident and wrong, and the way it was wrong is
+worth more than the finding it was attached to.
 
-`tec-identity-service` is the proof. Its `main.ts` has carried this note for months:
+**What was claimed:** Railway's private network routes over IPv6 only; six services bound
+`'0.0.0.0'` (IPv4 alone) and so were unreachable at their `*.railway.internal` address;
+therefore the public URLs were the only ones that *could* have been configured; therefore
+moving the URLs private before fixing the binds would take six services off the air.
+
+**What the Railway console actually shows.** The private domain on `tec-auth-service` is
+badged **`IPv4 & IPv6`**. Railway private networking resolves both. The six were reachable
+privately all along.
+
+So the real answer is the boring one: **nobody ever changed the variables.** No constraint,
+no trap — just a default that outlived the reason for it.
+
+**Where the wrong answer came from, which is the lesson.** `tec-identity-service`'s
+`main.ts` carries this, and it is genuine:
 
 > `'::' accepts BOTH IPv6 and IPv4 (public edge), so the public URL keeps working too.`
 
-Someone hit exactly this, fixed that one service, and the other six kept the bind they
-were born with. Same shape as the `^1.1.0` caret trap and the Dependabot config in
-Session 46: **learned once, never propagated.**
+Somebody really did hit IPv6-only private networking and really did fix it that way. The
+note was true when it was written. It was then read as a statement about **how Railway
+works** rather than **how Railway worked on the day someone fought it**, and a months-old
+in-repo comment was promoted to current platform behaviour without opening the console
+that would have settled it in one screen.
 
-### The trap in the obvious fix
+> **Same family as the Wait-for-CI path in Session 56l.** There, a path written from
+> memory read exactly like a path somebody had verified. Here, a comment describing the
+> platform *as it was* read exactly like a comment describing the platform *as it is*.
+> **A repo note is evidence about the past, not about the present** — and the console,
+> the dashboard, the actual screen, is one tap away in both cases.
 
-Pointing `*_SERVICE_URL` at the private network is the correct move — and doing it first
-takes six services off the air the instant they deploy. The order is not optional:
+### The order still stands — for a weaker, honest reason
 
 ```
 1. global x-internal-key guard        ← closes the door NOW, no risk
-2. bind '::' on the six               ← preparation; IPv4 keeps working, nothing changes
-3. move *_SERVICE_URL to private      ← service by service, only after 2
+2. bind '::' on the six               ← correct and harmless; NOT a prerequisite
+3. move *_SERVICE_URL to private      ← service by service
 4. remove the public domains          ← last, only after 3 is proven
 ```
 
-This is the August deploy lesson again, from the other side: there, a broken name was
-load-bearing and fixing it removed an accidental safety net. Here, a broken bind is
-load-bearing — it is *why* the public path exists — and removing the public path before
-fixing the bind is the same mistake with the pieces swapped. **Ask what a defect is
-holding up before you take it away.**
+Step 2 shipped and stays: `'::'` covers IPv4 and IPv6, so it is right under either
+behaviour and costs nothing. What it is **not** is the gate the first write-up made it —
+step 3 would not have broken anything without it.
+
+Steps 3 and 4 remain ordered for their own reasons: a variable change rolls back in
+seconds, and removing a public domain does not — Railway issues a **new, differently
+named** domain if you regenerate it.
 
 ### Shipped (tec-core-backend #320) — steps 1 and 2
 
