@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 17 September 2026 (Session 56m — the whole backend was on the open internet; global x-internal-key on all 11 services)
+**Last Updated:** 18 September 2026 (Session 56m — backend off the open internet: global x-internal-key on all 11 services + private networking)
 
 ---
 
@@ -5195,6 +5195,103 @@ it can happen.
 So the fix is two-thirds a known pattern and one-third a design change. Not scheduled.
 Recorded because the failure is **silent and financial**: nobody reports a purchase that
 never appeared as loudly as they report one that failed.
+
+
+### ADR-005 step 3 — all 11 services moved to the private network
+
+The gateway's `*_SERVICE_URL` values now point at `*.railway.internal` instead of the
+public `*.up.railway.app` hosts. Internal traffic stops leaving the platform.
+
+```
+auth          http://triumphant-spirit.railway.internal:5001
+wallet        http://wallet-service.railway.internal:5002
+payment       http://payment-service.railway.internal:5003
+assets        http://tec-core-backend-a5f9.railway.internal:5004
+identity      http://identity-service.railway.internal:5005
+notification  http://notification-service.railway.internal:5006
+storage       http://tec-core-backend-4aa8.railway.internal:5007
+kyc           http://kyc-service.railway.internal:5008
+commerce      http://commerce-service.railway.internal:5009
+realtime      http://realtime-service.railway.internal:5010
+analytics     http://analytics-service.railway.internal:5011
+```
+
+The same six that `tec-identity-service` calls directly (auth · commerce · payment ·
+asset · kyc · notification) were updated in its variables too.
+
+### The check that made this tractable — and it was free
+
+**The gateway prints its entire routing table at boot.** Eleven
+`[HPM] Mapped /api/<service> → <url>` lines, every deploy, already there:
+
+```
+[HPM] Mapped /api/kyc → https://kyc-service.railway.internal:5008
+```
+
+One screenshot of that log audits the whole migration at once — no guessing which
+variable took, no checking eleven panes. When the eleven were changed in one sitting
+rather than one at a time, this log is what turned "something is broken somewhere" into
+a defect found in seconds.
+
+**Record the log you already have before inventing a verification step.** The instinct
+was to verify service by service through the UI; the answer was printed at boot the whole
+time.
+
+### The defect: one character
+
+Ten entries read `http://`. One read **`https://`** — kyc.
+
+The private network terminates no TLS, so every KYC call would have failed. And it would
+have failed **only on the KYC screen** — login, payments, wallet, notifications all fine,
+nothing in a health check, nothing anywhere until a user tried to verify. A typo with a
+blast radius of one feature and a discovery time of "whenever somebody happens to look".
+
+> Third time this session a single character was the whole fault: the trailing space in
+> three Railway service names (August), the `var` inside an object literal that killed
+> `Pi.init` in two apps, and now an `s`. **The platform's most common defect shape is one
+> character in a string nobody re-reads** — which is exactly the class a printed routing
+> table catches and a code review does not, because none of it is in the repo.
+
+### A false alarm, recorded because the reasoning was wrong
+
+Two entries use odd names — `tec-core-backend-a5f9` (assets) and `tec-core-backend-4aa8`
+(storage) — where the rest are `<service>.railway.internal`. From that, the guess was
+that one private domain had been pasted for several services with only the port changed,
+which would have made ten of the eleven wrong.
+
+It was **not** that. `a5f9` and `4aa8` are two different domains belonging to two
+different services; Railway simply named them from the repo at a time when it named
+things differently (`triumphant-spirit` on auth is a third generation of the same). The
+inconsistency was cosmetic and the mapping was right.
+
+**A pattern that looks wrong is a question, not a finding.** The log had the answer —
+different suffixes, different services — and the guess was made before reading it
+carefully.
+
+### Verification status, stated per claim rather than as one word
+
+| Claim | Status |
+|---|---|
+| Login over the private network | ✅ `[AuthService] Pi login: yas55eR82` — twice, after the switch |
+| Payment + notification | ✅ `Created: PAYMENT for user …` → `Payment notification sent`, twice |
+| Gateway routes all 11 privately | ✅ read from its own boot log |
+| **KYC path** | ⚠️ corrected, **not yet exercised** — open `/hub/kyc` once |
+| **identity-service's own 6** | ⚠️ applied, **not yet exercised**. Not risky while the public domains still exist: if one were wrong, identity would simply… still work, because the old hosts answer. That safety net disappears at step 4 |
+
+### What is left
+
+Step **4** — removing the public domains — and it is now the one that matters, because
+until it happens the services remain reachable from the internet and step 3 has only
+changed which door the gateway knocks on.
+
+**Two domains stay, permanently:** `tec-api-gateway` (the Vercel apps call it) and
+`tec-realtime-service` (the browser opens its WebSocket directly — the gateway proxies no
+upgrades). Removing either is an outage, not a hardening.
+
+And **before payment-service's domain is removed**, the Pi Developer Portal's webhook URL
+must be confirmed to point at the gateway rather than at payment-service directly. The
+gateway carries an explicit public exemption for `^/api/payments/webhook`, which is strong
+evidence it does — but the Portal is the authority and has not been read.
 
 
 ## UPDATE PROTOCOL
