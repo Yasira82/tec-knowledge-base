@@ -5485,11 +5485,15 @@ and the only difference between those two states, that day, was whether anyone r
 warnings under the startup banner.
 
 **`Rate-limit store error – allowing request`** — eight minutes after boot, immediately
-before `Creating payment`. `createStore()` picks Redis or memory ONCE, at boot; when Redis
-was chosen and then stumbled, every request landed in the catch and was waved through. The
-limiter was not degraded — it was **absent**, on the service that moves real Pi, with
-initiate/confirm/cancel (5/5/3 per window) all off simultaneously, for as long as Redis
-stayed unhappy.
+before `Creating payment`. Every request that hit it landed in the catch and was waved
+through. The limiter was not degraded — it was **absent**, on the service that moves real
+Pi, with initiate/confirm/cancel (5/5/3 per window) all off simultaneously.
+
+> **Correction, made the same day by the next deploy's log:** this section first said
+> "when Redis was chosen and then stumbled", i.e. an occasional blip. **Wrong — it was
+> deterministic, every boot, first request.** See *"The log that corrected the diagnosis"*
+> below. The fix in #323 was right regardless; the causal story was not, and a wrong cause
+> written in the source of truth is how the next session inherits a wrong mental model.
 
 > The original `next()` was **right that a Pi payment must not be refused because Redis
 > hiccuped, and wrong that this is a choice between refusing and not counting.** The
@@ -5542,6 +5546,68 @@ reading as coverage for years.
 Kept deliberately: `PAYMENT_WEBHOOK_RECEIVED` in the audit event union. Nothing writes it
 now, but audit rows are immutable (Invariant #5) and rows already in the table carry that
 string — **dropping it would leave written history that the type system says cannot exist.**
+
+### The log that corrected the diagnosis (tec-core-backend #324)
+
+Deploying #323 produced the evidence that its own explanation was wrong. The new line
+appeared exactly where the old one had been:
+
+```
+14:40:39  Payment Service running on port 5003
+14:40:39  Using Redis idempotency store          ← Redis, healthy
+14:40:39  ✅ Redis publisher connected            ← Redis, healthy
+14:41:09  Rate-limit store error – falling back to in-memory counting
+14:41:09  Creating payment
+14:41:34  Payment completed successfully
+```
+
+Two facts in one boot: **Redis was fine**, and the rate-limit store failed anyway. One
+error, at the first payment, never again that boot. Not a blip — **a race the first
+command loses every single time**, by construction:
+
+- the store was built LAZILY, so the ioredis client was constructed **by** the first
+  request that needed it;
+- `lazyConnect: true` leaves it in status `wait` until something is sent;
+- ioredis writes only when the status is `ready`, and `enableOfflineQueue: false` rejects
+  anything else on the spot (`Redis.js:376`).
+
+Construct and command in the same tick and the command cannot win. **So the exposure
+before #323 was worse than #323 itself claimed: the first payment after EVERY deploy ran
+with the limiter switched off — not rarely, always.**
+
+> **The control was in the same service the whole time.** `idempotency.middleware.ts` uses
+> `enableOfflineQueue: true`, no `lazyConnect`, and is built at boot — and has never
+> failed this way. Same service, same Redis, same file layout. **When one client fails and
+> its sibling does not, the variable is not the dependency.** That comparison was available
+> from the first log and would have produced the right answer immediately; "Redis
+> stumbled" was reached instead because it is the explanation that needs no reading.
+
+Fixed in #324 by both halves — `client.connect()` at construction and
+`initRateLimitStore()` at boot — because either alone still loses the race.
+`enableOfflineQueue: false` was KEPT, with the reason now written beside it: a queued
+command makes a payment wait on an unhealthy Redis, and failing instantly is what lets the
+in-memory fallback take over invisibly. **That is only the right trade because #323 made
+the catch count instead of waving the request through** — the same option was a liability
+before and is correct after, without changing.
+
+### Runtime Verified — both fixes, and the path the webhook removal now leans on
+
+Deploy `8ea0b06e`, 18 Sep 2026 14:56 GMT+3:
+
+| Expected | Observed |
+|----------|----------|
+| `Rate-limit store initialised` at boot | ✅ 14:56:58, beside `Idempotency store initialised` |
+| the error line GONE from the first payment | ✅ two real payments (12π, 1π) — **no `Rate-limit store error` anywhere** |
+| the reconciliation cron actually runs | ✅ 15:00:00 on the hour — `Starting stale payment reconciliation`, cutoffs 11:30/11:00, `No stale payments found`, `reconciledCount: 0` |
+
+That third row is the one that matters beyond this fix. Removing the Pi webhook put weight
+on the hourly cron, and the log shows it **firing on schedule and completing** — so the
+path chosen as the replacement is observed working, not assumed. `[Runtime Verified]`.
+
+> A display detail worth knowing before it costs someone an hour: Railway's log pane does
+> **not** always list lines in timestamp order — in this deploy `Payment completed
+> successfully` (`.165`) is rendered ABOVE `Completing payment` (`.027`). The timestamps
+> are the truth; the ordering is ingestion batching. **Read the times, not the rows.**
 
 
 ## UPDATE PROTOCOL
