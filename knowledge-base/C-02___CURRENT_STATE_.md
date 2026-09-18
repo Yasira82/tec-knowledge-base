@@ -5445,6 +5445,13 @@ The fix, when the Portal is read, is to point the webhook at the **gateway** (wh
 carries an explicit public exemption for `^/api/payments/webhook`) — **not** to restore
 payment's domain.
 
+> **SUPERSEDED the same session — the webhook route was removed instead.** The Portal
+> question stopped mattering: the route had never settled a payment in its life
+> (`PI_WEBHOOK_SECRET` was never set, so its HMAC could not be computed and every call
+> was answered 401), while the exemption it carried was real. See *"A dead route that
+> was still holding a door open"* below. The gateway's `^/api/payments/webhook`
+> exemption is gone too — do not point anything at it.
+
 ### A naming trap that cost a wrong instruction
 
 `tec-commerce` (the merchant app: products, orders) has **no Pro feature and never had
@@ -5468,6 +5475,73 @@ and are discoverable nowhere in the repo: `http` not `https`, the port comes fro
 Three service READMEs said "Direct service URLs are internal only" — policy, and now
 physics. The gateway README's deploy step said Railway exposes the service publicly: true
 for that one service and for no other here.
+
+### Two lines in one boot log, neither of them an error (tec-core-backend #323)
+
+The payment-service boot on 18 Sep 2026 printed nothing that looked like a failure. It
+printed two lines that read like housekeeping, and each described something worth acting
+on. **A service that is not crashing is not the same as a service that is doing its job**,
+and the only difference between those two states, that day, was whether anyone read the
+warnings under the startup banner.
+
+**`Rate-limit store error – allowing request`** — eight minutes after boot, immediately
+before `Creating payment`. `createStore()` picks Redis or memory ONCE, at boot; when Redis
+was chosen and then stumbled, every request landed in the catch and was waved through. The
+limiter was not degraded — it was **absent**, on the service that moves real Pi, with
+initiate/confirm/cancel (5/5/3 per window) all off simultaneously, for as long as Redis
+stayed unhappy.
+
+> The original `next()` was **right that a Pi payment must not be refused because Redis
+> hiccuped, and wrong that this is a choice between refusing and not counting.** The
+> in-memory store was already in that file, written, unused after boot. Falling back to it
+> keeps the flood bounded AND lets the legitimate payment through. Per-instance, so the
+> effective limit during an outage is (instances × max) instead of (max) — weaker than
+> Redis, unboundedly stronger than nothing. **A fallback that is not written down as a
+> fallback is a hole with a comment over it.**
+
+The tests were then run against the **bug**, not only against the fix: reverting the catch
+block to the old `next()` turns 2 of the 5 red. A test that stays green on the broken
+version is not evidence about the fix — it is a green tick.
+
+### A dead route that was still holding a door open
+
+**`PI_WEBHOOK_SECRET not set — signature validation skipped`** was the second line, and it
+said the opposite of what the code did: `validatePiSignature` returned `false` and the
+caller answered **401**. Fail-closed and correct — but read alone, on a route the gateway
+exempts from JWT, *"validation skipped"* describes a service accepting an unsigned webhook
+from anyone. **Someone could reasonably have read that as a live P0 and acted on it.**
+
+Investigating it produced a decision, and the CEO made it: **let the cron settle incomplete
+payments — the webhook is not needed.** The route was removed.
+
+What made that easy is what the investigation turned up. The route had **never settled a
+payment**: no secret, no HMAC, 401 to everything. What it *did* have was an exemption —
+`WEBHOOK_PATHS` skipped `validateInternalKey`, making those three paths the only ones on
+the payment service that did not require `x-internal-key`, with two matching gateway
+`PUBLIC_ROUTES` entries written as **prefixes**, five lines below a comment explaining why
+a prefix under a money path is dangerous.
+
+> **A capability that never worked still costs whatever it was granted.** The webhook
+> delivered nothing for its entire life and held the only gap in the guard on the service
+> that moves real Pi. Nothing had grown into that opening — which is the argument for
+> closing it now rather than the argument for leaving it.
+
+Nothing is lost operationally. Two paths settle an incomplete payment and both were
+already doing the work: `POST /payments/resolve-incomplete`, which the browser's Pi SDK
+triggers via `onIncompletePaymentFound` (immediate, and the path users actually hit), and
+the hourly reconciliation cron, which asks **Pi itself** about anything stale and completes
+or cancels from Pi's own answer. **The stated cost:** a payment Pi completed but whose
+`complete` call we missed now waits for the sweep instead of seconds. That is the trade
+that was chosen, not a detail that slipped through.
+
+Also removed: 249 lines of integration test for that route which **had never run** — the
+whole `__tests__/integration/` directory sits in `testPathIgnorePatterns`. **A test file
+that no runner matches is documentation with a `.test.ts` extension**, and it had been
+reading as coverage for years.
+
+Kept deliberately: `PAYMENT_WEBHOOK_RECEIVED` in the audit event union. Nothing writes it
+now, but audit rows are immutable (Invariant #5) and rows already in the table carry that
+string — **dropping it would leave written history that the type system says cannot exist.**
 
 
 ## UPDATE PROTOCOL
