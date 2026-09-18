@@ -5294,6 +5294,90 @@ gateway carries an explicit public exemption for `^/api/payments/webhook`, which
 evidence it does — but the Portal is the authority and has not been read.
 
 
+### The guard found a service that was effectively unauthenticated
+
+Step 3 finished with two screens broken: KYC (`502`) and Notifications (`500`). KYC was
+the `https://` typo above. **Notifications was something else entirely, and it is the most
+important thing this whole piece of work produced.**
+
+`tec-notification-service`'s **`INTERNAL_SECRET` did not match the gateway's.**
+
+It had presumably not matched for a long time. Nobody could know, because until the
+guard shipped **that service never checked the key**:
+
+```
+gateway sends x-internal-key  →  notification ignores it, answers normally
+anyone else sends anything    →  notification answers normally
+```
+
+The secret meant to authenticate the service was a **dead value** — present in its
+variables, read by no line of code — while the service sat on a public Railway domain.
+**It was open, and the thing documented as protecting it was decorative.**
+
+> **The guard did not cause an outage. It ended one.**
+>
+> The `500` that cost four rounds of diagnosis was the first time this platform was
+> *capable* of reporting that two secrets disagreed. Before it, there was no code path
+> by which that fact could ever have reached anybody.
+
+#320's PR body argued the per-route pattern "holds right up until one route forgets."
+The real state was worse: **every** route had forgotten, on a service that checked
+nothing at all.
+
+**Where the fleet stands on this specific question:**
+
+| Service | Before the guard | Secret verified against the gateway? |
+|---|---|---|
+| kyc | no check anywhere | ✅ matched — worked first try |
+| **notification** | no check anywhere | ❌ **drifted — fixed 18 Sep** |
+| realtime | no check anywhere | ⬜ **untested** — see below |
+| the other 8 | per-route or global | ✅ implied: a drifted secret would already have been failing on the routes that did check |
+
+**`realtime` is the one still unknown.** If its secret has drifted too, `/presence/*`
+(who is online, who is typing) is failing right now — and failing **invisibly**, because
+nobody reports "a contact didn't show as online" the way they report a red error box.
+Worth one deliberate check.
+
+### Why it took four rounds, and the fix so it doesn't next time
+
+The Hub showed `500`. The gateway had relayed a `403`. Ten BFF routes did this:
+
+```ts
+if (!res.ok) throw new Error(`Gateway ${res.status}`);   // status discarded here
+```
+
+A plain `Error` carries no `status`, so `createHandler`'s final branch answered
+`500 "Something went wrong"` — **the same code a gateway that cannot reach the service
+at all produces.** Two unrelated causes, one number on screen, and the one fact that
+separates them in seconds was thrown away one line before it was needed.
+
+The mechanism to do it right already existed (a 4xx with `status` attached passes
+through — added earlier for pioneer refusals). The call sites just never used it.
+Fixed in **tec-app #239**: 13 throws across 10 routes now attach the status, so a
+refusal reports **403** and an unreachable upstream still reports **500**.
+
+> **A diagnostic that collapses two causes into one number is not a diagnostic.**
+> This one was one line from being right, in code that already had the machinery.
+
+### And a change that was written, tested, and deliberately backed out
+
+Relaying a 5xx's *status* too (keeping the message generic) looked obviously better —
+502 "cannot reach" vs 500 "something else" — and six tests went red.
+
+One of them, `createHandler.errors.test.ts`, pins `expect(res.status).toBe(500)` for an
+upstream 502, beside a comment saying a 5xx body may name hosts, drivers and stack
+frames. The generic *message* satisfied that comment's stated reason; the *assertion*
+said something narrower, and it was written on purpose.
+
+**It was reverted.** The distinction that actually mattered — refused vs unreachable —
+is won by the 4xx path alone.
+
+> Rewriting another test's expectation to make new code pass is how a deliberate
+> decision gets deleted by somebody who only read half of it. **Six red tests were the
+> signal, not the obstacle** — the same rule as the August deploy fix, arriving from the
+> other direction: there, a defect was load-bearing; here, an assertion was.
+
+
 ## UPDATE PROTOCOL
 
 ```
