@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 17 September 2026 (Session 56m — the whole backend was on the open internet; global x-internal-key on all 11 services)
+**Last Updated:** 18 September 2026 (Session 56m — backend off the open internet: global x-internal-key on all 11 services + private networking)
 
 ---
 
@@ -5133,6 +5133,249 @@ taken. That is the date that matters, not the one in the warning.
 Not scheduled here. Recorded with its source (a real production log, not a changelog
 someone remembered) so the next session finds it before a Dependabot PR fails for a
 reason nobody connects to a Node version.
+
+
+### ADR-005 steps 1 + 2 — `[Runtime Verified]`
+
+Two real Pi payments went through after the guard deployed, on the two apps least
+like the rest of the fleet, and neither was refused.
+
+| App | What was paid | What SHOULD happen | What happened |
+|-----|---------------|--------------------|---------------|
+| **System** | `system_supporter`, 1π | Payment completes and **grants nothing** — C-110: SYSTEM sells no governance authority; the contribution exists for the Portal's "Process a Transaction" step | ✅ paid, no Pro |
+| **Assets** | an NFT mint / marketplace buy | The **item appears** — Assets has no subscription at all | ✅ item appeared, no error |
+
+The System result is the one worth spelling out: **"no Pro appeared" is the PASS**, and
+Pro appearing would have been the failure — a leak in the activation pattern. A check
+whose success looks like nothing happening is easy to read backwards.
+
+This is what the test suites could not say. They proved the guard refuses what it should;
+only production could prove **nothing legitimate was missing the header**. Steps 1 and 2
+move from `[Code Verified]` to `[Runtime Verified]`.
+
+Steps 3 (variables → private) and 4 (remove the public domains) are unchanged and remain
+ops decisions.
+
+### NEW — Assets has no repair path for a paid purchase (open)
+
+Found while reading Assets to answer "did the payment work". All three of its buy flows
+have the same shape:
+
+```
+pay with Pi  →  a SEPARATE follow-up fetch from the browser  →  the thing is recorded
+```
+
+| Button | Follow-up call |
+|--------|----------------|
+| Mint Domain as NFT | `POST /api/bff/assets/mint-as-nft` |
+| Mint NFT (upload) | `POST /api/bff/nft/register` |
+| Buy listing | `POST /api/bff/marketplace/buy` |
+
+If that second call never lands — signal drops, the app is closed, anything returns an
+error — **the π is gone and nothing was recorded**, and no consumer repairs it.
+`tec-asset-service` consumes `payment.completed.v1` **nowhere**; the services that do are
+commerce, identity, analytics, wallet and payment.
+
+**This is Session 26's gap in a different app.** There, ~19 apps took real Pi and
+activated no subscription because commerce had no consumer. The fix was an event
+consumer, and it works. Assets never got the equivalent because its purchases are
+one-off rather than subscriptions — which changes who pays for the failure, not whether
+it can happen.
+
+**How much of it is actually repairable, stated honestly rather than optimistically:**
+
+- **Domain mint** (`asset_id`) and **marketplace buy** (`listing_id`) — the payment
+  metadata already carries the identifier, so a consumer could complete these from the
+  event alone.
+- **NFT upload** — it **cannot**. The follow-up sends `name`, `description`, `imageUrl`,
+  `key` and `mimeType`, and none of that is in the payment metadata; at the moment of
+  payment it exists only in the browser. Repairing this one means persisting the draft
+  BEFORE the payment, not adding a consumer after it.
+
+So the fix is two-thirds a known pattern and one-third a design change. Not scheduled.
+Recorded because the failure is **silent and financial**: nobody reports a purchase that
+never appeared as loudly as they report one that failed.
+
+
+### ADR-005 step 3 — all 11 services moved to the private network
+
+The gateway's `*_SERVICE_URL` values now point at `*.railway.internal` instead of the
+public `*.up.railway.app` hosts. Internal traffic stops leaving the platform.
+
+```
+auth          http://triumphant-spirit.railway.internal:5001
+wallet        http://wallet-service.railway.internal:5002
+payment       http://payment-service.railway.internal:5003
+assets        http://tec-core-backend-a5f9.railway.internal:5004
+identity      http://identity-service.railway.internal:5005
+notification  http://notification-service.railway.internal:5006
+storage       http://tec-core-backend-4aa8.railway.internal:5007
+kyc           http://kyc-service.railway.internal:5008
+commerce      http://commerce-service.railway.internal:5009
+realtime      http://realtime-service.railway.internal:5010
+analytics     http://analytics-service.railway.internal:5011
+```
+
+The same six that `tec-identity-service` calls directly (auth · commerce · payment ·
+asset · kyc · notification) were updated in its variables too.
+
+### The check that made this tractable — and it was free
+
+**The gateway prints its entire routing table at boot.** Eleven
+`[HPM] Mapped /api/<service> → <url>` lines, every deploy, already there:
+
+```
+[HPM] Mapped /api/kyc → https://kyc-service.railway.internal:5008
+```
+
+One screenshot of that log audits the whole migration at once — no guessing which
+variable took, no checking eleven panes. When the eleven were changed in one sitting
+rather than one at a time, this log is what turned "something is broken somewhere" into
+a defect found in seconds.
+
+**Record the log you already have before inventing a verification step.** The instinct
+was to verify service by service through the UI; the answer was printed at boot the whole
+time.
+
+### The defect: one character
+
+Ten entries read `http://`. One read **`https://`** — kyc.
+
+The private network terminates no TLS, so every KYC call would have failed. And it would
+have failed **only on the KYC screen** — login, payments, wallet, notifications all fine,
+nothing in a health check, nothing anywhere until a user tried to verify. A typo with a
+blast radius of one feature and a discovery time of "whenever somebody happens to look".
+
+> Third time this session a single character was the whole fault: the trailing space in
+> three Railway service names (August), the `var` inside an object literal that killed
+> `Pi.init` in two apps, and now an `s`. **The platform's most common defect shape is one
+> character in a string nobody re-reads** — which is exactly the class a printed routing
+> table catches and a code review does not, because none of it is in the repo.
+
+### A false alarm, recorded because the reasoning was wrong
+
+Two entries use odd names — `tec-core-backend-a5f9` (assets) and `tec-core-backend-4aa8`
+(storage) — where the rest are `<service>.railway.internal`. From that, the guess was
+that one private domain had been pasted for several services with only the port changed,
+which would have made ten of the eleven wrong.
+
+It was **not** that. `a5f9` and `4aa8` are two different domains belonging to two
+different services; Railway simply named them from the repo at a time when it named
+things differently (`triumphant-spirit` on auth is a third generation of the same). The
+inconsistency was cosmetic and the mapping was right.
+
+**A pattern that looks wrong is a question, not a finding.** The log had the answer —
+different suffixes, different services — and the guess was made before reading it
+carefully.
+
+### Verification status, stated per claim rather than as one word
+
+| Claim | Status |
+|---|---|
+| Login over the private network | ✅ `[AuthService] Pi login: yas55eR82` — twice, after the switch |
+| Payment + notification | ✅ `Created: PAYMENT for user …` → `Payment notification sent`, twice |
+| Gateway routes all 11 privately | ✅ read from its own boot log |
+| **KYC path** | ⚠️ corrected, **not yet exercised** — open `/hub/kyc` once |
+| **identity-service's own 6** | ⚠️ applied, **not yet exercised**. Not risky while the public domains still exist: if one were wrong, identity would simply… still work, because the old hosts answer. That safety net disappears at step 4 |
+
+### What is left
+
+Step **4** — removing the public domains — and it is now the one that matters, because
+until it happens the services remain reachable from the internet and step 3 has only
+changed which door the gateway knocks on.
+
+**Two domains stay, permanently:** `tec-api-gateway` (the Vercel apps call it) and
+`tec-realtime-service` (the browser opens its WebSocket directly — the gateway proxies no
+upgrades). Removing either is an outage, not a hardening.
+
+And **before payment-service's domain is removed**, the Pi Developer Portal's webhook URL
+must be confirmed to point at the gateway rather than at payment-service directly. The
+gateway carries an explicit public exemption for `^/api/payments/webhook`, which is strong
+evidence it does — but the Portal is the authority and has not been read.
+
+
+### The guard found a service that was effectively unauthenticated
+
+Step 3 finished with two screens broken: KYC (`502`) and Notifications (`500`). KYC was
+the `https://` typo above. **Notifications was something else entirely, and it is the most
+important thing this whole piece of work produced.**
+
+`tec-notification-service`'s **`INTERNAL_SECRET` did not match the gateway's.**
+
+It had presumably not matched for a long time. Nobody could know, because until the
+guard shipped **that service never checked the key**:
+
+```
+gateway sends x-internal-key  →  notification ignores it, answers normally
+anyone else sends anything    →  notification answers normally
+```
+
+The secret meant to authenticate the service was a **dead value** — present in its
+variables, read by no line of code — while the service sat on a public Railway domain.
+**It was open, and the thing documented as protecting it was decorative.**
+
+> **The guard did not cause an outage. It ended one.**
+>
+> The `500` that cost four rounds of diagnosis was the first time this platform was
+> *capable* of reporting that two secrets disagreed. Before it, there was no code path
+> by which that fact could ever have reached anybody.
+
+#320's PR body argued the per-route pattern "holds right up until one route forgets."
+The real state was worse: **every** route had forgotten, on a service that checked
+nothing at all.
+
+**Where the fleet stands on this specific question:**
+
+| Service | Before the guard | Secret verified against the gateway? |
+|---|---|---|
+| kyc | no check anywhere | ✅ matched — worked first try |
+| **notification** | no check anywhere | ❌ **drifted — fixed 18 Sep** |
+| realtime | no check anywhere | ⬜ **untested** — see below |
+| the other 8 | per-route or global | ✅ implied: a drifted secret would already have been failing on the routes that did check |
+
+**`realtime` is the one still unknown.** If its secret has drifted too, `/presence/*`
+(who is online, who is typing) is failing right now — and failing **invisibly**, because
+nobody reports "a contact didn't show as online" the way they report a red error box.
+Worth one deliberate check.
+
+### Why it took four rounds, and the fix so it doesn't next time
+
+The Hub showed `500`. The gateway had relayed a `403`. Ten BFF routes did this:
+
+```ts
+if (!res.ok) throw new Error(`Gateway ${res.status}`);   // status discarded here
+```
+
+A plain `Error` carries no `status`, so `createHandler`'s final branch answered
+`500 "Something went wrong"` — **the same code a gateway that cannot reach the service
+at all produces.** Two unrelated causes, one number on screen, and the one fact that
+separates them in seconds was thrown away one line before it was needed.
+
+The mechanism to do it right already existed (a 4xx with `status` attached passes
+through — added earlier for pioneer refusals). The call sites just never used it.
+Fixed in **tec-app #239**: 13 throws across 10 routes now attach the status, so a
+refusal reports **403** and an unreachable upstream still reports **500**.
+
+> **A diagnostic that collapses two causes into one number is not a diagnostic.**
+> This one was one line from being right, in code that already had the machinery.
+
+### And a change that was written, tested, and deliberately backed out
+
+Relaying a 5xx's *status* too (keeping the message generic) looked obviously better —
+502 "cannot reach" vs 500 "something else" — and six tests went red.
+
+One of them, `createHandler.errors.test.ts`, pins `expect(res.status).toBe(500)` for an
+upstream 502, beside a comment saying a 5xx body may name hosts, drivers and stack
+frames. The generic *message* satisfied that comment's stated reason; the *assertion*
+said something narrower, and it was written on purpose.
+
+**It was reverted.** The distinction that actually mattered — refused vs unreachable —
+is won by the 4xx path alone.
+
+> Rewriting another test's expectation to make new code pass is how a deliberate
+> decision gets deleted by somebody who only read half of it. **Six red tests were the
+> signal, not the obstacle** — the same rule as the August deploy fix, arriving from the
+> other direction: there, a defect was load-bearing; here, an assertion was.
 
 
 ## UPDATE PROTOCOL
