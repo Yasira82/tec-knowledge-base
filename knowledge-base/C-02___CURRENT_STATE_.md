@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 18 September 2026 (Session 56m — backend off the open internet: global x-internal-key on all 11 services + private networking)
+**Last Updated:** 18 September 2026 (Session 56m — ADR-005 CLOSED: global x-internal-key on all 11 services, private networking, 9 public domains removed)
 
 ---
 
@@ -5376,6 +5376,98 @@ is won by the 4xx path alone.
 > decision gets deleted by somebody who only read half of it. **Six red tests were the
 > signal, not the obstacle** — the same rule as the August deploy fix, arriving from the
 > other direction: there, a defect was load-bearing; here, an assertion was.
+
+
+### ADR-005 step 4 — nine public domains removed. The violation is closed.
+
+```
+Before:  11 services reachable from the internet; every gateway→service call left
+         the platform and came back over the open network.
+After:    2 services reachable, both deliberately.
+```
+
+| Still public | Why it must be |
+|---|---|
+| `tec-api-gateway` | Every client enters here. The Vercel apps call it by name. |
+| `tec-realtime-service` | **The browser opens its WebSocket DIRECTLY.** The gateway is configured without `ws: true`, so upgrades are never proxied and `onProxyReq` — which injects the internal key — fires for HTTP only. A socket client can neither reach it through the gateway nor be handed a key. Removing this domain is an outage, not a hardening. |
+
+The other nine now return Railway's 404 and show **"Unexposed service"**.
+
+### The canary earned its place
+
+`storage` went first, alone, and was verified three ways before anything else moved:
+the service stayed **Active without a redeploy**; Public Networking emptied while
+**Private Networking was untouched** (`IPv4 & IPv6`, "Ready to talk privately"); and an
+image loaded in a live app. Only then did the remaining eight follow.
+
+That is the opposite of how step 3 was done — eleven variables changed in one sitting,
+then hours spent separating a `https://` typo from a drifted secret from a gateway that
+had not redeployed. **The same person, the same afternoon, two orders of operation, and
+the difference was entire.**
+
+### Removing the domain removes the port with it — and that is fine
+
+The `→ Port 5007` shown beside the public domain disappeared when the domain did, which
+looks alarming and is not: that number was part of the **edge forwarding rule**, not a
+setting. The process still listens on 5007 because `PORT` is its own variable, untouched
+— proved immediately by the image that loaded after the removal.
+
+**Where the port lives when the domain is gone: `Variables → PORT`.** Not the code's
+fallback (`PORT ?? 5010` on storage, which runs on 5007 and never reaches it).
+
+### Pre-flight: what the search had to cover, and nearly didn't
+
+Nothing depended on a service's public domain. But the first scan was scoped to
+`tec-core-backend` alone, and reported "clean" — while **22 references in the app
+repos' CI workflows** had not been looked at. A background job searching all repos,
+started earlier and still running, surfaced them.
+
+They turned out to be a build-time env fallback pointing at the **gateway**, which stays
+public. Harmless — but harmless by luck, not by method. **"I searched" is a claim about
+the search's scope, and a clean result from a narrow scope reads exactly like a clean
+result from a complete one.**
+
+### What is NOT proven, stated rather than implied
+
+`payment`'s domain was removed before the Pi Developer Portal's webhook URL was read. A
+**successful** payment does not exercise it — that path is create → approve → complete
+through the gateway; the webhook is `/payments/webhook/incomplete`, which Pi calls for
+payments left hanging.
+
+**The exposure is small, and the reason is worth knowing:** `tec-payment-service` runs
+its own hourly reconciliation cron (`RECONCILE_CRON`, default `0 * * * *`) that asks **Pi
+itself** what happened to every stale `created`/`approved` payment and completes or
+cancels accordingly. That is an OUTBOUND call needing no inbound domain. So if the
+webhook is now dead, stale payments still settle — **within the hour instead of
+immediately**. Slower, not lost.
+
+The fix, when the Portal is read, is to point the webhook at the **gateway** (which
+carries an explicit public exemption for `^/api/payments/webhook`) — **not** to restore
+payment's domain.
+
+### A naming trap that cost a wrong instruction
+
+`tec-commerce` (the merchant app: products, orders) has **no Pro feature and never had
+one** — it is the same generation as `tec-assets` and `tec-ecommerce`, all three of which
+also sit outside the tec-ui v3 palette. `tec-commerce-service` is what owns `Subscription`
+for the whole fleet.
+
+The step-3 checklist told the operator to verify `COMMERCE_SERVICE_URL` by looking for the
+★ Pro card "in Commerce". The *test* was right — that card in any app is served by
+commerce-service — but the sentence named the app. **A service and an app one word apart
+will be confused, and the checklist is where that costs someone an afternoon.**
+
+### Docs reconciled (tec-core-backend)
+
+The root README's "Live URLs" listed all eleven; nine of them now resolve to nothing. It
+names the two that remain and why, and records the three facts that cost time in step 3
+and are discoverable nowhere in the repo: `http` not `https`, the port comes from
+`Variables → PORT`, and the private domain is frequently **not** `<service>.railway.internal`
+(`auth` is `triumphant-spirit`; `storage` and `asset` are `tec-core-backend-<hash>`).
+
+Three service READMEs said "Direct service URLs are internal only" — policy, and now
+physics. The gateway README's deploy step said Railway exposes the service publicly: true
+for that one service and for no other here.
 
 
 ## UPDATE PROTOCOL
