@@ -26,6 +26,11 @@ The coverage screen carries its own caveat next to its own numbers.
 
 **Seven findings.** Three of them make the page state something the system does not do.
 
+> **All seven are now closed** — tec-app `dc24a62`, tec-core-backend `6e9e533`.
+> F3 was a decision, not a repair, and the owner took it: **the Founding badge is open
+> to any Pi account.** So the claim came off the page rather than the gate going into
+> the code. See *The decision on F3* below.
+
 | # | Severity | Finding | Fires when |
 |---|----------|---------|-----------|
 | **F1** | **P1** | The Quest target is derived from a list that moves; the server's is frozen | The 25th app ships, or one app is taken off `live` |
@@ -344,19 +349,94 @@ produces the right outcome with more work.**
 
 ---
 
+## The decision on F3 — and what it costs
+
+F3 was the only finding that could not be repaired, because there was no "correct"
+state to restore: the page, the FAQ and the code each described a different campaign,
+and somebody had to say which one was real.
+
+**The owner's decision: the badge is open to any Pi account.** No KYC gate goes into
+`recordOpen`; the condition comes off the page instead, and the FAQ — which was right
+all along — is now the surface the page agrees with.
+
+That is the better of the two, and for the reason the service already argued:
+
+> *"asking a first-time visitor for identity documents to earn a badge reads as a scam
+> and costs more trust than it buys"*
+
+A KYC gate on a free badge, at the top of a funnel, on a platform strangers are being
+asked to trust for the first time, would suppress exactly the participation the campaign
+exists to produce.
+
+**The cost, recorded rather than glossed:** the hundred places now have no anti-sybil
+control beyond *"have a Pi account"*, which is free until you verify. The report raised
+this; it is real and it is accepted.
+
+What blunts it is not the badge but the gift. `giftFoundingPro` grants a subscription
+bound to the Pi identity, and the service says why that shape was chosen:
+
+> *"a PRO month is bound to the Pi identity and cannot be sold or moved, so a hundred
+> harvested accounts are a hundred subscriptions nobody can use"*
+
+A farmed place yields a badge on an account nobody is, and six months of PRO nobody can
+spend. The cost of taking one is twenty-four real app visits. **The economics do the work
+the KYC gate would have done, without the funnel damage** — which is why this decision
+stands on its own rather than merely being the owner's call.
+
+One consequence stays true and is worth keeping in view: **the campaign's reward and the
+campaign's purpose are now deliberately decoupled.** Founding places measure completion;
+Pi's domain threshold measures verified engagement at the app. They are different
+numbers, they will diverge, and the coverage screen (F4) is where that divergence is
+read. That is the screen to watch, not the Founding counter.
+
+---
+
+## What shipped
+
+| # | Fix | Where |
+|---|-----|-------|
+| F1 | `quest_target` read from the stats response; `LIVE_DOMAINS.length` demoted to a fallback; the grid counts live apps separately | tec-app |
+| F2 | Banner reads `completed_at`; the `/open` response is believed; the local↔server difference is re-sent on load | tec-app |
+| F3 | The KYC claim removed from the page, both languages; page and FAQ now say the same thing | tec-app |
+| F4 | `arrived` + `unconfirmed` declared and rendered beside `verified` | tec-app |
+| F5 | The 6-month PRO gift named on the page, the FAQ and its structured data — worded as a period that ends | tec-app |
+| F6 | `backTo="/hub/profile"` on pioneers · feedback · kyc | tec-app |
+| F7 | `by_source` stripped from the public counter, moved to the admin `/coverage` | tec-core-backend |
+
+**Gates:** tsc 0 · vitest **2663/2663** · lint 0 errors · build clean (Hub) ·
+tsc 0 · jest **1257/1257** across 52 suites (identity-service).
+
+### On the tests
+
+`pioneers-copy.test.ts` was pinning `"Needs a Pi-verified account"` into the hero — a
+condition that was never in the code. **The tests were doing their job and holding the
+wrong sentence still.** They were rewritten to pin what is now true rather than deleted,
+because the risk they guard against is real: this page will eventually be edited by
+somebody who wants it to sound more exclusive, and "verified accounts only" is the first
+thing that reaches for.
+
+Two client tests asserted the banner firing from local state. Both now supply
+`completed_at`, and a new one pins the inverse — **local-only completion must not promise
+the badge.** Reverting either of F1 or F2 fails five tests; that was checked by actually
+reverting them, not assumed.
+
+---
+
 ## Recommended order
 
-1. **F3** — decide the KYC rule first. It is the only one of the seven that changes what
-   the campaign *is*, and F5's copy cannot be written until it is settled.
-2. **F1 + F2** — the two places the page states something the server does not. Both are
-   small; both are the kind of defect that is only discovered by the person it happened to.
-3. **F4** — the coverage dial, before the fleet deploys the reporter, so the first real
-   `arrived` numbers have somewhere to land.
-4. **F5** — the gift on the page, worded as a period that ends.
-5. **F6 + F7** — housekeeping.
+All seven are closed. What remains is operational, and the ordering is the same as the
+reward campaign's:
 
-None of this blocks the merge queue already open. All of it is between here and pointing
-a public campaign at `/pioneers`.
+1. Deploy **tec-core-backend** — it carries F7, and F1's fix depends on `quest_target`
+   reaching the page. Until it does, the page runs on its `LIVE_DOMAINS.length` fallback,
+   which is the pre-fix behaviour. Correct, and not yet the fix.
+2. Deploy the **Hub**.
+3. Deploy the **24 apps** (the arrival reporter), then watch `arrived` climb toward
+   `verified` on the coverage screen — which can now show it.
+
+> **F1 and F4 are both only half-live until step 1 and step 3.** A merged fix that
+> depends on a deploy is not a working fix, and the honest reading of the coverage screen
+> before step 3 is *"nothing has confirmed anything yet"*, not *"nobody arrived"*.
 
 ---
 
