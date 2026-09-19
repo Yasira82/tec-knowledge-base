@@ -5485,11 +5485,15 @@ and the only difference between those two states, that day, was whether anyone r
 warnings under the startup banner.
 
 **`Rate-limit store error – allowing request`** — eight minutes after boot, immediately
-before `Creating payment`. `createStore()` picks Redis or memory ONCE, at boot; when Redis
-was chosen and then stumbled, every request landed in the catch and was waved through. The
-limiter was not degraded — it was **absent**, on the service that moves real Pi, with
-initiate/confirm/cancel (5/5/3 per window) all off simultaneously, for as long as Redis
-stayed unhappy.
+before `Creating payment`. Every request that hit it landed in the catch and was waved
+through. The limiter was not degraded — it was **absent**, on the service that moves real
+Pi, with initiate/confirm/cancel (5/5/3 per window) all off simultaneously.
+
+> **Correction, made the same day by the next deploy's log:** this section first said
+> "when Redis was chosen and then stumbled", i.e. an occasional blip. **Wrong — it was
+> deterministic, every boot, first request.** See *"The log that corrected the diagnosis"*
+> below. The fix in #323 was right regardless; the causal story was not, and a wrong cause
+> written in the source of truth is how the next session inherits a wrong mental model.
 
 > The original `next()` was **right that a Pi payment must not be refused because Redis
 > hiccuped, and wrong that this is a choice between refusing and not counting.** The
@@ -5542,6 +5546,303 @@ reading as coverage for years.
 Kept deliberately: `PAYMENT_WEBHOOK_RECEIVED` in the audit event union. Nothing writes it
 now, but audit rows are immutable (Invariant #5) and rows already in the table carry that
 string — **dropping it would leave written history that the type system says cannot exist.**
+
+### The log that corrected the diagnosis (tec-core-backend #324)
+
+Deploying #323 produced the evidence that its own explanation was wrong. The new line
+appeared exactly where the old one had been:
+
+```
+14:40:39  Payment Service running on port 5003
+14:40:39  Using Redis idempotency store          ← Redis, healthy
+14:40:39  ✅ Redis publisher connected            ← Redis, healthy
+14:41:09  Rate-limit store error – falling back to in-memory counting
+14:41:09  Creating payment
+14:41:34  Payment completed successfully
+```
+
+Two facts in one boot: **Redis was fine**, and the rate-limit store failed anyway. One
+error, at the first payment, never again that boot. Not a blip — **a race the first
+command loses every single time**, by construction:
+
+- the store was built LAZILY, so the ioredis client was constructed **by** the first
+  request that needed it;
+- `lazyConnect: true` leaves it in status `wait` until something is sent;
+- ioredis writes only when the status is `ready`, and `enableOfflineQueue: false` rejects
+  anything else on the spot (`Redis.js:376`).
+
+Construct and command in the same tick and the command cannot win. **So the exposure
+before #323 was worse than #323 itself claimed: the first payment after EVERY deploy ran
+with the limiter switched off — not rarely, always.**
+
+> **The control was in the same service the whole time.** `idempotency.middleware.ts` uses
+> `enableOfflineQueue: true`, no `lazyConnect`, and is built at boot — and has never
+> failed this way. Same service, same Redis, same file layout. **When one client fails and
+> its sibling does not, the variable is not the dependency.** That comparison was available
+> from the first log and would have produced the right answer immediately; "Redis
+> stumbled" was reached instead because it is the explanation that needs no reading.
+
+Fixed in #324 by both halves — `client.connect()` at construction and
+`initRateLimitStore()` at boot — because either alone still loses the race.
+`enableOfflineQueue: false` was KEPT, with the reason now written beside it: a queued
+command makes a payment wait on an unhealthy Redis, and failing instantly is what lets the
+in-memory fallback take over invisibly. **That is only the right trade because #323 made
+the catch count instead of waving the request through** — the same option was a liability
+before and is correct after, without changing.
+
+### Runtime Verified — both fixes, and the path the webhook removal now leans on
+
+Deploy `8ea0b06e`, 18 Sep 2026 14:56 GMT+3:
+
+| Expected | Observed |
+|----------|----------|
+| `Rate-limit store initialised` at boot | ✅ 14:56:58, beside `Idempotency store initialised` |
+| the error line GONE from the first payment | ✅ two real payments (12π, 1π) — **no `Rate-limit store error` anywhere** |
+| the reconciliation cron actually runs | ✅ 15:00:00 on the hour — `Starting stale payment reconciliation`, cutoffs 11:30/11:00, `No stale payments found`, `reconciledCount: 0` |
+
+That third row is the one that matters beyond this fix. Removing the Pi webhook put weight
+on the hourly cron, and the log shows it **firing on schedule and completing** — so the
+path chosen as the replacement is observed working, not assumed. `[Runtime Verified]`.
+
+> A display detail worth knowing before it costs someone an hour: Railway's log pane does
+> **not** always list lines in timestamp order — in this deploy `Payment completed
+> successfully` (`.165`) is rendered ABOVE `Completing payment` (`.027`). The timestamps
+> are the truth; the ordering is ingestion batching. **Read the times, not the rows.**
+
+
+## Session 56n — the fleet finally received a rule it already had, and the bill explained why that matters
+
+Four threads, and they turned out to be one thread: **a platform of 29 repos pays for
+every rule twice — once to write it, and once for every repo that never received it.**
+
+### 1.3 — `/api/ready` reaches the fleet (23 apps + the template)
+
+`tec-template-base` #33 added the readiness endpoint months ago. Counted today:
+**24 apps carry `/api/health`, exactly ONE carried `/api/ready`** — the template itself.
+
+```
+health  → "am I alive?"   — ALWAYS 200, never blocks a deploy
+ready   → "can I serve?"  — 503 when a dependency it needs is unusable
+```
+
+These cannot be one endpoint. `/api/health` is deliberately incapable of failing
+(NEW-W: a liveness check that failed while the gateway was merely BUSY reported the
+platform down, and **the false alarm was the outage people saw**). Which left nothing
+able to gate a rollout or pull a broken instance out of rotation.
+
+> **Third time, same shape.** The `^1.1.0` caret trap and the Dependabot config were
+> the first two, both recorded above. **A rule that lives in the template and not in
+> the apps is a rule the fleet does not have.** Writing it down is not shipping it.
+
+Verified, not assumed: 14 apps run locally (test + typecheck green), and the other 9 —
+which had no `node_modules` in the session — were confirmed by **reading their own CI
+runs**, all green. 23/23 covered by evidence, none by inference.
+
+### The CI bill, and the arithmetic nobody had done
+
+The Actions budget hit **98% of its $65 cap with `Stop usage` armed** — one pipeline
+from freezing every open PR across the fleet. Opening 23 PRs in an hour is what pushed
+it there, which is a cost that should have been counted before the PRs, not after.
+
+`ci.yml` was five jobs. **Four of them ran `npm install`**, and — the part that had
+never been reckoned with — **GitHub bills each job ROUNDED UP TO THE MINUTE**, so a
+policy job of five seconds' greps cost a full minute. Five jobs is five roundings
+before any real work counts.
+
+Measured on Tec-Zone, same repo, same day, old run beside new:
+
+| | 5 jobs | 1 job |
+|---|---|---|
+| `npm install` | 4× (75s) | 1× (16s) |
+| actual compute | 195s | 82s |
+| **billed** | **6 min** | **2 min** |
+
+**67% off every run, same checks, nothing dropped.** Splitting bought parallelism — a
+faster red light. On a platform built by one person, wall-clock is worth far less than
+the bill.
+
+> **The merge was done by transforming each repo's OWN file, not by copying the
+> template over it — and that is the whole lesson.** The files are not the same file:
+> six distinct variants. Comparing first is what caught two defects that had nothing to
+> do with the thing being fixed — `tec-ecommerce` carried `push: [main, 'claude/**']`
+> ALONGSIDE `pull_request`, starting **two full pipelines per commit** (concurrency
+> cannot help: different `github.ref` means duplicates, not superseded runs); and
+> `tec-nbf`/`tec-brookfield` had no `cache: 'npm'`, re-downloading the tree every
+> install. A blind copy would also have **deleted** the Drift-Detection checks that
+> only Analytics and Ecommerce carry.
+
+### Two things I was wrong about, recorded so the next look is shorter
+
+- I called `tec-core-backend`'s three concurrency-less workflows "the best remaining
+  target". **Wrong about all three.** `changelog.yml` fires on `release: published`;
+  `load-test.yml` and `weekly-scan.yml` are `workflow_dispatch` ONLY. **A missing
+  `concurrency` on a workflow nobody triggers is not a leak.**
+- `weekly-scan.yml` had already had its schedule removed deliberately, reasoning written
+  into the file. **I was about to redo finished work.**
+
+The backend's CI turned out to be the best-tuned pipeline on the platform (paths-filter
+matrix, per-service node cache, Docker layer cache). Its one real defect: the Prisma
+version pin ran for **every** service, so `tec-api-gateway` and `tec-realtime-service`
+— which own no schema and import no Prisma — downloaded the client and its engines on
+every run, to throw them away.
+
+### IIC 4.5 — the proof module existed and nothing ever called it
+
+#316 shipped `intent.proof.ts` complete: canonicalise, build, sign, verify, tested.
+**Never invoked.** The platform had a proof implementation and zero proofs. Wired now,
+both halves: the backend collects decisions/effects/approvals where each fact is first
+known and emits at the terminal transition, and the Hub posts the approval **with the
+sentence the buyer actually read**.
+
+`shown.ts` in the Hub was the same shape again — written, tested, no callers, while the
+modal built the same strings a second time five lines away.
+
+> **A capability that never worked still costs whatever it was granted.** Same
+> sentence as the Pi webhook, one layer up.
+
+### The revenue surfaces that took money and delivered nothing
+
+| App | What happened | Fix |
+|---|---|---|
+| **VIP** | `item_id: 'vip-standard'` matches NEITHER commerce pattern (`_pro_monthly` / `_enterprise_monthly`), so the consumer found no plan and returned. Every purchase moved real π and created **no subscription row at all** | → `vip_pro_monthly`, **5π not 50π** |
+| **Elite** | `elite-certificate`, 5π, **no issuance, no record, no backend anywhere** | Button removed; the screen now says recognition is free and the certificate is not yet available |
+
+**50π → 5π, and the reasoning matters more than the number.** Naming it
+`vip_enterprise_monthly` would also have made the id match at 50π — rejected, because
+VIP STANDARD is the ENTRY tier of STANDARD → PARTNER, and **calling the entry tier
+"enterprise" so a regex agrees is fixing the parser by lying to it.** As PRO it joins
+the fleet's real entry price (Life/Connection/Alert all 5π for the identical
+entitlement).
+
+The price also lived in **three places** — the charged constant, a literal `π 50` in
+the card's JSX, and `price: 50` in the tier catalog. Now rendered from what is charged.
+**A screen and a payment disagreeing about the price is the one disagreement a buy
+surface cannot have**, and it was one edit away.
+
+### The fact that reframes the roadmap
+
+Asked who needed a refund for those two SKUs, the answer was: **nobody but the owner,
+on two accounts.**
+
+So no user was harmed, and nothing is owed. But it says something larger, and it should
+be written down rather than inferred later: **24 apps are live on Mainnet with real Pi
+payments working, and there are effectively no external paying users yet.**
+
+That **validates the Elite decision rather than merely excusing it** — the certificate's
+addressable buyers really would have been zero, which is exactly why building the
+issuance was refused. And it moves VIP's unfulfilled benefits (reduced Commerce fees,
+<2hr Hub support, advanced Analytics dashboards — **not implemented in any owning app**,
+confirmed by grep) from "fix now" to "before VIP is marketed": nobody is paying for them
+and being let down.
+
+> The next question is not what to build. It is **what gets the first real user**.
+
+
+## Session 56o — the campaign paid a real pioneer, and the chain agreed
+
+The previous session closed with *"the next question is what gets the first real user."*
+This one answered a smaller version of it: **the reward campaign ran end to end, on
+Mainnet, and the payout was verified against the chain.** Seat #1 of 100 is taken and
+paid. The claimant was the CEO testing his own flow — which is the honest description,
+and it is also how three defects were found before a stranger met them.
+
+### 1. The campaign page spoke only English, on the one screen that asks for trust
+
+The Hub card advertising the campaign is translated. The page it opens was not. A
+pioneer who reads Arabic tapped an Arabic card and met a wall of English on the screen
+where they decide whether a stranger offering free Pi is real.
+
+~47 strings moved into `hub.campaignPage` (`en.ts` + `ar.ts`); the page reads them via
+`useTranslation()` with `dir`. Two dead ends went with it: a subtitle that could render
+`undefined π · undefined of undefined seats left` before the status loaded, and a
+signed-out state that said sign-in was required while offering nothing to tap (now a
+real button that remembers `/hub/campaign` through `rememberReturn`). tec-app #240.
+
+> **The anti-phishing warning was the sharpest case.** *"We will never ask for your
+> passphrase or secret key"* existed in English only. **A guarantee that reaches one
+> audience is not a guarantee.** Every copy assertion in `campaign-ui.test.ts` now checks
+> BOTH locales for exactly that reason.
+
+### 2. A test that could not fail, and the real defect underneath it
+
+`campaign-ui.test.ts` pinned the warning's position with `page.indexOf('never')`. That
+matched a **source comment on line 17** and therefore passed no matter where the warning
+sat. Moving the copy to the locale files forced the anchor to become real (`c.neverAsk1`)
+— and it failed.
+
+The warning was down beside the claim, while the **Connection mission above it** is the
+thing that says *"post your Pi wallet address there."* **The warning was arriving after
+the moment it exists to protect.** It now sits above the missions, read first by everyone
+the round is open to rather than only by whoever already finished the list.
+
+> A test whose anchor can match a comment is not a weak test. It is a test that reports
+> success for a property nobody has checked — which is worse than not having one.
+
+### 3. The address had exactly one route in, and it was a dead end
+
+The Connection mission's bar was *"posted a valid Pi address in the TEC group"*, because
+the group was the only way the campaign could learn one. That turned a chat mission into
+an address form with extra steps: somebody who joined the group, used it as asked, and
+did not paste 56 characters into it finished every mission and was then refused, with
+nothing on screen to do about it. **The CEO hit this himself at 7/8.**
+
+Two changes (tec-core-backend #326 · tec-app #240):
+
+| | |
+|---|---|
+| **The mission** | now asks for a MESSAGE, not an address. A tab that opened is still not enough — that half is unchanged. One query (`groupMessages`) behind both bars so "a message that counts" cannot mean two things. |
+| **The claim** | takes a typed address as a FALLBACK. The group still wins when both exist — it was written in public under their own name, where a wrong one is visible. Both get the same checksum. |
+
+**Why a typed address became acceptable again, stated exactly rather than dropped
+quietly.** The group was made the only route when the address was also the payout
+destination, and a request that could name where real Pi goes is the one thing a payout
+path must never accept (P6). **That reasoning expired: A2U pays a Pi UID and Pi resolves
+the wallet itself** — in `sendPayout` the recipient comes back FROM Pi and the caller
+never supplies a destination. An address in the request cannot redirect a single π. P6 is
+intact; the thing it protected moved.
+
+**Why not drop the field entirely, since Pi does not need it.** Because of what having
+one MEANS: a Pi account is KYC-verified or it has no wallet at all, so an address is the
+evidence that a claimant is a distinct verified person rather than one of five accounts.
+`wallet_address @unique` is the campaign's real anti-sybil rule. Nothing else available
+says that.
+
+A third copy fix followed from the second: the mission had promised *"That is where we
+send the reward"* — never literally true, and with a second route it stopped being true
+in the ordinary sense too.
+
+### 4. Runtime Verified — the whole path, including the chain lookup
+
+Seat #1, 1 π, sent by hand from the CEO's wallet to the address on the claim, hash pasted
+into `Mark sent`:
+
+```
+identity-service → payment-service → Horizon (Pi Mainnet)
+    the hash names a successful transaction?   ✅
+    paid to the address on THIS claim?         ✅
+    for at least the amount owed?              ✅
+    hash already recorded on another seat?     ❌
+```
+
+It passed, and the claimant's own screen now carries `tx: 38d2d088…`. **This is the first
+time the payout path has been exercised against the real chain** — `markPaid`'s
+`verifyTransfer` had never run in production before.
+
+**A2U remains unconfigured, deliberately.** `PI_A2U_WALLET_SEED` is unset because the
+app wallet is still pending from Pi, so the gold "Send now" is disabled and the screen
+says why, in the service's own words, with the green `Mark sent` promoted in its place.
+Nothing was faked to make a button look alive.
+
+> **Do not `unpaid` seat #1.** The π moved on chain. Retracting the record would make it
+> disagree with the chain — the one thing this ledger exists to prevent.
+
+### 5. Open after this session
+
+| # | Item | Note |
+|---|------|------|
+| 1 | `CAMPAIGN_APPS` → all 24 | Env var + restart on `tec-identity-service`. The round ran on 8. |
+| 2 | **The payout queue shows no evidence of qualification** | Found by the CEO while looking at his own claim. `listClaims` returns the raw row — seat, owner, amount, address — and nothing about WHY the reward is owed. The service genuinely enforces it (`claim()` refuses with `Still to visit: …`), but "the service checked" is not the same as "I can see the check", and it will not be the same at fifty claims. **The fix must record the evidence AT CLAIM TIME, not re-derive it**: raising `CAMPAIGN_APPS` from 8 to 24 would make an already-qualified claim render as "7 of 24" and look unearned. Needs an additive nullable column. |
+| 3 | A2U wallet | Pending from Pi. When it arrives, set the seed — no code changes. |
 
 
 ## UPDATE PROTOCOL
