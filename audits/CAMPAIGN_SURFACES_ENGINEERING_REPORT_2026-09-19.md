@@ -20,6 +20,11 @@ This review looked for what breaks when the campaign stops being a test with one
 and becomes a public offer with a hundred. **Five findings.** One of them fires at the
 campaign's most successful moment.
 
+> **All five are now fixed, and so are the three gaps listed further down.** A second pass
+> over the fixed code found no new defects. See *Correction to this report's own
+> classification* — one item was filed under "decisions" that was plainly a defect, which
+> makes the session's real defect count **six**.
+
 | # | Severity | Finding | Fires when |
 |---|----------|---------|-----------|
 | **F1** | **P1** | A full campaign is reported as *"No campaign is running"* | The 101st pioneer arrives |
@@ -195,35 +200,81 @@ Stated explicitly so it is not re-discovered as a finding later.
 
 ---
 
-## Decisions, not defects
+## Correction to this report's own classification
 
-Recorded so they are chosen rather than inherited.
+The first version of this section was headed *"Decisions, not defects"* and listed four
+items. **That heading was wrong about one of them, and the error is worth correcting in
+place rather than quietly.**
 
-1. **No claim-specific rate limit.** The gateway limits globally (NEW-V, in-memory). A
-   claim endpoint that pays real Pi is a reasonable place for its own bucket.
-2. **No search or sort in the payout queue.** Fine at one claim; a hundred rows on a
-   phone is a scroll. Filter chips exist; a username search does not.
-3. **No export.** Reconciling a hundred hand-sent payouts against the chain is a CSV away
-   and currently a scroll away.
-4. **Taps versus arrivals** — see C-02 Session 56o. Fixed in code this session, gated OFF
-   until the fleet deploys (`CAMPAIGN_REQUIRE_ARRIVAL`). It is the single largest
-   correctness item on the campaign and it is already in flight.
+The test is: **a defect produces a wrong outcome. A gap produces the right outcome with
+more work.** Applied honestly:
+
+| Item | Verdict | Why |
+|------|---------|-----|
+| **Taps counted as arrivals** | **DEFECT** | Produces a WRONG NUMBER — an app reporting 5 engaged pioneers while Pi counts 0. It was found, named a defect, and fixed this session. Listing it beside the other three implied it was a choice. It was not. |
+| No claim rate limit | **Hardening** | The protections that matter are `owner @unique`, `wallet_address @unique` and the eligibility check — **database constraints, not counters**. A thousand attempts yield at most one reward. What they yield is load. |
+| No search in the payout queue | **Gap** | Right answer, more scrolling. |
+| No export | **Gap** — and weaker than first stated | The report said *"for reconciliation"*. Reconciliation is **already done**: every `tx_id` is verified against the chain as it is written. Export is convenience, not correctness. |
+
+**So the campaign's defect count for this session is SIX, not five** — F1–F5 plus the
+tap/arrival defect — and the sixth was the most serious of them.
+
+All three remaining items were built anyway (below), so the distinction is now historical.
+It is recorded because a report that mis-sorts its own findings teaches the next reader
+the wrong test.
+
+---
+
+## Built after the report
+
+| Item | What shipped |
+|------|--------------|
+| **Claim attempt limit** | 12 attempts / 5 min per pioneer, env-overridable, counted **before** any query — the queries are the thing being bounded. Keyed on the canonical owner, so a different capitalisation of your own username is not a way around it. The refusal names a **wait**, not an accusation: the likely reader is somebody whose address keeps being refused, and being called an attacker on a screen offering free Pi is how a pioneer leaves for good. |
+| **Search** | Seat, username or address — the three things somebody arrives holding. Client-side over the loaded round, because 100 rows is not a pagination problem. The **total stays on the whole queue**: a figure that shrinks as you type will be read as the amount owed, and reported as one. |
+| **Export** | CSV of exactly what is listed, filter and search included — a file containing more than the list above it is a quiet lie. Every cell quoted, internal quotes doubled (a username is user-supplied text; one bare comma shifts every later column), UTF-8 BOM so Excel does not mangle a non-ASCII name. |
+
+> **Two limits of the attempt counter, written into the code rather than left to be
+> found:** it resets on deploy, and it is **per instance** — with N replicas the real
+> ceiling is N × the limit. Both are fine for a load bound and would be unacceptable for
+> an anti-fraud control. It is not one; the `@unique` constraints are, and those hold
+> across every replica and every deploy because they live in the database.
+
+---
+
+## Second pass
+
+Re-read after every fix above was applied. **No new defects.** Stated plainly rather than
+padded: a second audit that always finds something is an audit that is inventing.
+
+What it did produce:
+
+1. **The attempt limiter's scope was understated.** The comment said "resets on deploy"
+   and did not say "per instance". Corrected in place — a control whose real ceiling is
+   unclear is a control somebody will later mistake for a guarantee.
+2. **The export carries 100 wallet addresses into a file.** Not new exposure: the admin
+   already sees every one on screen, and they are public keys. Worth knowing that the
+   file outlives the session the screen does not.
+
+Checked and found correct on the second pass: no address is ever rendered that did not
+come from the server; the admin role gate is still cosmetic-only with the route and the
+service deciding; `qualified` cannot render `0 / 0` because `claim()` refuses an
+unconfigured round; `claimed` excludes rejected seats, so a rejection really does return
+its seat to the pool.
 
 ---
 
 ## Recommended order
 
-**F1 first** — it is the only finding that damages the campaign at its best moment, and it
-is roughly an hour: one field on `getStatus`, one branch on the page, two strings in each
-locale.
+All five findings and all three gaps are now **closed**. Remaining work on the campaign is
+operational, not engineering:
 
-**F2 next** — it is felt twenty-four times per pioneer and nobody will report it, because
-a flashing skeleton reads as "the page is slow" rather than "the page is wrong".
-
-**F3** whenever the route is next touched. The defence downstream is real, so this is
-hardening, not a hole.
-
-**F4, F5** are minutes each.
+1. Deploy `tec-core-backend` (carries `closed_reason`, the attempt limiter, the arrival
+   endpoint and the `qualified` column).
+2. Deploy the Hub and the 24 apps.
+3. Watch `arrived` climb toward `verified` on `/pioneer/coverage`.
+4. Set `CAMPAIGN_REQUIRE_ARRIVAL=true` once the gap closes. **Not before** — flipping it
+   while half the fleet is undeployed fails every mission on the apps that had not caught
+   up.
 
 ---
 
