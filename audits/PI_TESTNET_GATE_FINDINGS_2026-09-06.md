@@ -89,7 +89,7 @@ reason, so the same "obvious consistency fix" is not reapplied by someone who ha
 this.
 
 **The lesson is not about cookies.** A redundant-looking duplicate can be load-bearing —
-the same shape as the backend deploy defect recorded in C-02 §5, where a broken name lookup
+the same shape as the backend deploy defect recorded in C-02 Session 46 §7a (memory/sessions/session-46.md), where a broken name lookup
 was the access control for an unguarded production deploy. *Removing a redundancy without
 asking what it was silently doing is how a tidy-up becomes an incident.*
 

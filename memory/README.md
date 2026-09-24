@@ -26,7 +26,8 @@ The following context should be captured in every TEC session:
 ### Session End — Always Save
 ```
 1. Decisions made → ADR references
-2. Violations found/closed → update C-02
+2. Violations found/closed → update C-02 §1–§2 in place
+   The session narrative → memory/sessions/session-<id>.md (+ a row in its README)
 3. Files modified → with rationale
 4. Outstanding items → for handoff
 ```

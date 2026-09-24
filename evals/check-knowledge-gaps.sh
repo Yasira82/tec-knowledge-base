@@ -45,6 +45,17 @@ if ! ls "$KB_DIR"/C-02* &>/dev/null; then
   GAPS=$((GAPS+1))
 else
   echo "  ✅ C-02 Current State present"
+  # C-02 is current state only, edited in place. It once grew to 5,929 lines because every
+  # session appended to it, and stopped answering "where do we stand?" (audit F12). Session
+  # narratives go to memory/sessions/. Unlike the gaps above, this one FAILS the gate.
+  C02_MAX=150
+  C02_LINES=$(wc -l < "$(ls "$KB_DIR"/C-02* | head -1)")
+  if [ "$C02_LINES" -gt "$C02_MAX" ]; then
+    echo "❌ C-02 is $C02_LINES lines (max $C02_MAX). Move the session narrative to"
+    echo "   memory/sessions/session-<id>.md and edit C-02 §1–§3 in place."
+    exit 1
+  fi
+  echo "  ✅ C-02 is $C02_LINES lines (max $C02_MAX)"
 fi
 
 # Check ADR system

@@ -22,7 +22,8 @@ before making substantial changes.
 2. **Make changes.** For a new C-document, copy `templates/new-c-document/C-XX-TEMPLATE.md`
    (or `templates/new-charter/` for an App Charter, `templates/new-adr/` for an ADR).
 3. **Register new documents** in `knowledge-base/C-57` (Master Index) and, if platform state
-   changed, in `knowledge-base/C-02` (Current State).
+   changed, in `knowledge-base/C-02` (Current State — edited in place; a session's narrative
+   goes to `memory/sessions/`, see its README).
 4. **Validate locally** (see below) — all checks must pass.
 5. **Open a PR** using the template in `.github/PULL_REQUEST_TEMPLATE.md`.
 
