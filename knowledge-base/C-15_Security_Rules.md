@@ -120,11 +120,12 @@ CHECK (balance >= 0)
 ## 12. COOKIE SECURITY
 
 ```typescript
-// ✅ All cookies
+// ✅ All cookies — the locked contract is C-123 §2
 {
-  secure:   true,
-  sameSite: 'none',  // REQUIRED for Pi Browser WebView
-  path:     '/',
+  secure:      true,
+  sameSite:    'none',  // REQUIRED for Pi Browser WebView (never 'lax' — C-123 §2 rule 1)
+  partitioned: true,    // REQUIRED — C-123 LAW 3: 'none' without Partitioned is blocked in embedded contexts
+  path:        '/',
 }
 
 // httpOnly per cookie type (intentional)

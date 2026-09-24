@@ -5,7 +5,12 @@
 > **Governance State:** `[ADR Approved]`
 > **Verification:** `[Documentation Verified]`
 
-**Last Updated:** 16 June 2026 (Session 9)
+**Last Updated:** 24 September 2026 — status reconciled with `architecture/app-fleet.yaml`.
+
+> **Where this roadmap stands:** Phases 0, 1 and 2 are **complete**. All 24 apps have been
+> live on Mainnet with real Pi since July 2026 (`app-fleet.yaml`: 21 `live-verified`,
+> 3 `live-readonly-gated`). Everything below is the historical record of how the platform
+> got there; current open work is in **C-02** and `audits/KB_REMEDIATION_PLAN_2026-09-24.md`.
 
 ---
 
@@ -37,7 +42,7 @@ Target (External Audit): ≥ 9.5/10 → Portal Submission
 
 ---
 
-## 3. PHASE 1 — Portal Readiness (CURRENT)
+## 3. PHASE 1 — Portal Readiness (DONE ✅)
 
 ### tec-ui v1.2.1 ✅ DONE
 
@@ -61,7 +66,7 @@ Target (External Audit): ≥ 9.5/10 → Portal Submission
 ✅ NEW-G: Dual-Mode في ADR-002 + C-12
 ```
 
-### External Audit ← NEXT NOW
+### External Audit — superseded (all apps went live on Mainnet in July 2026)
 
 ```
 □ Submit for external audit (كل fixes على main ✅)
@@ -81,13 +86,13 @@ Target (External Audit): ≥ 9.5/10 → Portal Submission
 
 ---
 
-## 4. PHASE 2 — Post-Portal (Layer 1)
+## 4. PHASE 2 — Post-Portal (Layer 1) (DONE ✅)
 
 ```
-□ Analytics UI (backend :5011 موجود)
-□ Life app (retention layer)
-□ SYSTEM UI (governance dashboard)
-□ tec-ui v1.3.0 + C-83 Phase 2
+✅ Analytics UI — live (analytics.tecosystem.app)
+✅ Life app — live, full C-106 charter (Session 51)
+✅ SYSTEM UI — live (system.tecosystem.app)
+✅ tec-ui — past v1.3.0; v3.0.0 on the Pi amber (C-83, Session 46)
 ```
 
 ---
@@ -95,8 +100,9 @@ Target (External Audit): ≥ 9.5/10 → Portal Submission
 ## 7. CONTENT FREEZE RULE
 
 ```
-No new contents after C-86 before Portal.
+(historical) No new contents after C-86 before Portal.
 Documentation inflation risk.
+Lifted once the Portal gate passed — C-87 → C-135 were added afterwards.
 → C-77 §11 Rule #2
 ```
 
