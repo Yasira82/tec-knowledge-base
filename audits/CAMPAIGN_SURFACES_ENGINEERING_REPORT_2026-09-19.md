@@ -98,7 +98,12 @@ and `<HubSubShell loading={authLoading || loading}>` renders `<Skeleton />`.
 ### Why it matters
 
 **Every mission opens in a new tab.** Returning to this page is not an edge case — it is
-the loop the page is built around, twenty-four times per pioneer. Each return replaces
+the loop the page is built around, twenty-four times per pioneer.
+
+> **Correction (2026-09-24).** Pi Browser **has no tabs** — `target="_blank"` there opens a
+> fresh context whose history holds only the app, and whose cookie jar is not the Hub's
+> (C-123 §7). The finding above still stands (a return is the common path), but "tab" is
+> the wrong model: see C-123 §9 for what that context does to the Hub's own sign-in. Each return replaces
 the mission list with grey blocks and rebuilds it.
 
 The refetch is right, and the comment explaining it is right: the server is the only
