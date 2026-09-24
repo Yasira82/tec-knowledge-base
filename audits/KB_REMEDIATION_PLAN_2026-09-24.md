@@ -17,9 +17,9 @@
 | 3 | C-56 → pointer to `events-catalog.yaml`; C-62 → pointer to the SLO manifest (one set of numbers) | F8, F9 | S | ✅ #153 |
 | 4 | Regenerate `dependency-graph.yaml`; regen + diff in preflight and CI | F13 | S | ✅ #153 |
 | 5 | Fix F17 references; delete the duplicate impact script; stop committing the integrity report | F17, F20 | S | ✅ #153 |
-| 6 | README / CLAUDE.md: counts replaced by "run preflight"; CLAUDE.md → navigation only; consolidate the two impact scripts (C-116 amendment) | F16, F20 | M | ☐ |
+| 6 | README / CLAUDE.md: counts replaced by "run preflight"; CLAUDE.md → navigation only; consolidate the two impact scripts (C-116 amendment) | F16, F20 | M | ◐ in this PR — ✅ on merge |
 | 7 | C-02 split: ≤ 150-line current state + one file per session | F12 | M | ✅ #157 |
-| 8 | C-11 + C-44 generated from the repos by a script | F6, F7 | M | ◐ in this PR — ✅ on merge |
+| 8 | C-11 + C-44 generated from the repos by a script | F6, F7 | M | ✅ #158 |
 | 9 | Weekly cross-repo drift job + `Last-Verified` on `[Code Verified]` headers | F1 — prevents recurrence | L | ◐ merged #154 — ✅ on the first green scheduled run |
 | 10 | Language-policy pass, or amend the policy to what the KB actually does | F18 | M | ☐ |
 
@@ -45,6 +45,9 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 | 2026-09-24 | 8 | Staleness is caught by the weekly drift job (regenerate in memory, compare), not by knowledge-ci | Generating needs every repo cloned; a KB PR must not depend on other repos' state |
 | 2026-09-24 | 8 | Generated docs are exempt from the `Last verified` date rule | Their claim is re-derived from the code weekly — stronger than a date a person typed |
 | 2026-09-24 | 8 | The scanner reads four forms: `process.env.X` / `['X']`, zod `config/env.ts` keys, the gateway's `envVar` entries, NestJS `configService.get('X')`, plus Prisma `env("X")` | Each one, missing, made a real variable look unused — `JWT_REFRESH_SECRET` and `DATABASE_URL` both did during development |
+| 2026-09-24 | 6 | Kept `registry-impact-analysis.py`, deleted `impact_analysis.py`; C-116 §1.3 amended (v1.1) | Identical dependents on C-12, C-47, C-123; the CDG's only extra relation (`informs`) is empty for all 116 docs; the registry is the source, the CDG a derivative |
+| 2026-09-24 | 6 | CLAUDE.md = navigation + a "rules that bite" table; the Session 12 → 46 log moved verbatim to `memory/sessions/kb-claude-md-log.md`; ≤ 150 lines is a failing gate | Loaded into every session; its counts were each true only on their own day. Durable rules were lifted out of the log, not lost with it |
+| 2026-09-24 | 6 | README keeps no counts or phase list; the drift job now reads its port block | The README's ports were wrong for 5 services and nothing checked them |
 
 ## First drift run (2026-09-24, all repos at `origin/main`)
 
@@ -82,3 +85,5 @@ fails on `main` today and passes on #256.
 | 2026-09-24 | 9 | tec-knowledge-base #155 · #156 · tec-app #256 | `refresh` check added (7th); Hub refresh fixed. Drift job run #1 (manual, with `DRIFT_READ_TOKEN`): **34 · 0 · 0**, all 30 repos cloned |
 | 2026-09-24 | 7 | tec-knowledge-base #157 (merged) | C-02 5,929 → 114 lines; 65 records + today's (56q) in `memory/sessions/`; no line lost (checked line by line; the one edit is the CSV RFC's number, written with a hyphen before it, which the canonical-reference gate read as a citation of a four-hundred-series C-doc — now written with a space) |
 | 2026-09-24 | 8 | tec-knowledge-base (this PR) | `scripts/code_facts.py` (shared repo reader) + `generate-code-docs.py`; C-11 (9 repos, wrong ports → all 29 code repos + 12 services, ports from `main.ts`) and C-44 (24 names, 3 unused → 160 read by code, by app/service); drift check `generated` → **36 · 0 · 0**. Seeded a deleted row → caught, with the variable named |
+| 2026-09-24 | 8 | tec-knowledge-base #158 (merged) | — |
+| 2026-09-24 | 6 | tec-knowledge-base (this PR) | CLAUDE.md 722 → 102 lines; README: 5 wrong ports, stale counts/badges/ADR range, NX role, 8 missing charters; one impact engine (and its charter count fixed: C-124 → C-131 were missing, and dependents were double-counted); `.cursorrules` RULE 3 → preflight. Drift check reads the README: on the old one, 5 port FAILs |

@@ -10,7 +10,7 @@ for months with every gate green (audits/KB_ENGINEERING_AUDIT_2026-09-24.md).
 This script closes that gap. It reads the code repos at a git ref and compares:
 
   versions   C-14 + memory/platform-snapshot.md   ↔ package.json (tec-ui · tec-auth · tec-sdk · tec-shared)
-  ports      C-20 + snapshot + app-fleet + tec-core-backend CLAUDE.md ↔ each service's main.ts default
+  ports      C-20 + snapshot + README + app-fleet + tec-core-backend CLAUDE.md ↔ each service's main.ts default
   events     manifests/events-catalog.yaml         ↔ event names in tec-core-backend source (both directions)
   cookies    C-13 / C-123 (None + Partitioned)     ↔ every cookie setter in the Hub, template and apps
   refresh    C-13 §1 (token + tec_user together)   ↔ every refresh route that renews the token
@@ -123,8 +123,11 @@ def check_ports(get):
     c20 = kb_glob_one('C-20')
     for m in re.finditer(r'^\|\s*(' + '|'.join(SERVICES) + r')\s*\|\s*(\d{4})\s*\|', kb_read(c20), re.M):
         claims.append((c20, m.group(1), int(m.group(2))))
-    for m in re.finditer(r'\b(' + '|'.join(SNAPSHOT_NAMES) + r')\s*:(\d{4})\b', kb_read('memory/platform-snapshot.md')):
-        claims.append(('memory/platform-snapshot.md', SNAPSHOT_NAMES[m.group(1)], int(m.group(2))))
+    # the same compact "Name :port" block appears in the snapshot and in the README — the
+    # README's said Identity :5004 / Commerce :5005 until 2026-09-24, unchecked
+    for rel in ('memory/platform-snapshot.md', 'README.md'):
+        for m in re.finditer(r'\b(' + '|'.join(SNAPSHOT_NAMES) + r')\s*:(\d{4})\b', kb_read(rel)):
+            claims.append((rel, SNAPSHOT_NAMES[m.group(1)], int(m.group(2))))
     for m in re.finditer(r'Gateway\s*:(\d{4})', kb_read('architecture/app-fleet.yaml')):
         claims.append(('architecture/app-fleet.yaml', 'api-gateway', int(m.group(1))))
     claude = backend.read('CLAUDE.md') or ''

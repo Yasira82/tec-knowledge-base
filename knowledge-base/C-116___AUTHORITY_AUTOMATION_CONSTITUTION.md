@@ -1,6 +1,6 @@
 # C-116 — AUTHORITY AUTOMATION CONSTITUTION
 
-> **Version:** v1.0
+> **Version:** v1.1 — §1.3 amended 2026-09-24 (one impact engine)
 > **Truth State:** `[Planned State]`
 > **Governance State:** `[Draft]`
 > **Verification:** `[Documentation Verified]`
@@ -99,16 +99,27 @@ A Python program that reads the CDG manifest and enforces six violation classes:
 
 ### 1.3 Impact Analysis Engine
 
-**Asset:** `scripts/impact_analysis.py`
+**Asset:** `scripts/registry-impact-analysis.py`
 
-Reads the CDG manifest and computes the blast radius of a document change:
+Reads the asset registry (`architecture/asset-registry.yaml`, generated per C-117) and
+computes the blast radius of a document change:
 - Direct dependents (must review immediately)
 - Transitive dependents (review if change is non-trivial)
 - Affected ADRs
-- Affected App Charters (C-100 → C-115)
-- Suggested review order (ranked by authority_rank)
+- Affected App Charters (C-100 → C-115, C-124 → C-131)
+- Suggested review order (ranked by tier)
 
-**Usage:** Before editing any C-document, run `impact_analysis.py C-XX` to see who will be affected.
+**Usage:** Before editing any C-document, run `registry-impact-analysis.py C-XX` to see who
+will be affected.
+
+> **Amendment v1.1 (2026-09-24, KB remediation step 6, audit F20).** This section named
+> `scripts/impact_analysis.py`, which read the CDG manifest. A second engine,
+> `registry-impact-analysis.py`, was added with C-117 and read the registry the CDG is
+> generated from (C-118). Two engines for one question: checked on C-12, C-47 and C-123 they
+> returned identical dependents, and the CDG's only extra relation, `informs`, is empty for
+> all 116 documents. The registry engine is kept because it reads the source rather than a
+> derivative, and because README, CONTRIBUTING, C-117 and the integrity report already point
+> at it. `impact_analysis.py` is deleted.
 
 ---
 
@@ -182,7 +193,7 @@ Changes to `manifests/dependency-graph.yaml` that affect:
 
 ### 5.2 Engine Updates
 
-Changes to `scripts/ahv_engine.py` or `scripts/impact_analysis.py` that:
+Changes to `scripts/ahv_engine.py` or `scripts/registry-impact-analysis.py` that:
 - Add a new violation class → require ADR + governance approval
 - Change severity of an existing violation → require ADR
 - Remove a violation class → require formal deprecation ADR

@@ -65,7 +65,7 @@ The 96 C-documents are the moat. The AHV engine protects that moat. Apps are dow
 |-------------|--------|-------|
 | `manifests/dependency-graph.yaml` (CDG) | ✅ Delivered Session 12 | Founder |
 | `scripts/ahv_engine.py` v1 (6 violation classes) | ✅ Delivered Session 12 | Founder |
-| `scripts/impact_analysis.py` v1 | ✅ Delivered Session 12 | Founder |
+| `scripts/impact_analysis.py` v1 | ✅ Delivered Session 12 — retired 2026-09-24 for `registry-impact-analysis.py` (C-116 §1.3) | Founder |
 | `evals/check-c57-index.sh` | ✅ Delivered Session 12 | Founder |
 | `evals/check-authority-consistency.sh` | ✅ Delivered Session 12 | Founder |
 | `C-116 Authority Automation Constitution` | ✅ Delivered Session 12 | Founder |
