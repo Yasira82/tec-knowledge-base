@@ -49,10 +49,13 @@ The script's first run was against the code as it stood — before this PR's KB 
 | Side | Finding | Action |
 |---|---|---|
 | KB | `app-fleet.yaml` packages: "Gateway :4000" | fixed here → `:3000` |
-| Code | `resolve-incomplete/route.ts` re-sets `tec_access_token` `sameSite:'none'` **without `partitioned`** — in tec-template-base and so in 21 apps cloned from it | a cookie set without Partitioned lands in a different jar in an embedded context (C-123 §2) — a second copy of the token, the same half-session class as the refresh bug. Fleet fix: separate PRs |
-| Code | Tec-Life `middleware.ts` CSRF cookie + `refresh` without `partitioned` | refresh is fixed in the still-open Life #62; middleware in the fleet fix |
+| Code | `resolve-incomplete/route.ts` re-sets `tec_access_token` `sameSite:'none'` **without `partitioned`** — in tec-template-base and so in 21 apps cloned from it | a cookie set without Partitioned lands in a different jar in an embedded context (C-123 §2) — a second copy of the token, the same half-session class as the refresh bug. **Fixed** (plus a per-app test that checks each cookie object): commits on the 19 still-open fleet PRs + Insure #37 · Brookfield #19 · NBF #24 |
+| Code | Tec-Life `middleware.ts` CSRF cookie + `refresh` without `partitioned` | both fixed on Life #62 — its refresh PR had kept Life's old options object, which never had `partitioned` |
 | Code | 20 of the refresh-renews-the-whole-session PRs (2026-09-23) are **still open** — on `main` only Commerce, Insure, Brookfield and NBF renew `tec_user` with the token | merge them; the drift job will show it |
 | Script | 3 false positives on its first run (C-13 glob matched C-135; `payment.completed` defined in `shared/`; DX's guide text contains `APP_SOURCE = 'yourslug'`) | fixed in the script before merge |
+| Script | the cookie check was file-level: one partitioned cookie in a file vouched for every other cookie in it | now object by object — the same rule as the per-app test |
+
+After the fixes, run against every repo's PR branch: **cookies clean in all repos**.
 
 ## Log
 

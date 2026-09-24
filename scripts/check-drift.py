@@ -246,7 +246,9 @@ def check_events(get):
 # ── cookies ──────────────────────────────────────────────────────────────────────────────
 
 LAX = re.compile(r"sameSite\s*:\s*['\"]lax['\"]", re.I)
-NONE = re.compile(r"sameSite\s*:\s*['\"]none['\"]", re.I)
+# one cookie-options object literal that says sameSite 'none' — checked object by object, so a
+# partitioned cookie elsewhere in the same file cannot vouch for this one
+NONE_OBJ = re.compile(r"\{[^{}]*sameSite\s*:\s*['\"]none['\"][^{}]*\}", re.I)
 PARTITIONED = re.compile(r'partitioned\s*:\s*true')
 
 
@@ -273,7 +275,7 @@ def check_cookies(get, fleet):
             code = '\n'.join(l for l in body.splitlines() if not l.strip().startswith(('//', '*')))
             if LAX.search(code):
                 record(FAIL, 'cookies', f"{name}/{f}: sameSite 'lax' — forbidden for session cookies (C-123 LAW 3)")
-            elif NONE.search(code) and not PARTITIONED.search(code):
+            elif any(not PARTITIONED.search(o) for o in NONE_OBJ.findall(code)):
                 record(FAIL, 'cookies', f"{name}/{f}: sameSite 'none' without partitioned: true (C-123 §2)")
     if missing:
         record(SKIP, 'cookies', f'not available: {", ".join(missing)}')
