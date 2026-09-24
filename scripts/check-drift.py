@@ -13,6 +13,7 @@ This script closes that gap. It reads the code repos at a git ref and compares:
   ports      C-20 + snapshot + app-fleet + tec-core-backend CLAUDE.md ↔ each service's main.ts default
   events     manifests/events-catalog.yaml         ↔ event names in tec-core-backend source (both directions)
   cookies    C-13 / C-123 (None + Partitioned)     ↔ every cookie setter in the Hub, template and apps
+  refresh    C-13 §1 (token + tec_user together)   ↔ every refresh route that renews the token
   fleet      architecture/app-fleet.yaml           ↔ Hub registry + SSO allowlist + each app's APP_SOURCE
   slo        C-78 §2                               ↔ manifests/slo-definitions.yaml (same numbers, one authority)
 
@@ -283,6 +284,40 @@ def check_cookies(get, fleet):
         record(PASS, 'cookies', f'{checked} repos: every sameSite setter is None + Partitioned, none lax')
 
 
+# ── refresh renews the whole session ─────────────────────────────────────────────────────
+
+SETS_TOKEN = re.compile(r"set\(\s*['\"]tec_access_token['\"]")
+SETS_USER = re.compile(r"set\(\s*['\"]tec_user['\"]|\[\s*['\"]tec_user['\"]")
+
+
+def check_refresh(get, fleet):
+    """A refresh that renews tec_access_token must renew tec_user too (C-13 §1): they are
+    born with the same 24h life, and a token without a user is 401 `no_user` a day later.
+    The 24 apps were fixed for this on 2026-09-24 and the Hub was missed — its route is
+    different code. This check is what would have caught it."""
+    ok, missing = 0, []
+    for name in [a['repo'] for a in fleet] + ['tec-template-base']:
+        repo = get(name)
+        if not repo:
+            missing.append(name)
+            continue
+        for f in repo.files():
+            if not f.endswith('api/auth/refresh/route.ts'):
+                continue
+            code = '\n'.join(l for l in (repo.read(f) or '').splitlines()
+                             if not l.strip().startswith(('//', '*')))
+            if not SETS_TOKEN.search(code):
+                continue
+            if SETS_USER.search(code):
+                ok += 1
+            else:
+                record(FAIL, 'refresh', f'{name}/{f}: renews tec_access_token but not tec_user (C-13 §1)')
+    if missing:
+        record(SKIP, 'refresh', f'not available: {", ".join(missing)}')
+    if ok:
+        record(PASS, 'refresh', f'{ok} refresh routes renew tec_user with the token')
+
+
 # ── fleet ────────────────────────────────────────────────────────────────────────────────
 
 APP_SOURCE = re.compile(r"APP_SOURCE\b[^=\n]*=\s*['\"]([a-z0-9-]+)['\"]")
@@ -374,6 +409,7 @@ def main():
     check_ports(get)
     check_events(get)
     check_cookies(get, fleet)
+    check_refresh(get, fleet)
     check_fleet(get, fleet)
     check_slo()
 
