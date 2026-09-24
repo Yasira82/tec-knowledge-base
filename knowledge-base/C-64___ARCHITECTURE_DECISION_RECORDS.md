@@ -36,7 +36,7 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-011 | Modules-First — Service Extraction & Modular Architecture Policy | ACCEPTED (July 2026 · details in C-132) |
 | ADR-012 | Referral Rewards = Gift Subscription (raw-Pi bonus hard-gated) | ACCEPTED (July 2026) |
 | ADR-013 | Legend Scoring Contract (Analytics computes · Legend serves) | ACCEPTED (July 2026) |
-| ADR-014 | A property is never a tradable token · a non-transferable Property Certificate, hard-gated | PROPOSED (September 2026) |
+| ADR-014 | A property is never a tradable token · a non-transferable Property Certificate, hard-gated | ACCEPTED (September 2026) |
 
 ---
 
@@ -450,7 +450,7 @@ Event: `legend.scores.updated.v1` (see `manifests/events-catalog.yaml`). tec-cor
 
 ## ADR-014 — A property is never a tradable token · a non-transferable Property Certificate, hard-gated
 
-**Status:** PROPOSED | **Date:** 24 September 2026 | **Decision Authority:** CEO (C-47) | **Extends:** C-114 (Estate) · C-120 (Zone)
+**Status:** ACCEPTED | **Date:** 24 September 2026 (proposed and accepted the same day) | **Decision Authority:** CEO (C-47) | **Extends:** C-114 (Estate) · C-120 (Zone)
 
 ### Context
 A property registered in TEC Estate is recorded as a `REAL_ESTATE` asset in tec-asset-service
@@ -473,10 +473,9 @@ the way a domain can be?* Three facts answer it.
    any app. This restates C-114 §4/§6; it is already enforced in code (tec-core-backend #337:
    no listing, no saga reservation, a paid purchase is a recorded refund; Tec-Assets #61:
    properties are not shown in Assets).
-2. **What MAY exist later: a Property Certificate — non-transferable.** A record in the
-   owner's profile (e.g. surfaced by Legend, C-126) that says *this user registered this
-   property in TEC, and Zone verified it*. It cannot be listed, sold, transferred or
-   pledged; it proves a registration, never ownership of the building.
+2. **What MAY exist later: a Property Certificate — non-transferable.** A record that says
+   *this user registered this property in TEC, and Zone verified it*. It cannot be listed,
+   sold, transferred or pledged; it proves a registration, never ownership of the building.
 3. **The Certificate is HARD-GATED** — it ships only after all three, the same pattern as
    FundX and Insure custody (C-113 · C-129):
    - **Zone verification (C-120):** the property AND its owner are verified; a certificate
@@ -484,8 +483,19 @@ the way a domain can be?* Three facts answer it.
    - **Legal review** for the target jurisdiction: what a platform-issued property
      certificate may claim, and what it must disclaim.
    - **Phase gate:** it is a new feature, so it waits for Phase 0 to close.
-4. **Ownership:** the certificate record belongs to tec-asset-service (it owns Asset,
-   C-68); verification belongs to Zone; Estate presents it. No new service.
+4. **Ownership — one owner per concern, no new service:**
+   | Concern | Owner | Why |
+   |---|---|---|
+   | The certificate record | tec-asset-service | It owns Asset (C-68); the property already lives there |
+   | Verification | Zone (C-120) | Zone verifies; nobody else mints "verified" |
+   | Showing it with the property | Estate | Estate owns property screens (C-114 §4) |
+   | Showing it as an achievement | Legend (C-126) | From an event, like every Legend record — Legend never issues or edits a certificate |
+
+### Why ACCEPTED, not left PROPOSED
+Decision 1 is not new — it is C-114 §4/§6, already enforced in code. Leaving it PROPOSED would
+make the KB say a live rule is still under discussion. Decisions 2–4 set only a direction:
+nothing is built until the gates in 3 are documented-done, so accepting carries no risk, and
+an ACCEPTED ADR is re-opened only by a new ADR — the question "why not an NFT?" is closed once.
 
 ### Consequences
 - A PR that mints a property as a transferable NFT, lists one for Pi, or lets a property

@@ -97,8 +97,10 @@ through; `readFollowUp` makes 202 "delivering shortly" and 409 a refund, not "al
 - The owner asked why a property is not minted as an NFT. **C-64 ADR-014 (PROPOSED)**: never
   a tradable token (a sale of the property for Pi by another name, no legal title, and the
   record is unverified); a non-transferable, Zone-verified **Property Certificate** may come
-  later, hard-gated on Zone verification + legal review + the Phase 0 exit. Awaiting the
-  CEO's accept/reject.
+  later, hard-gated on Zone verification + legal review + the Phase 0 exit. **Accepted by the
+  CEO the same day**, with one fix: the ADR had the certificate shown by Legend in one clause
+  and by Estate in another — now one owner per concern (record: asset-service · verification:
+  Zone · with the property: Estate · as an achievement, from an event: Legend).
 
 ## 5. Left open
 

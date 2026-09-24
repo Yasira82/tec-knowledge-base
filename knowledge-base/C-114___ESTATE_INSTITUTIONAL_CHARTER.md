@@ -41,7 +41,7 @@
   the property is not recorded; standalone (Mode 2) works.
 - **Tokenizing a property** ("why not an NFT?"): never as a tradable token; a
   non-transferable, Zone-verified Property Certificate is proposed and hard-gated in
-  C-64 ADR-014 (PROPOSED).
+  C-64 ADR-014 (ACCEPTED 24 Sep 2026).
 
 **Still `[Future Vision]`:** the advanced runtime described below (V2+ / the charter's later phases) — vision, not yet built.
 
