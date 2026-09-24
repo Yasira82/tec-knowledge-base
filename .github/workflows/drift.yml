@@ -6,10 +6,10 @@ name: KB ↔ Code Drift (weekly)
 # Audit F1 (audits/KB_ENGINEERING_AUDIT_2026-09-24.md): those facts drifted for months
 # with every in-repo gate green. Remediation plan step 9.
 #
-# Private repos (Tec-core-backend, TEC-SDK — the rest are public) need a read-only token:
+# The one private repo (Tec-core-backend — every other repo is public) needs a read-only token:
 #   Settings → Secrets → Actions → DRIFT_READ_TOKEN
-#   = a fine-grained PAT, Repository access: those repos, Permissions: Contents → Read-only.
-# Without it those repos are SKIPPED, loudly, and the run fails (--strict): a check that
+#   = a fine-grained PAT, Repository access: Tec-core-backend, Permissions: Contents → Read-only.
+# Without it that repo is SKIPPED, loudly, and the run fails (--strict): a check that
 # silently checks less is the failure mode this job exists to end.
 
 on:
