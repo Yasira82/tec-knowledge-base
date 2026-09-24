@@ -12,15 +12,15 @@
 
 | Step | Work | Closes | Size | Status |
 |---|---|---|---|---|
-| 1 | Rewrite C-13 §1–§2; C-15 & C-51 cookie blocks → cite C-123 §2/§3/§9 | F2, F3 | S | ◐ done in #153 — ✅ on merge |
-| 2 | Correct C-14 versions, C-20 ports + private hosts, C-40 NEW-M, C-41 + `memory/` phase | F4, F5, F10, F11 | S | ◐ done in #153 — ✅ on merge |
-| 3 | C-56 → pointer to `events-catalog.yaml`; C-62 → pointer to the SLO manifest (one set of numbers) | F8, F9 | S | ◐ done in #153 — ✅ on merge |
-| 4 | Regenerate `dependency-graph.yaml`; regen + diff in preflight and CI | F13 | S | ◐ done in #153 — ✅ on merge |
-| 5 | Fix F17 references; delete the duplicate impact script; stop committing the integrity report | F17, F20 | S | ◐ done in #153 — ✅ on merge |
+| 1 | Rewrite C-13 §1–§2; C-15 & C-51 cookie blocks → cite C-123 §2/§3/§9 | F2, F3 | S | ✅ #153 |
+| 2 | Correct C-14 versions, C-20 ports + private hosts, C-40 NEW-M, C-41 + `memory/` phase | F4, F5, F10, F11 | S | ✅ #153 |
+| 3 | C-56 → pointer to `events-catalog.yaml`; C-62 → pointer to the SLO manifest (one set of numbers) | F8, F9 | S | ✅ #153 |
+| 4 | Regenerate `dependency-graph.yaml`; regen + diff in preflight and CI | F13 | S | ✅ #153 |
+| 5 | Fix F17 references; delete the duplicate impact script; stop committing the integrity report | F17, F20 | S | ✅ #153 |
 | 6 | README / CLAUDE.md: counts replaced by "run preflight"; CLAUDE.md → navigation only; consolidate the two impact scripts (C-116 amendment) | F16, F20 | M | ☐ |
 | 7 | C-02 split: ≤ 150-line current state + one file per session | F12 | M | ☐ |
 | 8 | C-11 + C-44 generated from the repos by a script | F6, F7 | M | ☐ |
-| 9 | Weekly cross-repo drift job + `Last-Verified` on `[Code Verified]` headers | F1 — prevents recurrence | L | ☐ |
+| 9 | Weekly cross-repo drift job + `Last-Verified` on `[Code Verified]` headers | F1 — prevents recurrence | L | ◐ in this PR — ✅ on merge + first green scheduled run |
 | 10 | Language-policy pass, or amend the policy to what the KB actually does | F18 | M | ☐ |
 
 Not scheduled (recorded, low value now): F14 evidence loop (needs ops to run the emitter
@@ -37,6 +37,22 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 | 2026-09-24 | 5 | `impact_analysis.py` **kept** (audit said delete) | C-116 names it as the governed asset; both scripts work and agree. Consolidation = a C-116 amendment → folded into step 6 |
 | 2026-09-24 | 5 | `registry-integrity-report.md` untracked + gitignored; the gate still writes it | Generated every run with a timestamp and an absolute local path. preflight's restore no longer names it (an untracked pathspec makes `git checkout` refuse every path) |
 | 2026-09-24 | 2 | tec-core-backend `CLAUDE.md` 4000-series port table: fixed in that repo, separately | Outside this repo — tec-core-backend #333 |
+| 2026-09-24 | 9 | Drift is checked at a git ref (`git show`), never the working tree | A local clone on a feature branch must not make `main` look drifted |
+| 2026-09-24 | 9 | The weekly job runs `--strict`: a repo it cannot clone fails the run | A drift check that silently checks less is the failure this step exists to end. Private repos need the `DRIFT_READ_TOKEN` secret (read-only fine-grained PAT) |
+| 2026-09-24 | 9 | Freshness: `[Code/Runtime Verified]` + a `Last verified …: YYYY-MM-DD` older than 60 days = FAIL; no date = WARN only | Enforcing a date on 27 docs at once would mean writing 27 dates nobody checked — the exact false claim being removed. Dates are added only when a doc is actually re-verified; the warning list is the backlog |
+| 2026-09-24 | 9 | Not a KB-CI job; a separate scheduled workflow | It needs ~30 clones; KB PRs must not wait on, or break because of, another repo's commit |
+
+## First drift run (2026-09-24, all repos at `origin/main`)
+
+The script's first run was against the code as it stood — before this PR's KB fixes.
+
+| Side | Finding | Action |
+|---|---|---|
+| KB | `app-fleet.yaml` packages: "Gateway :4000" | fixed here → `:3000` |
+| Code | `resolve-incomplete/route.ts` re-sets `tec_access_token` `sameSite:'none'` **without `partitioned`** — in tec-template-base and so in 21 apps cloned from it | a cookie set without Partitioned lands in a different jar in an embedded context (C-123 §2) — a second copy of the token, the same half-session class as the refresh bug. Fleet fix: separate PRs |
+| Code | Tec-Life `middleware.ts` CSRF cookie + `refresh` without `partitioned` | refresh is fixed in the still-open Life #62; middleware in the fleet fix |
+| Code | 20 of the refresh-renews-the-whole-session PRs (2026-09-23) are **still open** — on `main` only Commerce, Insure, Brookfield and NBF renew `tec_user` with the token | merge them; the drift job will show it |
+| Script | 3 false positives on its first run (C-13 glob matched C-135; `payment.completed` defined in `shared/`; DX's guide text contains `APP_SOURCE = 'yourslug'`) | fixed in the script before merge |
 
 ## Log
 
@@ -44,3 +60,4 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 |---|---|---|---|
 | 2026-09-24 | 1–5 | tec-knowledge-base #153 | all five done; preflight **22/22** (new graph gate). Audit F8, F9, F17, F20 corrected in place where remediation showed the finding was imprecise |
 | 2026-09-24 | 2 | tec-core-backend #333 | backend CLAUDE.md: ports from code (3000 / 5001–5011), public vs private, NEW-B closed |
+| 2026-09-24 | 9 | tec-knowledge-base (this PR) | `scripts/check-drift.py` (6 checks: versions · ports · events · cookies · fleet · SLO) + weekly `drift.yml` + `evals/check-verification-freshness.sh` (23rd preflight step). Seeded a wrong C-20 port → caught |

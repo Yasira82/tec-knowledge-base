@@ -60,7 +60,7 @@ apps:
 
 # ── Shared packages / infra (not user-facing apps) ──────────────────────────
 packages:
-  - { name: tec-core-backend,      repo: Tec-core-backend,   role: "all backend microservices (Gateway :4000 + 11 services)", deploy: Railway }
+  - { name: tec-core-backend,      repo: Tec-core-backend,   role: "all backend microservices (Gateway :3000 + 11 services :5001–:5011, C-20)", deploy: Railway }
   - { name: "@yasser172/tec-sdk",  repo: TEC-SDK,            role: "server BFF SDK",           deploy: npm }
   - { name: "@yasser172/tec-auth", repo: tec-auth,           role: "SSO/cookies auth package", deploy: npm }
   - { name: "@yasser172/tec-ui",   repo: Tec-ui,             role: "shared design system",     deploy: npm }

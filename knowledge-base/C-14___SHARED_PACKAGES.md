@@ -4,6 +4,7 @@
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Code Verified]`
+> Last verified against code: 2026-09-24 — and weekly by `scripts/check-drift.py` (versions ↔ `package.json`).
 
 **Last Updated:** 24 September 2026 — versions verified against each repo's `package.json` on `main`.
 
