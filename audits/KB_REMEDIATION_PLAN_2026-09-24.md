@@ -36,10 +36,11 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 | 2026-09-24 | 4 | The dependency graph is gated exactly like the registry (regenerate, diff vs HEAD, ignore `# Generated:`), in preflight and CI | Same failure class as the registry; one rule for both generated files |
 | 2026-09-24 | 5 | `impact_analysis.py` **kept** (audit said delete) | C-116 names it as the governed asset; both scripts work and agree. Consolidation = a C-116 amendment → folded into step 6 |
 | 2026-09-24 | 5 | `registry-integrity-report.md` untracked + gitignored; the gate still writes it | Generated every run with a timestamp and an absolute local path. preflight's restore no longer names it (an untracked pathspec makes `git checkout` refuse every path) |
-| 2026-09-24 | 2 | tec-core-backend `CLAUDE.md` 4000-series port table: fixed in that repo, separately | Outside this repo; tracked under the log below |
+| 2026-09-24 | 2 | tec-core-backend `CLAUDE.md` 4000-series port table: fixed in that repo, separately | Outside this repo — tec-core-backend #333 |
 
 ## Log
 
 | Date | Step | PR | Result |
 |---|---|---|---|
 | 2026-09-24 | 1–5 | tec-knowledge-base #153 | all five done; preflight **22/22** (new graph gate). Audit F8, F9, F17, F20 corrected in place where remediation showed the finding was imprecise |
+| 2026-09-24 | 2 | tec-core-backend #333 | backend CLAUDE.md: ports from code (3000 / 5001–5011), public vs private, NEW-B closed |
