@@ -35,6 +35,8 @@ PROPOSED → ACCEPTED → DEPRECATED
 | ADR-010 | NX repurposed → Opportunity Exchange · Security Governance folded into System | ACCEPTED (July 2026) |
 | ADR-011 | Modules-First — Service Extraction & Modular Architecture Policy | ACCEPTED (July 2026 · details in C-132) |
 | ADR-012 | Referral Rewards = Gift Subscription (raw-Pi bonus hard-gated) | ACCEPTED (July 2026) |
+| ADR-013 | Legend Scoring Contract (Analytics computes · Legend serves) | ACCEPTED (July 2026) |
+| ADR-014 | A property is never a tradable token · a non-transferable Property Certificate, hard-gated | PROPOSED (September 2026) |
 
 ---
 
@@ -443,3 +445,55 @@ Event: `legend.scores.updated.v1` (see `manifests/events-catalog.yaml`). tec-cor
 
 **References:** C-105 (Analytics — intelligence/computation) · C-126 (Legend — serves, never computes)
 · C-127 (Elite — criteria over scores) · C-47 (Invariant #8, eventual consistency) · C-70 (event law)
+
+---
+
+## ADR-014 — A property is never a tradable token · a non-transferable Property Certificate, hard-gated
+
+**Status:** PROPOSED | **Date:** 24 September 2026 | **Decision Authority:** CEO (C-47) | **Extends:** C-114 (Estate) · C-120 (Zone)
+
+### Context
+A property registered in TEC Estate is recorded as a `REAL_ESTATE` asset in tec-asset-service
+(C-114 → Deployment Status → Property records). On 24 Sep 2026 one was listed in the Assets
+marketplace for 50π, and the natural next question was asked: *why not mint it as an NFT,
+the way a domain can be?* Three facts answer it.
+
+1. **An NFT in Assets is sellable.** A tradable property token is a sale of the property for
+   Pi by another name — what C-114 §4 and §6 forbid ("No Pi payment for full property value —
+   legal liability too high"), and what tec-core-backend #337 now refuses.
+2. **A token does not carry title.** Legal title transfer is an external legal process
+   (C-114 §4, "Does NOT Own"). A buyer of a property NFT would believe they bought the
+   property; they would own a picture of it. That misleads the user and exposes the platform.
+3. **The record is a claim, not a fact.** Registration is self-recorded (`zoneVerified:
+   false`). Anyone can register any building. Minting that into a sellable token turns an
+   unverified claim into an instrument of fraud.
+
+### Decision
+1. **A property is never minted as a transferable or sellable token** — not in Assets, not in
+   any app. This restates C-114 §4/§6; it is already enforced in code (tec-core-backend #337:
+   no listing, no saga reservation, a paid purchase is a recorded refund; Tec-Assets #61:
+   properties are not shown in Assets).
+2. **What MAY exist later: a Property Certificate — non-transferable.** A record in the
+   owner's profile (e.g. surfaced by Legend, C-126) that says *this user registered this
+   property in TEC, and Zone verified it*. It cannot be listed, sold, transferred or
+   pledged; it proves a registration, never ownership of the building.
+3. **The Certificate is HARD-GATED** — it ships only after all three, the same pattern as
+   FundX and Insure custody (C-113 · C-129):
+   - **Zone verification (C-120):** the property AND its owner are verified; a certificate
+     is never issued for a self-recorded property.
+   - **Legal review** for the target jurisdiction: what a platform-issued property
+     certificate may claim, and what it must disclaim.
+   - **Phase gate:** it is a new feature, so it waits for Phase 0 to close.
+4. **Ownership:** the certificate record belongs to tec-asset-service (it owns Asset,
+   C-68); verification belongs to Zone; Estate presents it. No new service.
+
+### Consequences
+- A PR that mints a property as a transferable NFT, lists one for Pi, or lets a property
+  change owner for Pi is rejected, citing this ADR and C-114 §4/§6.
+- A PR that builds the Certificate must show the three gates as documented-done.
+- Until then, a property lives in Estate only: registered for a 3π service fee, verified
+  (later) by Zone, never traded.
+
+**References:** C-114 (Estate — §4 authority boundary, §6 security, Deployment Status → Property records)
+· C-120 (Zone — verification) · C-126 (Legend — where a certificate would be presented)
+· C-113 · C-129 (hard-gate pattern) · C-68 (Asset ownership) · C-47 (decision authority)
