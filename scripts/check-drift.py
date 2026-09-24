@@ -16,6 +16,7 @@ This script closes that gap. It reads the code repos at a git ref and compares:
   refresh    C-13 §1 (token + tec_user together)   ↔ every refresh route that renews the token
   fleet      architecture/app-fleet.yaml           ↔ Hub registry + SSO allowlist + each app's APP_SOURCE
   slo        C-78 §2                               ↔ manifests/slo-definitions.yaml (same numbers, one authority)
+  generated  the tables in C-11 + C-44                ↔ what generate-code-docs.py renders from the code now
 
 Each result is PASS, FAIL or SKIP (a repo that is not available). Exit 1 on any FAIL, or on
 any SKIP with --strict.
@@ -43,54 +44,11 @@ def record(status, check, detail):
     results.append((status, check, detail))
 
 
-# ── repo access (read at a git ref, never the working tree — a checkout on another branch
-#    must not make main look drifted) ─────────────────────────────────────────────────────
-
-class Repo:
-    def __init__(self, name, path, ref):
-        self.name, self.path, self.ref = name, path, ref
-
-    def _git(self, *args):
-        r = subprocess.run(['git', '-C', self.path, *args], capture_output=True, text=True)
-        return r.stdout if r.returncode == 0 else None
-
-    def read(self, rel):
-        return self._git('show', f'{self.ref}:{rel}')
-
-    def files(self, *pathspecs):
-        out = self._git('ls-tree', '-r', '--name-only', self.ref, '--', *pathspecs)
-        return out.split('\n') if out else []
-
-    def grep(self, pattern, *pathspecs):
-        """[(file, line_text)] for an extended regex, source files only (tests excluded)."""
-        specs = list(pathspecs) or ['.']
-        specs += [':!*.test.ts', ':!*.test.tsx', ':!*.spec.ts', ':!**/__tests__/**', ':!**/node_modules/**']
-        out = self._git('grep', '-I', '-E', pattern, self.ref, '--', *specs)
-        hits = []
-        for line in (out or '').splitlines():
-            # "<ref>:<file>:<text>"
-            rest = line[len(self.ref) + 1:]
-            f, _, text = rest.partition(':')
-            hits.append((f, text))
-        return hits
-
-
-def open_repos(repos_dir, ref):
-    by_lower = {}
-    if os.path.isdir(repos_dir):
-        for d in os.listdir(repos_dir):
-            if os.path.isdir(os.path.join(repos_dir, d, '.git')):
-                by_lower[d.lower()] = d
-
-    def get(name):
-        d = by_lower.get(name.lower())
-        if not d:
-            return None
-        repo = Repo(name, os.path.join(repos_dir, d), ref)
-        if repo._git('rev-parse', '--verify', '--quiet', ref) is None:
-            return None
-        return repo
-    return get
+# Repo access, the service list and the port reader live in code_facts.py — the doc
+# generator (generate-code-docs.py) reads the code the same way this check does.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from code_facts import (Repo, open_repos, SERVICES, service_dir, code_ports,  # noqa: E402
+                        MissingRepo, extract_block, render_c11, render_c44)
 
 
 def kb_read(rel):
@@ -146,32 +104,9 @@ def check_versions(get):
 
 # ── ports ────────────────────────────────────────────────────────────────────────────────
 
-SERVICES = ['api-gateway', 'auth', 'wallet', 'payment', 'asset', 'identity',
-            'notification', 'storage', 'kyc', 'commerce', 'realtime', 'analytics']
 SNAPSHOT_NAMES = {'Gateway': 'api-gateway', 'Auth': 'auth', 'Wallet': 'wallet', 'Payment': 'payment',
                   'Asset': 'asset', 'Identity': 'identity', 'Notify': 'notification', 'Storage': 'storage',
                   'KYC': 'kyc', 'Commerce': 'commerce', 'Realtime': 'realtime', 'Analytics': 'analytics'}
-
-
-def service_dir(svc):
-    return 'tec-api-gateway' if svc == 'api-gateway' else f'tec-{svc}-service'
-
-
-def code_ports(backend):
-    ports = {}
-    for svc in SERVICES:
-        d = service_dir(svc)
-        main = backend.read(f'{d}/src/main.ts') or ''
-        m = re.search(r"process\.env\.PORT\s*(?:\?\?|\|\|)\s*['\"]?(\d{4})", main)
-        if m:
-            ports[svc] = (int(m.group(1)), 'main.ts')
-            continue
-        # no code default (payment: PORT is required by its env schema) → the documented default
-        env = backend.read(f'{d}/.env.example') or ''
-        m = re.search(r'^PORT=(\d{4})', env, re.M)
-        if m:
-            ports[svc] = (int(m.group(1)), '.env.example — no code default')
-    return ports
 
 
 def check_ports(get):
@@ -366,6 +301,33 @@ def check_fleet(get, fleet):
         record(PASS, 'fleet', f'{ok} apps: APP_SOURCE matches app-fleet.yaml')
 
 
+# ── generated docs (C-11 repository map · C-44 environment variables) ─────────────────────
+
+GENERATED = {'knowledge-base/C-11___REPOSITORY_MAP.md': render_c11,
+             'knowledge-base/C-44_Environment_Variables.md': render_c44}
+
+
+def check_generated(get, fleet_doc):
+    """The tables in C-11 and C-44 are generated from the code (generate-code-docs.py).
+    Regenerate them in memory; if the committed block differs, the code moved and the doc
+    did not — a new variable, a new repo, a version bump."""
+    for rel, render in GENERATED.items():
+        try:
+            fresh = render(get, fleet_doc)
+        except MissingRepo as e:
+            record(SKIP, 'generated', f'{rel}: repo {e} not available')
+            continue
+        committed = extract_block(kb_read(rel))
+        if committed is None:
+            record(FAIL, 'generated', f'{rel}: GENERATED markers missing')
+        elif committed == fresh.strip('\n'):
+            record(PASS, 'generated', f'{rel}: matches the code')
+        else:
+            added = sorted(set(fresh.splitlines()) - set(committed.splitlines()))
+            record(FAIL, 'generated', f'{rel}: stale — run scripts/generate-code-docs.py. New from code: '
+                   + '; '.join(l.strip()[:80] for l in added[:5]))
+
+
 # ── SLO (in-KB, but the same failure class: two copies of one number) ────────────────────
 
 SLO_ROWS = {'Auth': 'auth_availability', 'Payments': 'payment_availability', 'Gateway': 'gateway_availability',
@@ -411,6 +373,7 @@ def main():
     check_cookies(get, fleet)
     check_refresh(get, fleet)
     check_fleet(get, fleet)
+    check_generated(get, yaml.safe_load(kb_read('architecture/app-fleet.yaml')))
     check_slo()
 
     icon = {PASS: '✅', FAIL: '❌', SKIP: '⚠️ '}

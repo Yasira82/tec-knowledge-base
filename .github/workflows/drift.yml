@@ -2,7 +2,8 @@ name: KB ↔ Code Drift (weekly)
 
 # The in-repo gates (knowledge-ci.yml) check the KB against itself. This job checks the
 # KB against the CODE it describes — ports, package versions, events, cookie attributes,
-# the app fleet — by cloning every repo and running scripts/check-drift.py.
+# the app fleet, and the generated tables in C-11/C-44 — by cloning every repo and running
+# scripts/check-drift.py.
 # Audit F1 (audits/KB_ENGINEERING_AUDIT_2026-09-24.md): those facts drifted for months
 # with every in-repo gate green. Remediation plan step 9.
 #

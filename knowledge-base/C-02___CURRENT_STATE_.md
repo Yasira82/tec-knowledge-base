@@ -30,6 +30,7 @@ checks it every Monday (`drift.yml`); last run 2026-09-24: **34 pass · 0 fail �
 | SLOs | Auth / payments / gateway 99.9 % · PAL 99.95 % · Hub 99.5 % | C-78 §2 + `manifests/slo-definitions.yaml` |
 | Violations | All P0/P1/P2 closed | C-40 |
 | KB gates | `bash scripts/preflight.sh` = what CI runs (23 steps) | `CLAUDE.md` |
+| Repos · env vars | Every repo with its dependencies, every variable the code reads — generated from the code | C-11 · C-44 |
 
 ---
 
@@ -49,7 +50,7 @@ Replace rows as they close — do not strike them through and keep them.
 | 8 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
 | 9 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
 | 10 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
-| 11 | KB remediation steps 6 · 8 · 10; 27 `[Code Verified]` docs without a `Last verified` date | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
+| 11 | KB remediation steps 6 · 10; 24 `[Code Verified]` docs without a `Last verified` date | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
 ---
 
