@@ -4,6 +4,10 @@
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
+> **Canonical list:** `manifests/events-catalog.yaml` — code-sourced, gated by
+> `evals/check-events-catalog.sh`, every entry found in tec-core-backend on 2026-09-24.
+> This file explains the **patterns** (consumer groups, idempotency, outbox). For *which*
+> events exist, read the catalog; where the two differ, the catalog wins.
 
 ---
 
@@ -54,9 +58,14 @@ await publishEvent(pub, EVENTS.PAYMENT_COMPLETED, {
 
 ---
 
-### Event: `user.created`
+### Event: `user.created` → retired; now `user.created.v1` (C-70 rename, Sessions 23–24)
 
-**Publisher:**
+> The unversioned `user.created` emit was dropped in Session 24 (tec-core-backend #163).
+> The producer now emits only `user.created.v1`, **with an `eventId`**, and four consumers
+> (identity · analytics · realtime · notification) dedupe on it. The snippet below is the
+> pre-rename shape, kept for the pattern only.
+
+**Publisher (historical shape):**
 ```typescript
 // tec-auth-service/src/modules/auth/auth.service.ts:62
 await this.redis.xadd('user.created', '*', 'data', JSON.stringify({
@@ -77,13 +86,26 @@ await this.redis.xadd('user.created', '*', 'data', JSON.stringify({
 
 ---
 
-## 3. STREAM NAMES (كلهم)
+## 3. STREAM NAMES
+
+The two-line list that stood here ("كلهم" — all of them) had been wrong since July: one of
+its two streams was retired and a dozen more went live. The live set, from the catalog on
+2026-09-24 — **15 live · 1 planned**:
 
 ```
-payment.completed  ← payment-service publishes
-user.created       ← auth-service publishes
-payment:outbox     ← payment-service internal (outbox worker)
+Identity / payment core   user.created.v1 · payment.approved.v1 · payment.completed
+                          payment.completed.v1 · order.paid.v1
+Verification              kyc.verified · kyc.rejected
+Zone                      zone.badge.issued.v1 · zone.badge.revoked.v1
+Value chain               epic.project.completed.v1 · connection.milestone.v1
+                          connection.trust.updated.v1 · legend.scores.updated.v1
+Analytics                 analytics.business.popularity.v1 · analytics.finding.raised.v1
+Planned                   fundx.investment.closed.v1
+Internal (not an event)   payment:outbox  ← payment-service outbox worker
 ```
+
+`payment.completed` (unversioned) is still emitted beside `.v1` and still has consumers — a
+legacy name the catalog flags; do not add new consumers to it.
 
 ---
 
@@ -159,12 +181,14 @@ const startLifeConsumer = async (client: Redis) => {
 
 ## 8. EVENTS لم تُنفَذ بعد (Future)
 
-```
-kyc.approved
-asset.transferred
-subscription.upgraded
-order.created
-```
+The planned list is the catalog's `status: planned` entries — today only
+`fundx.investment.closed.v1`.
+
+The four names that used to be here — `kyc.approved`, `asset.transferred`,
+`subscription.upgraded`, `order.created` — were **never adopted**: verification ships as
+`kyc.verified` / `kyc.rejected`, orders as `order.paid.v1`, and none of the four exists in
+tec-core-backend (the only `order.created` in the code is the `order.created_at` column).
+A new event is added to the catalog first, versioned (C-70), then implemented.
 
 ---
 

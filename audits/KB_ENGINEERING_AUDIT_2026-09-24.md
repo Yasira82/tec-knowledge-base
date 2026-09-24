@@ -99,18 +99,27 @@ Mentions the original repos + backend services only; 28 TEC repos exist (Life, Z
 - In C-44 but **used nowhere**: `REFRESH_SECRET` (code: `JWT_REFRESH_SECRET`), `PI_WEBHOOK_SECRET`, `PI_API_KEY_HUB`.
 - **Cost, observed:** on 2026-09-24 `insure.pi` sat at 0/5 arrivals because one Vercel var was missing (`configured:false`). The per-app matrix in `audits/PER_APP_LAUNCH_ENV_MATRIX.md` (07-16) is the right idea; C-44 should *be* it, generated from code.
 
-### F8 · P2 — Two SLO sources disagree (violates P1 Single Source of Truth)
+### F8 · P2 — Two SLO sources disagree on availability (violates P1 Single Source of Truth)
 
-| SLO | C-62 | `manifests/slo-definitions.yaml` |
+| SLO | C-62 | C-78 §2 · `manifests/slo-definitions.yaml` |
 |---|---|---|
-| Payment success | **> 99%** | **≥ 95%** |
-| Gateway availability | 99.95% | ≥ 99.9% |
+| Payment availability | **99.99%** | **99.9%** |
+| Auth availability | 99.95% | 99.9% |
+| Gateway availability | 99.95% | 99.9% |
 
+(Corrected during remediation: C-62's "> 99%" is the *Pi API* success rate, not our payment
+success rate, so it does not conflict with the manifest's `payment_success_rate ≥ 95%`.)
 `check-slo-definitions` validates the manifest only. **Fix:** C-62 cites the manifest; numbers live in one place.
 
-### F9 · P2 — C-56 names events that do not exist
+### F9 · P2 — C-56's stream list is two streams, one of them retired
 
-`kyc.approved`, `asset.transferred`, `subscription.upgraded` — **0 occurrences** in tec-core-backend. `user.created` (unversioned) was retired in Session 24. `manifests/events-catalog.yaml` is correct (every entry found in code). **Fix:** C-56 → pointer to the catalog.
+C-56 §3 "STREAM NAMES (كلهم — all of them)" lists `payment.completed` and `user.created`;
+`user.created` was retired in Session 24 and **15 events are live** in the catalog. Its §8
+"future" list names `kyc.approved`, `asset.transferred`, `subscription.upgraded`,
+`order.created` — none adopted, none in code (verification shipped as `kyc.verified` /
+`kyc.rejected`, orders as `order.paid.v1`). (Corrected during remediation: those four were
+listed as *future*, not claimed live.) `manifests/events-catalog.yaml` is correct.
+**Fix:** C-56 → pointer to the catalog.
 
 ### F10 · P2 — C-40 lists NEW-M as open; it closed on 2026-06-18
 

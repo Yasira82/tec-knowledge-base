@@ -4,6 +4,20 @@
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
+> **Binding SLOs:** **C-78 §2** is the authority and `manifests/slo-definitions.yaml` its
+> machine-readable form (gated by `evals/check-slo-definitions.sh`). The **availability**
+> figures in this file are stricter than the binding ones —
+>
+> | Service | This file | Binding (C-78 §2 · manifest) |
+> |---|---|---|
+> | Payment | 99.99% | **99.9%** |
+> | Auth | 99.95% | **99.9%** |
+> | Gateway | 99.95% | **99.9%** |
+>
+> — and are kept as **engineering stretch goals, not SLOs**: nothing alerts on them and no
+> error budget is spent against them. The latency, error-rate and Pi-API figures below have
+> no binding counterpart yet; they are guidance until the manifest adopts them.
+> (Decision recorded 2026-09-24, `audits/KB_REMEDIATION_PLAN_2026-09-24.md`.)
 
 ---
 

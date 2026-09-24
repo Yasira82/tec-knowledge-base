@@ -31,7 +31,8 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 
 | Date | Step | Decision | Why |
 |---|---|---|---|
-| — | — | — | — |
+| 2026-09-24 | 3 | SLO authority = C-78 §2 + `slo-definitions.yaml`; C-62's stricter availability figures (payment 99.99%, auth/gateway 99.95%) are stretch goals, not SLOs | C-78 is the operations constitution and the manifest already mirrors it; relabelling avoids silently changing anyone's numbers |
+| 2026-09-24 | 3 | C-56 points at `events-catalog.yaml` for the event list; keeps only the patterns | The catalog is code-sourced and gated; the prose list had drifted twice |
 
 ## Log
 
