@@ -86,6 +86,22 @@ through; `readFollowUp` makes 202 "delivering shortly" and 409 a refund, not "al
 - Estate registration opened FROM the Hub (Mode 1) loses the form on the return trip, so
   the property is not registered — a pre-existing gap, found while writing the test steps.
 
+## 4c. Properties leave Assets; "why not an NFT?" becomes ADR-014
+
+- Tec-Assets **#61**: `REAL_ESTATE` left out of the Assets list — the record stays in
+  asset-service and in Estate; nothing was deleted. In Assets it was a 0π card with a
+  Transfer button to a missing route and a "Delete NFT" that would erase Estate's record.
+- Nine code comments cited "C-114 §12" for storing a property as an asset; §12 is the
+  Integration Map and never said it. The decision is now written in C-114 → Deployment
+  Status → Property records (KB #165), and the comments point there (backend #338, Estate #39).
+- The owner asked why a property is not minted as an NFT. **C-64 ADR-014 (PROPOSED)**: never
+  a tradable token (a sale of the property for Pi by another name, no legal title, and the
+  record is unverified); a non-transferable, Zone-verified **Property Certificate** may come
+  later, hard-gated on Zone verification + legal review + the Phase 0 exit. **Accepted by the
+  CEO the same day**, with one fix: the ADR had the certificate shown by Legend in one clause
+  and by Estate in another — now one owner per concern (record: asset-service · verification:
+  Zone · with the property: Estate · as an achievement, from an event: Legend).
+
 ## 5. Left open
 
 - Tec-Assets `assets/transfer` calls `/api/assets/:id/transfer`, which asset-service does not have.
