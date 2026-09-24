@@ -11,7 +11,8 @@ the registry and commit BOTH files together:
 
 ```bash
 python3 scripts/build-asset-registry.py     # rebuild from the edited headers
-git add knowledge-base/ architecture/asset-registry.yaml architecture/registry-integrity-report.md
+python3 scripts/regenerate-cdg.py           # then the dependency graph derived from it
+git add knowledge-base/ architecture/asset-registry.yaml manifests/dependency-graph.yaml
 ```
 
 - ❌ Editing `asset-registry.yaml` by hand → the **Registry Integrity Check** CI gate

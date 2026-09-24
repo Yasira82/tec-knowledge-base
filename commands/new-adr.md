@@ -8,7 +8,7 @@ Create a new ADR for the TEC platform following the C-64 ADR system.
 ## Steps
 
 1. **Determine ADR number**
-   - Check `knowledge-base/C-64___ADR_SYSTEM.md` for the last ADR number
+   - Check `knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md` for the last ADR number
    - Increment by 1
 
 2. **Validate the decision needs an ADR**

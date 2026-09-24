@@ -30,7 +30,6 @@ cd "$(dirname "$0")/.."
 WORKFLOW=".github/workflows/knowledge-ci.yml"
 REGISTRY="architecture/asset-registry.yaml"
 GRAPH="manifests/dependency-graph.yaml"
-REPORT="architecture/registry-integrity-report.md"
 
 if [ ! -f "$WORKFLOW" ]; then
   echo "❌ $WORKFLOW not found — cannot mirror CI without it."
@@ -140,8 +139,11 @@ done
 # regenerated file is exactly what the user is being told to commit, and
 # discarding it would turn a helpful failure into a baffling one.
 if [ "$registry_was_clean" -eq 1 ]; then
-  git checkout -- "$REGISTRY" "$REPORT" 2>/dev/null || true
+  git checkout -- "$REGISTRY" 2>/dev/null || true
 fi
+# The integrity report is no longer tracked (.gitignore — KB audit F20). It must not be
+# in the checkout above: one untracked pathspec makes `git checkout` refuse ALL of them,
+# which would silently stop restoring the registry.
 if [ "$graph_was_clean" -eq 1 ]; then
   git checkout -- "$GRAPH" 2>/dev/null || true
 fi

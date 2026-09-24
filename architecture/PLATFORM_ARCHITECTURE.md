@@ -350,7 +350,7 @@ Consumer groups (idempotent)
 | ADR-006 | SSO redirect to Hub for all apps | ACCEPTED |
 | ADR-007 | Pi Payment Ownership Authority (isHubNavigation) | ACCEPTED |
 
-Full ADR details → [`knowledge-base/C-64___ADR_SYSTEM.md`](../knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md)
+Full ADR details → [`knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md`](../knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md)
 
 ---
 

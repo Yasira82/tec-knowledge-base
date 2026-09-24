@@ -162,7 +162,7 @@ so they pass; any standard tool (`yaml.safe_load`, editors, CI linters) fails. *
 |---|---|---|
 | `architecture/PLATFORM_ARCHITECTURE.md`, `commands/new-adr.md` (+ tec-app `CLAUDE.md`) | `C-64___ADR_SYSTEM.md` | `C-64___ARCHITECTURE_DECISION_RECORDS.md` |
 | `C-80` | proposes "C-23 or doc **#24**" for a tec-auth doc | #24 was never created (this reference in `knowledge-base/` is not seen by `check-session-canonical`, which scans `audits/` + `memory/` only) |
-| `audits/EXTERNAL_AUDIT_2026-06-20_Session14.md` | `docs/PAYMENT_SYSTEM.md` | does not exist |
+| `audits/EXTERNAL_AUDIT_2026-06-20_Session14.md` | `docs/PAYMENT_SYSTEM.md` | *(corrected during remediation: exists in **tec-app** `docs/` — a cross-repo reference, not broken)* |
 | `CLAUDE.md` Session 25 | `scripts/verify-runtime.mjs` | lives in **tec-core-backend**, not here |
 
 ### F18 · P3 — Language policy: ~30 English-only docs contain Arabic; the policy contradicts itself
@@ -177,7 +177,7 @@ The policy also puts C-02 inside the English-only C-00→C-23 range and then lis
 
 ### F20 · P3 — Duplicates and generated noise
 
-- `scripts/impact_analysis.py` and `scripts/registry-impact-analysis.py` — two "v1.0" blast-radius engines, same purpose; only the second is used.
+- `scripts/impact_analysis.py` and `scripts/registry-impact-analysis.py` — two "v1.0" blast-radius engines, same purpose and same result (verified on C-123), different ranking. *(Remediation: kept — C-116 names `impact_analysis.py` as the governed asset and the integrity report recommends the other; consolidating needs a C-116 amendment.)*
 - `architecture/registry-integrity-report.md` is a generated artefact committed with an absolute local path (`/home/user/...`) and a timestamp — churn on every run.
 
 ### F21 · P3 — The "4 apps" era is still in 21 files
