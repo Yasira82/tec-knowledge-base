@@ -45,13 +45,17 @@ NFT's name and image travel inside the payment's own `product_id` (`nft:<base64>
 through; `readFollowUp` makes 202 "delivering shortly" and 409 a refund, not "already done".
 186/186 (12 new).
 
-## 3. Deploy order (ops — not done by this session)
+## 3. Deploy — what actually happened (24 Sep, evening)
 
-1. tec-asset-service: start command `npm run db:push && node dist/main` → redeploy → **restore**
-   `node dist/main`.
-2. Set `REDIS_URL` on tec-asset-service (the shared Redis). Without it the consumer does not
-   start and the endpoints stay at 202.
-3. Deploy asset-service + payment-service, then Tec-Assets.
+- #334 merged → asset-service deployed with the new routes and `Purchase Consumer started`
+  (`REDIS_URL` set), but with **no `db:push` in its logs** — the start-command change had
+  not been applied (Railway stages a settings edit until you Deploy it).
+- Applied, redeployed: `db push` → `The database is already in sync` — the table exists —
+  **but repeating every ~2 s with no Nest line between**: a crash loop, with
+  `--skip-generate` present and `/app` owned by `appuser`. Restoring `node dist/main`
+  ended it (deploy `2e3ede48`: one `Purchase Consumer started`, no loop).
+- Cause not identified; npm's banner shows the command ran under a shell. The documented
+  method therefore changed to a **pre-deploy step** (tec-core-backend #335).
 
 ## 4. Left open
 
