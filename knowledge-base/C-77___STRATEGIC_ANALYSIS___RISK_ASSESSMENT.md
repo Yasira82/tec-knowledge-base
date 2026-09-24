@@ -70,7 +70,7 @@ Tests:    tec-auth-service = 95% | tec-auth pkg ≥ 80% gate | apps with payment
 ✅ Tencent model = Economic Transaction Graph
 ```
 
-TEC = **Stripe + Tencent + Shopify** داخل Pi Network
+TEC = **Stripe + Tencent + Shopify** inside Pi Network
 
 ## Core Flow
 
@@ -90,7 +90,7 @@ The REAL product = **Economic Coordination Infrastructure**
 
 ---
 
-# 3. CORRECT DECISIONS (لا تُعاد مناقشتها — ADR مُلزم)
+# 3. CORRECT DECISIONS (not to be reopened — binding ADRs)
 
 | # | Decision | Why correct |
 |---|----------|--------------|
@@ -106,7 +106,7 @@ The REAL product = **Economic Coordination Infrastructure**
 
 # 4. EXISTENTIAL RISKS
 
-## R1 — Pi Network Black Box (الأخطر)
+## R1 — Pi Network Black Box (the most dangerous)
 
 ```txt
 Pi SDK    → undocumented edge cases

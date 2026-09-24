@@ -6,10 +6,10 @@
 > **Authority Scope:** `[Platform]`
 > **Decision Authority:** CEO (C-47)
 
-> **TL;DR (عربي):** ده **قرار استراتيجي نافذ الآن**: بدل ما نروّج 24 app متوسطة، نعمّق **8 apps**
-> لحد مستوى **احترافي عليه مصداقية** لغاية **شهر 9 (سبتمبر 2026)**، وبعدها **يبدأ التسويق
-> فورًا — حتى لو الـ apps مش خالصة 100%**. العمق قبل الاتساع؛ المصداقية قبل الضجيج. مُحفّز
-> شهر-9 **إجباري** عشان الكمال ما ياكلش الوقت كله.
+> **TL;DR:** this is a **strategic decision in force now**: instead of promoting 24 average apps, we deepen **8 apps**
+> to a **professional, credible** level until **month 9 (September 2026)**, and then **marketing starts
+> immediately — even if the apps are not 100% finished**. Depth before breadth; credibility before noise. The
+> month-9 trigger is **mandatory**, so perfection does not eat all the time.
 
 ---
 

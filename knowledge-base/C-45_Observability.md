@@ -16,7 +16,7 @@
 |---|---|---|
 | Sentry | Frontend (Hub + apps) | ✅ |
 | Pino | Backend (all services) | ✅ |
-| Prometheus | payment-service فقط | ⚠️ ISS-010 |
+| Prometheus | payment-service only | ⚠️ ISS-010 |
 | Railway Metrics | CPU + Memory | ✅ |
 | Distributed Tracing | — | ❌ |
 | Centralized Logging | — | ❌ |

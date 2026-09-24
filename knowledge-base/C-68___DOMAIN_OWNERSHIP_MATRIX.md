@@ -9,25 +9,25 @@
 
 Authority + Write Ownership + Read Rules
 
-⚠️ هذا الـ content دستوري
-أي service تكتب في domain لا تملكه = P1 violation
+⚠️ This content is constitutional
+Any service that writes to a domain it does not own = P1 violation
 
 ---
 
 ## 1. CORE PRINCIPLE — SINGLE WRITE AUTHORITY
 
-كل domain داخل الـ ecosystem له:
+Every domain inside the ecosystem has:
 
-- ✅ Owner واحد فقط
-- ✅ Database authority واحدة فقط
-- ✅ Write authority واحدة فقط
-- ✅ Event publisher واحد فقط
+- ✅ exactly one Owner
+- ✅ exactly one database authority
+- ✅ exactly one write authority
+- ✅ exactly one event publisher
 
-- ❌ ممنوع multiple ownership
-- ❌ ممنوع shared writes
-- ❌ ممنوع cross-service DB access
+- ❌ Forbidden: multiple ownership
+- ❌ Forbidden: shared writes
+- ❌ Forbidden: cross-service DB access
 
-القاعدة:
+The rule:
 ```
 Owner Service = الوحيد المسموح له يكتب مباشرة
 
@@ -79,7 +79,7 @@ Owner Service = الوحيد المسموح له يكتب مباشرة
 
 ✅ ONLY owner service writes directly
 
-مثال:
+Example:
 
 ```
 Wallet balance:
@@ -104,14 +104,14 @@ Payment state:
 
 ## 4. CROSS-SERVICE ACCESS RULES
 
-✅ مسموح:
+✅ Allowed:
 ```
 Service → API Gateway → Owner Service
 أو:
 Service → Redis Stream → Projection (read-only)
 ```
 
-❌ ممنوع:
+❌ Forbidden:
 ```
 Direct database access بين services
 Prisma cross-service imports
@@ -136,14 +136,14 @@ payment-service → GET /api/v1/auth/user/:id
 | subscription.upgraded | auth-service |
 | notification.created | notification-service |
 
-⚠️ فقط owner service يقدر ينشر الـ event
-⚠️ باقي الـ services تستمع بس — لا تنشر
+⚠️ Only the owner service may publish the event
+⚠️ The other services only listen — they do not publish
 
 ---
 
 ## 6. DATABASE OWNERSHIP
 
-كل service تملك database منفصلة
+Every service owns a separate database
 
 | Service | Database |
 |---|---|
@@ -159,7 +159,7 @@ payment-service → GET /api/v1/auth/user/:id
 | realtime-service | tec_realtime |
 | analytics-service | Supabase (exception) |
 
-❌ ممنوع:
+❌ Forbidden:
 - shared schemas
 - shared migrations
 - shared Prisma clients
@@ -169,7 +169,7 @@ payment-service → GET /api/v1/auth/user/:id
 
 ## 7. CACHE OWNERSHIP
 
-Redis cache keys لازم تبقى namespaced بالـ service:
+Redis cache keys must stay namespaced by service:
 
 ```
 ✅ CORRECT:
@@ -204,7 +204,7 @@ Authority دائماً Backend:
 
 ---
 
-## 9. PAYMENT DOMAIN — الأكثر حساسية
+## 9. PAYMENT DOMAIN — the most sensitive
 
 | Authority | Owner |
 |---|---|
@@ -235,11 +235,11 @@ Client metadata:
 
 ## 11. CONFLICT RESOLUTION
 
-لو حصل conflict:
+If there is a conflict:
 1. C-47 — Kernel Spec
 2. C-64 — ADRs
-3. هذا الـ content
-4. Owner Service يفوز دائماً
+3. this content
+4. the Owner Service always wins
 
 ---
 
@@ -248,10 +248,10 @@ Client metadata:
 | Violation | Severity |
 |---|---|
 | Cross-service direct DB access | P1 |
-| Multiple write owners على نفس الـ domain | P1 |
-| Frontend authority على payment amount | P1 |
-| Wrong service ينشر foreign event | P1 |
-| Shared mutable database بين services | P1 |
+| Multiple write owners on the same domain | P1 |
+| Frontend authority over the payment amount | P1 |
+| The wrong service publishes a foreign event | P1 |
+| Shared mutable database between services | P1 |
 | Frontend calculates financial truth | P1 |
 
 ---

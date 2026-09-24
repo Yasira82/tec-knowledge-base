@@ -41,11 +41,11 @@ ALERT is the **early warning system** of the TEC economic runtime. It monitors a
 
 ## 3. ECONOMIC PURPOSE
 
-تقليل الخسائر والانحرافات في وقتها.
+Reduce losses and deviations while they are still happening.
 
-- بدون ALERT: مشاكل تظهر بعد فوات الأوان → user trust erosion
-- بوجود ALERT: مشاكل تُكتشف وتُحل قبل تأثير المستخدم
-- اقتصادياً: loss prevention value > cost of building ALERT
+- Without ALERT: problems surface too late → user trust erosion
+- With ALERT: problems are detected and resolved before they affect the user
+- Economically: loss prevention value > cost of building ALERT
 
 ---
 

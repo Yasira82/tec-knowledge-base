@@ -17,11 +17,11 @@
 | 3 | C-56 → pointer to `events-catalog.yaml`; C-62 → pointer to the SLO manifest (one set of numbers) | F8, F9 | S | ✅ #153 |
 | 4 | Regenerate `dependency-graph.yaml`; regen + diff in preflight and CI | F13 | S | ✅ #153 |
 | 5 | Fix F17 references; delete the duplicate impact script; stop committing the integrity report | F17, F20 | S | ✅ #153 |
-| 6 | README / CLAUDE.md: counts replaced by "run preflight"; CLAUDE.md → navigation only; consolidate the two impact scripts (C-116 amendment) | F16, F20 | M | ◐ in this PR — ✅ on merge |
+| 6 | README / CLAUDE.md: counts replaced by "run preflight"; CLAUDE.md → navigation only; consolidate the two impact scripts (C-116 amendment) | F16, F20 | M | ✅ #159 |
 | 7 | C-02 split: ≤ 150-line current state + one file per session | F12 | M | ✅ #157 |
 | 8 | C-11 + C-44 generated from the repos by a script | F6, F7 | M | ✅ #158 |
 | 9 | Weekly cross-repo drift job + `Last-Verified` on `[Code Verified]` headers | F1 — prevents recurrence | L | ◐ merged #154 — ✅ on the first green scheduled run |
-| 10 | Language-policy pass, or amend the policy to what the KB actually does | F18 | M | ☐ |
+| 10 | Language-policy pass, or amend the policy to what the KB actually does | F18 | M | ◐ in this PR — ✅ on merge |
 
 Not scheduled (recorded, low value now): F14 evidence loop (needs ops to run the emitter
 against prod), F15 rename of fenced-YAML manifests (touches four gates), F19 stale Railway
@@ -48,6 +48,10 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 | 2026-09-24 | 6 | Kept `registry-impact-analysis.py`, deleted `impact_analysis.py`; C-116 §1.3 amended (v1.1) | Identical dependents on C-12, C-47, C-123; the CDG's only extra relation (`informs`) is empty for all 116 docs; the registry is the source, the CDG a derivative |
 | 2026-09-24 | 6 | CLAUDE.md = navigation + a "rules that bite" table; the Session 12 → 46 log moved verbatim to `memory/sessions/kb-claude-md-log.md`; ≤ 150 lines is a failing gate | Loaded into every session; its counts were each true only on their own day. Durable rules were lifted out of the log, not lost with it |
 | 2026-09-24 | 6 | README keeps no counts or phase list; the drift job now reads its port block | The README's ports were wrong for 5 services and nothing checked them |
+| 2026-09-24 | 10 | **Both**: translate AND amend. Every English-only doc's prose translated (522 lines, 61 docs, line for line); the policy amended where it was wrong (C-02 in two classes; ranges left unclassified; an archive copy per translation) | The repository is public, so "external" is real; the policy's intent was right, its classification incomplete |
+| 2026-09-24 | 10 | "External unless listed internal" (C-02 · C-40 · C-50 · C-55 · C-80 · C-81, `memory/`, `audits/`); `marketing/` = the language of its audience | A new doc gets a class by default; Arabic launch copy for Arab pioneers is correct, not drift |
+| 2026-09-24 | 10 | Arabic inside code blocks (669 lines) is a ratchet, not translated now | The policy's own gate definition covers prose; the ratchet stops growth while the backlog shrinks |
+| 2026-09-24 | 10 | The Arabic TL;DRs of C-133/C-134/C-135 were translated too | They are external docs; the founder's Arabic summary belongs in C-02 |
 
 ## First drift run (2026-09-24, all repos at `origin/main`)
 
@@ -87,3 +91,5 @@ fails on `main` today and passes on #256.
 | 2026-09-24 | 8 | tec-knowledge-base (this PR) | `scripts/code_facts.py` (shared repo reader) + `generate-code-docs.py`; C-11 (9 repos, wrong ports → all 29 code repos + 12 services, ports from `main.ts`) and C-44 (24 names, 3 unused → 160 read by code, by app/service); drift check `generated` → **36 · 0 · 0**. Seeded a deleted row → caught, with the variable named |
 | 2026-09-24 | 8 | tec-knowledge-base #158 (merged) | — |
 | 2026-09-24 | 6 | tec-knowledge-base (this PR) | CLAUDE.md 722 → 102 lines; README: 5 wrong ports, stale counts/badges/ADR range, NX role, 8 missing charters; one impact engine (and its charter count fixed: C-124 → C-131 were missing, and dependents were double-counted); `.cursorrules` RULE 3 → preflight. Drift check reads the README: on the old one, 5 port FAILs |
+| 2026-09-24 | 6 | tec-knowledge-base #159 (merged) | — |
+| 2026-09-24 | 10 | tec-knowledge-base (this PR) | 522 Arabic prose lines → English in 61 docs (line counts unchanged); `governance/LANGUAGE_POLICY.md` v1.1; `evals/check-language-policy.sh` (LP-1 prose = blocking, LP-2 code-block ratchet at 669). Seeded Arabic prose → LP-1; a code-block line → LP-2 (9 → 10). **All ten steps done.** |

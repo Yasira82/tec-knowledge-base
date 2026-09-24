@@ -1,5 +1,5 @@
 # C-22 — COMMERCE + ASSETS + ECOMMERCE APPS
-## الـ 3 Apps الجاهزة — Patterns + Status
+## The 3 ready apps — patterns + status
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -51,9 +51,9 @@ const handleBuy = async (product: Product) => {
 
 ---
 
-## 4. SHARED PATTERNS (الـ 3 Apps)
+## 4. SHARED PATTERNS (the 3 apps)
 
-### ADR-007 — isHubNavigation() (إلزامي)
+### ADR-007 — isHubNavigation() (mandatory)
 ```typescript
 const isHubNavigation = (): boolean => {
   if (typeof document === 'undefined') return false;

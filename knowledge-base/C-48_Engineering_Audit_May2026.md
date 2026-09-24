@@ -9,26 +9,26 @@
 
 
 **Date:** May 2026
-**Source:** Claude Code deep audit — الكود الفعلي (مش docs)
-**Repos:** 9 repos كاملين
+**Source:** Claude Code deep audit — the actual code (not docs)
+**Repos:** all 9 repos
 
 ---
 
 ## 1. EXECUTIVE SUMMARY
 
-| البند | القيمة |
+| Item | Value |
 |---|---|
-| Score الحالي (Self) | ~8.5/10 |
-| Score المتوقع (External) | ~7.0–7.5/10 |
-| الـ Gap الحقيقي | ~2.0–2.5 نقطة |
-| Violations جديدة | 8 (NEW-A → NEW-H) |
-| Commerce محتوى | ✅ مكتمل |
-| Assets محتوى | ✅ مكتمل |
-| Ecommerce محتوى | ✅ مكتمل |
+| Current score (self) | ~8.5/10 |
+| Expected score (external) | ~7.0–7.5/10 |
+| The real gap | ~2.0–2.5 points |
+| New violations | 8 (NEW-A → NEW-H) |
+| Commerce content | ✅ complete |
+| Assets content | ✅ complete |
+| Ecommerce content | ✅ complete |
 
 ---
 
-## 3. SECURITY SCAN — عبر كل الـ 9 Repos
+## 3. SECURITY SCAN — across all 9 repos
 
 ### ✅ CONFIRMED STRENGTHS
 
@@ -46,17 +46,17 @@
 
 ### 🔴 NEW VIOLATIONS FOUND
 
-**[NEW-A] P1 — NEXT_PUBLIC_API_GATEWAY_URL يكشف Railway URL**
+**[NEW-A] P1 — NEXT_PUBLIC_API_GATEWAY_URL exposes the Railway URL**
 ```
 Fix: استخدم API_GATEWAY_URL (server-only) في BFF routes
 ```
 
-**[NEW-B] P1 — INTERNAL_SECRET Optional في payment-service**
+**[NEW-B] P1 — INTERNAL_SECRET optional in payment-service**
 ```
 Fix: z.string().min(32) + process.exit(1) startup guard
 ```
 
-**[NEW-D] P1 — tec-auth بدون Tests**
+**[NEW-D] P1 — tec-auth without tests**
 ```
 Fix: vitest tests لـ createAuthMiddleware + CSRF + SSO + refresh
 ```

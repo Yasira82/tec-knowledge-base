@@ -39,11 +39,11 @@ System of Production — Real Estate Coordination Infrastructure
 
 ## 3. ECONOMIC PURPOSE
 
-ربط العقارات بالاقتصاد الرقمي.
+Connect real estate with the digital economy.
 
-- بدون Estate: العقار وال Pi اقتصادين منفصلان
-- بوجود Estate: Pi users يجدون عقارات، يدفعون خدمات بـ Pi
-- اقتصادياً: أكبر عملية Pi ممكنة (عقارات) = Pi utility peak proof
+- Without Estate: real estate and Pi are two separate economies
+- With Estate: Pi users find properties and pay for services in Pi
+- Economically: the largest Pi transaction possible (real estate) = peak proof of Pi utility
 
 ---
 

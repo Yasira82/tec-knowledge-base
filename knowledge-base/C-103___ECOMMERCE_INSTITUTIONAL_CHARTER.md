@@ -27,11 +27,11 @@ Ecommerce is the **consumer-facing marketplace** — the highest transaction vol
 
 ## 3. ECONOMIC PURPOSE
 
-تحويل المستخدمين إلى مشترين نشطين داخل اقتصاد Pi.
+Turn users into active buyers inside the Pi economy.
 
-- بدون Ecommerce: Pi اقتصاد محدود بالـ peer-to-peer
-- بوجود Ecommerce: consumer demand → merchant supply → economic cycle
-- اقتصادياً: أعلى حجم معاملات في النظام → proof of Pi utility at scale
+- Without Ecommerce: the Pi economy is limited to peer-to-peer
+- With Ecommerce: consumer demand → merchant supply → economic cycle
+- Economically: the highest transaction volume in the system → proof of Pi utility at scale
 
 ---
 

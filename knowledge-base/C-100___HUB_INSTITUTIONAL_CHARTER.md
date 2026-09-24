@@ -27,11 +27,11 @@ Hub is the **Conductor** of the federated platform. Every other app is an instru
 
 ## 3. ECONOMIC PURPOSE
 
-تقليل الاحتكاك بين المستخدم والاقتصاد الرقمي.
+Reduce the friction between the user and the digital economy.
 
-- بدون Hub: كل App تحتاج login منفصل → friction → churn
-- بوجود Hub: login مرة واحدة → كل الـ ecosystem متاح
-- Hub الاقتصادية: activation engine — كل user يمر من Hub قبل ما يوصل لأي قيمة
+- Without Hub: every app needs its own login → friction → churn
+- With Hub: log in once → the whole ecosystem is available
+- Hub's economics: an activation engine — every user passes through Hub before reaching any value
 
 ---
 

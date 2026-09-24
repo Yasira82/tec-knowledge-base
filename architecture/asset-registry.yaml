@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-09-24T13:47:51.097514
+# Generated: 2026-09-24T14:08:41.418393
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -254,7 +254,7 @@ assets:
       verification_state: code-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-12-ecosystem", "c-12-read-this-before"]
+    authoritative_for: ["c-12-read-this-before"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -668,7 +668,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-49-engineering-work-map"]
+    authoritative_for: ["c-49-engineering-work-map", "c-49-the-complete-engineering"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -722,7 +722,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-52-protected-files-map"]
+    authoritative_for: ["c-52-protected-files-map", "c-52-the-rule"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -740,7 +740,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-53-new-app-creation-protocol", "c-53-app"]
+    authoritative_for: ["c-53-new-app-creation-protocol", "c-53-the-complete-steps", "c-53-rule-one"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -830,7 +830,7 @@ assets:
       verification_state: assumed
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-58-hub-completion-plan"]
+    authoritative_for: ["c-58-hub-completion-plan", "c-58-the-important-discovery"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -866,7 +866,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-60-code-templates"]
+    authoritative_for: ["c-60-code-templates", "c-60-how-to-use"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -884,7 +884,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-61-typescript-shared-types-strategy"]
+    authoritative_for: ["c-61-typescript-shared-types-strategy", "c-61-preventing-type-drift"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -938,7 +938,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-65-new-backend-service-template", "c-65-service-creation-gate", "c-65-service"]
+    authoritative_for: ["c-65-new-backend-service-template", "c-65-service-creation-gate", "c-65-structure-of-the"]
     depends_on: []
     supersedes: []
     superseded_by: null
@@ -956,7 +956,7 @@ assets:
       verification_state: documentation-verified
       authority_scope: platform
     owner: yasser
-    authoritative_for: ["c-66-hub-features-code-guide"]
+    authoritative_for: ["c-66-hub-features-code-guide", "c-66-priority"]
     depends_on: []
     supersedes: []
     superseded_by: null

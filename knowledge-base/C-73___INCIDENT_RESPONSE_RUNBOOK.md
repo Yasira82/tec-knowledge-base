@@ -9,8 +9,8 @@
 
 Production Failure + Security + Payment Incidents
 
-⚠️ راجع C-10 section 12 للـ Quick Reference
-هذا الملف = detailed runbooks
+⚠️ See C-10 section 12 for the Quick Reference
+This file = detailed runbooks
 
 ---
 
@@ -25,7 +25,7 @@ P3 → Minor issue (UI bug / non-critical)
 
 ---
 
-## 2. P0 INCIDENTS — فوري بدون استثناء
+## 2. P0 INCIDENTS — immediate, no exceptions
 
 ```
 Examples:
@@ -178,9 +178,9 @@ Symptoms: balance خاطئ / 0.00 بشكل غير متوقع
 
 | Violation | Severity |
 |---|---|
-| لا reconciliation بعد financial incident | P0 |
-| Restore corrupted balances بدون audit | P0 |
-| Missing incident report بعد P0/P1 | P1 |
+| No reconciliation after a financial incident | P0 |
+| Restoring corrupted balances without an audit | P0 |
+| Missing incident report after a P0/P1 | P1 |
 | Deploy during active P0 | P1 |
 
 ---

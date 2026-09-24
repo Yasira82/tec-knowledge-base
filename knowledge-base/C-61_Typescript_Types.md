@@ -1,5 +1,5 @@
 # C-61 — TYPESCRIPT SHARED TYPES STRATEGY
-## منع Type Drift بين الـ 9 Repos
+## Preventing type drift across the 9 repos
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -10,7 +10,7 @@
 
 ---
 
-## 1. المشكلة الحالية
+## 1. The current problem
 
 ```
 Payment type مكررة في:
@@ -31,7 +31,7 @@ User type مكررة في:
 
 ---
 
-## 2. WHAT EXISTS في tec-ui ✅
+## 2. WHAT EXISTS in tec-ui ✅
 
 ```typescript
 // @yasser172/tec-ui — موجود بالفعل ويُصدَّر
@@ -73,7 +73,7 @@ export interface PaymentRecord {
 
 ---
 
-## 3. TYPES يجب إضافتها لـ tec-ui (v1.2.0+)
+## 3. TYPES that must be added to tec-ui (v1.2.0+)
 
 ```typescript
 // Tec-ui/src/types/index.ts — يتوسع هنا

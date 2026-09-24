@@ -6,11 +6,11 @@
 
 ## ADR Index + 8 Core Decisions
 
-ليه ADRs موجودة?
-كل قرار معماري غير تقليدي لازم يكون مبرر رسمي مكتوب.
-External auditor يشوف httpOnly:false → "bug"
-External auditor يشوف ADR-001 → "intentional — مبرر"
-الفرق: -0.5 نقطة vs +0.2 نقطة في الـ score.
+Why do ADRs exist?
+Every unconventional architectural decision needs a formal written justification.
+An external auditor sees httpOnly:false → "bug"
+An external auditor sees ADR-001 → "intentional — justified"
+The difference: -0.5 points vs +0.2 points in the score.
 
 ## ADR LIFECYCLE
 
@@ -21,37 +21,37 @@ PROPOSED → ACCEPTED → DEPRECATED
 
 ## INDEX
 
-| ADR | العنوان | Status |
+| ADR | Title | Status |
 |-----|--------|--------|
-| ADR-001 | httpOnly:false على tec_access_token | ACCEPTED |
+| ADR-001 | httpOnly:false on tec_access_token | ACCEPTED |
 | ADR-002 | Dual-Mode Payment Architecture | ACCEPTED |
 | ADR-003 | FOREIGN_SESSION Detection Pattern | ACCEPTED |
 | ADR-004 | BFF-Only Architecture | ACCEPTED |
 | ADR-005 | Redis Streams over Kafka/RabbitMQ | ACCEPTED |
-| ADR-006 | CSRF Exclusion على Payment BFF Routes | ACCEPTED |
-| ADR-007 | Pi Payment Ownership Authority | ACCEPTED (تفاصيل في C-76) |
+| ADR-006 | CSRF Exclusion on Payment BFF Routes | ACCEPTED |
+| ADR-007 | Pi Payment Ownership Authority | ACCEPTED (details in C-76) |
 | ADR-008 | Runtime Observability Architecture | ACCEPTED (June 2026) |
 | ADR-009 | Unified Payment Contract (Single Source of Truth) | ACCEPTED (June 2026) |
 | ADR-010 | NX repurposed → Opportunity Exchange · Security Governance folded into System | ACCEPTED (July 2026) |
-| ADR-011 | Modules-First — Service Extraction & Modular Architecture Policy | ACCEPTED (July 2026 · تفاصيل في C-132) |
+| ADR-011 | Modules-First — Service Extraction & Modular Architecture Policy | ACCEPTED (July 2026 · details in C-132) |
 | ADR-012 | Referral Rewards = Gift Subscription (raw-Pi bonus hard-gated) | ACCEPTED (July 2026) |
 
 ---
 
-## ADR-001 — httpOnly:false على tec_access_token
+## ADR-001 — httpOnly:false on tec_access_token
 
 **Status:** ACCEPTED | **Date:** April 2026
 
-**السياق:** Pi Browser هو WebView — Pi SDK يحتاج يقرأ الـ token من `document.cookie`
+**Context:** Pi Browser is a WebView — the Pi SDK needs to read the token from `document.cookie`
 
-**القرار:** `tec_access_token` يُعيَّن بـ `httpOnly: false`
+**Decision:** `tec_access_token` is set with `httpOnly: false`
 
-**مخاطر مُدارة:**
+**Managed risks:**
 - CSRF double-submit protection
 - CSP + HTTPS + Token TTL 24h
-- tec_refresh_token = httpOnly:true دايماً
+- tec_refresh_token = httpOnly:true, always
 
-**البدائل المرفوضة:** httpOnly:true → Pi Browser مش يقدر يقرأه | localStorage → Policy CI يبلوكه
+**Rejected alternatives:** httpOnly:true → Pi Browser cannot read it | localStorage → blocked by Policy CI
 
 ---
 
@@ -59,17 +59,17 @@ PROPOSED → ACCEPTED → DEPRECATED
 
 **Status:** ACCEPTED | **Date:** April 2026
 
-**السياق:** Pi.createPayment() يشتغل فقط لو Pi.init() اتعمل على نفس الـ domain. لو user جه من Hub → الـ app لا تقدر تعمل Pi.init() تاني.
+**Context:** Pi.createPayment() only works if Pi.init() ran on the same domain. If a user came from Hub → the app cannot run Pi.init() again.
 
-**القرار:** كل app تدعم وضعين:
+**Decision:** every app supports two modes:
 
-- **Mode 1 — Hub Redirect:** app → `hub.tecosystem.app/hub?pay=1&...` → Hub يعمل Pi.createPayment()
-- **Mode 2 — Direct Payment:** Pi.init() على domain الـ app → Pi.createPayment() مباشر
+- **Mode 1 — Hub Redirect:** app → `hub.tecosystem.app/hub?pay=1&...` → Hub runs Pi.createPayment()
+- **Mode 2 — Direct Payment:** Pi.init() on the app's domain → Pi.createPayment() directly
 
-**قواعد دستورية:**
-- ✅ كل app لازم تدعم Mode 1 (Hub fallback) — إلزامي
+**Constitutional rules:**
+- ✅ Every app must support Mode 1 (Hub fallback) — mandatory
 - ✅ Commerce = Reference Implementation
-- ❌ App بـ Mode واحد = P1 violation
+- ❌ An app with only one mode = P1 violation
 
 ---
 
@@ -77,12 +77,12 @@ PROPOSED → ACCEPTED → DEPRECATED
 
 **Status:** ACCEPTED | **Date:** April 2026
 
-**السياق:** Pi Browser بيخلي كل الـ apps تشارك نفس Pi session.
+**Context:** Pi Browser makes every app share the same Pi session.
 
-**القرار:** `window.__TEC_PI_FOREIGN_SESSION = true` لما Pi.init() يرمي "already initialized".
+**Decision:** `window.__TEC_PI_FOREIGN_SESSION = true` when Pi.init() throws "already initialized".
 
-**قاعدة ثابتة:**
-❌ NEVER تمنع payment بسبب FOREIGN_SESSION=true — Pi.createPayment() يشتغل في الحالتين
+**Fixed rule:**
+❌ NEVER block a payment because FOREIGN_SESSION=true — Pi.createPayment() works in both cases
 
 ---
 
@@ -90,9 +90,9 @@ PROPOSED → ACCEPTED → DEPRECATED
 
 **Status:** ACCEPTED | **Date:** March 2026
 
-**السياق:** Railway URLs يجب إخفاؤها عن الـ client.
+**Context:** Railway URLs must be hidden from the client.
 
-**القرار:** Client Components → /api/* (BFF) → API Gateway → Services
+**Decision:** Client Components → /api/* (BFF) → API Gateway → Services
 
 ```typescript
 const GW = process.env.API_GATEWAY_URL;              // ✅ server-only
@@ -105,27 +105,27 @@ const GW = process.env.NEXT_PUBLIC_API_GATEWAY_URL;  // ❌ violation NEW-A
 
 **Status:** ACCEPTED | **Date:** March 2026
 
-**السياق:** Event bus موزع مطلوب. Redis موجود بالفعل.
+**Context:** A distributed event bus is needed. Redis already exists.
 
-**القرار:** Redis Streams (XADD/XREADGROUP/XACK)
+**Decision:** Redis Streams (XADD/XREADGROUP/XACK)
 
-**الأسباب:** Zero additional infrastructure + At-least-once delivery + Message persistence
+**Reasons:** Zero additional infrastructure + At-least-once delivery + Message persistence
 
-⚠️ Kafka يُعاد النظر فيه بعد 100k+ active users
+⚠️ Kafka to be reconsidered after 100k+ active users
 
 ---
 
-## ADR-006 — CSRF Exclusion على Payment BFF Routes
+## ADR-006 — CSRF Exclusion on Payment BFF Routes
 
 **Status:** ACCEPTED | **Date:** April 2026
 
-**السياق:** Payment callbacks من Pi SDK مش بيدعم CSRF headers.
+**Context:** Payment callbacks from the Pi SDK do not support CSRF headers.
 
-**القرار:** `CSRF_EXCLUDED = ['/api/bff/payment/']`
+**Decision:** `CSRF_EXCLUDED = ['/api/bff/payment/']`
 
-**التبرير:** JWT verification في كل route + Idempotency-Key يمنع replay + HTTPS only
+**Justification:** JWT verification in every route + Idempotency-Key prevents replay + HTTPS only
 
-**قاعدة ثابتة:** ✅ كل BFF payment route لازم JWT verify — إلزامي
+**Fixed rule:** ✅ Every BFF payment route must verify the JWT — mandatory
 
 ---
 
@@ -133,14 +133,14 @@ const GW = process.env.NEXT_PUBLIC_API_GATEWAY_URL;  // ❌ violation NEW-A
 
 **Status:** ACCEPTED | **Date:** June 2026 | **Verification:** `[Code Verified]`
 
-**السياق:**
-فحص Code Verified لـ Tec-App و tec-api-gateway (يونيو 2026) كشف 3 مشاكل بنيوية:
+**Context:**
+A Code Verified inspection of Tec-App and tec-api-gateway (June 2026) found 3 structural problems:
 
-1. `BackendOfflineBanner` و `BackendStatus` كلاهما يعمل health polling مستقل كل 30s → Split Runtime View
-2. `client.on('error', () => {})` في Redis Client → Silent Failures، خرق مباشر لـ C-00 "No Runtime Without Events"
-3. `GET /api/health` يُعيد `{ "status": "ok" }` فقط → لا runtime evidence عند وقوع incidents
+1. `BackendOfflineBanner` and `BackendStatus` each ran their own health polling every 30s → Split Runtime View
+2. `client.on('error', () => {})` in the Redis client → Silent Failures, a direct breach of C-00 "No Runtime Without Events"
+3. `GET /api/health` returns only `{ "status": "ok" }` → no runtime evidence when incidents happen
 
-**القرارات:**
+**Decisions:**
 
 ### ADR-008a — Centralized Health Runtime
 
@@ -156,7 +156,7 @@ src/context/PlatformHealthContext.tsx      ✅
   BackendStatus reads from context         ✅
 ```
 
-**التبرير:** Distributed pollers يخلقون Split Runtime View — جزء من الـ UI يعتقد Backend Online والجزء الآخر Offline في نفس اللحظة.
+**Justification:** Distributed pollers create a Split Runtime View — one part of the UI believes the backend is online and another believes it is offline at the same moment.
 
 ### ADR-008b — Redis Observable Lifecycle
 
@@ -172,7 +172,7 @@ client.on('reconnecting', () => logger.warn('Redis reconnecting')); ✅
 client.on('end',          () => logger.warn('Redis ended'));        ✅
 ```
 
-**التبرير:** Silent error handlers يمنعون verification (C-93). Invisible failure = ungoverned runtime (C-96).
+**Justification:** Silent error handlers prevent verification (C-93). Invisible failure = ungoverned runtime (C-96).
 
 ### ADR-008c — Runtime Evidence Endpoint
 
@@ -186,7 +186,7 @@ GET /api/health/details  → full runtime state            ✅ (x-internal-key)
   { gateway, redis, uptime, memory, services: { auth, wallet, payment... } }
 ```
 
-**التبرير:** `{ "status": "ok" }` is a conclusion, not evidence. C-93 requires evidence to establish institutional state. Without `/health/details`, incidents cannot be diagnosed or verified.
+**Justification:** `{ "status": "ok" }` is a conclusion, not evidence. C-93 requires evidence to establish institutional state. Without `/health/details`, incidents cannot be diagnosed or verified.
 
 ### ADR-008d — Timeout Contract
 
@@ -200,15 +200,15 @@ Gateway:  10,000 ms (2× frontend — upstream has enough time)
 Upstream:  8,000 ms (within gateway window)
 ```
 
-**التبرير:** 25,000ms gap causes Railway to log 499 (client cancellation) instead of 500/502/503. The 499 at 595ms during incidents is a Runtime Visibility failure caused by missing observability — not a timeout failure.
+**Justification:** 25,000ms gap causes Railway to log 499 (client cancellation) instead of 500/502/503. The 499 at 595ms during incidents is a Runtime Visibility failure caused by missing observability — not a timeout failure.
 
-**قواعد دستورية (تُطبَّق بـ Policy CI):**
+**Constitutional rules (enforced by Policy CI):**
 - ❌ FORBIDDEN: `client.on('error', () => {})` — empty error handlers on critical clients
 - ❌ FORBIDDEN: Health endpoints that return conclusions without evidence
 - ✅ REQUIRED: Centralized health runtime — no distributed polling of the same signal
 - ✅ REQUIRED: Timeout alignment across frontend → gateway → upstream
 
-**الـ violations المفتوحة:** NEW-K, NEW-N, NEW-O, NEW-L في C-40
+**Open violations:** NEW-K, NEW-N, NEW-O, NEW-L in C-40
 
 **References:** C-96 Platform Runtime & Observability Constitution
 
@@ -216,7 +216,7 @@ Upstream:  8,000 ms (within gateway window)
 
 ## ADR-007 — Pi Payment Ownership Authority
 
-**Status:** ACCEPTED — تفاصيل كاملة في C-76
+**Status:** ACCEPTED — full details in C-76
 
 ---
 
@@ -226,41 +226,41 @@ Upstream:  8,000 ms (within gateway window)
 **Repos:** tec-sdk (owner) · tec-app · tec-ecommerce · tec-assets · tec-commerce · tec-core-backend (reference)
 **Severity:** P1 | **Extends:** ADR-002 (Dual-Mode Payment), ADR-004 (BFF-Only)
 
-**السياق (السبب الجذري):**
-بعد الـ hardening audit، اتولد **stack دفع متوازي** مختلف عن الـ legacy. كل تطبيق
-عرّف عقد الدفع بنفسه، فحصل drift في ٣ محاور أدّى لفشل دفع متكرر (إصلاح تطبيق
-واحد ما بيصلّحش الباقي):
+**Context (root cause):**
+After the hardening audit, a **parallel payment stack** emerged, different from the legacy one. Each app
+defined the payment contract itself, so it drifted on 3 axes and caused repeated payment failures (fixing one
+app did not fix the others):
 
-| المحور | الانحراف المرصود | الصح (مصدر الحقيقة = tec-payment-service) |
+| Axis | Observed drift | Correct (source of truth = tec-payment-service) |
 |--------|------------------|------------------------------------------|
-| `amount` | بعضهم `string` (Zod `z.string()`) وبعضهم `number` | **`number`** — DECIMAL في الـ DB |
-| Internal header | `x-service-secret` / `SERVICE_SECRET` في `bffFetch` | **`x-internal-key` / `INTERNAL_SECRET`** فقط |
-| Gateway path | `/api/v1/payments/*` · bare `/payments` (404 على host خام) | **`/api/payment/*`** (rewrite نظيف `^/api/payment → /payments`) |
+| `amount` | Some `string` (Zod `z.string()`), some `number` | **`number`** — DECIMAL in the DB |
+| Internal header | `x-service-secret` / `SERVICE_SECRET` in `bffFetch` | **`x-internal-key` / `INTERNAL_SECRET`** only |
+| Gateway path | `/api/v1/payments/*` · bare `/payments` (404 on a raw host) | **`/api/payment/*`** (clean rewrite `^/api/payment → /payments`) |
 
-ده انتهاك مباشر لـ **C-47**: P1 (Single Source of Truth) · P2 (No Rule Duplication)
+This directly violates **C-47**: P1 (Single Source of Truth) · P2 (No Rule Duplication)
 · Forbidden #5 (Divergent SDK contracts vs backend).
 
-**القرار:**
-عقد الدفع يُعرَّف **مرة واحدة** في `@yasser172/tec-sdk` ويُستورد في كل BFF route:
+**Decision:**
+The payment contract is defined **once** in `@yasser172/tec-sdk` and imported in every BFF route:
 - `src/contracts/payment.ts` → `CreatePaymentRequestSchema` · `ApprovePaymentRequestSchema`
   · `CompletePaymentRequestSchema` · `PAYMENT_GATEWAY_PATHS` · `INTERNAL_KEY_HEADER`
-  · حُرّاس صيغة Pi id/txid.
-- `amount` = `z.coerce.number()` — يتحوّل من string **مرة واحدة عند حدود الـ BFF**؛
-  رقم في كل طبقة تحته (P5).
+  · Pi id/txid format guards.
+- `amount` = `z.coerce.number()` — converted from a string **once, at the BFF boundary**;
+  a number in every layer below it (P5).
 
-**قواعد ثابتة (تُطبَّق بـ Policy CI لاحقًا):**
-- ❌ FORBIDDEN: تعريف Zod schema للدفع محليًا داخل أي app (لازم import من tec-sdk).
-- ❌ FORBIDDEN: `x-service-secret` / `SERVICE_SECRET` في أي gateway call.
-- ❌ FORBIDDEN: إرسال `amount` كـ string لأي payment endpoint.
-- ✅ REQUIRED: مسارات `/api/payment/*` (مفرد) لكل نداء على الـ gateway.
+**Fixed rules (to be enforced by Policy CI later):**
+- ❌ FORBIDDEN: defining a payment Zod schema locally inside any app (it must be imported from tec-sdk).
+- ❌ FORBIDDEN: `x-service-secret` / `SERVICE_SECRET` in any gateway call.
+- ❌ FORBIDDEN: sending `amount` as a string to any payment endpoint.
+- ✅ REQUIRED: `/api/payment/*` paths (singular) for every call to the gateway.
 
-**التبرير:** عقد واحد = إصلاح واحد. يقفل فئة الـ bug كلها بدل ترقيع نسخة في كل repo،
-ويتوافق مع P5 (SDK = طبقة العقود) و C-41 (tec-ui v1.2.0 PaymentModal/createU2APayment
-المشتركين فوق نفس العقد).
+**Justification:** one contract = one fix. It closes the whole class of bug instead of patching a copy in every repo,
+and is consistent with P5 (SDK = the contracts layer) and C-41 (tec-ui v1.2.0 PaymentModal/createU2APayment
+built on the same contract).
 
-**خطة الانتشار (release chain):**
-`tec-core-backend → tec-sdk@1.3.0 (نُشر العقد) → tec-ui v1.2.0 → الـ4 apps (نشر متزامن)`.
-التطبيقات تستبدل الـ Zod المحلي بـ import من tec-sdk عند نشر 1.3.0 على npm.
+**Rollout plan (release chain):**
+`tec-core-backend → tec-sdk@1.3.0 (contract published) → tec-ui v1.2.0 → the 4 apps (simultaneous deploy)`.
+Apps replace their local Zod with an import from tec-sdk once 1.3.0 is published on npm.
 
 **References:** C-12 Dual-Mode Payment · C-76 ADR-007 · C-47 §14 SDK Contract Rules
 ---
@@ -308,7 +308,7 @@ biggest missing value for the Pi community (no unified opportunity marketplace e
 
 ## ADR-011 — Modules-First — Service Extraction & Modular Architecture Policy
 
-**Status:** ACCEPTED — تفاصيل كاملة في **C-132** | **Date:** July 2026 | **Decision Authority:** CEO (C-47)
+**Status:** ACCEPTED — full details in **C-132** | **Date:** July 2026 | **Decision Authority:** CEO (C-47)
 
 ### Context
 TEC has **24 apps**. The default reflex "1 app = 1 microservice" would create 24

@@ -17,11 +17,11 @@
 | Tec-core-backend | Jest + ts-jest | ✅ | 60%+ (payment + wallet) |
 | Tec-App (Hub) | Vitest + Playwright | ✅ | passing |
 | Tec-Commerce | Vitest | ✅ | CI passing |
-| Tec-Assets | Vitest | ⚠️ | منخفض |
-| Tec-Ecommerce | Vitest | ❌ | لم تُكتب |
+| Tec-Assets | Vitest | ⚠️ | Low |
+| Tec-Ecommerce | Vitest | ❌ | Not written |
 | TEC-SDK | Jest | ✅ | prepublish gate |
-| tec-auth | Vitest | ❌ | لم تُكتب |
-| tec-ui | Vitest | ❌ | لم تُكتب |
+| tec-auth | Vitest | ❌ | Not written |
+| tec-ui | Vitest | ❌ | Not written |
 
 ---
 

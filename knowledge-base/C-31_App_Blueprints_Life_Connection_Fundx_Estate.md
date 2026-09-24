@@ -12,11 +12,11 @@
 
 ## 1. LIFE — Financial Operating System
 
-### الرؤية
-> الـ Retention Engine — أهم app بعد Hub
-> ليس dashboard فقط — بل **Actionable Financial System**
+### Vision
+> The Retention Engine — the most important app after Hub
+> Not just a dashboard — an **Actionable Financial System**
 
-### المحتوى المطلوب
+### Required content
 ```
 Wallet Intelligence:
   - Balance history chart
@@ -37,10 +37,10 @@ Financial Timeline:
 
 ## 2. CONNECTION — Professional & Social Graph
 
-### الرؤية
+### Vision
 > Network Effects Engine
 
-### المحتوى (MVP أولاً)
+### Content (MVP first)
 ```
 Profiles: Identity + Bio + Skills
 Connections: Follow + Connect
@@ -48,7 +48,7 @@ Messaging (WebSocket): Direct messages
 Communities: Builders + Merchants + Investors
 ```
 
-### ⚠️ تحذير هندسي
+### ⚠️ Engineering warning
 ```
 Realtime complexity explosion:
   - WebSocket scaling
@@ -65,7 +65,7 @@ Realtime complexity explosion:
 
 ## 3. FUNDX — Investment Infrastructure
 
-### متطلبات قبل البناء
+### Requirements before building
 ```
 ✅ KYC mature
 ✅ Analytics mature

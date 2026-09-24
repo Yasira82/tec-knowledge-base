@@ -58,11 +58,11 @@ NX is the **security operations layer** of the TEC economic runtime. While every
 
 ## 3. ECONOMIC PURPOSE
 
-حماية الثقة الاقتصادية.
+Protect economic trust.
 
-- بدون NX: خرق أمني واحد = ثقة المستخدم تنهار
-- بوجود NX: security posture visible + threats contained before breach
-- اقتصادياً: security investment ≈ insurance premium for the entire platform
+- Without NX: one security breach = user trust collapses
+- With NX: security posture visible + threats contained before breach
+- Economically: security investment ≈ insurance premium for the entire platform
 
 ---
 

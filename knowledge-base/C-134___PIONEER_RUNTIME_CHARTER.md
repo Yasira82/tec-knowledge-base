@@ -15,13 +15,13 @@
 > **Constitution:** Governed by C-47 (Kernel Spec). Nothing here may weaken a C-47 invariant.
 > **Related:** `_registry.ts` (LIVE domain SSoT) · C-133 Platform Adoption & Growth Governance (the campaign/funnel layer that consumes this runtime) · C-76/ADR-007 (Pi payment) · C-126 Legend · C-127 Elite · C-128 VIP · C-105 Analytics · C-108 Explorer · C-111 Alert
 
-> **TL;DR (عربي):** Pioneer **مش صفحة دعائية** — ده أول **Onboarding Runtime رسمي** للمنصّة.
-> المستخدم بيعدّي رحلة: **Login → يكمّل Missions حقيقية في التطبيقات → يوصل Founding Pioneer → يتسجّل في Legend**.
-> القاعدة الحاكمة: **الـ Hub بيعرض بس (Conductor)**، والحقيقة بتتملكها الخدمات — Reputation في Legend،
-> Recognition في Elite، Statistics في Analytics، Activity Feed في Alert، Discovery في Explorer،
-> وحالة الـ Pioneer نفسها في `tec-identity-service`. **ممنوع أي رقم مزيّف** (لو مفيش pioneers اعرض 0)،
-> وهوية الـ Pioneer دايمًا من الـ **JWT principal** مش من أي param من العميل. كل تطبيق من الـ24 بيُصدر
-> **event واحد** (`pioneer.mission.completed`) والـ identity-service بيسجّله بشكل idempotent وimmutable.
+> **TL;DR:** Pioneer is **not a promotional page** — it is the platform's first official **Onboarding Runtime**.
+> The user goes through a journey: **Login → completes real Missions in the apps → reaches Founding Pioneer → is recorded in Legend**.
+> The governing rule: **the Hub only displays (Conductor)**, and the truth is owned by the services — Reputation in Legend,
+> Recognition in Elite, Statistics in Analytics, Activity Feed in Alert, Discovery in Explorer,
+> and the Pioneer's own state in `tec-identity-service`. **No fake number, ever** (if there are no pioneers, show 0),
+> and the Pioneer's identity always comes from the **JWT principal**, never from a client param. Each of the 24 apps emits
+> **one event** (`pioneer.mission.completed`) and identity-service records it idempotently and immutably.
 
 ---
 

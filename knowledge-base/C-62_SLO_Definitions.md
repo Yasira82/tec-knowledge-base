@@ -24,7 +24,7 @@
 
 ---
 
-## 1. ما هو SLO ولماذا مهم
+## 1. What an SLO is and why it matters
 
 ```
 SLO = Service Level Objective
@@ -65,7 +65,7 @@ SLO = Service Level Objective
 | Token verify p95 | < 50ms | > 100ms |
 | Error rate | < 0.05% | > 0.2% |
 
-### Payment Service (:5003) — الأحرج
+### Payment Service (:5003) — the most critical
 
 | Metric | Target | Alert Threshold |
 |---|---|---|
@@ -140,7 +140,7 @@ Error Budget Calculation:
 
 ---
 
-## 5. PAYMENT FINANCIAL SLOs — الأهم
+## 5. PAYMENT FINANCIAL SLOs — the most important
 
 ```
 Financial Accuracy:
@@ -198,7 +198,7 @@ Missing (ISS-010 — post-Mainnet):
 
 ---
 
-## 8. PERFORMANCE BUDGETS (تطبيق فوري)
+## 8. PERFORMANCE BUDGETS (apply immediately)
 
 ```typescript
 // tec-api-gateway/src/main.ts — موجود بالفعل ✅

@@ -20,14 +20,14 @@
 
 | Principle | Rule |
 |---|---|
-| **P1** Single Source of Truth | كل rule تتعرف في مكان واحد فقط |
-| **P2** No Rule Duplication | لا rule تتعرف بشكل مختلف في أكتر من layer |
-| **P3** Strict State Transitions | كل state change يتبع lifecycle صريح |
+| **P1** Single Source of Truth | Every rule is defined in one place only |
+| **P2** No Rule Duplication | No rule is defined differently in more than one layer |
+| **P3** Strict State Transitions | Every state change follows an explicit lifecycle |
 | **P4** Event-Driven Truth | Events = facts |
 | **P5** Layer Responsibility | SDK=contracts, Gateway=orchestration, Services=execution |
-| **P6** **Fail Closed** | لو فيه شك في identity/permission/state → **deny by default** |
+| **P6** **Fail Closed** | If there is doubt about identity/permission/state → **deny by default** |
 
-> ⚠️ P6 هو الأهم — non-negotiable لـ financial platform
+> ⚠️ P6 is the most important — non-negotiable for a financial platform
 
 ---
 

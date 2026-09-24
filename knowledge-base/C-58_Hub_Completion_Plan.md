@@ -1,5 +1,5 @@
 # C-58 — HUB COMPLETION PLAN
-## KYC + Subscription + Notifications — ما تبقى للـ Mainnet
+## KYC + Subscription + Notifications — what is left for Mainnet
 
 > **Truth State:** `[Planned State]`
 > **Governance State:** `[Draft]`
@@ -10,17 +10,17 @@
 
 ---
 
-## ⚠️ الاكتشاف المهم
+## ⚠️ The important discovery
 
-> الـ Dashboard pages مبنية فعلاً في `/dashboard`
-> المشكلة مش في الـ pages نفسها
-> المشكلة في: integration + NEXT_PUBLIC_ + upgrade flow
+> The Dashboard pages are already built in `/dashboard`
+> The problem is not the pages themselves
+> The problem is: integration + NEXT_PUBLIC_ + the upgrade flow
 
 ---
 
-## 1. WHAT EXISTS (من الكود الفعلي)
+## 1. WHAT EXISTS (from the actual code)
 
-### ✅ موجود بالفعل
+### ✅ Already exists
 
 ```
 Dashboard Pages:
@@ -55,9 +55,9 @@ Hooks:
 
 ---
 
-## 2. WHAT'S MISSING — المشاكل الفعلية
+## 2. WHAT'S MISSING — the actual problems
 
-### Problem 1: NEXT_PUBLIC_ في كل الـ BFF routes
+### Problem 1: NEXT_PUBLIC_ in every BFF route
 
 ```typescript
 // ❌ في كل الـ routes (subscription, kyc, notifications)
@@ -68,11 +68,11 @@ const GATEWAY = process.env.API_GATEWAY_URL
              ?? process.env.API_GATEWAY_URL  ✅ (FIXED — NEW-A June 2026)!;
 ```
 
-**الأثر:** كل الـ BFF routes بتكشف Railway URL للـ browser
+**Impact:** every BFF route exposes the Railway URL to the browser
 
 ---
 
-### Problem 2: Subscription Upgrade Flow غير مكتمل
+### Problem 2: Subscription upgrade flow incomplete
 
 ```
 /dashboard/subscription/page.tsx موجود
@@ -121,7 +121,7 @@ Hub page عندها onNotifClick → /dashboard/notifications
 
 ## 3. WORK PLAN
 
-### Phase A — Fix NEXT_PUBLIC_ (قبل كل حاجة)
+### Phase A — Fix NEXT_PUBLIC_ (before anything else)
 
 ```
 Files to fix:
@@ -271,7 +271,7 @@ Notifications:
 
 ---
 
-## 6. الترتيب الموصى به
+## 6. The recommended order
 
 ```
 1. Fix NEXT_PUBLIC_ في كل الـ 11 routes (NEW-A)

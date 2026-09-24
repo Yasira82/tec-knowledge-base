@@ -7,25 +7,25 @@
 ---
 
 
-NestJS Service Scaffold — نسخ ولصق جاهز
+NestJS Service Scaffold — ready to copy and paste
 
-## SERVICE CREATION GATE — اقرأ أولاً
+## SERVICE CREATION GATE — read first
 
-❌ ممنوع إنشاء service جديدة إلا إذا تحققت كل الشروط:
+❌ Forbidden: creating a new service unless every condition holds:
 
-  1. الـ functionality لا تنتمي لأي service من الـ 12 الموجودين
-  2. Bounded context مستقل فعلياً — مش مجرد feature
-  3. Event ownership واضح — مين بيبعت ومين بيستقبل
-  4. Database ownership واضح — الـ service يملك DB منفردة
+  1. The functionality belongs to none of the existing 12 services
+  2. A genuinely independent bounded context — not just a feature
+  3. Clear event ownership — who sends and who receives
+  4. Clear database ownership — the service owns a DB of its own
 
-⚠️ Default decision = أضف Module داخل service موجود
-   مش service جديدة. Service جديدة هي الاستثناء مش القاعدة.
+⚠️ Default decision = add a Module inside an existing service
+   not a new service. A new service is the exception, not the rule.
 
-أول service جديد مخطط: life-service (بعد Portal Submission)
+First planned new service: life-service (after Portal Submission)
 
 ---
 
-## هيكل الـ Service الجديد
+## Structure of the new service
 
 ```
 Tec-core-backend/
@@ -54,7 +54,7 @@ Tec-core-backend/
 
 ---
 
-## STEP 1 — env.ts (validation إلزامي)
+## STEP 1 — env.ts (validation mandatory)
 
 ```typescript
 import { z } from 'zod';

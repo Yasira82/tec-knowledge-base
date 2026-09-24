@@ -1,5 +1,5 @@
 # C-12 — DUAL-MODE PAYMENT ARCHITECTURE
-## أهم قاعدة معمارية في الـ Ecosystem
+## The most important architectural rule in the ecosystem
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[ADR Approved]` — ADR-002 + ADR-007 (C-76)
@@ -9,23 +9,23 @@
 
 ## ⚠️ READ THIS BEFORE ANY PAYMENT CODE
 
-> ✅ **Pi Network Mainnet** — PI_SANDBOX=false دايماً
-> ✅ كل payment حقيقي — مش testnet
+> ✅ **Pi Network Mainnet** — PI_SANDBOX=false, always
+> ✅ Every payment is real — not testnet
 
 ---
 
-## 1. القاعدة الذهبية
+## 1. The golden rule
 
-كل app في TEC تدعم **وضعين للدفع في نفس الوقت:**
+Every app in TEC supports **two payment modes at the same time:**
 
-### Mode 1 — عبر Hub Redirect
+### Mode 1 — via Hub redirect
 ```
 App → hub.tecosystem.app/hub?pay=1&...
 → Hub PaymentModal → Pi.createPayment() على Hub domain
 → Redirect لـ return_url?payment_status=success&txid=X&payment_id=Y
 ```
 
-### Mode 2 — مباشرة من الـ App
+### Mode 2 — directly from the app
 ```
 App → Pi.init() على domain الـ app
 → window.Pi.createPayment() مباشرة
@@ -41,20 +41,20 @@ App → Pi.init() على domain الـ app
 
 ## 3. __TEC_PI_FOREIGN_SESSION + hub-entry signal
 
-| القيمة | المعنى |
+| Value | Meaning |
 |---|---|
-| `false` | الـ app عملت Pi.init() بنجاح — دفع مباشر |
-| `true` | Hub أو app تانية عملت Pi.init() قبلنا |
+| `false` | The app ran Pi.init() successfully — direct payment |
+| `true` | Hub or another app ran Pi.init() before us |
 
-### hub-entry signal — إشارتين مش واحدة (July 2026)
+### hub-entry signal — two signals, not one (July 2026)
 
-`isHubNavigation()` كان بيعتمد على `document.referrer` بس. ده اتكسر لما
-C-123 LAW 2 خلّى الـ SSO دخول للـ app يعدي على **landing page 200** بتكمل
-بـ `location.replace()` — فالـ referrer بقى same-origin مش hub. النتيجة:
-الـ apps عملت `Pi.init()` جوّه Pi Browser session مملوكة للـ Hub →
-Hub PaymentModal (Mode 1) فشل بـ "Pi Network SDK was not initialized".
+`isHubNavigation()` used to rely on `document.referrer` alone. That broke when
+C-123 LAW 2 made the SSO entry into an app pass through a **200 landing page** that continues
+with `location.replace()` — so the referrer became same-origin, not the Hub. The result:
+apps ran `Pi.init()` inside a Pi Browser session owned by the Hub →
+the Hub PaymentModal (Mode 1) failed with "Pi Network SDK was not initialized".
 
-**العقد الحالي (كل الـ apps + template):**
+**The current contract (every app + the template):**
 
 ```typescript
 // 1) sso-callback landing script (قبل أي navigation):
@@ -70,8 +70,8 @@ sessionStorage['__tec_hub_entry'] === '1'
 //    ومن غير Pi.init() خالص — الـ init جوّه session مملوكة للـ Hub بيسمّمها.
 ```
 
-> ⚠️ الـ flag مش token — ADR-001 لسه سليم. وأي تغيير في سلسلة hub→app
-> navigation لازم يعيد التحقق من الإشارة دي (C-123 §8 gate 5).
+> ⚠️ The flag is not a token — ADR-001 still holds. Any change to the hub→app
+> navigation chain must re-verify this signal (C-123 §8 gate 5).
 
 ---
 
@@ -101,7 +101,7 @@ URL Params اللي Hub يستقبلها:
 /api/bff/payment/resolve-incomplete ← يحل incomplete payments
 ```
 
-### create route — القواعد الحرجة:
+### create route — the critical rules:
 ```typescript
 // ✅ userId من cookie — مش من body
 const getUserId = (req: NextRequest): string | null => {

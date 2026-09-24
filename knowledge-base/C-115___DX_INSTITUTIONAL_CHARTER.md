@@ -90,11 +90,11 @@ DX + TEC AI = future **Institutional Construction Runtime** (builders say what t
 
 ## 3. ECONOMIC PURPOSE
 
-تحويل TEC من Platform إلى Economic Ecosystem.
+Turn TEC from a platform into an economic ecosystem.
 
-- بدون DX: TEC ينمو بمعدل شخص واحد
-- بوجود DX: 1000 builder يبنوا 1000 service → network effect explosion
-- اقتصادياً: ecosystem multiplication > API revenue (exponential vs linear)
+- Without DX: TEC grows at the rate of one person
+- With DX: 1000 builders build 1000 services → network effect explosion
+- Economically: ecosystem multiplication > API revenue (exponential vs linear)
 
 ---
 

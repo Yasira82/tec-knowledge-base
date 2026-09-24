@@ -163,7 +163,7 @@ needed): `/api/admin/auth-debug` (token claims + verify + backend refresh probe)
 | #65 | **200 HTML landing + server-verified entry** (exposed LAW 2) | ✅ core fix |
 | #66 | restore sameSite=none everywhere (corrected #56) | ✅ core fix |
 | #67 | **+ Partitioned (CHIPS)** + matching deletion attributes + landing diagnostics | ✅ login, re-login and wallet Runtime Verified — but still cookie-DEPENDENT |
-| #69 | **cookie-independent session (§7)** — in-memory token + Authorization-header BFF + silent Pi re-auth + always-rendering /hub | ✅ **structural end-state** — Runtime Verified in production ("تمام") |
+| #69 | **cookie-independent session (§7)** — in-memory token + Authorization-header BFF + silent Pi re-auth + always-rendering /hub | ✅ **structural end-state** — Runtime Verified in production (the owner's "all good" on the phone) |
 
 Separate but related: the initial "login does nothing" was a **stuck incomplete
 U2A payment** surfacing on every authenticate — resolved by **completing** it on

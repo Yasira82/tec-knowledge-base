@@ -1,5 +1,5 @@
 # C-52 — PROTECTED FILES MAP
-## ملفات لا تُعدَّل بدون طلب صريح
+## Files not to be changed without an explicit request
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -10,9 +10,9 @@
 
 ---
 
-## القاعدة
+## The rule
 
-> **لو مش فيه طلب صريح من Yasser → لا تمس الملفات دي**
+> **Without an explicit request from Yasser → do not touch these files**
 
 ---
 
@@ -57,7 +57,7 @@ File: tec-payment-service/src/services/outbox.worker.ts
 
 ---
 
-## 7. متى يجوز التعديل
+## 7. When a change is allowed
 
 ```
 ✅ عند إضافة خاصية جديدة لـ PaymentModal (بطلب صريح)

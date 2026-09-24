@@ -82,11 +82,11 @@ Explorer bridges supply and demand. Without Explorer, users cannot find Pi-accep
 
 ## 3. ECONOMIC PURPOSE
 
-ربط الطلب بالعرض عبر الاكتشاف الجغرافي والاجتماعي.
+Connect demand with supply through geographic and social discovery.
 
-- بدون Explorer: Pi لا تقدر تعرف مين يقبلها حولي
-- بوجود Explorer: user يفتح التطبيق ويجد merchants على بُعد 500 متر
-- اقتصادياً: discovery → transaction → trust signal → relationship → retention
+- Without Explorer: a Pioneer cannot find out who accepts Pi nearby
+- With Explorer: a user opens the app and finds merchants 500 metres away
+- Economically: discovery → transaction → trust signal → relationship → retention
 
 ---
 

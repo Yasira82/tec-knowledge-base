@@ -12,26 +12,26 @@
 
 ---
 
-## ⚠️ القاعدة الأولى: لا تفلاج httpOnly:false كـ bug
+## ⚠️ Rule one: do not flag httpOnly:false as a bug
 
-> httpOnly:false على tec_access_token = **INTENTIONAL DESIGN DECISION**
-> Pi Browser WebView يقرأ الـ cookies عبر `document.cookie`
-> لو غيّرته لـ httpOnly:true → Pi Browser مش هيقدر يقرأ الـ token → الـ auth ينكسر
+> httpOnly:false on tec_access_token = **INTENTIONAL DESIGN DECISION**
+> The Pi Browser WebView reads the cookies via `document.cookie`
+> If you change it to httpOnly:true → Pi Browser cannot read the token → auth breaks
 
 ---
 
 ## 1. COOKIE MAP
 
-| Cookie | httpOnly | maxAge | الهدف |
+| Cookie | httpOnly | maxAge | Purpose |
 |---|---|---|---|
-| tec_access_token | **false** ✅ | 24h | Pi Browser يقرأه + server-side في req.cookies |
-| tec_refresh_token | **true** ✅ | 7d | Secure — مش محتاج client-side |
-| tec_user | **false** ✅ | 24h | Client يحتاج user data |
+| tec_access_token | **false** ✅ | 24h | Pi Browser reads it + server-side in req.cookies |
+| tec_refresh_token | **true** ✅ | 7d | Secure — not needed client-side |
+| tec_user | **false** ✅ | 24h | The client needs the user data |
 | tec_csrf | **false** ✅ | 24h | Double-submit CSRF |
 
 ---
 
-## 2. REQUIRED SETTINGS — كل الـ cookies
+## 2. REQUIRED SETTINGS — every cookie
 
 ```typescript
 // ✅ REQUIRED على كل cookie — C-123 §2 (LOCKED)
@@ -43,11 +43,11 @@
 }
 ```
 
-> ⚠️ `partitioned` مش optional: من غيره الـ cookie بتتمنع في الـ webview/embedded context
-> (Chrome third-party phaseout) — ده كان جزء من incident الـ login في يوليو (C-123 §6).
+> ⚠️ `partitioned` is not optional: without it the cookie is blocked in the webview/embedded context
+> (Chrome third-party phaseout) — this was part of the July login incident (C-123 §6).
 
-> ⚠️ لو `sameSite` مش `none` → Pi Browser WebView مش بيبعت الـ cookies
-> ده مش اختياري — ده requirement لـ Pi Network
+> ⚠️ If `sameSite` is not `none` → the Pi Browser WebView does not send the cookies
+> This is not optional — it is a Pi Network requirement
 
 ---
 

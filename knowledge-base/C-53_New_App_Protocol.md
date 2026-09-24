@@ -1,5 +1,5 @@
 # C-53 — NEW APP CREATION PROTOCOL
-## الخطوات الكاملة لبناء أي App جديدة
+## The complete steps for building any new app
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -10,15 +10,15 @@
 
 ---
 
-## القاعدة الأولى
+## Rule one
 
 > **Commerce = Reference Implementation**
-> قبل أي app جديدة → تأكد Commerce Mode1+Mode2 شغالين
-> أي مشكلة في Commerce قبل البدء → حلها أولاً
+> Before any new app → make sure Commerce Mode 1 + Mode 2 work
+> Any problem in Commerce before starting → fix it first
 
 ---
 
-## DAY 1 — SETUP (2-3 ساعات)
+## DAY 1 — SETUP (2-3 hours)
 
 ### Step 1: Clone Template
 ```bash
@@ -162,7 +162,7 @@ src/app/api/auth/
   logout/route.ts
 ```
 
-### Step 11: Payment في الـ Page
+### Step 11: Payment in the page
 ```typescript
 // import من tec-ui (بعد v1.2.0)
 import {
@@ -200,7 +200,7 @@ const handleHubPay = (item) => handleBuy({
 
 ## WEEK 2-3 — CONTENT + TESTS
 
-### Step 12: اكتب المحتوى
+### Step 12: Write the content
 ```
 Focus على MVP:
   - الـ feature الأساسية بس
@@ -223,7 +223,7 @@ Focus على MVP:
 
 ---
 
-## BEFORE LAUNCH — الـ Checklist النهائي
+## BEFORE LAUNCH — the final checklist
 
 ```
 □ Pi App ID مسجل في Pi Developer Portal ✅

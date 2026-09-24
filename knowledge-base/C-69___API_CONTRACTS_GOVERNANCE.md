@@ -9,13 +9,13 @@
 
 HTTP Contracts + Versioning + Compatibility Rules
 
-⚠️ أي breaking API change بدون versioning = P1 violation
+⚠️ Any breaking API change without versioning = P1 violation
 
 ---
 
 ## 1. GLOBAL RESPONSE CONTRACT
 
-كل APIs لازم ترجع نفس الشكل — راجع C-59 للتفاصيل الكاملة
+Every API must return the same shape — see C-59 for the full details
 
 ```json
 // ✅ SUCCESS
@@ -36,10 +36,10 @@ HTTP Contracts + Versioning + Compatibility Rules
 }
 ```
 
-❌ ممنوع:
-- raw strings كـ response
-- HTML responses من APIs
-- inconsistent shapes بين endpoints
+❌ Forbidden:
+- raw strings as a response
+- HTML responses from APIs
+- inconsistent shapes between endpoints
 
 ---
 
@@ -192,7 +192,7 @@ PAYMENT_TIMEOUT       ← 422 — exceeded 90s
 { "balance": 1234.12 }
 ```
 
-Reason: JS number → floating-point errors. DECIMAL(20,8) → string في API → لا errors.
+Reason: JS number → floating-point errors. DECIMAL(20,8) → a string in the API → no errors.
 
 ---
 

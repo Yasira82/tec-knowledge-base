@@ -7,14 +7,14 @@
 ---
 
 
-KYC + Subscription + Notifications — كود جاهز للتنفيذ
+KYC + Subscription + Notifications — code ready to implement
 
-⚠️ اقرأ C-58 أولاً (Hub Completion Plan)
-الـ pages موجودة في /dashboard — المشكلة في الـ integration
+⚠️ Read C-58 first (Hub Completion Plan)
+The pages exist in /dashboard — the problem is the integration
 
 ---
 
-## الأولوية
+## Priority
 
 ```
 1. Fix NEW-A في كل routes (11 ملف)
@@ -25,7 +25,7 @@ KYC + Subscription + Notifications — كود جاهز للتنفيذ
 
 ---
 
-## 1. FIX NEW-A — الخطوة الأولى في كل route
+## 1. FIX NEW-A — the first step in every route
 
 ```typescript
 // ✅ طبّق على الـ 11 route دي في Hub:
@@ -48,7 +48,7 @@ const GW = process.env.API_GATEWAY_URL
 
 ---
 
-## 2. SUBSCRIPTION UPGRADE — كود كامل
+## 2. SUBSCRIPTION UPGRADE — full code
 
 ### 2.1 BFF Route
 

@@ -9,8 +9,8 @@
 
 Balances + Ledger + Settlement + Anti-Corruption Rules
 
-⚠️ أي violation هنا = P0 مباشرة
-⚠️ راجع C-16 للـ DB rules التفصيلية
+⚠️ Any violation here = P0 immediately
+⚠️ See C-16 for the detailed DB rules
 
 ---
 
@@ -76,7 +76,7 @@ ALTER TABLE wallets
   CHECK (balance >= 0);
 ```
 
-أي negative balance: → P0 — DB يرفض العملية
+Any negative balance: → P0 — the DB rejects the operation
 
 ---
 
@@ -113,7 +113,7 @@ await prisma.$transaction(async (tx) => {
 
 ---
 
-## 6. IDEMPOTENCY — إلزامي لكل عملية مالية
+## 6. IDEMPOTENCY — mandatory for every financial operation
 
 ```
 // pattern في wallet-service
@@ -147,7 +147,7 @@ if (ALLOWED_TRANSITIONS[current].length === 0) {
 
 ---
 
-## 8. PI VERIFICATION — إلزامي
+## 8. PI VERIFICATION — mandatory
 
 ```
 كل payment completion:
@@ -191,7 +191,7 @@ if (ALLOWED_TRANSITIONS[current].length === 0) {
 
 ---
 
-## 11. RECONCILIATION — إلزامي
+## 11. RECONCILIATION — mandatory
 
 ```
 Reconciliation cron (60 min):
@@ -208,14 +208,14 @@ Reconciliation cron (60 min):
 
 | Violation | Severity |
 |---|---|
-| Float/Double للـ Pi amounts | P0 |
-| Negative balance في DB | P0 |
-| Payment completion بدون Pi verification | P0 |
+| Float/Double for Pi amounts | P0 |
+| Negative balance in the DB | P0 |
+| Payment completion without Pi verification | P0 |
 | Settlement duplication | P0 |
-| Missing idempotency على wallet write | P1 |
-| Transition من terminal state | P1 |
-| Frontend يحسب balance | P1 |
-| Balance mutation خارج $transaction | P1 |
+| Missing idempotency on a wallet write | P1 |
+| Transition from a terminal state | P1 |
+| Frontend computes the balance | P1 |
+| Balance mutation outside $transaction | P1 |
 
 ---
 

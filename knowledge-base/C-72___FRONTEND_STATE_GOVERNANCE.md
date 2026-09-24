@@ -9,7 +9,7 @@
 
 Client Boundaries + State Authority + Security Rules
 
-⚠️ هذا ملف مرجعي — القواعد التفصيلية في:
+⚠️ This is a reference file — the detailed rules are in:
 C-51 (Cookies) + C-63 (Pi Rules) + C-15 (Security)
 
 ---
@@ -47,7 +47,7 @@ Client Components:
 
 ## 3. AUTH BOUNDARIES
 
-راجع C-51 للتفاصيل
+See C-51 for the details
 
 ```
 القاعدة:
@@ -89,7 +89,7 @@ Frontend:
 // ❌ NEVER router.push() بعد login/logout
 ```
 
-راجع C-63 section 7 للـ rationale الكامل
+See C-63 section 7 for the full rationale
 
 ---
 
@@ -104,8 +104,8 @@ display(formatPi(balance));  // من tec-ui
 const total = walletBalance + paymentAmount;  // floating-point error
 ```
 
-✅ Fetch balance من Backend — مش local calculation
-❌ NEVER arithmetic على Pi amounts في JS
+✅ Fetch the balance from the backend — not a local calculation
+❌ NEVER do arithmetic on Pi amounts in JS
 
 ---
 
@@ -134,8 +134,8 @@ Server-only (BFF routes):
 | Frontend payment authority | P1 |
 | Secret in NEXT_PUBLIC_* | P0 |
 | Token in WebSocket URL | P1 |
-| Float math على Pi amounts | P1 |
-| router.push() بعد Pi login | P1 |
+| Float math on Pi amounts | P1 |
+| router.push() after Pi login | P1 |
 
 ---
 

@@ -36,7 +36,7 @@ Level 3 (Apps):
 
 ---
 
-## 2. PUBLISH SEQUENCE — الترتيب الصح
+## 2. PUBLISH SEQUENCE — the right order
 
 ```
 1. @yasser172/tec-shared
@@ -79,9 +79,9 @@ npm info @yasser172/tec-ui version
 
 ---
 
-## 4. UPDATE PROTOCOL — بعد الـ Publish
+## 4. UPDATE PROTOCOL — after publishing
 
-### لما تحدث tec-ui:
+### When you update tec-ui:
 ```bash
 # STEP 1: Commerce أولاً (دايماً)
 cd Tec-Commerce
@@ -108,13 +108,13 @@ npm install @yasser172/tec-ui@NEW_VERSION
 npm install @yasser172/tec-ui@OLD_VERSION
 ```
 
-### لما تحدث tec-auth:
+### When you update tec-auth:
 ```bash
 # نفس protocol بالظبط
 # Commerce أولاً → اختبر SSO + login + CSRF → ثم باقي الـ apps
 ```
 
-### لما تحدث tec-sdk:
+### When you update tec-sdk:
 ```bash
 # Hub BFF routes أولاً (Hub هو الأكثر استخداماً)
 # ثم Commerce → Assets → Ecommerce
@@ -163,7 +163,7 @@ Breaking changes في tec-ui → يأثر على كل الـ apps
 
 ---
 
-## 7. npm LINK للـ Development المحلي
+## 7. npm LINK for local development
 
 ```bash
 # بدل npm publish في كل تغيير صغير

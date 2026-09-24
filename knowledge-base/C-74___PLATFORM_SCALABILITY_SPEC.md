@@ -9,8 +9,8 @@
 
 Growth Limits + Scaling Thresholds + Evolution Triggers
 
-⚠️ هذا الملف reference للمستقبل
-التطبيق الفعلي بعد Portal Submission + growth
+⚠️ This file is a reference for the future
+It applies in practice after Portal Submission + growth
 
 ---
 
@@ -26,7 +26,7 @@ Phase 1 (Now → 10k users):
 
 ---
 
-## 2. SCALING TRIGGERS — متى تتصرف
+## 2. SCALING TRIGGERS — when to act
 
 | Trigger | Action Required |
 |---|---|
@@ -39,7 +39,7 @@ Phase 1 (Now → 10k users):
 
 ---
 
-## 3. STATELESS SERVICES — جاهزين للـ scale
+## 3. STATELESS SERVICES — ready to scale
 
 ```
 ✅ يقدروا يتـ scale horizontally:
@@ -164,7 +164,7 @@ Realtime:     < 500ms delivery
 Auth:         < 1s
 ```
 
-Raajع C-62 للتفاصيل
+See C-62 for the details
 
 ---
 
@@ -173,10 +173,10 @@ Raajع C-62 للتفاصيل
 | Violation | Severity |
 |---|---|
 | Premature infra complexity | P2 |
-| Local filesystem dependency في service | P1 |
+| Local filesystem dependency in a service | P1 |
 | Stateful app instances | P1 |
 | Cache as financial authority | P0 |
-| Single point of failure في critical path | P1 |
+| Single point of failure in the critical path | P1 |
 
 ---
 
