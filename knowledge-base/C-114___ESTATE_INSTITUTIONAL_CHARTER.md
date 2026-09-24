@@ -19,6 +19,27 @@
 - **Hub SSO:** enabled (in `/api/auth/sso` ALLOWED_TARGETS + Hub domain registry).
 - **Growth:** referral loop wired (C-133).
 
+### Property records
+
+> **Truth State:** `[Current State]` · **Verification:** `[Code Verified]` and `[Runtime Verified]`
+> Last verified against code: 2026-09-24 — tec-core-backend #336 · #337, Tec-Assets #61, and a
+> real 3π registration on Mainnet the same day.
+
+- **Where a property lives.** Estate has no store of its own: a registered property is a
+  `REAL_ESTATE` asset in **tec-asset-service** (`kind: property` in its metadata). Estate
+  reads it back for the portfolio. This was an implementation choice that the code cited as
+  "C-114 §12" — §12 is the Integration Map and never said it; this subsection is its record.
+- **What it costs.** A 3π **listing fee** — a service fee (§4). asset-service registers the
+  property only after payment-service confirms that payment: completed, the same user, not
+  Test-Pi, made for `estate_listing_fee`, at least 3π. One payment registers one property.
+- **What it never does.** It is never listed or sold for Pi (§4, §6): asset-service refuses
+  the listing, hides any older one, never reserves one for a saga, and records a paid
+  purchase of one as a refund.
+- **Where it is shown.** In Estate only. Tec-Assets leaves `REAL_ESTATE` out of its list —
+  Estate owns property screens (§4) and Assets has nothing it may do with one.
+- **Open.** A registration started from the Hub (Mode 1) loses the form on the way back, so
+  the property is not recorded; standalone (Mode 2) works.
+
 **Still `[Future Vision]`:** the advanced runtime described below (V2+ / the charter's later phases) — vision, not yet built.
 
 ---
