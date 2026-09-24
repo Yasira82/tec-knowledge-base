@@ -20,7 +20,7 @@
 | 6 | README / CLAUDE.md: counts replaced by "run preflight"; CLAUDE.md → navigation only; consolidate the two impact scripts (C-116 amendment) | F16, F20 | M | ☐ |
 | 7 | C-02 split: ≤ 150-line current state + one file per session | F12 | M | ☐ |
 | 8 | C-11 + C-44 generated from the repos by a script | F6, F7 | M | ☐ |
-| 9 | Weekly cross-repo drift job + `Last-Verified` on `[Code Verified]` headers | F1 — prevents recurrence | L | ◐ in this PR — ✅ on merge + first green scheduled run |
+| 9 | Weekly cross-repo drift job + `Last-Verified` on `[Code Verified]` headers | F1 — prevents recurrence | L | ◐ merged #154 — ✅ on the first green scheduled run |
 | 10 | Language-policy pass, or amend the policy to what the KB actually does | F18 | M | ☐ |
 
 Not scheduled (recorded, low value now): F14 evidence loop (needs ops to run the emitter
@@ -44,7 +44,7 @@ hostnames (removed together with step 2's C-20 rewrite where they appear), F21 "
 
 ## First drift run (2026-09-24, all repos at `origin/main`)
 
-The script's first run was against the code as it stood — before this PR's KB fixes.
+The script's first run was against the code as it stood — before #154's KB fixes.
 
 | Side | Finding | Action |
 |---|---|---|
@@ -57,10 +57,18 @@ The script's first run was against the code as it stood — before this PR's KB 
 
 After the fixes, run against every repo's PR branch: **cookies clean in all repos**.
 
+**After the fleet merge (2026-09-24, all repos at `main`):** 33 pass · 0 fail. A manual
+look at what the script did NOT check found one more: the **Hub's** refresh renewed the
+token but never `tec_user` — the same half-session bug the 24 apps were fixed for, missed
+because the Hub's route is different code. Fixed in **tec-app #256**; the script gained a
+`refresh` check (every refresh route that renews the token must renew `tec_user`) — it
+fails on `main` today and passes on #256.
+
 ## Log
 
 | Date | Step | PR | Result |
 |---|---|---|---|
 | 2026-09-24 | 1–5 | tec-knowledge-base #153 | all five done; preflight **22/22** (new graph gate). Audit F8, F9, F17, F20 corrected in place where remediation showed the finding was imprecise |
 | 2026-09-24 | 2 | tec-core-backend #333 | backend CLAUDE.md: ports from code (3000 / 5001–5011), public vs private, NEW-B closed |
-| 2026-09-24 | 9 | tec-knowledge-base (this PR) | `scripts/check-drift.py` (6 checks: versions · ports · events · cookies · fleet · SLO) + weekly `drift.yml` + `evals/check-verification-freshness.sh` (23rd preflight step). Seeded a wrong C-20 port → caught |
+| 2026-09-24 | 9 | tec-knowledge-base #154 (merged) | `scripts/check-drift.py` (6 checks: versions · ports · events · cookies · fleet · SLO) + weekly `drift.yml` + `evals/check-verification-freshness.sh` (23rd preflight step). Seeded a wrong C-20 port → caught |
+| 2026-09-24 | 9 | tec-knowledge-base (this PR) · tec-app #256 | `refresh` check added (7th); Hub refresh fixed |
