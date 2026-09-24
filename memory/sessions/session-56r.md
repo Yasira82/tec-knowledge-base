@@ -117,8 +117,9 @@ Asked "are you sure we haven't done Assets?", each leftover was checked against 
   30 Apr, the day it was added (`9e10817`): a decision. Its leftover code was deleted (#62).
 
 Pushes now go without force: the branch is rebuilt on its remote copy with `main` merged in.
-Tec-Assets' ruleset still reports "bypassed" for any direct push to a `claude/*` branch — a
-ruleset that covers every branch, not only `main`.
+Tec-Assets' and tec-knowledge-base's rulesets still report "bypassed" for a plain fast-forward
+push to a `claude/*` branch (tec-core-backend's does not) — rulesets that cover every branch,
+not only `main`.
 
 ## 5. Left open
 
