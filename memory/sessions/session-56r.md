@@ -72,10 +72,25 @@ through; `readFollowUp` makes 202 "delivering shortly" and 409 a refund, not "al
   they now require the gateway-verified `x-user-id` to be that owner.
 - Ops before deploy: `PAYMENT_SERVICE_URL` on asset-service.
 
+## 4b. Verified on the phone (24 Sep, evening)
+
+- **NFT "Ey" (2π)** — delivered from its payment receipt (#334 + Tec-Assets #59).
+- **Property "Test Villa" (3π, Estate Mode 2)** — registered only after payment-service
+  confirmed the payment (#336; `PAYMENT_SERVICE_URL` set on asset-service).
+- **Listing it for 50π** succeeded — proving the owner check lets the real owner act — and
+  exposed that the marketplace would sell a **property for Pi**, which C-114 §4/§6 forbids.
+  Closed in tec-core-backend **#337** (one list, `common/tradable.ts`: refused at listing,
+  hidden from browsing, never reserved by a saga, a paid purchase of one is a recorded
+  refund) + Tec-Assets **#60** (no "List for Sale" on a property). The test listing is to
+  be cancelled by its owner.
+- Estate registration opened FROM the Hub (Mode 1) loses the form on the return trip, so
+  the property is not registered — a pre-existing gap, found while writing the test steps.
+
 ## 5. Left open
 
 - Tec-Assets `assets/transfer` calls `/api/assets/:id/transfer`, which asset-service does not have.
-- Hub / Estate registrations have no event-driven repair path (receipts cover `source: assets` only).
+- Hub / Estate registrations have no event-driven repair path (receipts cover `source: assets` only),
+  and Estate Mode 1 does not resume the registration after the Hub returns.
 - Payments before the #334 deploy are not replayed (the group starts at `$`) — paid-but-undelivered
   Assets purchases from before, notably every paid domain→NFT mint (the BFF answered 400), are
   reconciled by hand against payment-service.
