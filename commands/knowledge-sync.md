@@ -23,8 +23,9 @@ Sync the TEC knowledge base with the current state of all platform repositories.
 
 4. **Update C-02 if needed**
    - Use `/docs-guard` skill before editing
-   - Update Truth State, Verification status
-   - Add change log entry
+   - Edit §1 (platform) and §2 (open now) IN PLACE — replace rows, never append
+   - The session narrative goes to `memory/sessions/session-<id>.md` + a row in its README;
+     C-02 §3 keeps only the last three sessions (C-02 has a 150-line gate)
 
 5. **Check master index (C-57)**
    - Verify all C-documents are listed

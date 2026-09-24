@@ -222,7 +222,7 @@ These need no argument, and two of them are the reason the rest is tractable:
 |---|---|---|---|
 | 1 | Decide the SoloHost edition is **BYO-key / local model** and write that on the package | Zero | §1. Everything else depends on this being settled first |
 | 2 | Secret-leak gate: fail if a TEC env name appears in either package file | Tiny | §5. Before the first publish, not after |
-| 3 | Dockerfile for the TEC AI UI + its own model client | Small | Must build with no network — the `bcrypt` lesson (C-02 §5c) |
+| 3 | Dockerfile for the TEC AI UI + its own model client | Small | Must build with no network — the `bcrypt` lesson (C-02 Session 46 §7c) |
 | 4 | `config_options.yml`: `password` field for the user's key, `select` for the provider | Tiny | Never `hidden` for anything secret |
 | 5 | Publish one package. Claim the name | Small | §4 |
 | 6 | `/api/ready` — separate from `/api/health`, allowed to fail | Small | §2. Useful platform-wide, not only here |
