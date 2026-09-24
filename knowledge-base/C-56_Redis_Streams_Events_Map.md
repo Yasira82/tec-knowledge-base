@@ -1,5 +1,5 @@
 # C-56 — REDIS STREAMS EVENTS MAP
-## Event Bus Architecture — من الكود الفعلي
+## Event Bus Architecture — from the actual code
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -14,7 +14,7 @@
 
 ---
 
-## 1. نظرة عامة
+## 1. Overview
 
 ```
 Pattern: XADD → Redis Stream → XREADGROUP (consumer groups)
@@ -22,13 +22,13 @@ Library: ioredis (backend) + @yasser172/tec-shared (helpers)
 Format:  XADD [stream] * data [JSON.stringify(payload)]
 ```
 
-> ✅ Delivery: At-least-once → كل consumer لازم idempotent
-> ✅ Pending messages recovery موجودة في كل consumer
-> ❌ مش Pub/Sub — لا تستخدم SUBSCRIBE/PUBLISH
+> ✅ Delivery: at-least-once → every consumer must be idempotent
+> ✅ Pending-message recovery exists in every consumer
+> ❌ Not Pub/Sub — do not use SUBSCRIBE/PUBLISH
 
 ---
 
-## 2. EVENTS MAP — الكاملة
+## 2. EVENTS MAP — the complete one
 
 ### Event: `payment.completed`
 
@@ -88,7 +88,7 @@ await this.redis.xadd('user.created', '*', 'data', JSON.stringify({
 
 ## 3. STREAM NAMES
 
-The two-line list that stood here ("كلهم" — all of them) had been wrong since July: one of
+The two-line list that stood here ("all of them") had been wrong since July: one of
 its two streams was retired and a dozen more went live. The live set, from the catalog on
 2026-09-24 — **15 live · 1 planned**:
 
@@ -159,7 +159,7 @@ EVENTS.PAYMENT_COMPLETED = 'payment.completed'
 
 ---
 
-## 7. عند إضافة Service جديدة (Life / Connection)
+## 7. When adding a new service (Life / Connection)
 
 ```typescript
 const startLifeConsumer = async (client: Redis) => {
@@ -179,7 +179,7 @@ const startLifeConsumer = async (client: Redis) => {
 
 ---
 
-## 8. EVENTS لم تُنفَذ بعد (Future)
+## 8. EVENTS not yet implemented (Future)
 
 The planned list is the catalog's `status: planned` entries — today only
 `fundx.investment.closed.v1`.

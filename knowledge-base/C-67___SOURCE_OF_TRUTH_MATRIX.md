@@ -11,16 +11,16 @@ Architecture Authority Map + Cross-Reference Constitution
 
 ## ⚠️ PURPOSE
 
-هذا الملف هو المرجع الأعلى لتحديد:
-  - أين توجد الحقيقة الأساسية (Source of Truth)
-  - أي content يملك authority النهائي
-  - أي content مجرد reference أو implementation detail
+This file is the highest reference for deciding:
+  - where the primary truth lives (Source of Truth)
+  - which content holds final authority
+  - which content is only a reference or an implementation detail
 
-❌ ممنوع وجود authority مزدوجة لنفس الموضوع
-❌ ممنوع تعديل rule في secondary reference بدون تعديل source الأصلي
+❌ Forbidden: two authorities for the same subject
+❌ Forbidden: changing a rule in a secondary reference without changing the original source
 
-✅ التعديل يبدأ دائماً من Source of Truth
-❌ NEVER تعدّل secondary reference فقط
+✅ A change always starts at the Source of Truth
+❌ NEVER edit only a secondary reference
 
 ---
 
@@ -50,12 +50,12 @@ Templates / Guides
 Violations / Checklists
 ```
 
-⚠️ لو حصل conflict:
-- Kernel Spec يفوز دائماً
-- ثم ADR
-- ثم Rule Content
-- ثم Template
-- ثم Guide
+⚠️ If there is a conflict:
+- the Kernel Spec always wins
+- then the ADR
+- then Rule Content
+- then the Template
+- then the Guide
 
 ---
 
@@ -63,7 +63,7 @@ Violations / Checklists
 
 | Domain / Concern | Source of Truth | References |
 |---|---|---|
-| Kernel Constitution | C-47 | كل الملفات |
+| Kernel Constitution | C-47 | Every file |
 | Architecture Decisions | C-64 | C-40, C-58 |
 | Violations Registry | C-40 | C-55 |
 | Payment Architecture | C-12 | C-63, C-66 |
@@ -106,8 +106,8 @@ Violations / Checklists
 | Pi Browser navigation | C-63 |
 | Pi Browser cookie constraints | C-51 + C-63 |
 
-⚠️ أي تغيير في Pi payment behavior:
-ابدأ دائماً من: C-63 أو C-12 أو ADR-002
+⚠️ Any change to Pi payment behaviour:
+always start from: C-63 or C-12 or ADR-002
 
 ---
 
@@ -126,8 +126,8 @@ Violations / Checklists
 | Rate limiting | C-15 |
 | XSS mitigations | C-15 |
 
-⚠️ ممنوع تعريف security rule في guide فقط.
-لازم rule الأساسية تكون في C-15 أو ADR رسمي.
+⚠️ Forbidden: defining a security rule only in a guide.
+The primary rule must be in C-15 or a formal ADR.
 
 ---
 
@@ -145,11 +145,11 @@ Violations / Checklists
 | Healthcheck rules | C-20 |
 | Docker patterns | C-65 |
 
-قاعدة دستورية:
+Constitutional rule:
 
-- ✅ كل service تملك database الخاصة بها فقط
-- ❌ ممنوع direct DB access بين services
-- ✅ inter-service communication: API أو Redis Streams events
+- ✅ Every service owns only its own database
+- ❌ Forbidden: direct DB access between services
+- ✅ Inter-service communication: API or Redis Streams events
 
 ---
 
@@ -179,10 +179,10 @@ Violations / Checklists
 | ADR-005 | Redis Streams decision |
 | ADR-006 | CSRF exclusion on payment BFF routes |
 
-⚠️ أي behavior معماري مغطى بـ ADR:
-- ❌ لا يُناقش داخل PR comments
-- ❌ لا يُعاد تفسيره
-- ✅ التعديل يكون عبر ADR جديد فقط
+⚠️ Any architectural behaviour covered by an ADR:
+- ❌ is not debated in PR comments
+- ❌ is not reinterpreted
+- ✅ is changed only through a new ADR
 
 Lifecycle: PROPOSED → ACCEPTED → DEPRECATED
 
@@ -190,7 +190,7 @@ Lifecycle: PROPOSED → ACCEPTED → DEPRECATED
 
 ## 8. VIOLATION MAPPING RULES
 
-كل violation لازم يرتبط بـ:
+Every violation must be linked to:
 
 ```
 □ Source of Truth
@@ -199,7 +199,7 @@ Lifecycle: PROPOSED → ACCEPTED → DEPRECATED
 □ Fix path
 ```
 
-مثال:
+Example:
 ```
 NEW-A → ADR-004 → C-60 → BFF-only violation
 NEW-B → C-65 → payment-service env.ts
@@ -213,31 +213,31 @@ NEW-C → ADR-006 → Documented exception (P2)
 
 ## 9. TEMPLATE AUTHORITY RULES
 
-Templates لا تُنشئ قواعد جديدة.
+Templates do not create new rules.
 
 C-60 / C-65 / C-66:
-- تطبق القواعد
-- لا تعيد تعريفها
+- apply the rules
+- do not redefine them
 
-❌ ممنوع: تغيير architecture داخل template
+❌ Forbidden: changing architecture inside a template
 
-✅ الصحيح:
-  - غيّر Source of Truth أولاً
-  - ثم حدّث template
+✅ Correct:
+  - change the Source of Truth first
+  - then update the template
 
 ---
 
 ## 10. ANTI-DRIFT RULES
 
-لمنع documentation drift:
+To prevent documentation drift:
 
-✅ أي تعديل معماري:
-  1. حدّث Source of Truth
-  2. حدّث references المرتبطة
-  3. حدّث checklist لو لزم
-  4. حدّث violations لو متأثرة
+✅ Any architectural change:
+  1. update the Source of Truth
+  2. update the linked references
+  3. update the checklist if needed
+  4. update violations if affected
 
-❌ ممنوع:
+❌ Forbidden:
 - stale duplicated rules
 - conflicting snippets
 - multiple authorities
@@ -282,7 +282,7 @@ C-60 / C-65 / C-66:
 
 ## 12. APP AUTHORITY — INSTITUTIONAL CHARTERS (C-100→C-115)
 
-كل app عندها Charter هو مرجعها الأول:
+Every app has a Charter as its primary reference:
 
 ```
 App Institutional Charter (C-100→C-115)

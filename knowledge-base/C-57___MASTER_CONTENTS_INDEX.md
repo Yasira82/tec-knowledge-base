@@ -1,5 +1,5 @@
 # C-57 — MASTER CONTENTS INDEX
-## دليل سريع للـ Content (C-00 → C-135)
+## Quick guide to the content (C-00 → C-135)
 
 > **Truth State:** `[Current State]`
 > **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
@@ -21,7 +21,7 @@
 
 ## TIER 1 — Platform Constitution (C-00→C-02)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-00** | Platform Constitution v3.0 | C-00 v3.0 — PLATFORM CONSTITUTION & ENGINEERING GOVERNANCE |
 | **C-01** | Platform Identity & App Registry | Project Identity |
@@ -31,7 +31,7 @@
 
 ## TIER 2 — Architecture + Rules (C-10→C-19)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-10** | System Architecture | System Architecture |
 | **C-11** | Repository Map | Repository Map |
@@ -48,7 +48,7 @@
 
 ## TIER 3 — Backend + Apps + SDK (C-20→C-23)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-20** | Backend Services Map | Backend Services Map |
 | **C-21** | Hub App | Hub App |
@@ -59,7 +59,7 @@
 
 ## TIER 4 — Vision + App Blueprints (C-30→C-32)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-30** | Vision — 24 Apps | Platform Vision & 24 Apps Roadmap |
 | **C-31** | App Blueprint Template | App Blueprints |
@@ -69,7 +69,7 @@
 
 ## TIER 5 — Engineering + Violations + Roadmap (C-40→C-49)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-40** | Open Violations Map | Open Violations Map |
 | **C-41** | Engineering Roadmap | Engineering Roadmap |
@@ -86,7 +86,7 @@
 
 ## TIER 6A — Session + Patterns + Protocols (C-50→C-58)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-50** | Session Log | Session Log |
 | **C-51** | Cookie Architecture | Cookie Architecture |
@@ -102,7 +102,7 @@
 
 ## TIER 6B — Templates + Code + Guides (C-59→C-66)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-59** | Unified Error Response Format | Unified Error Response Format |
 | **C-60** | Code Templates | Code Templates |
@@ -117,7 +117,7 @@
 
 ## TIER 6C — Governance + Integrity + Operations (C-67→C-78)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-67** | Source of Truth Matrix | Source Of Truth Matrix |
 | **C-68** | Domain Ownership Matrix | Domain Ownership Matrix |
@@ -136,7 +136,7 @@
 
 ## TIER 7A — Governance + Execution (C-87→C-92)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-87** | Execution Governance | Execution Governance & Ownership Constitution |
 | **C-88** | Pi Economic Flow Constitution | Pi Economic Flow Constitution |
@@ -151,7 +151,7 @@
 
 ### Tier-1 Constitutional Layer (Operating Loop)
 
-| Content | العنوان | الدور في الحلقة |
+| Content | Title | Role in the loop |
 |---------|---------|-----------------|
 | **C-93** | Institutional Verification Constitution | Institutional Verification Constitution |
 | **C-94** | Governed Capability Constitution | Governed Capability Constitution |
@@ -162,7 +162,7 @@
 
 ### Tier-2 Constitutional Assets (Continuity + Construction)
 
-| Content | العنوان | الدور |
+| Content | Title | Role |
 |---------|---------|-------|
 | **C-79** | Institutional Memory Constitution | Institutional Memory Constitution |
 | **C-98** | Institutional Construction Constitution | Institutional Construction Constitution |
@@ -171,7 +171,7 @@
 
 ## TIER 7C — Engineering Assessment + Implementation
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-80** | Engineering Assessment Report | Engineering Assessment Report |
 | **C-81** | P1 Runtime Fixes Implementation Guide | P1 Runtime Fixes — Implementation Guide |
@@ -185,7 +185,7 @@
 
 ## TIER 8 — App Institutional Charters (C-100→C-115)
 
-| Charter | App | System Role | جملة واحدة |
+| Charter | App | System Role | One sentence |
 |---------|-----|-------------|----------|
 | **C-100** | Hub | System of Access — Control Plane | Hub Institutional Charter |
 | **C-101** | Commerce | System of Production (Reference Impl) | Commerce Institutional Charter |
@@ -208,7 +208,7 @@
 
 ## TIER 9 — Constitutional Automation (C-116→C-118)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-116** | Authority Automation Constitution | Authority Automation — CDG + AHV + Impact Analysis |
 | **C-117** | Registry Integrity Constitution | Auto-generated registry + R-SEMANTIC rules + 100% coverage |
@@ -217,7 +217,7 @@
 
 ## TIER 10 — Economic Operating System Model (C-119→C-122)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-119** | Economic Operating System Model | TEC = 3-tier economic OS (Constitutional Runtimes / User Runtimes / Economic Products) — supersedes C-30 build sequence |
 | **C-120** | Zone Constitutional Runtime Charter | Zone = Verification Runtime — "What can be trusted?" · zone.pi strategic asset |
@@ -227,7 +227,7 @@
 
 ## TIER 11 — Runtime Operational Law (C-123)
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-123** | Pi Browser Session & Cookie Spec | Pi Browser session & cookie law (Runtime Verified) — 3 cookie laws · none+secure+Partitioned LOCKED · 200-only establishment · server-verified login entry · server-side refresh · July 2026 incident ledger |
 
@@ -237,7 +237,7 @@
 
 `[Future Vision]` / `[Draft]` app charters — the reputation/creation/protection/enterprise value chain. Gated (Phase 2/3); not current runtime.
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-124** | NBF Business Foundation Runtime | Business Day-1 — establish + verify a Pi business identity in 25 min; graduates INTO Titan (team>5 / rev>1kπ / …) |
 | **C-125** | Epic Creation Runtime | Epic Creation — System of Construction; create/launch/grow projects (startup·community·campaign·event); Epic→Zone→Legend pipeline |
@@ -253,7 +253,7 @@
 
 `[Current State]` / `[Governance Approved]` — how the 24 apps map to backend deployment.
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-132** | Service Extraction & Modular Architecture Policy | ADR-011 detail — Modules-First (App→Module→Service); new service only on a T1–T4 production trigger; Design-for-Extraction (Explorer→search-service); payment-service is the only Pi custodian; target now = 11 services |
 
@@ -263,7 +263,7 @@
 
 `[Current State]` / `[Governance Approved]` — the durable adoption/growth constitution: how users progress (Adoption Levels), how we measure it (Adoption Event Model), and how campaigns are governed. Founding 100 is the first campaign.
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-133** | Platform Adoption & Growth Governance | Adoption/growth SSoT — Adoption Levels ladder + Adoption Event Model + campaigns register (Founding 100 first); North-Star = claimed Pi domains (≥5 KYC'd Pioneers/app); **no fabricated numbers** (Pi Core Team credibility); community retention loop; Growth presents, Analytics/Legend own the truth (P5) |
 
@@ -273,7 +273,7 @@
 
 `[Planned State]` / `[Governance Approved]` — the official onboarding runtime the growth campaigns drive users into: missions, the immutable event contract, the journey state machine, and Founding rules.
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-134** | Pioneer Runtime Charter | Onboarding runtime — Login → real per-app **missions** → Founding Pioneer → Legend; one immutable `pioneer.mission.completed` event per app (P4); identity ALWAYS from JWT principal, never a client param (P6 — the IDOR law); Hub = Conductor (presents), state owned by `tec-identity-service`; cap 100, **no payment**, **no fabricated counters** |
 
@@ -284,7 +284,7 @@
 `[Current State]` / `[Governance Approved]` — the CEO launch decision: deepen a **Focused-8**
 to a professional bar, then start marketing at a **month-9 hard trigger** (even if apps aren't 100%).
 
-| Content | العنوان | جملة واحدة |
+| Content | Title | One sentence |
 |---------|---------|----------|
 | **C-135** | Launch Strategy: Focused-8 & Month-9 Trigger | Depth over breadth — deepen the core **8** (Hub · Commerce · Ecommerce · Explorer · Zone · Connection · NBF · Analytics) + **Assets promoted (#9)**, path to **11** with Life/Alert candidates (only if depth allows), to an objective **Professional Bar** by month 9, then **marketing starts unconditionally** (rolling launch); credibility before campaign; the rest stay honest **"preview"**; **R2 open question** — confirm whether the Pi domain claim needs *active users* or just "app done" |
 
@@ -371,7 +371,7 @@ Code
 Assumptions  ← lowest
 ```
 
-⚠️ لو حصل conflict: C-00 → C-47 → C-64 → C-67 → Rule Content → App Charter
+⚠️ If there is a conflict: C-00 → C-47 → C-64 → C-67 → Rule Content → App Charter
 
 ---
 

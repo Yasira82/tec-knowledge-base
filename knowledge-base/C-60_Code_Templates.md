@@ -1,5 +1,5 @@
 # C-60 — CODE TEMPLATES
-## Copy-Paste Patterns — كل template جاهز للـ paste
+## Copy-Paste Patterns — every template ready to paste
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -10,7 +10,7 @@
 
 ---
 
-## ⚠️ كيفية الاستخدام
+## ⚠️ How to use
 
 ```
 1. اختار الـ template المناسب
@@ -218,7 +218,7 @@ export class [Domain]Controller {
 
 ---
 
-## TEMPLATE 4 — Redis Event Consumer (جديد service)
+## TEMPLATE 4 — Redis Event Consumer (new service)
 
 ```typescript
 // tec-[service]-service/src/consumers/[domain].consumer.ts

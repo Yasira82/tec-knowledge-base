@@ -113,11 +113,11 @@ Nexus is the **coordination fabric** of the TEC runtime. When multiple actors ne
 
 ## 3. ECONOMIC PURPOSE
 
-تقليل تكلفة التنسيق بين الأطراف المتعددة.
+Reduce the cost of coordination between multiple parties.
 
-- بدون Nexus: كل coordination يحتاج manual intervention → friction → deals fall through
-- بوجود Nexus: complex economic workflows execute automatically → scale
-- اقتصادياً: automation of coordination = more economic activity at same headcount
+- Without Nexus: every coordination needs manual intervention → friction → deals fall through
+- With Nexus: complex economic workflows execute automatically → scale
+- Economically: automation of coordination = more economic activity at the same headcount
 
 ---
 

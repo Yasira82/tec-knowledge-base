@@ -26,11 +26,11 @@ Ownership Layer of the TEC Economic Runtime
 
 ## 3. ECONOMIC PURPOSE
 
-تحويل الأصول الرقمية إلى نشاط اقتصادي مستمر.
+Turn digital assets into continuous economic activity.
 
-- بدون Assets: Pi الاقتصاد لحظي (buy/sell فقط)
-- بوجود Assets: wealth يتراكم ويُتداول → economic permanence
-- اقتصادياً: كل asset = unit of stored Pi value → longer retention cycles
+- Without Assets: the Pi economy is momentary (buy/sell only)
+- With Assets: wealth accumulates and circulates → economic permanence
+- Economically: every asset = a unit of stored Pi value → longer retention cycles
 
 ---
 

@@ -7,14 +7,14 @@
 ---
 
 
-Pi Browser + Pi SDK + Mainnet — القواعد الموحدة
+Pi Browser + Pi SDK + Mainnet — the unified rules
 
 ⚠️ READ THIS BEFORE ANY Pi SDK CODE
-✅ TEC على Mainnet — PI_SANDBOX=false دايماً بدون استثناء
-✅ Pi Browser = WebView — مش standard browser
-✅ كل payment حقيقي — real Pi transactions
+✅ TEC is on Mainnet — PI_SANDBOX=false, always, no exceptions
+✅ Pi Browser = a WebView — not a standard browser
+✅ Every payment is real — real Pi transactions
 
-## 1. القاعدة الأولى — MAINNET ONLY
+## 1. Rule one — MAINNET ONLY
 
 ```typescript
 // ✅ ALWAYS — في كل مكان بدون استثناء
@@ -27,9 +27,9 @@ Pi.init({ sandbox: true });
 PI_SANDBOX=true
 ```
 
-## 2. PI APP ID — عزل إلزامي
+## 2. PI APP ID — mandatory isolation
 
-كل app عندها Pi App ID منفصل — مش shared
+Every app has its own Pi App ID — not shared
 
 | App | Env Var |
 |-----|--------|
@@ -38,7 +38,7 @@ PI_SANDBOX=true
 | Assets | `NEXT_PUBLIC_PI_APP_ID=assets_app_id` |
 | Ecommerce | `NEXT_PUBLIC_PI_APP_ID=ecommerce_app_id` |
 
-## 3. Pi.init() PATTERN — نفس الكود في كل app
+## 3. Pi.init() PATTERN — the same code in every app
 
 ```typescript
 const piInitScript = `(function(){
@@ -65,7 +65,7 @@ const piInitScript = `(function(){
 })();`;
 ```
 
-## 4. FOREIGN_SESSION — القاعدة الحرجة
+## 4. FOREIGN_SESSION — the critical rule
 
 ```
 window.__TEC_PI_FOREIGN_SESSION
@@ -77,7 +77,7 @@ window.__TEC_PI_FOREIGN_SESSION
 ❌ NEVER تمنع payment بسبب FOREIGN_SESSION=true
 ```
 
-## 5. Pi.authenticate() — الترتيب الإلزامي
+## 5. Pi.authenticate() — the mandatory order
 
 ```typescript
 window.Pi.authenticate(
@@ -94,7 +94,7 @@ window.Pi.authenticate(
 );
 ```
 
-## 6. Pi.createPayment() — الهيكل الإلزامي
+## 6. Pi.createPayment() — the mandatory structure
 
 ```typescript
 window.Pi.createPayment(
@@ -123,15 +123,15 @@ router.push('/hub/profile');
 router.push('/hub');  // cookies مش بتتحدث في Pi Browser
 ```
 
-## 8. Pi BROWSER WEBVIEW — القيود
+## 8. Pi BROWSER WEBVIEW — the constraints
 
-| المشكلة | الحل |
+| Problem | Fix |
 |---------|------|
-| Cookies مش بتتبعت | `sameSite:'none'` على كل cookie |
-| `document.cookie` مطلوب | `httpOnly:false` على `tec_access_token` |
-| Pi SDK بيتحمل ببطء | polling 150ms × 40 = 6s |
+| Cookies are not sent | `sameSite:'none'` on every cookie |
+| `document.cookie` is required | `httpOnly:false` on `tec_access_token` |
+| Pi SDK loads slowly | polling 150ms × 40 = 6s |
 
-## 9. CHECKLIST — قبل deploy أي app
+## 9. CHECKLIST — before deploying any app
 
 ```
 □ Pi App ID مسجل في Pi Developer Portal

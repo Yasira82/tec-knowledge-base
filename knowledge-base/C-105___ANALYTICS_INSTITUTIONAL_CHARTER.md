@@ -33,11 +33,11 @@ System of Intelligence — Economic Intelligence Infrastructure
 
 ## 3. ECONOMIC PURPOSE
 
-تحويل البيانات إلى معرفة قابلة للتنفيذ.
+Turn data into actionable knowledge.
 
-- بدون Analytics: platform تعمل عمياء
-- بوجود Analytics: merchants يحسّنوا، platform تحكم أفضل، AI يستدل بدقة
-- اقتصادياً: intelligence = competitive advantage → retention → growth
+- Without Analytics: the platform operates blind
+- With Analytics: merchants improve, the platform governs better, AI reasons accurately
+- Economically: intelligence = competitive advantage → retention → growth
 
 ---
 

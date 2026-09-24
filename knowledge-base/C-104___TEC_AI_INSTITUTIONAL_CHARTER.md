@@ -89,11 +89,11 @@ Record Layer → TEC AI → Recommendations → Users/Apps
 
 ## 3. ECONOMIC PURPOSE
 
-زيادة جودة القرارات الاقتصادية داخل النظام.
+Raise the quality of economic decisions inside the system.
 
-- بدون TEC AI: users يعملوا قرارات على معلومات ناقصة
-- بوجود TEC AI: relevant intelligence في السياق الصح في الوقت الصح
-- اقتصادياً: better decisions → more transactions → more Pi velocity
+- Without TEC AI: users make decisions on incomplete information
+- With TEC AI: relevant intelligence in the right context at the right time
+- Economically: better decisions → more transactions → more Pi velocity
 
 ---
 

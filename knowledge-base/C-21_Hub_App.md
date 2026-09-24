@@ -9,7 +9,7 @@
 
 ## 1. ROLE
 
-Hub هو محور الـ ecosystem:
+Hub is the centre of the ecosystem:
 ```
 Identity     ← Pi Login + Profile + KYC
 Wallet       ← Balance + Transactions

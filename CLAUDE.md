@@ -69,6 +69,7 @@ graph and diffs them against what you committed. It has shipped red twice: once 
 | C-02 is edited **in place** (≤ 150 lines); a session's narrative is a new file in `memory/sessions/` | C-02 §5; gate in `check-knowledge-gaps.sh` |
 | `[Code Verified]` needs `Last verified …: YYYY-MM-DD` (≤ 60 days) or a generated block | `check-verification-freshness.sh` |
 | The events catalog is code-sourced — no entry without a producer in code | `manifests/events-catalog.yaml` (C-70 governs) |
+| English only in every doc except C-02 · C-40 · C-50 · C-55 · C-80 · C-81, `memory/`, `audits/`; Arabic inside code blocks may only go down | `governance/LANGUAGE_POLICY.md` v1.1 · `check-language-policy.sh` |
 | A cookie / login / refresh change in any app cites C-123 and names the LAW it keeps. `sameSite=lax` is forbidden; cookies are set only on a 200; refresh renews the token **with** `tec_user` + `tec_csrf` | C-123 §2 · C-13 §1 |
 | A shared package's major bump includes auditing every consumer's range (`^1.x` never reaches 2.x) | Session 46; C-11 shows each app's ranges |
 | Pushing to the development branch and opening its PR are one step | Session 46 |

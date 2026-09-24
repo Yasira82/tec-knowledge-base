@@ -382,3 +382,17 @@ jobs:
         run: chmod +x evals/*.sh
       - name: Run Verification Freshness Engine
         run: bash evals/check-verification-freshness.sh
+
+  check-language-policy:
+    name: Language Policy Engine
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Make scripts executable
+        run: chmod +x evals/*.sh
+      - name: Run Language Policy Engine
+        run: bash evals/check-language-policy.sh

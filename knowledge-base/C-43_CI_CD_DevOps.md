@@ -88,7 +88,7 @@ CMD ["node", "dist/main.js"]
 
 ## 9. ENVIRONMENT VARIABLES CHECKLIST
 
-### كل Frontend App يحتاج
+### Every frontend app needs
 ```
 NEXT_PUBLIC_PI_APP_ID=        # منفصل لكل app
 NEXT_PUBLIC_PI_SANDBOX=false  # ✅ Mainnet
@@ -100,7 +100,7 @@ JWT_SECRET=
 SSO_SECRET=
 ```
 
-### Backend Services يحتاجون
+### Backend services need
 ```
 DATABASE_URL=
 REDIS_URL=

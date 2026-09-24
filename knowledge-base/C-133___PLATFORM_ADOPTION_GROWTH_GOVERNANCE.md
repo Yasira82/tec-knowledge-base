@@ -8,13 +8,13 @@
 > **Authority Scope:** `[Platform]`
 > **Decision Authority:** CEO (C-47)
 
-> **TL;DR (عربي):** ده دستور **النمو والتبنّي** — مش وثيقة حملة واحدة. بيحكم: كيف المستخدم
-> يتطوّر (Adoption Levels)، إزاي نقيس ده (Adoption Event Model)، وإزاي نطلق **حملات**
-> (Founding 100 = أول حملة، وبعدها Merchant 500 · Builder · Ambassador...). الهدف الحقيقي:
-> **استلام دومينات Pi للـ 24 app**. القاعدة الحاكمة: **ممنوع أي رقم مزيّف** (data حقيقية أو 0)،
-> الـ **KYC بيفرضه Pi نفسه** (نعرض مش نتحقق)، والـ Growth **بيعرض** بس — الأرقام لـ Analytics،
-> السمعة لـ Legend، حالة المستخدم لـ `tec-identity-service`. وأخطر خطر: تطبيقات فاضية بلا قيمة
-> حقيقية — كل app لازم يقدّم قيمة مستقلة.
+> **TL;DR:** this is the constitution of **growth and adoption** — not a single-campaign document. It governs: how a user
+> progresses (Adoption Levels), how that is measured (Adoption Event Model), and how **campaigns** are launched
+> (Founding 100 = the first campaign, then Merchant 500 · Builder · Ambassador...). The real goal:
+> **receiving Pi domains for the 24 apps**. The governing rule: **no fake number, ever** (real data or 0);
+> **KYC is enforced by Pi itself** (we display, we do not verify), and Growth only **displays** — the numbers belong to Analytics,
+> reputation to Legend, the user's state to `tec-identity-service`. The worst risk: empty apps with no real
+> value — every app must offer value of its own.
 
 ---
 

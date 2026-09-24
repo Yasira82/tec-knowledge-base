@@ -1,5 +1,5 @@
 # C-49 — ENGINEERING WORK MAP
-## خريطة العمل الهندسية الشاملة
+## The complete engineering work map
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`

@@ -1,5 +1,5 @@
 # C-01 — PROJECT IDENTITY
-## TEC Ecosystem — من هو + الـ Vision + الـ Repos
+## TEC Ecosystem — who, the vision, the repos
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -9,13 +9,13 @@
 
 ## 1. WHO
 
-| البند | القيمة |
+| Item | Value |
 |---|---|
-| **الاسم** | Yasser |
-| **GitHub** | Yasira82 (كل الـ repos بدون استثناء) |
-| **npm** | @yasser172 (كل الـ packages) |
-| **الدور** | CEO + Founder + Sole Developer |
-| **الهدف** | Pi Mainnet submission → 9.5/10 |
+| **Name** | Yasser |
+| **GitHub** | Yasira82 (every repo, no exceptions) |
+| **npm** | @yasser172 (every package) |
+| **Role** | CEO + Founder + Sole Developer |
+| **Goal** | Pi Mainnet submission → 9.5/10 |
 
 ---
 
@@ -24,10 +24,10 @@
 > **"24 Apps — One Identity, One Wallet, One World"**
 > Digital Economic Operating System for Pi Network
 
-TEC مش مجرد collection of apps —
-بل **اقتصاد رقمي متكامل** على Pi Network.
+TEC is not just a collection of apps —
+it is an **integrated digital economy** on Pi Network.
 
-كل user عنده:
+Every user has:
 ```
 Identity → Wallet → Purchase History → Assets
 Subscriptions → Connections → Investments → Reputation
@@ -131,7 +131,7 @@ Subscriptions → Connections → Investments → Reputation
 > investment/REITs (C-131). Do NOT treat those as live — escrow/pool/REIT custody is
 > Invariant-#8 gated.
 
-> ⚠️ Domain مرتبط بالـ Pi.init() registration. لو اتغيّر الـ domain → لازم update Pi Developer Portal.
+> ⚠️ The domain is tied to the Pi.init() registration. If the domain changes → the Pi Developer Portal must be updated.
 >
 > ✅ **Reconciled (21 Jun 2026):** Commerce domain confirmed as
 > `commerce.tecosystem.app` — this is the domain registered in the Pi Developer
@@ -162,10 +162,10 @@ Subscriptions → Connections → Investments → Reputation
 
 ## 5. PUBLISHED PACKAGES
 
-| Package | Version | الدور | Source |
+| Package | Version | Role | Source |
 |---|---|---|---|
 | @yasser172/tec-sdk | v1.2.2 | BFF → Backend API calls | Yasira82/TEC-SDK |
-| @yasser172/tec-shared | v1.1.0 | Backend middleware + event-bus | shared/ جوه Tec-core-backend ⚠️ |
+| @yasser172/tec-shared | v1.1.0 | Backend middleware + event-bus | shared/ inside Tec-core-backend ⚠️ |
 | @yasser172/tec-ui | v1.2.1 | Shared UI + PaymentModal + createU2APayment | Yasira82/Tec-ui |
 | @yasser172/tec-auth | v1.0.0 | Auth middleware + SSO + cookies | Yasira82/tec-auth |
 
@@ -189,12 +189,12 @@ Monitor:   Sentry (frontend) + Pino (backend) + Prometheus (payment)
 
 ## 7. COOKIE ARCHITECTURE (INTENTIONAL)
 
-| Cookie | httpOnly | السبب |
+| Cookie | httpOnly | Reason |
 |---|---|---|
-| tec_access_token | **false** | Pi Browser يقرأه عبر document.cookie |
-| tec_refresh_token | **true** | Secure — مش محتاج client-side |
-| tec_user | **false** | Client يحتاج user data |
+| tec_access_token | **false** | Pi Browser reads it via document.cookie |
+| tec_refresh_token | **true** | Secure — not needed client-side |
+| tec_user | **false** | The client needs the user data |
 | tec_csrf | **false** | Double-submit CSRF pattern |
 
-> ⚠️ `sameSite: 'none'` REQUIRED على كل الـ cookies — Pi Browser WebView
-> ⚠️ httpOnly:false على tec_access_token = INTENTIONAL مش bug
+> ⚠️ `sameSite: 'none'` REQUIRED on every cookie — Pi Browser WebView
+> ⚠️ httpOnly:false on tec_access_token = INTENTIONAL, not a bug

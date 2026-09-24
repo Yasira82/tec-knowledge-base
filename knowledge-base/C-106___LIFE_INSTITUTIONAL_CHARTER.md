@@ -58,11 +58,11 @@ Life is the **memory** of the TEC economic identity. Without Life, TEC AI has no
 
 ## 3. ECONOMIC PURPOSE
 
-زيادة retention والذكاء الشخصي داخل النظام.
+Raise retention and personal intelligence inside the system.
 
-- بدون Life: كل user تجربته generic → churn
-- بوجود Life: TEC يعرف كل user → relevant experience → retention
-- اقتصادياً: 1 retained user = more lifetime Pi transactions than 5 churned users
+- Without Life: every user's experience is generic → churn
+- With Life: TEC knows every user → relevant experience → retention
+- Economically: 1 retained user = more lifetime Pi transactions than 5 churned users
 
 ---
 

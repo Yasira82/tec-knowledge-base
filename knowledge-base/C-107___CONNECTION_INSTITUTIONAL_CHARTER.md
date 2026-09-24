@@ -69,11 +69,11 @@ Connection is the **relationship graph** of the TEC economic runtime. Without Co
 
 ## 3. ECONOMIC PURPOSE
 
-بناء Trust Graph اقتصادي يضاعف قيمة كل مستخدم.
+Build an economic Trust Graph that multiplies the value of every user.
 
-- بدون Connection: كل مستخدم isolated → no network effects
-- بوجود Connection: users discover and transact through trusted relationships
-- اقتصادياً: trust graph = virality engine → organic growth → lower acquisition cost
+- Without Connection: every user is isolated → no network effects
+- With Connection: users discover and transact through trusted relationships
+- Economically: trust graph = virality engine → organic growth → lower acquisition cost
 
 ---
 

@@ -28,11 +28,11 @@ Commerce is the **reference implementation** for all platform-level engineering 
 
 ## 3. ECONOMIC PURPOSE
 
-خلق تداول اقتصادي فعلي داخل النظام.
+Create real economic exchange inside the system.
 
-- بدون Commerce: Pi الاقتصاد نظري — لا سلع حقيقية
-- بوجود Commerce: merchants يبيعوا بـ Pi → velocity اقتصادي حقيقي
-- اقتصادياً: كل معاملة تجارية = proof that Pi has utility
+- Without Commerce: the Pi economy is theoretical — no real goods
+- With Commerce: merchants sell in Pi → real economic velocity
+- Economically: every commercial transaction = proof that Pi has utility
 
 ---
 

@@ -12,10 +12,10 @@
 
 ## 1. PACKAGE MAP
 
-| Package | Version | الدور | npm |
+| Package | Version | Role | npm |
 |---------|---------|-------|-----|
 | tec-sdk | **v1.4.0** | BFF → Backend API calls · canonical payment contract (v1.3.0) | @yasser172/tec-sdk |
-| tec-shared | v1.1.0 | Backend middleware + event bus | shared/ جوه Tec-core-backend |
+| tec-shared | v1.1.0 | Backend middleware + event bus | shared/ inside Tec-core-backend |
 | tec-ui | **v3.0.0** | Shared UI + types + payment utils + EVL palette (C-83) on the **Pi amber** + Icon/CountUp + app glyphs | @yasser172/tec-ui |
 | tec-auth | **v1.2.0** | Auth middleware + SSO + hooks · `ssoRedirect` replaces the sign-in page (back returns to the page you came from) | @yasser172/tec-auth |
 
@@ -81,7 +81,7 @@ const resolveDomain(primary, event?): SemanticDomain
 // + CSS-variable layer (--tec-* custom properties)
 ```
 
-### Publish sequence (إلزامي)
+### Publish sequence (mandatory)
 ```
 tec-shared → tec-sdk → tec-auth → tec-ui → Commerce (test first) → apps
 ```

@@ -88,11 +88,11 @@ SYSTEM is the **Economic Constitution Runtime**. C-47 (Kernel Spec) defines the 
 
 ## 3. ECONOMIC PURPOSE
 
-ضمان شرعية وثقة كل عملية اقتصادية.
+Guarantee the legitimacy and trustworthiness of every economic operation.
 
-- بدون SYSTEM: rules موجودة لكن enforcement غير مضمون
-- بوجود SYSTEM: كل actor في النظام يعمل ضمن حدود معتمدة
-- اقتصادياً: governance legitimacy → user trust → platform premium → higher Pi utility
+- Without SYSTEM: rules exist but enforcement is not guaranteed
+- With SYSTEM: every actor in the system works within approved limits
+- Economically: governance legitimacy → user trust → platform premium → higher Pi utility
 
 ---
 

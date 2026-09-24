@@ -1,0 +1,47 @@
+# Arabic lines INSIDE code blocks of English-only documents, per file.
+# A ratchet: evals/check-language-policy.sh fails if a file goes above its count
+# or a file not listed here gains one. Lower it after translating:
+#   UPDATE_BASELINE=1 bash evals/check-language-policy.sh
+# Authority: governance/LANGUAGE_POLICY.md v1.1 §6 (LP-2)
+"knowledge-base/C-10_System_Architecture.md": 6
+"knowledge-base/C-12_Dual_Mode_Payment.md": 17
+"knowledge-base/C-14___SHARED_PACKAGES.md": 4
+"knowledge-base/C-15_Security_Rules.md": 6
+"knowledge-base/C-21_Hub_App.md": 4
+"knowledge-base/C-22_Apps_Commerce_Assets_Ecommerce.md": 2
+"knowledge-base/C-23_TEC_SDK.md": 5
+"knowledge-base/C-30_Vision_24_Apps.md": 2
+"knowledge-base/C-31_App_Blueprints_Life_Connection_Fundx_Estate.md": 1
+"knowledge-base/C-32_App_Blueprints_Nexus_Titan_DX.md": 3
+"knowledge-base/C-41_Engineering_Roadmap.md": 7
+"knowledge-base/C-43_CI_CD_DevOps.md": 4
+"knowledge-base/C-45_Observability.md": 3
+"knowledge-base/C-46_Commercial_Strategy.md": 10
+"knowledge-base/C-47_Kernel_Spec_Architecture_Binding.md": 9
+"knowledge-base/C-48_Engineering_Audit_May2026.md": 14
+"knowledge-base/C-49_Engineering_Work_Map.md": 12
+"knowledge-base/C-51_Cookie_Architecture.md": 12
+"knowledge-base/C-52_Protected_Files_Map.md": 18
+"knowledge-base/C-53_New_App_Protocol.md": 34
+"knowledge-base/C-54_Package_Management.md": 64
+"knowledge-base/C-56_Redis_Streams_Events_Map.md": 2
+"knowledge-base/C-57___MASTER_CONTENTS_INDEX.md": 7
+"knowledge-base/C-58_Hub_Completion_Plan.md": 57
+"knowledge-base/C-59_Error_Format.md": 8
+"knowledge-base/C-60_Code_Templates.md": 11
+"knowledge-base/C-61_Typescript_Types.md": 25
+"knowledge-base/C-62_SLO_Definitions.md": 25
+"knowledge-base/C-63___PI_NETWORK_INTEGRATION_RULES.md": 23
+"knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md": 1
+"knowledge-base/C-65___NEW_BACKEND_SERVICE_TEMPLATE.md": 6
+"knowledge-base/C-66___HUB_FEATURES_CODE_GUIDE.md": 12
+"knowledge-base/C-67___SOURCE_OF_TRUTH_MATRIX.md": 26
+"knowledge-base/C-68___DOMAIN_OWNERSHIP_MATRIX.md": 20
+"knowledge-base/C-69___API_CONTRACTS_GOVERNANCE.md": 38
+"knowledge-base/C-70___EVENT_GOVERNANCE_SPEC.md": 29
+"knowledge-base/C-71___FINANCIAL_INTEGRITY_SPEC.md": 33
+"knowledge-base/C-72___FRONTEND_STATE_GOVERNANCE.md": 12
+"knowledge-base/C-73___INCIDENT_RESPONSE_RUNBOOK.md": 35
+"knowledge-base/C-74___PLATFORM_SCALABILITY_SPEC.md": 27
+"knowledge-base/C-75___RELEASE_GOVERNANCE_SPEC.md": 34
+"governance/LANGUAGE_POLICY.md": 1

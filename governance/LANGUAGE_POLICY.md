@@ -1,6 +1,6 @@
 # TEC GOVERNANCE CHARTER — LANGUAGE POLICY
 
-> **Version:** v1.0 — June 2026 (Session 11)
+> **Version:** v1.1 — 24 September 2026 (KB remediation step 10; v1.0 June 2026, Session 11)
 > **Authority:** TEC_GOVERNANCE_CHARTER_v1.2 § Documentation Standards
 > **Scope:** All TEC documentation (knowledge-base/, governance/, architecture/, README, CONTRIBUTING, agent skills, slash commands)
 
@@ -9,6 +9,12 @@
 ## Purpose
 
 Establish a clear, enforceable language policy for TEC documentation. The project's founder thinks in Egyptian Arabic; external auditors (Pi Network Portal, prospective investors, open-source contributors) read English. Without a policy, the knowledge base drifts into inconsistent bilingualism that hurts both audiences.
+
+> **v1.1 context.** This repository is **public** (since September 2026), so "external" is no
+> longer hypothetical: every reader of a C-doc may be outside the project. v1.0 classified
+> only some C-doc ranges and left the rest undecided; ~40 English-only documents had drifted
+> to 522 lines of Arabic prose by the 2026-09-24 audit (F18). v1.1 classifies everything,
+> and §6's gate — promised in v1.0 as "future" — now runs in CI.
 
 ---
 
@@ -25,34 +31,25 @@ Every TEC document has exactly one **primary audience**:
 
 ### 2. Document Classification
 
+**The rule (v1.1): every document is external — English only — unless it is listed as internal
+below.** A new C-doc is therefore English by default; there is no unclassified range.
+
 | Path | Audience | Language |
 |------|----------|----------|
-| `README.md` | External | **English only** |
-| `CONTRIBUTING.md` | External | **English only** |
-| `SECURITY.md` | External | **English only** |
-| `CODE_OF_CONDUCT.md` | External | **English only** |
-| `LICENSE` | External | English (legal) |
-| `governance/TEC_GOVERNANCE_CHARTER_v1.2.md` | External | **English only** |
-| `architecture/PLATFORM_ARCHITECTURE.md` | External | **English only** |
-| `knowledge-base/C-00` → `C-23` (Constitution + Architecture + Backend) | External | **English only** |
-| `knowledge-base/C-30` → `C-32` (Vision + Blueprints) | External | **English only** |
-| `knowledge-base/C-47` (Kernel Spec) | External | **English only** |
-| `knowledge-base/C-64` (ADRs) | External | **English only** |
-| `knowledge-base/C-67` → `C-78` (Governance + Operations) | External | **English only** |
-| `knowledge-base/C-93` → `C-99` (Institutional Loop) | External | **English only** |
-| `knowledge-base/C-100` → `C-115` (App Charters) | External | **English only** |
-| `knowledge-base/C-116` (Authority Automation) | External | **English only** |
-| `knowledge-base/C-02` (Current State — Living Document) | **Internal** | Arabic + English mixed |
-| `knowledge-base/C-50` (Session Log) | **Internal** | Arabic + English mixed |
+| `knowledge-base/C-02` (Current State) | **Internal** | Arabic + English mixed |
 | `knowledge-base/C-40` (Open Violations Map) | **Internal** | Arabic + English mixed |
+| `knowledge-base/C-50` (Session Log) | **Internal** | Arabic + English mixed |
 | `knowledge-base/C-55` (Scoring & Audit Strategy) | **Internal** | Arabic + English mixed |
 | `knowledge-base/C-80` (Engineering Assessment Report) | **Internal** | Arabic + English mixed |
 | `knowledge-base/C-81` (P1 Fixes Implementation) | **Internal** | Arabic + English mixed |
-| `memory/` (Agent memory snapshots) | **Internal** | Arabic + English mixed |
-| `agents/*/SKILL.md` | External (Claude Code plugin users) | **English only** |
-| `skills/*/SKILL.md` | External | **English only** |
-| `commands/*.md` | External | **English only** |
-| `templates/**/*.md` | External | **English only** |
+| `memory/` (session records, snapshots) | **Internal** | Arabic + English mixed |
+| `audits/` (dated audits and plans) | **Internal** | Arabic + English mixed |
+| `marketing/` | **Its audience** | The language of the people it is written for — Arabic launch copy for Arab pioneers is correct |
+| **Every other C-doc** (C-00 → C-135, charters, ADRs, constitutions, runtimes) | External | **English only** |
+| `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md` | External | **English only** |
+| `LICENSE` | External | English (legal) |
+| `governance/`, `architecture/`, `docs/` | External | **English only** |
+| `skills/`, `agents/`, `commands/`, `templates/` | External (Claude Code plugin users) | **English only** |
 | `evals/*.sh` (comments) | External | **English only** |
 
 ### 3. Mixed-Language Rules (Internal Docs Only)
@@ -72,7 +69,7 @@ For internal documents that mix Arabic and English:
 When Arabic is used in internal docs:
 
 - Use **Egyptian Arabic** (not MSA) for natural voice — matches how the founder thinks
-- Use **Arabic numerals (0-9)**, not Eastern Arabic numerals (٠-٩), for code compatibility
+- Use **Western digits (0-9)**, not Eastern Arabic-Indic digits (U+0660–U+0669), for code compatibility
 - Use **straight quotes** `"..."` not curly quotes `"..."` — avoids encoding issues
 - Use **ASCII parentheses** `(...)` not Arabic parentheses `﴾...﴿`
 - Use **ASCII dash** `-` not Arabic dash `—` in code blocks
@@ -89,25 +86,29 @@ For documents that need to surface both languages in the heading (e.g., for grep
 
 The H1 is always English; an optional H2 in Arabic may follow immediately.
 
-### 6. CI Enforcement (Future)
+### 6. CI Enforcement
 
-In Phase 2, the following CI checks will be added:
+`evals/check-language-policy.sh` runs in CI (and in `scripts/preflight.sh`) since v1.1:
 
-| Check | Rule | Severity |
-|-------|------|----------|
-| `check-language-policy.sh` | External-audience docs must not contain Arabic characters outside code blocks | Blocking |
-| `check-rtl-mixing.sh` | Internal docs must not contain mixed RTL/LTR text in table headers | Warning |
+| Rule | Checks | Severity |
+|------|--------|----------|
+| **LP-1** | Arabic in the **prose** of an external document (outside ``` fences). The §5 bilingual H2 is allowed. | Blocking |
+| **LP-2** | Arabic **inside code blocks** of external documents. A ratchet against `manifests/language-baseline.yaml`: a file may only go down; above its count, or a file not listed, fails. | Blocking |
+| `check-rtl-mixing.sh` | Internal docs: no mixed RTL/LTR text in table headers | Future (warning) |
 
-For Phase 1, language compliance is reviewed manually in PR review.
+LP-2 exists because 669 lines of Arabic sit inside code blocks (diagrams, annotated
+examples). Translating them is worth doing but not all at once; the ratchet stops the number
+growing while it shrinks. After translating some: `UPDATE_BASELINE=1 bash evals/check-language-policy.sh`.
 
 ### 7. Translation Protocol
 
 When a previously-internal document needs to become external-facing:
 
-1. Translate Arabic body paragraphs to English
-2. Preserve all code blocks, identifiers, and technical terms as-is
-3. Move the Arabic version to `knowledge-base/archive/C-XX-ar.md` (preserve institutional memory)
-4. Add a note at the top: `> Translated from Arabic in Session NN. Original preserved in archive/.`
+1. Translate Arabic body paragraphs to English — **line for line**, keeping the document's
+   line count, so `git diff` shows each original beside its translation
+2. Preserve all identifiers, file paths, `C-NN` citations and technical terms as-is
+3. The original stays in git history; no archive copy is made (v1.1 — a second copy of a
+   document is a second place for it to drift, which is what C-67 forbids)
 
 ### 8. Non-Goals
 
@@ -124,6 +125,7 @@ This policy does NOT:
 | Version | Date | Changes |
 |---------|------|---------|
 | v1.0 | June 2026 (Session 11) | Initial policy. Two-audience rule + document classification table. |
+| v1.1 | 24 Sep 2026 (KB remediation step 10) | Repository public. "External unless listed internal" replaces partial ranges (C-02's contradiction removed: it sat in the English-only C-00 → C-23 range and in the internal list). `audits/` internal, `marketing/` audience-language, `docs/` external. §6 gate live (LP-1, LP-2). §7: line-for-line, no archive copy. 522 prose lines in 61 documents translated. |
 
 ---
 

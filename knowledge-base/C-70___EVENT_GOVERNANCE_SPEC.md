@@ -9,8 +9,8 @@
 
 Redis Streams + Event Ownership + Payload Standards
 
-⚠️ اقرأ C-56 أولاً للـ implementation details
-هذا الملف = governance rules فقط
+⚠️ Read C-56 first for the implementation details
+This file = governance rules only
 
 ---
 
@@ -37,7 +37,7 @@ PAYMENT_COMPLETED
 
 ## 2. EVENT OWNERSHIP
 
-كل event له publisher واحد فقط
+Every event has exactly one publisher
 
 | Event | Owner |
 |---|---|
@@ -50,14 +50,14 @@ PAYMENT_COMPLETED
 | subscription.upgraded | auth-service |
 | notification.created | notification-service |
 
-⚠️ فقط owner service ينشر (XADD) الـ event
-⚠️ باقي الـ services consumer فقط — لا تنشر events غيرها
+⚠️ Only the owner service publishes (XADD) the event
+⚠️ The other services are consumers only — they do not publish events they do not own
 
 ---
 
 ## 3. EVENT PAYLOAD STANDARD
 
-كل event لازم يحتوي:
+Every event must contain:
 
 ```json
 {
@@ -217,12 +217,12 @@ Analytics events:
 | Violation | Severity |
 |---|---|
 | Non-idempotent consumer | P1 |
-| Service تنشر foreign event | P1 |
-| Event payload يتعدل بعد publish | P1 |
-| Financial replay بدون idempotency | P0 |
-| XACK قبل processing | P1 |
+| A service publishes a foreign event | P1 |
+| Event payload modified after publish | P1 |
+| Financial replay without idempotency | P0 |
+| XACK before processing | P1 |
 | Missing dead-letter handling | P2 |
-| Secret في event payload | P0 |
+| A secret in the event payload | P0 |
 
 ---
 

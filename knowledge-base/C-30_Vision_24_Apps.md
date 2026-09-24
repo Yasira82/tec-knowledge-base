@@ -20,10 +20,10 @@
 
 > **"24 Apps — One Identity, One Wallet, One World"**
 
-TEC مش collection of apps — ده:
-**Economic Identity Graph على Pi Network**
+TEC is not a collection of apps — it is:
+**An Economic Identity Graph on Pi Network**
 
-الـ Behavior Loop المطلوب:
+The Behavior Loop we want:
 ```
 user earns Pi
   → spends (Commerce/Ecommerce)
@@ -56,7 +56,7 @@ user earns Pi
 
 ## 5. EXECUTION PHASES
 
-### Phase 0 — NOW (قبل Mainnet)
+### Phase 0 — NOW (before Mainnet)
 ```
 □ Hub hardening (KYC + Subscriptions + Notifications UI)
 □ Fix NEXT_PUBLIC_ exposure (NEW-A)
@@ -66,20 +66,20 @@ user earns Pi
 □ Pi Network submission
 ```
 
-### Phase 1 — بعد Mainnet (شهر 1-2)
+### Phase 1 — after Mainnet (months 1-2)
 ```
 □ Life MVP
 □ Analytics UI
 □ tec-template-base production-ready
 ```
 
-### Phase 2 — شهر 3-4
+### Phase 2 — months 3-4
 ```
 □ Connection MVP
 □ Explorer MVP
 ```
 
-### Phase 3 — شهر 5-8
+### Phase 3 — months 5-8
 ```
 □ Fundx v1
 □ Estate v1
@@ -105,7 +105,7 @@ The REAL product = Economic Coordination Infrastructure.
 
 ## 10. APP INSTITUTIONAL CHARTERS (C-100→C-115)
 
-كل app عندها Charter رسمي في knowledge-base — اقرأ الـ Charter قبل أي تعديل على الـ app:
+Every app has an official Charter in the knowledge base — read the Charter before changing the app:
 
 | System Role | App | Charter |
 |-------------|-----|---------|
@@ -126,7 +126,7 @@ The REAL product = Economic Coordination Infrastructure.
 | Real Estate Coordination | Estate | C-114 |
 | System of Construction | DX | C-115 |
 
-**Economic Runtime Lifecycle (من كل Charter):**
+**Economic Runtime Lifecycle (from every Charter):**
 ```
 Settlement → Record → Reasoning → Access → Construction → Production → Economic Activity → Settlement
 ```

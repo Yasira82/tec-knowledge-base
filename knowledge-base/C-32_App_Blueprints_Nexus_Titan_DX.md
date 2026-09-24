@@ -12,7 +12,7 @@
 
 ## 1. NEXUS — Ecosystem Aggregator
 
-### متى يُبنى؟
+### When is it built?
 ```
 ✅ بعد 6+ apps شغالين
 ✅ بعد 50k+ users
@@ -23,7 +23,7 @@
 
 ## 2. TITAN — Enterprise Operating System
 
-### الرؤية
+### Vision
 > B2B Infrastructure for Pi Economy
 > Stripe Atlas + Shopify Admin + Notion Business
 
@@ -31,7 +31,7 @@
 
 ## 3. DX — Developer Experience Platform
 
-### المحتوى
+### Content
 ```
 Developer Portal:
   - API documentation
@@ -45,20 +45,20 @@ Developer Portal:
 
 ## 4. EXPLORER — Discovery + Travel
 
-### الرؤية
+### Vision
 > Pi-accepting businesses + Travel experiences
 
 ---
 
-## 7. APPS القرار النهائي
+## 7. APPS — THE FINAL DECISION
 
-| App | القرار | السبب |
+| App | Decision | Reason |
 |---|---|---|
-| Nexus | Phase 4 | محتاج 6+ apps أولاً |
-| Titan | Phase 4 | محتاج mature infra |
-| DX | Phase 4 | للـ developers — بعد ecosystem |
-| Explorer | Phase 3 | منطقي بعد Commerce |
-| Epic | Phase 4+ | Complex جداً |
-| Zone | Feature في Connection | مش app منفصل |
-| VIP/Elite/Legend | Features في Hub | Subscription tiers |
-| NBF | محتاج legal | Regulatory risk عالي |
+| Nexus | Phase 4 | Needs 6+ apps first |
+| Titan | Phase 4 | Needs mature infra |
+| DX | Phase 4 | For developers — after the ecosystem |
+| Explorer | Phase 3 | Logical after Commerce |
+| Epic | Phase 4+ | Very complex |
+| Zone | A feature in Connection | Not a separate app |
+| VIP/Elite/Legend | Features in Hub | Subscription tiers |
+| NBF | Needs legal | High regulatory risk |

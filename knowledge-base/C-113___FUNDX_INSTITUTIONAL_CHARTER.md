@@ -40,11 +40,11 @@ System of Production — Capital Coordination Infrastructure
 
 ## 3. ECONOMIC PURPOSE
 
-تجميع رأس المال بطريقة منظمة ومحكومة.
+Pool capital in an organised, governed way.
 
-- بدون FundX: تجميع Pi يحتاج trust يدوي → لا يحدث على النطاق الواسع
-- بوجود FundX: governed pools + transparent returns + audit trail
-- اقتصادياً: capital velocity increases → Pi economy deepens
+- Without FundX: pooling Pi needs manual trust → it does not happen at scale
+- With FundX: governed pools + transparent returns + audit trail
+- Economically: capital velocity increases → the Pi economy deepens
 
 ---
 

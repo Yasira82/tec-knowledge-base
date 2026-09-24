@@ -41,14 +41,14 @@ COOKIE_DOMAIN = .tecosystem.app
 
 ---
 
-## 3. BFF PATTERN — القاعدة الذهبية
+## 3. BFF PATTERN — the golden rule
 
 ```
 Client Components → /api/* (BFF) → API Gateway → Services
                 ❌ NEVER → Railway URLs مباشرة
 ```
 
-BFF هو trust-transformation layer:
+The BFF is a trust-transformation layer:
 - Cookie boundary
 - Token mediation
 - Topology hiding

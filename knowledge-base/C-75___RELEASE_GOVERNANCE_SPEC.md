@@ -9,8 +9,8 @@
 
 Deployments + Production Gates + Package Releases
 
-⚠️ راجع C-43 للـ CI/CD implementation details
-هذا الملف = governance rules + gates فقط
+⚠️ See C-43 for the CI/CD implementation details
+This file = governance rules + gates only
 
 ---
 
@@ -192,12 +192,12 @@ Hotfix allowed فقط لـ:
 
 | Violation | Severity |
 |---|---|
-| Deploy مع failing tests | P1 |
-| Destructive migration بدون expand-contract | P1 |
-| Breaking API بدون version | P1 |
+| Deploy with failing tests | P1 |
+| Destructive migration without expand-contract | P1 |
+| Breaking API without a version | P1 |
 | Floating package versions | P2 |
-| Deploy أثناء active P0 | P1 |
-| Production secret في code | P0 |
+| Deploy during an active P0 | P1 |
+| A production secret in code | P0 |
 
 ---
 
