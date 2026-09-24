@@ -29,6 +29,7 @@ cd "$(dirname "$0")/.."
 
 WORKFLOW=".github/workflows/knowledge-ci.yml"
 REGISTRY="architecture/asset-registry.yaml"
+GRAPH="manifests/dependency-graph.yaml"
 REPORT="architecture/registry-integrity-report.md"
 
 if [ ! -f "$WORKFLOW" ]; then
@@ -39,6 +40,7 @@ fi
 failed=()
 passed=0
 registry_was_clean=0
+graph_was_clean=0
 
 echo "Mirroring $WORKFLOW"
 echo
@@ -63,6 +65,31 @@ if python3 scripts/build-asset-registry.py >/dev/null 2>&1; then
 else
   echo "❌ build-asset-registry.py failed to run (is PyYAML installed?)"
   failed+=("registry-rebuild")
+fi
+echo
+
+# ── 1b. The dependency graph is generated too (C-118) ────────────────────────
+# `regenerate-cdg.py` derives the graph from the registry. Nothing compared the
+# committed graph with the generator, and by the 2026-09-24 audit it had drifted
+# by +187/−43 lines — while C-118's stale-flag propagation walks this file. Same
+# rule as the registry: regenerate, diff against HEAD, ignore the timestamp.
+echo "── Dependency graph rebuild (C-118) ─────────────────────"
+if python3 scripts/regenerate-cdg.py >/dev/null 2>&1; then
+  if git diff --quiet -I '^# Generated:' HEAD -- "$GRAPH"; then
+    echo "✅ dependency graph matches the generator"
+    passed=$((passed + 1))
+    graph_was_clean=1
+  else
+    echo "❌ dependency graph is STALE — the registry changed and the graph was not rebuilt."
+    echo "   It has just been regenerated for you. Commit it alongside the registry:"
+    echo
+    git diff --stat -I '^# Generated:' HEAD -- "$GRAPH" | sed 's/^/   /'
+    echo
+    failed+=("graph-rebuild")
+  fi
+else
+  echo "❌ regenerate-cdg.py failed to run (is PyYAML installed?)"
+  failed+=("graph-rebuild")
 fi
 echo
 
@@ -114,6 +141,9 @@ done
 # discarding it would turn a helpful failure into a baffling one.
 if [ "$registry_was_clean" -eq 1 ]; then
   git checkout -- "$REGISTRY" "$REPORT" 2>/dev/null || true
+fi
+if [ "$graph_was_clean" -eq 1 ]; then
+  git checkout -- "$GRAPH" 2>/dev/null || true
 fi
 
 echo
