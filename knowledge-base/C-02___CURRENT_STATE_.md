@@ -50,7 +50,7 @@ Replace rows as they close — do not strike them through and keep them.
 | 8 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
 | 9 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
 | 10 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
-| 11 | KB remediation steps 6 · 10; 24 `[Code Verified]` docs without a `Last verified` date | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
+| 11 | KB remediation step 10 (language policy); 24 `[Code Verified]` docs without a `Last verified` date | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
 ---
 

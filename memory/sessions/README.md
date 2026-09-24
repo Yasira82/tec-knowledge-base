@@ -78,10 +78,12 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | | Historical |
 |---|---|
+| — | [KB change log — the "Session N Additions" blocks, Sessions 12 → 46](kb-claude-md-log.md) |
 | — | [SCORE](archive-score-history.md) |
 | — | [DONE ✅ (تراكمي) · PENDING ⚠️ · NEXT 🔴 (Portal path) · PLATFORM STATE](archive-june-2026-status.md) |
 | — | [CORRECTION — A2U EXISTS. Two recorded reasons for not building it are stale.](correction-a2u-exists.md) |
 
 Sessions 1–5, 12–13 and 22–25 never had a block in C-02. Sessions 12 and 22–25 are
-described in the KB's `CLAUDE.md` ("Session N Additions"); 13 appears in the score history.
+described in the KB change log below (the "Session N Additions" blocks that used to live in
+`CLAUDE.md`); 13 appears in the score history.
 Rows marked — are not sessions: June 2026 snapshots and a standing correction.

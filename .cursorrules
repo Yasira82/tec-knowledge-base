@@ -41,14 +41,12 @@ Verification:       [Documentation Verified] | [Code Verified] | [Runtime Verifi
 ## 🔴 RULE 3 — Before opening a PR, run the gates locally
 
 ```bash
-python3 scripts/build-asset-registry.py
-for g in evals/check-registry-integrity.sh evals/check-truth-framework.sh \
-         evals/check-c57-index.sh evals/check-links.sh evals/check-vam-compliance.sh; do
-  echo "== $g =="; bash "$g" || echo "FAILED: $g";
-done
+bash scripts/preflight.sh     # exactly what CI runs: regenerates the registry + graph, diffs
+                             # them against HEAD, then every gate in CI's order
 ```
-Open the PR only when Registry Integrity shows **0 errors**. There are 13 gates in
-`evals/`; the registry + truth-framework + c57-index gates are the ones edits break.
+Open the PR only when preflight prints all-green. Do NOT run a hand-picked subset of
+`evals/*.sh` instead: that skips the regenerate-and-diff step CI starts with, and it is how
+this repo has shipped red twice. Commit the regenerated registry/graph with your C-doc edit.
 
 ## RULE 4 — Adding a new C-doc
 

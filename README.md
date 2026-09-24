@@ -7,8 +7,6 @@
 [![Status](https://img.shields.io/badge/Status-24%20Apps%20Mainnet-22c55e?style=flat-square)](#)
 [![Apps](https://img.shields.io/badge/Live%20Apps-24-22c55e?style=flat-square)](#)
 [![Services](https://img.shields.io/badge/Railway%20Services-12-3b82f6?style=flat-square)](#)
-[![KB](https://img.shields.io/badge/KB%20Contents-112-8b5cf6?style=flat-square)](#)
-[![Version](https://img.shields.io/badge/KB%20Version-v3.12.0-10b981?style=flat-square)](#)
 
 ---
 
@@ -38,26 +36,30 @@ Settlement → Record → Reasoning → Access → Construction → Production �
 ```
 tec-knowledge-base/
 ├── README.md                          ← You are here
-├── CLAUDE.md                          ← AI assistant navigation index (v3.12.0)
+├── CLAUDE.md                          ← AI assistant navigation + the rules that bite
 │
-├── knowledge-base/                    ← 112 platform knowledge contents (C-00 → C-131)
+├── knowledge-base/                    ← the C-docs (C-00 → C-135, with reserved gaps)
 │   ├── C-00_*.md                      ← Platform Constitution (highest authority)
 │   ├── C-01 → C-99                   ← Architecture, Engineering, Governance, Institutional Operating Loop
-│   ├── C-100 → C-131                 ← App and user-layer institutional charters
-│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index of all 112 contents
+│   ├── C-100 → C-135                 ← App and user-layer charters, platform policies
+│   └── C-57___MASTER_CONTENTS_INDEX.md ← Complete index — the live document count
 │
-├── skills/                            ← 16 Claude Code skills
+├── skills/                            ← Claude Code skills
 │   ├── platform/                      ← payment-expert, platform-architect, security-reviewer…
 │   ├── engineering/                   ← bff-patterns, tec-testing
 │   ├── design/                        ← tec-design-system, ui-patterns
 │   └── marketing/                     ← pi-growth, content-strategy, community-marketing…
 │
-├── agents/                            ← 3 advisory agents
-├── commands/                          ← 7 Claude Code commands
+├── agents/                            ← Advisory agents
+├── commands/                          ← Claude Code commands
 ├── templates/                         ← Scaffolds: skill, ADR, C-document
-├── evals/                             ← CI quality gates
-├── memory/                            ← Persistent memory configuration
+├── evals/                             ← CI quality gates (run them all: bash scripts/preflight.sh)
+├── scripts/                           ← Generators (registry, graph, C-11/C-44) + drift check
+├── manifests/                         ← Events catalog · SLOs · dependency graph · VAM
+├── audits/                            ← Dated audits and remediation plans
+├── memory/sessions/                   ← One record per session (history, not current state)
 ├── architecture/
+│   ├── app-fleet.yaml                 ← THE list of apps (domain · Pi App ID · status)
 │   └── PLATFORM_ARCHITECTURE.md      ← System architecture reference
 └── governance/
     └── TEC_GOVERNANCE_CHARTER_v1.2.md ← Platform governance charter
@@ -70,10 +72,10 @@ tec-knowledge-base/
 ### Current State
 | Document | Description |
 |----------|-------------|
-| [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Live platform state — score, violations, checklist |
+| [C-02 Current State](knowledge-base/C-02___CURRENT_STATE_.md) | Where the platform stands now — the platform, open items, the last three sessions |
 | [C-77 Strategic Analysis](knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md) | Risk register, execution roadmap |
 | [C-78 Operations](knowledge-base/C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md) | SLOs, incidents, reliability |
-| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | All 112 contents indexed with quick lookup |
+| [C-57 Master Index](knowledge-base/C-57___MASTER_CONTENTS_INDEX.md) | Every C-doc, indexed |
 | [C-93 Institutional Verification Constitution](knowledge-base/C-93___INSTITUTIONAL_VERIFICATION_CONSTITUTION.md) | How reality becomes verified institutional state (Tier-1) |
 | [C-94 Governed Capability Constitution](knowledge-base/C-94___GOVERNED_CAPABILITY_CONSTITUTION.md) | How knowledge becomes executable capability (Tier-1) |
 | [C-95 Institutional Knowledge Constitution](knowledge-base/C-95___INSTITUTIONAL_KNOWLEDGE_CONSTITUTION.md) | How institutional state becomes knowledge (Tier-1) |
@@ -87,7 +89,7 @@ tec-knowledge-base/
 |----------|-------------|
 | [C-00 Constitution](knowledge-base/C-00_v3.0___PLATFORM_CONSTITUTION___ENGINEERING_GOVERNANCE.md) | Platform constitution — highest authority |
 | [C-47 Kernel Spec](knowledge-base/C-47_Kernel_Spec_Architecture_Binding.md) | P6 Fail Closed + 10 Forbidden behaviors |
-| [C-64 ADR System](knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md) | All ADRs (ADR-001 → ADR-007) |
+| [C-64 ADR System](knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md) | Every ADR |
 | [C-67 Source of Truth](knowledge-base/C-67___SOURCE_OF_TRUTH_MATRIX.md) | Authority hierarchy & conflict resolution |
 | [Architecture](architecture/PLATFORM_ARCHITECTURE.md) | Full system architecture reference |
 
@@ -107,7 +109,7 @@ tec-knowledge-base/
 | [C-75 Release Governance](knowledge-base/C-75___RELEASE_GOVERNANCE_SPEC.md) | Release gates, migration rules |
 | [C-68 Domain Ownership](knowledge-base/C-68___DOMAIN_OWNERSHIP_MATRIX.md) | Single write authority per domain |
 
-### App Institutional Charters (C-100→C-115)
+### App Institutional Charters (C-100→C-115, C-124→C-131)
 | Charter | App | System Role |
 |---------|-----|-------------|
 | [C-100](knowledge-base/C-100___HUB_INSTITUTIONAL_CHARTER.md) | Hub | System of Access |
@@ -122,10 +124,18 @@ tec-knowledge-base/
 | [C-109](knowledge-base/C-109___NEXUS_INSTITUTIONAL_CHARTER.md) | Nexus | System of Coordination |
 | [C-110](knowledge-base/C-110___SYSTEM_INSTITUTIONAL_CHARTER.md) | SYSTEM | System of Governance |
 | [C-111](knowledge-base/C-111___ALERT_INSTITUTIONAL_CHARTER.md) | ALERT | System of Risk |
-| [C-112](knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md) | NX | System of Security |
+| [C-112](knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md) | NX | Opportunity Exchange (repurposed from security by ADR-010) |
 | [C-113](knowledge-base/C-113___FUNDX_INSTITUTIONAL_CHARTER.md) | FundX | Capital Coordination Infrastructure |
 | [C-114](knowledge-base/C-114___ESTATE_INSTITUTIONAL_CHARTER.md) | Estate | Real Estate Coordination |
-| [C-115](knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md) | DX | System of Construction |
+| [C-115](knowledge-base/C-115___DX_INSTITUTIONAL_CHARTER.md) | DX | Developer Platform |
+| [C-124](knowledge-base/C-124___NBF_BUSINESS_FOUNDATION_RUNTIME.md) | NBF | Business Foundation Runtime |
+| [C-125](knowledge-base/C-125___EPIC_CREATION_RUNTIME.md) | Epic | Creation Runtime |
+| [C-126](knowledge-base/C-126___LEGEND_REPUTATION_RUNTIME.md) | Legend | Reputation Runtime |
+| [C-127](knowledge-base/C-127___ELITE_EXCELLENCE_RUNTIME.md) | Elite | Excellence Runtime |
+| [C-128](knowledge-base/C-128___VIP_PREMIUM_EXPERIENCE_RUNTIME.md) | VIP | Premium Experience Runtime |
+| [C-129](knowledge-base/C-129___INSURE_RISK_PROTECTION_RUNTIME.md) | Insure | Risk Protection Runtime |
+| [C-130](knowledge-base/C-130___TITAN_ENTERPRISE_OS_RUNTIME.md) | Titan | Enterprise OS Runtime |
+| [C-131](knowledge-base/C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md) | Brookfield | Infrastructure Runtime |
 
 ### Future Vision
 | Document | Description |
@@ -152,11 +162,11 @@ and hard-gated; a live subscription is not custody readiness.
 
 ```
 Gateway :3000  │  Auth    :5001  │  Wallet   :5002  │  Payment :5003
-Identity:5004  │  Commerce:5005  │  Storage  :5006  │  Notify  :5007
-KYC     :5008  │  Asset   :5009  │  Realtime :5010  │  Analytics:5011
+Asset   :5004  │  Identity:5005  │  Notify   :5006  │  Storage :5007
+KYC     :5008  │  Commerce:5009  │  Realtime :5010  │  Analytics:5011
 ```
 
-> **Port Authority:** C-20 Backend Services Map (Code Verified)
+> **Port Authority:** C-20 (checked against each `main.ts` every week by the drift job). Public: gateway + realtime only (ADR-005).
 
 ### Release Chain
 
@@ -176,13 +186,13 @@ C-00  Platform Constitution          ← highest authority
   ↓
 C-67  Source of Truth Matrix
   ↓
-ADRs  (C-64: ADR-001 → ADR-007)
+ADRs  (C-64)
   ↓
 C-77  Strategic Analysis + Risk
   ↓
 Current-State Documents (C-02, C-78)
   ↓
-App Institutional Charters (C-100→C-115)
+App Institutional Charters (C-100→C-115, C-124→C-131)
   ↓
 App CLAUDE.md files
   ↓
@@ -196,7 +206,7 @@ Assumptions                          ← lowest authority
 ---
 
 
-## Registry Integrity (NEW in v3.6.0)
+## Registry Integrity
 
 The Asset Registry is now **auto-generated** from file headers and **semantically validated** by CI. v1.0 (manual) had 17% semantic error rate; v2.0 (auto-generated) eliminates drift.
 
@@ -204,8 +214,8 @@ The Asset Registry is now **auto-generated** from file headers and **semanticall
 
 | Asset | Path | Role |
 |-------|------|------|
-| **Asset Registry** (auto-generated) | `architecture/asset-registry.yaml` | 112 C-docs + tier + truth_state + depends_on — DO NOT EDIT MANUALLY |
-| **Integrity Rules** | `architecture/registry-integrity-rules.yaml` | 28 rules across 7 categories (schema, semantic, structural, governance, lifecycle, audit, coverage) |
+| **Asset Registry** (auto-generated) | `architecture/asset-registry.yaml` | Every C-doc + tier + truth_state + depends_on — DO NOT EDIT MANUALLY |
+| **Integrity Rules** | `architecture/registry-integrity-rules.yaml` | Rules in 7 categories (schema, semantic, structural, governance, lifecycle, audit, coverage) |
 | **Registry Integrity Engine** | `evals/check-registry-integrity.sh` | CI gate: validates registry against rules + against actual files |
 
 ### New CI gate
@@ -232,13 +242,13 @@ See `knowledge-base/C-117___REGISTRY_INTEGRITY_CONSTITUTION.md` for the full con
 ---
 
 
-## Verification Authority Matrix (v3.6.1 — RESTORED)
+## Verification Authority Matrix
 
-The VAM defines **who can verify what, using which policy, at what confidence level**. Restored from v3.5.0 and now enforced by CI.
+The VAM defines **who can verify what, using which policy, at what confidence level**, and CI enforces it.
 
 | Asset | Path | Role |
 |-------|------|------|
-| **VAM Manifest** | `manifests/verification-authority-matrix.yaml` | 7 verification tiers + 7 verification policies + per-tier requirements |
+| **VAM Manifest** | `manifests/verification-authority-matrix.yaml` | Verification tiers + policies + per-tier requirements |
 | **VAM Compliance Engine** | `evals/check-vam-compliance.sh` | CI gate: validates every current-state asset's verification_state against VAM requirements |
 
 ### Usage
@@ -253,26 +263,15 @@ See `manifests/verification-authority-matrix.yaml` for the full matrix.
 ---
 
 
-## Dependency Propagation (NEW in v3.6.2)
+## Dependency Propagation
 
-The Dependency Propagation Runtime (DPR) automatically marks downstream documents as stale when an upstream document changes — closing the "Dependency Propagation Runtime" gap from v3.6.1.
+The Dependency Propagation Runtime (DPR) marks downstream documents as stale when an upstream document changes. The graph it walks is generated from the registry, and preflight/CI fail if the committed graph differs from the generator.
 
 | Asset | Path | Role |
 |-------|------|------|
 | **C-118 Constitution** | `knowledge-base/C-118___DEPENDENCY_PROPAGATION_CONSTITUTION.md` | Defines propagation rules + stale flag mechanism |
 | **Propagation Engine** | `scripts/propagate-dependency.py` | Computes transitive closure of downstream dependents |
 | **CDG Regenerator** | `scripts/regenerate-cdg.py` | Derives CDG from asset-registry (single source of truth) |
-
-### v3.6.2 Engineering Fixes
-
-| Fix | Impact |
-|-----|--------|
-| `depends_on` extraction moved from header (lines 1-30) to body (lines 30-200) | Eliminates 22 cycle errors |
-| DAG-guarantee filter (only refs to HIGHER-authority docs) | Eliminates ALL V1_AUTHORITY_INVERSION + V6_CYCLE_DETECTED |
-| C-01 moved to tier-1 (was tier-2-experimental — wrong) | Fixes R-GOV-008 violation |
-| C-79 moved to tier-2 (was tier-1 — truth_state=speculation requires tier-2) | Fixes R-GOV-008 violation |
-| `authoritative_for` claims prefixed with `c-NN-` for uniqueness | Eliminates ALL R-GOV-002 collisions |
-| Generic headings excluded (Purpose, Scope, etc.) | Prevents claim collisions across docs |
 
 ### Usage
 
@@ -319,37 +318,20 @@ No Charter Without Engineering Substance
 
 ---
 
-## Phase Status
+## Where things stand, and how the KB checks itself
 
-```
-Session 18 — Mainnet Governance Baseline (v3.10.0):
-  ✅ NEW-B: INTERNAL_SECRET set on Railway — all 4 services
-  ✅ tec-ui v1.2.1 published — PaymentModal + createU2APayment + 80% tests
-  ✅ All apps coverage ≥ 60%
-  ✅ All P1 + P2 violations closed
-  ✅ 16 App Institutional Charters (C-100→C-115)
-  ✅ Truth Framework adoption 33% → 79% → 100% (auto-generated)  ← v3.5.0 + v3.6.0
-  ✅ C-57 index drift corrected (31 descriptions fixed)            ← v3.5.0
-  ✅ AHV Engine v1 + CDG manifest + Impact Analysis v1             ← v3.5.0
-  ✅ C-116 Authority Automation Constitution                       ← v3.5.0
-  ✅ LANGUAGE_POLICY.md + 90-Day Strategic Roadmap                 ← v3.5.0
-  ✅ Asset Registry auto-generated (112/112 coverage)             ← v3.10.0
-  ✅ R-SEMANTIC-001 catches institutional_role drift               ← v3.6.0
-  ✅ C-117 Registry Integrity Constitution                         ← v3.6.0
-  ✅ VAM restored + check-vam-compliance.sh (BLOCKING)            ← v3.6.1
-  ✅ C-118 Dependency Propagation Constitution                    ← v3.6.2
-  ✅ DAG-guaranteed depends_on (0 cycles + 0 inversions)           ← v3.6.2
-  ✅ All 13 CI gates passing (0 errors)                            ← v3.10.0
-  ✅ 28 rules across 7 categories (schema/semantic/structural/...) ← v3.6.0
-  ✅ 24 apps registered and deployed on Mainnet; real-Pi subscription surfaces verified
-  ✅ Value chain wired: Epic/Zone→Legend, Elite→VIP — [Code Verified]           ← v3.12.0
-  ✅ All app charters reconciled to the fleet (Deployment Status; 24 live)      ← v3.12.0
-  ⬜ External audit ≥ 9.5 and independently attributable production evidence
-  ⬜ Deepen product capability one app at a time, preserving financial hard-gates
-  ⬜ Runtime-verify the value chain (set REDIS_URL + run the Legend consumer)   ← v3.12.0
+Current state is **[C-02](knowledge-base/C-02___CURRENT_STATE_.md)** — this README keeps no
+counts or phase lists, because each one was true only on the day it was written.
+
+```bash
+bash scripts/preflight.sh                  # exactly what CI runs — prints the live gate count
+python3 scripts/check-drift.py \
+  --repos-dir <clones> --ref origin/main   # KB facts vs the code (also weekly: drift.yml)
+python3 scripts/generate-code-docs.py \
+  --repos-dir <clones> --ref origin/main   # regenerate the tables in C-11 and C-44
+python3 scripts/registry-impact-analysis.py C-XX   # blast radius of editing a doc
 ```
 
 ---
 
-*Knowledge Base v3.12.0 — July 2026 (Session 20)*
 *Authority: Yasser (CEO/Founder) | GitHub: Yasira82 | npm: @yasser172*

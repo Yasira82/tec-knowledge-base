@@ -58,6 +58,19 @@ else
   echo "  ✅ C-02 is $C02_LINES lines (max $C02_MAX)"
 fi
 
+# CLAUDE.md is loaded into every session. It grew to 722 lines as an append-only log of
+# 18 sessions whose counts were each true only on their own day (audit F16). It is
+# navigation + rules now; what a session did goes to memory/sessions/. Also FAILS.
+if [ -f CLAUDE.md ]; then
+  CLAUDE_LINES=$(wc -l < CLAUDE.md)
+  if [ "$CLAUDE_LINES" -gt 150 ]; then
+    echo "❌ CLAUDE.md is $CLAUDE_LINES lines (max 150). A session log belongs in"
+    echo "   memory/sessions/session-<id>.md; keep CLAUDE.md to navigation and rules."
+    exit 1
+  fi
+  echo "  ✅ CLAUDE.md is $CLAUDE_LINES lines (max 150)"
+fi
+
 # Check ADR system
 if ! ls "$KB_DIR"/C-64* &>/dev/null; then
   echo "❌ MISSING: C-64 ADR System"

@@ -7,7 +7,7 @@ Given a document ID (e.g., "ADR-007" or "C-12"), compute the blast radius:
   - Direct dependents (who depends_on this doc)
   - Indirect dependents (transitive closure)
   - Affected ADRs
-  - Affected App Charters (C-100 → C-115)
+  - Affected App Charters (C-100 → C-115, C-124 → C-131)
   - Affected tiers
   - Suggested review list (ranked by tier priority)
 
@@ -93,13 +93,16 @@ def analyze(target_id, assets, max_depth=10):
     direct_invalidates = invalidates_me.get(target_id, [])
 
     # Affected ADRs
-    affected_adrs = [d_id for d_id in (direct_dependents + list(transitive_dependents.keys()))
+    affected_adrs = [d_id for d_id in dict.fromkeys(direct_dependents + list(transitive_dependents.keys()))
                      if d_id.startswith('ADR-')]
 
-    # Affected App Charters (C-100 → C-115)
-    affected_charters = [d_id for d_id in (direct_dependents + list(transitive_dependents.keys()))
-                         if d_id.startswith('C-1') and len(d_id) <= 5
-                         and d_id[2:].isdigit() and 100 <= int(d_id[2:]) <= 115]
+    # Affected App Charters: C-100 → C-115 (economic infrastructure) and C-124 → C-131
+    # (user layer, added Session 17). The range once stopped at 115, so a change to C-47
+    # reported its dependents C-129/C-130 as plain documents, not charters.
+    # dict.fromkeys: a document can be both a direct and a transitive dependent — count it once
+    affected_charters = [d_id for d_id in dict.fromkeys(direct_dependents + list(transitive_dependents.keys()))
+                         if d_id.startswith('C-1') and d_id[2:].isdigit()
+                         and (100 <= int(d_id[2:]) <= 115 or 124 <= int(d_id[2:]) <= 131)]
 
     # Affected tiers
     affected_tiers = defaultdict(int)
