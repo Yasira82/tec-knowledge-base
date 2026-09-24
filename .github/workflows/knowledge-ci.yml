@@ -154,6 +154,19 @@ jobs:
       - name: Run Registry Integrity Engine v2.0
         run: bash evals/check-registry-integrity.sh
 
+      # The dependency graph is derived from the registry (C-118) and drifted
+      # unnoticed until the 2026-09-24 audit (+187/−43). Same rule as above.
+      - name: Regenerate Dependency Graph
+        run: python3 scripts/regenerate-cdg.py
+
+      - name: Verify Dependency Graph Matches Generator
+        run: |
+          if ! git diff --exit-code -I '^# Generated:' manifests/dependency-graph.yaml; then
+            echo "❌ FAIL: manifests/dependency-graph.yaml is stale — the registry changed and the graph was not rebuilt."
+            echo "   Run: python3 scripts/regenerate-cdg.py  (after build-asset-registry.py) and commit the result."
+            exit 1
+          fi
+
 
   check-authority-consistency:
     name: Authority Hierarchy Consistency (v3.5.0+)

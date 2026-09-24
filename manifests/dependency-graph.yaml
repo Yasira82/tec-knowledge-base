@@ -7,7 +7,7 @@
 # v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
 # This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
 #
-# Generated: 2026-07-02T04:41:12.489595
+# Generated: 2026-09-24T10:39:35.036713
 
 documents:
 
@@ -80,7 +80,7 @@ documents:
     governance_state: "draft"
     verification_state: "documentation-verified"
     authority_scope: "platform"
-    depends_on: ["C-00", "C-64"]
+    depends_on: []
     informs: []
 
   - id: "C-10"
@@ -152,7 +152,7 @@ documents:
     governance_state: "adr-approved"
     verification_state: "code-verified"
     authority_scope: "platform"
-    depends_on: ["C-47", "C-64"]
+    depends_on: []
     informs: []
 
   - id: "C-123"
@@ -164,7 +164,7 @@ documents:
     governance_state: "governance-approved"
     verification_state: "runtime-verified"
     authority_scope: "platform"
-    depends_on: ["C-47"]
+    depends_on: []
     informs: []
 
   - id: "C-13"
@@ -175,6 +175,42 @@ documents:
     truth_state: "current-state"
     governance_state: "governance-approved"
     verification_state: "code-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-132"
+    title: "Service Extraction & Modular Architecture Policy"
+    filename: "C-132___SERVICE_EXTRACTION_MODULAR_ARCHITECTURE_POLICY.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: []
+    informs: []
+
+  - id: "C-133"
+    title: "Platform Adoption & Growth Governance"
+    filename: "C-133___PLATFORM_ADOPTION_GROWTH_GOVERNANCE.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-64"]
+    informs: []
+
+  - id: "C-135"
+    title: "Launch Strategy: The Focused-8 & the Month-9 Marketing Trigger"
+    filename: "C-135___LAUNCH_STRATEGY_FOCUSED_8.md"
+    tier: "tier-1-constitutional-runtime"
+    authority_rank: 60
+    truth_state: "current-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -378,7 +414,7 @@ documents:
     authority_rank: 60
     truth_state: "planned-state"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -389,7 +425,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "documentation-verified"
+    governance_state: "governance-approved"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
@@ -413,7 +449,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "documentation-verified"
+    governance_state: "governance-approved"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: ["C-64", "C-67"]
@@ -473,7 +509,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "documentation-verified"
+    governance_state: "governance-approved"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
@@ -510,7 +546,7 @@ documents:
     authority_rank: 60
     truth_state: "planned-state"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -678,7 +714,7 @@ documents:
     authority_rank: 60
     truth_state: "planned-state"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -713,7 +749,7 @@ documents:
     tier: "tier-1-constitutional-runtime"
     authority_rank: 60
     truth_state: "current-state"
-    governance_state: "documentation-verified"
+    governance_state: "governance-approved"
     verification_state: "documentation-verified"
     authority_scope: "platform"
     depends_on: []
@@ -824,7 +860,7 @@ documents:
     governance_state: "draft"
     verification_state: "documentation-verified"
     authority_scope: "app"
-    depends_on: ["C-47"]
+    depends_on: ["C-133", "C-47"]
     informs: []
 
   - id: "C-105"
@@ -846,7 +882,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: []
     informs: []
@@ -858,7 +894,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: ["C-47"]
     informs: []
@@ -870,7 +906,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: []
     informs: []
@@ -882,7 +918,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: ["C-47"]
     informs: []
@@ -894,7 +930,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: ["C-47"]
     informs: []
@@ -906,7 +942,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: ["C-47", "C-62", "C-78"]
     informs: []
@@ -918,9 +954,9 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
-    depends_on: []
+    depends_on: ["C-64"]
     informs: []
 
   - id: "C-113"
@@ -930,7 +966,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: ["C-47"]
     informs: []
@@ -942,7 +978,7 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
     depends_on: []
     informs: []
@@ -954,9 +990,9 @@ documents:
     authority_rank: 55
     truth_state: "current-state"
     governance_state: "draft"
-    verification_state: "documentation-verified"
+    verification_state: "runtime-verified"
     authority_scope: "app"
-    depends_on: []
+    depends_on: ["C-47"]
     informs: []
 
   - id: "C-119"
@@ -980,7 +1016,7 @@ documents:
     governance_state: "draft"
     verification_state: "assumed"
     authority_scope: "platform"
-    depends_on: []
+    depends_on: ["C-123"]
     informs: []
 
   - id: "C-121"
@@ -1007,6 +1043,114 @@ documents:
     depends_on: ["C-47", "C-68"]
     informs: []
 
+  - id: "C-124"
+    title: "Nbf Business Foundation Runtime"
+    filename: "C-124___NBF_BUSINESS_FOUNDATION_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-125"
+    title: "Epic Creation Runtime"
+    filename: "C-125___EPIC_CREATION_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-126"
+    title: "Legend Reputation Runtime"
+    filename: "C-126___LEGEND_REPUTATION_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-127"
+    title: "Elite Excellence Runtime"
+    filename: "C-127___ELITE_EXCELLENCE_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-128"
+    title: "Vip Premium Experience Runtime"
+    filename: "C-128___VIP_PREMIUM_EXPERIENCE_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "planned-state"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-129"
+    title: "Insure Risk Protection Runtime"
+    filename: "C-129___INSURE_RISK_PROTECTION_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-130"
+    title: "Titan Enterprise Os Runtime"
+    filename: "C-130___TITAN_ENTERPRISE_OS_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: ["C-47"]
+    informs: []
+
+  - id: "C-131"
+    title: "Brookfield Infrastructure Runtime"
+    filename: "C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "future-vision"
+    governance_state: "draft"
+    verification_state: "assumed"
+    authority_scope: "app"
+    depends_on: []
+    informs: []
+
+  - id: "C-134"
+    title: "Pioneer Runtime Charter"
+    filename: "C-134___PIONEER_RUNTIME_CHARTER.md"
+    tier: "tier-1-institutional-intelligence"
+    authority_rank: 55
+    truth_state: "planned-state"
+    governance_state: "governance-approved"
+    verification_state: "documentation-verified"
+    authority_scope: "platform"
+    depends_on: ["C-133", "C-47", "C-70"]
+    informs: []
+
   - id: "C-83"
     title: "Economic Visual Language (evl) & Economic State Language (esl)"
     filename: "C-83___EVL_ESL.md"
@@ -1016,7 +1160,7 @@ documents:
     governance_state: "draft"
     verification_state: "documentation-verified"
     authority_scope: "platform"
-    depends_on: []
+    depends_on: ["C-02"]
     informs: []
 
   - id: "C-84"
@@ -1134,7 +1278,7 @@ documents:
     authority_rank: 55
     truth_state: "future-vision"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -1146,7 +1290,7 @@ documents:
     authority_rank: 55
     truth_state: "future-vision"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -1158,7 +1302,7 @@ documents:
     authority_rank: 55
     truth_state: "speculation"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: []
     informs: []
@@ -1182,7 +1326,7 @@ documents:
     authority_rank: 55
     truth_state: "speculation"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: ["C-12", "C-13", "C-63", "C-64", "C-68", "C-71", "C-73"]
     informs: []
@@ -1194,7 +1338,7 @@ documents:
     authority_rank: 55
     truth_state: "speculation"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: ["C-21", "C-22", "C-47", "C-53", "C-60", "C-61", "C-63", "C-65", "C-66"]
     informs: []
@@ -1206,7 +1350,7 @@ documents:
     authority_rank: 55
     truth_state: "speculation"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "platform"
     depends_on: ["C-00", "C-02", "C-40", "C-47", "C-64", "C-67", "C-68", "C-78"]
     informs: []
@@ -1218,7 +1362,7 @@ documents:
     authority_rank: 10
     truth_state: "future-vision"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "experimental"
     depends_on: ["C-100", "C-101", "C-102", "C-103", "C-104", "C-105", "C-106", "C-107", "C-108", "C-109", "C-110", "C-111", "C-112", "C-113", "C-114", "C-115", "C-77"]
     informs: []
@@ -1230,7 +1374,7 @@ documents:
     authority_rank: 10
     truth_state: "future-vision"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "experimental"
     depends_on: []
     informs: []
@@ -1242,7 +1386,7 @@ documents:
     authority_rank: 10
     truth_state: "future-vision"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "experimental"
     depends_on: []
     informs: []
@@ -1254,7 +1398,7 @@ documents:
     authority_rank: 10
     truth_state: "speculation"
     governance_state: "draft"
-    verification_state: "unverified"
+    verification_state: "assumed"
     authority_scope: "experimental"
     depends_on: ["C-50", "C-64", "C-84", "C-85", "C-92", "C-93", "C-94", "C-95", "C-96", "C-97", "C-98", "C-99"]
     informs: []
@@ -1296,18 +1440,18 @@ adrs:
 # =============================================================================
 # STATISTICS
 # =============================================================================
-# Total documents: 104
-# Total cross-references (depends_on): 115
+# Total documents: 116
+# Total cross-references (depends_on): 121
 #
 # Tier distribution:
-#   tier-1-constitutional-runtime: 59
-#   tier-1-institutional-intelligence: 37
+#   tier-1-constitutional-runtime: 62
+#   tier-1-institutional-intelligence: 46
 #   tier-0-foundational: 4
 #   tier-2-experimental: 4
 #
 # Truth State distribution:
-#   current-state: 84
-#   future-vision: 9
-#   planned-state: 6
+#   current-state: 87
+#   future-vision: 16
+#   planned-state: 8
 #   speculation: 5
 

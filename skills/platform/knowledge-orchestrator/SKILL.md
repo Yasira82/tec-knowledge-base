@@ -18,7 +18,7 @@ You are the conductor of the TEC Federated Platform knowledge system. Before any
 1. ALWAYS load → knowledge-base/C-02___CURRENT_STATE_.md        (what's done, what's open)
 2. ALWAYS load → knowledge-base/C-47___KERNEL_SPEC___PLATFORM_CONSTITUTION.md  (constraints)
 3. On demand  → knowledge-base/C-57___MASTER_CONTENTS_INDEX.md  (navigation)
-4. On demand  → knowledge-base/C-64___ADR_SYSTEM.md             (before any arch decision)
+4. On demand  → knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md             (before any arch decision)
 ```
 
 ## Task → Knowledge Routing

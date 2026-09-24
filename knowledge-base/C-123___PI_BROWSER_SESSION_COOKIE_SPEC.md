@@ -142,6 +142,8 @@ Forbidden (each one caused a production incident):
 | `401 "Refresh token already used"` | backend refresh | Single-use token burned — find who consumed rotation without forwarding it |
 | `ERR_JWT_EXPIRED` vs `ERR_JWS_SIGNATURE_VERIFICATION_FAILED` | jwtVerify error code | Expiry (normal, self-heals) vs JWT_SECRET mismatch (env) — do NOT confuse them |
 | `[landing-report]` warn line | Vercel logs | Landing page failed: shows document.cookie names + whether the server received any cookies |
+| Sign-in button waits, then `AUTH_TIMEOUT` — and **no `POST /api/auth/pi-login` in Vercel at all** | phone + Vercel logs | The wait is inside `Pi.authenticate`, not the network and not our server. Pi's bridge is silent — see **§9**. |
+| `/api/auth/sso 307 → / → /api/auth/me 401 → pi-login → /hub` | Vercel logs | An app sent the visitor to the Hub from a context with no Hub cookies (§7). Before tec-app #253 the destination was dropped on that bounce, so sign-in landed on `/hub`, not the app. |
 
 Temp diagnostic endpoints (delete when stable, recreate from this spec when
 needed): `/api/admin/auth-debug` (token claims + verify + backend refresh probe),
@@ -253,10 +255,62 @@ accepts them (§1–§2 rules), skip step 4 — an accelerator, never a requirem
 
 ---
 
+## §9 — THE HUB INSIDE AN APP'S PI CONTEXT (the reverse foreign session)
+
+> Truth State: **[Current State]** · Verification: the log evidence is **[Runtime Verified]**
+> (Vercel + Railway, 2026-09-24); the causal chain is **[Assumed]** — consistent with
+> C-02 and C-76, not yet confirmed on a device. Mitigation: tec-app **#253** (open).
+
+ADR-007 (C-76) protects an **app** from calling Pi inside a session the **Hub** owns.
+Nothing protected the **Hub** from the mirror case, and the Founding 100 Quest now
+produces it on purpose:
+
+```
+Quest link  → rel="noreferrer"  → the app sees a standalone visit
+            → the app loads pi-sdk.js and runs its OWN Pi.init()     (so Pi counts the visit
+                                                                       toward the .pi claim)
+            → Pi Browser's app context now belongs to THAT app
+back to Hub → "Sign in with Pi" → Pi.authenticate()  → the bridge never replies
+            → 45s → AUTH_TIMEOUT ("check your internet" until #253 — the network was fine)
+close Pi Browser, reopen → fresh context → sign-in works in a second
+```
+
+**Observed (2026-09-24):** the owner, signed in 40 seconds earlier, opened an app from
+the Quest; the app bounced to `/api/auth/sso`; the Hub had no cookies in that context
+(§7) → `me 401` → the sign-in page. `pi-login` was answered by `tec-auth-service` in the
+**same second** it arrived — the server was never the wait.
+
+**What recovers it — and what is NOT established.** Re-running `Pi.init()` is already
+rejected (C-76: "already initialized" persists). **A page reload is also listed there
+as rejected for payment ownership** ("Pi Browser preserves session across reloads"),
+and what recovered sign-in on the phone was **closing Pi Browser entirely**. Whether a
+reload is enough for *authentication* is therefore unknown. tec-app #253 does not
+assume it:
+
+1. The button names the step — *Waiting for Pi…* / *Signing in…* — so a stall is
+   attributable at a glance (the server half has never been the slow one).
+2. After **15s** of Pi silence, *Try again* appears **beside** the wait (Pi keeps its
+   full 45s — a first sign-in shows Pi's permission screen, and reading it is not a hang).
+3. *Try again* reloads, and is remembered for 5 minutes. If Pi is silent **again**, the
+   screen stops offering it and says: *close Pi Browser completely, then open the Hub
+   again.*
+4. `/api/auth/sso` carries the app as `returnTo` on the no-session bounce, so the
+   sign-in finishes the trip the visitor started.
+
+**The first phone test closes the open question:** after touring Quest apps, sign in
+to the Hub and press *Try again* at 15s. Signs in → a reload suffices; the "close Pi
+Browser" message → only a full restart does. Record the answer here and in C-76.
+
+**Rule:** any code that calls `Pi.authenticate` on the Hub MUST show which step it is
+waiting on and MUST offer a recovery before its own timeout. A silent bridge is not an
+error, so nothing else will ever surface it.
+
+---
+
 ## Related Documents
 
 - `C-02___CURRENT_STATE_.md` — Session 16 (full incident narrative)
 - `C-12_Dual_Mode_Payment.md` — payment-side Pi Browser constraints (CSRF §11)
 - `C-47` Kernel Spec — P6 Fail Closed (why /api/auth/me 401s by default)
-- `C-76___ADR-007.md` — Pi foreign session (payment counterpart of these laws)
+- `C-76___ADR-007.md` — Pi foreign session (payment counterpart of these laws; §9 is its mirror)
 - `C-78___PLATFORM_OPERATIONS___RELIABILITY_GOVERNANCE.md` — incident process

@@ -5,25 +5,32 @@
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Code Verified]` — Canonical Port Authority for the platform
 > **Port Scheme:** Gateway `:3000` · Services `:5001`–`:5011` (supersedes any other reference)
+> Last verified against code + runtime: 2026-09-24 — every port below is the `main.ts`
+> default on tec-core-backend `main` AND the port in the gateway's boot routing table after
+> ADR-005 (C-02 Session 56m). The 4000-series table in tec-core-backend's CLAUDE.md is wrong.
 
 ---
 
 ## 1. SERVICE REGISTRY
 
-| Service | Port | Framework | Railway URL |
+| Service | Port | Framework | Network (after ADR-005) |
 |---|---|---|---|
-| api-gateway | 3000 | NestJS+Express | api-gateway-production-6a68.up.railway.app |
-| auth | 5001 | NestJS | auth-service-pi.up.railway.app |
-| wallet | 5002 | Express* | wallet-service-production-445d.up.railway.app |
-| payment | 5003 | Express* | payment-service-production-90e5.up.railway.app |
-| identity | 5004 | NestJS | identity-service-production-fe57.up.railway.app |
-| commerce | 5005 | NestJS | commerce-service-production.up.railway.app |
-| storage | 5006 | NestJS | storage-sevice-production.up.railway.app ⚠️ typo |
-| notification | 5007 | NestJS | notification-service-production-dc81.up.railway.app |
-| kyc | 5008 | NestJS | kyc-service-production-ba73.up.railway.app |
-| asset | 5009 | NestJS | asset-service-production-54c4.up.railway.app |
-| realtime | 5010 | NestJS+WS | realtime-service-production-9630.up.railway.app |
-| analytics | 5011 | NestJS+Fastify | Supabase PostgreSQL |
+| api-gateway | 3000 | NestJS+Express | **public** — `api-gateway-production-6a68.up.railway.app` (every client enters here) |
+| auth | 5001 | NestJS | private — `triumphant-spirit.railway.internal` |
+| wallet | 5002 | Express* | private — `wallet-service.railway.internal` |
+| payment | 5003 | Express* | private — `payment-service.railway.internal` · `PORT` is **required** in its env schema (no code default) |
+| asset | 5004 | NestJS | private — `tec-core-backend-a5f9.railway.internal` |
+| identity | 5005 | NestJS | private — `identity-service.railway.internal` |
+| notification | 5006 | NestJS | private — `notification-service.railway.internal` |
+| storage | 5007 | NestJS | private — `tec-core-backend-4aa8.railway.internal` |
+| kyc | 5008 | NestJS | private — `kyc-service.railway.internal` |
+| commerce | 5009 | NestJS | private — `commerce-service.railway.internal` |
+| realtime | 5010 | NestJS+WS | **public** — the browser opens its WebSocket directly (gateway has no `ws: true`) |
+| analytics | 5011 | NestJS+Fastify | private — `analytics-service.railway.internal` · data in Supabase PostgreSQL |
+
+The nine private services answer Railway's "Unexposed service" 404 from the internet; the
+gateway reaches them over `*.railway.internal` with `x-internal-key` (ADR-005). Do not
+re-add a public domain to call one directly — go through the gateway.
 
 ---
 
@@ -38,7 +45,7 @@ Patterns:
   ✅ Reconciliation (cron 60min)
   ✅ getPiApiKey(source) ← per-app API key
   ✅ PI_SANDBOX: z.enum (no default)
-  ⚠️ NEW-B: INTERNAL_SECRET optional (يجب required)
+  ✅ INTERNAL_SECRET required (env schema: min 32 chars) — NEW-B closed
 ```
 
 ---
@@ -46,8 +53,8 @@ Patterns:
 ## Health Check URLs
 
 ```
-Hub:     https://hub.tecosystem.app/api/health
-Gateway: https://api-gateway-production-6a68.up.railway.app/health
-Auth:    https://auth-service-pi.up.railway.app/health
-Payment: https://payment-service-production-90e5.up.railway.app/health
+Hub:      https://hub.tecosystem.app/api/health
+Gateway:  https://api-gateway-production-6a68.up.railway.app/health
+Services: GET <gateway>/health/detailed  — the gateway checks all 11 over the private
+          network (the services' own public URLs were removed by ADR-005)
 ```

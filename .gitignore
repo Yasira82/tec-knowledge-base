@@ -18,3 +18,12 @@ tmp/
 
 # Node (in case tooling is added later)
 node_modules/
+
+# Generated on every gate run — not source. The integrity report embeds a timestamp and the
+# absolute path of whoever ran it, so committing it only produced churn (KB audit F20).
+# The gate still writes it locally; C-117 describes the output, it does not require a commit.
+architecture/registry-integrity-report.md
+architecture/registry-integrity-report.json
+
+# Python bytecode from running scripts/
+__pycache__/

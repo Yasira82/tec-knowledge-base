@@ -82,11 +82,11 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## P2 — OPEN (Code Verified — June 2026)
+## P2 — CLOSED (Code Verified — re-checked 24 Sep 2026)
 
 | ID | المشكلة | المصدر | الحل | الحالة |
 |----|---------|--------|------|--------|
-| **NEW-M** | **Hardcoded Service Map** — `private readonly services = {}` داخل `proxy.service.ts`. إضافة Life/Connection/Explorer/SYSTEM تحتاج تعديل كود Gateway + redeploy | `tec-api-gateway/src/modules/proxy/proxy.service.ts` | إنشاء `src/config/service-registry.ts` — Gateway يقرأه وقت التشغيل بدل hardcoding | **OPEN** |
+| **NEW-M** | **Hardcoded Service Map** — `private readonly services = {}` داخل `proxy.service.ts`. إضافة Life/Connection/Explorer/SYSTEM تحتاج تعديل كود Gateway + redeploy | `tec-api-gateway/src/modules/proxy/proxy.service.ts` | إنشاء `src/config/service-registry.ts` — Gateway يقرأه وقت التشغيل بدل hardcoding | ✅ **CLOSED 18 Jun 2026** — tec-core-backend `38d33e4` ("extract service-registry.ts … closes NEW-M"); `proxy.service.ts` now holds `buildServiceRegistry()`, every URL from `*_SERVICE_URL` |
 
 ---
 
@@ -147,12 +147,12 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## SUMMARY (Updated Session 10 — 17 June 2026, Code Verified + Applied)
+## SUMMARY (Updated 24 Sep 2026 — NEW-M re-checked against tec-core-backend `main`)
 
 ```
 P0 Open:  0
 P1 Open:  0  ✅  (NEW-K + NEW-L + NEW-N + NEW-O — all VERIFIED — C-81 applied to repos)
-P2 Open:  1  ⚠️  (NEW-M: Hardcoded Service Map)
+P2 Open:  0  ✅  (NEW-M closed 18 Jun 2026 — was left marked OPEN here until the 24 Sep audit)
 Deferred: 3  (post-Portal — VM-NEW-009, VM-NEW-014, ISS-010)
 
 Source: C-81 Implementation Guide applied to Tec-App + tec-api-gateway (June 2026)
@@ -164,6 +164,6 @@ Score Impact:
   PRI:            8.22 → 8.8+/10 (estimated post-audit)
 
 Next:
-  1. Fix NEW-M  (service-registry.ts) [P2]
-  2. External Re-Audit → target 9.0–9.5/10 → Portal Submission
+  (historical — superseded) All 24 apps have been live on Mainnet since July 2026.
+  Current open work lives in C-02 and audits/KB_REMEDIATION_PLAN_2026-09-24.md.
 ```

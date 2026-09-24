@@ -5,7 +5,7 @@
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Code Verified]`
 
-**Last Updated:** June 2026
+**Last Updated:** 24 September 2026 — versions verified against each repo's `package.json` on `main`.
 
 ---
 
@@ -13,13 +13,13 @@
 
 | Package | Version | الدور | npm |
 |---------|---------|-------|-----|
-| tec-sdk | v1.2.2 | BFF → Backend API calls | @yasser172/tec-sdk |
+| tec-sdk | **v1.4.0** | BFF → Backend API calls · canonical payment contract (v1.3.0) | @yasser172/tec-sdk |
 | tec-shared | v1.1.0 | Backend middleware + event bus | shared/ جوه Tec-core-backend |
-| tec-ui | **v2.1.0** ✅ | Shared UI + types + payment utils + EVL palette (C-83) + Icon/CountUp | @yasser172/tec-ui |
-| tec-auth | **v1.0.0** | Auth middleware + SSO + hooks | @yasser172/tec-auth |
+| tec-ui | **v3.0.0** | Shared UI + types + payment utils + EVL palette (C-83) on the **Pi amber** + Icon/CountUp + app glyphs | @yasser172/tec-ui |
+| tec-auth | **v1.2.0** | Auth middleware + SSO + hooks · `ssoRedirect` replaces the sign-in page (back returns to the page you came from) | @yasser172/tec-auth |
 
 ```
-tec-auth v1.0.0:
+tec-auth v1.2.0 (1.0.0 → 1.1.1 packaging → 1.2.0 ssoRedirect location.replace):
   ✅ 95% statement coverage
   ✅ 46 tests — 4 files
   Status: NEW-D VERIFIED ✅
@@ -28,12 +28,13 @@ tec-ui status:
   ✅ createU2APayment() — Mode 2 payment   (shipped v1.2.x)
   ✅ PaymentModal component                (shipped v1.2.x)
   ✅ C-83 EVL color tokens                 (shipped v2.0.0 — live identity)
+  ✅ WEALTH → Pi amber #FBB44A             (v3.0.0 — MAJOR: values moved, nothing renamed)
   □ C-83 Phase 1 remainder: CSS-var layer + SemanticDomain type (planned)
 ```
 
 ---
 
-## 2. @yasser172/tec-sdk v1.2.2
+## 2. @yasser172/tec-sdk (v1.4.0 — history below)
 
 ```typescript
 import { TecSdk } from '@yasser172/tec-sdk';
@@ -57,7 +58,7 @@ sdk.health        // check gateway health
 
 ---
 
-## 4. @yasser172/tec-ui → v2.0.0
+## 4. @yasser172/tec-ui (v3.0.0 — history below)
 
 ### Shipped
 ```typescript
