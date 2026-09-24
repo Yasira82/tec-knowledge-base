@@ -43,7 +43,7 @@ Replace rows as they close — do not strike them through and keep them.
 | 1 | **Re-deploy 8 apps + the Hub** (Estate · FundX · Nx · Titan · Vip · Insure · Brookfield · NBF; Hub #256) | Vercel Hobby build quota ran out on 24 Sep; merged ≠ deployed | 56q |
 | 2 | **Phone checks**: Hub keeps the name a day after sign-in (#256)? "Try again" recovers a silent Pi (#253)? | Only a device can answer; record in C-123 §9 | 56p · 56q |
 | 3 | **Campaign payout evidence** — the queue shows no proof of qualification; record it AT CLAIM TIME (additive nullable column). Also `CAMPAIGN_APPS` → all 24 | Will not scale to 50 claims | 56o |
-| 4 | **Assets: no repair path for a paid purchase** — pay, then a separate browser call records it; if that call is lost the π is gone and nothing repairs it | Financial integrity (Invariant #4) | 56m |
+| 4 | **Deploy Assets payment integrity** (backend #334 + Tec-Assets #59): `db:push` on asset-service → restore start command → set `REDIS_URL` → deploy. Then close what #334 left: `/assets/provision` still unverified for Hub, `domains/add`, Estate; marketplace `list`/`cancel`/`price` trust body `sellerId` | Until deployed, any signed-in user can take a listing, and approve does not compare Pi's amount | 56r |
 | 5 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
 | 6 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
 | 7 | VIP benefits not implemented in any owning app (fees, support SLA, dashboards) | Must exist before VIP is marketed | 56n |
@@ -56,6 +56,9 @@ Replace rows as they close — do not strike them through and keep them.
 
 ## 3. The last three sessions
 
+- **[56r](../memory/sessions/session-56r.md) — 24 Sep.** Assets delivered paid actions on any
+  payment id, so a listing could be taken for free; approve never compared Pi's amount with the
+  recorded one. Both fixed (receipts from `payment.completed.v1`, #334 · #59) — not yet deployed.
 - **[56q](../memory/sessions/session-56q.md) — 24 Sep.** The KB now checks itself against the
   code every week. Its first run found `resolve-incomplete` setting the token without
   `Partitioned` in 22 repos, 20 unmerged name-fix PRs, and the Hub's refresh never renewing
@@ -63,8 +66,6 @@ Replace rows as they close — do not strike them through and keep them.
 - **[56p](../memory/sessions/session-56p.md) — 24 Sep.** "Not signed in" traced through three
   causes (guard, refresh, reason word); arrivals made countable; the Hub's sign-in stall is
   Pi's silent bridge (C-123 §9, #253).
-- **[56o](../memory/sessions/session-56o.md) — 19 Sep.** The campaign paid a real pioneer and
-  the chain agreed.
 
 Older: [`memory/sessions/README.md`](../memory/sessions/README.md).
 
