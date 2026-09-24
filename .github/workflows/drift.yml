@@ -1,0 +1,64 @@
+name: KB ↔ Code Drift (weekly)
+
+# The in-repo gates (knowledge-ci.yml) check the KB against itself. This job checks the
+# KB against the CODE it describes — ports, package versions, events, cookie attributes,
+# the app fleet — by cloning every repo and running scripts/check-drift.py.
+# Audit F1 (audits/KB_ENGINEERING_AUDIT_2026-09-24.md): those facts drifted for months
+# with every in-repo gate green. Remediation plan step 9.
+#
+# Private repos (Tec-core-backend, TEC-SDK, Tec-Fundx) need a read-only token:
+#   Settings → Secrets → Actions → DRIFT_READ_TOKEN
+#   = a fine-grained PAT, Repository access: those repos, Permissions: Contents → Read-only.
+# Without it those repos are SKIPPED, loudly, and the run fails (--strict): a check that
+# silently checks less is the failure mode this job exists to end.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+# Scheduled + manual only, on main — nothing to supersede, so never cancel a run.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: KB facts vs code
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Clone the code repos (main, shallow)
+        env:
+          READ_TOKEN: ${{ secrets.DRIFT_READ_TOKEN }}
+        run: |
+          set -u
+          mkdir -p repos
+          # Every app in architecture/app-fleet.yaml + the packages the KB states facts about.
+          REPOS=$(python3 -c "import yaml; d=yaml.safe_load(open('architecture/app-fleet.yaml')); print(' '.join([a['repo'] for a in d['apps']] + [p['repo'] for p in d['packages']]))")
+          for r in $REPOS; do
+            url="https://github.com/Yasira82/$r.git"
+            if [ -n "${READ_TOKEN:-}" ]; then
+              url="https://x-access-token:${READ_TOKEN}@github.com/Yasira82/$r.git"
+            fi
+            if git clone -q --depth 1 --branch main "$url" "repos/$r" 2>/dev/null; then
+              echo "cloned $r"
+            else
+              echo "::warning::could not clone $r — its checks will be SKIPPED (private repo without DRIFT_READ_TOKEN?)"
+            fi
+          done
+
+      - name: Check KB facts against the code
+        run: python3 scripts/check-drift.py --repos-dir repos --strict --summary "$GITHUB_STEP_SUMMARY"

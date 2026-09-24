@@ -59,6 +59,11 @@ That has now happened twice — `preflight.sh` was written after the first time 
 this line exists because the second session did not know the script was there. A
 tool nothing points at is a tool nobody runs.
 
+> **Preflight checks the KB against itself; it cannot see the code.** For facts the code
+> can confirm (ports, versions, events, cookies, the fleet) run
+> `python3 scripts/check-drift.py --repos-dir <dir with the repo clones> --ref origin/main`
+> — the same check `drift.yml` runs every Monday.
+
 > **If you edit a C-doc, the registry is part of your change.** Its `depends_on` is
 > derived from the document BODY, not only its header — so citing another `C-NN`
 > anywhere in the text changes the generated registry. `preflight.sh` catches it;

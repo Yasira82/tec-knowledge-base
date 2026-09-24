@@ -1,0 +1,85 @@
+#!/bin/bash
+# =============================================================================
+# TEC Verification Freshness Engine v1.0
+# =============================================================================
+# A `[Code Verified]` header is a claim about a moment: "on this day, the code said
+# this". Without the day, the claim never expires — and that is how C-13, C-14 and
+# C-20 kept saying `[Code Verified]` while the code had moved on for months
+# (audits/KB_ENGINEERING_AUDIT_2026-09-24.md, F1).
+#
+# For every knowledge-base doc whose header says [Code Verified] or [Runtime Verified]:
+#   FV-1  a `Last verified …: YYYY-MM-DD` line older than MAX_AGE_DAYS → FAIL
+#         (re-verify against the code and bump the date, or downgrade the header)
+#   FV-2  a date in the future → FAIL
+#   FV-3  no `Last verified` date at all → WARN (the backlog; not yet enforced)
+#
+# The date line is free-form after the words, as long as it starts "Last verified"
+# and ends in an ISO date, e.g.
+#   > Last verified against code: 2026-09-24 (tec-app `main`, tec-auth 1.2.0).
+#
+# The cross-repo drift job (scripts/check-drift.py, weekly) checks the facts
+# themselves where they can be read from code; this gate makes sure every other
+# verified claim at least says when it was last true.
+#
+# Authority: C-67 (evidence over claims) · KB_REMEDIATION_PLAN_2026-09-24 step 9
+# Usage: bash evals/check-verification-freshness.sh   (exit 0 = pass, 1 = violations)
+# =============================================================================
+
+set -e
+
+MAX_AGE_DAYS="${MAX_AGE_DAYS:-60}"
+
+echo "🗓️  TEC — Verification Freshness Engine (max age ${MAX_AGE_DAYS} days)"
+echo "=========================================================="
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "⚠️  python3 not available — skipping freshness check."
+  exit 0
+fi
+
+MAX_AGE_DAYS="$MAX_AGE_DAYS" python3 - <<'PY'
+import datetime, glob, os, re, sys
+
+max_age = int(os.environ["MAX_AGE_DAYS"])
+today = datetime.date.today()
+VERIFIED = re.compile(r"Verification:.*\[(Code|Runtime) Verified\]")
+DATE = re.compile(r"^\W*Last verified\b[^\n]*?(\d{4}-\d{2}-\d{2})", re.I | re.M)
+
+fails, missing, fresh = [], [], 0
+for path in sorted(glob.glob("knowledge-base/C-*.md")):
+    text = open(path, encoding="utf-8").read()
+    header = "\n".join(text.splitlines()[:15])
+    if not VERIFIED.search(header):
+        continue
+    name = os.path.basename(path)
+    m = DATE.search(header)
+    if not m:
+        missing.append(name)
+        continue
+    try:
+        when = datetime.date.fromisoformat(m.group(1))
+    except ValueError:
+        fails.append(f"{name}: '{m.group(1)}' is not a real date")
+        continue
+    age = (today - when).days
+    if age < 0:
+        fails.append(f"{name}: Last verified {when} is in the future")
+    elif age > max_age:
+        fails.append(f"{name}: Last verified {when} — {age} days ago (> {max_age}). "
+                     f"Re-verify against the code and bump the date, or downgrade the header.")
+    else:
+        fresh += 1
+
+print(f"  ✅ {fresh} verified doc(s) with a fresh date")
+if missing:
+    print(f"  ⚠️  {len(missing)} verified doc(s) say when they were verified nowhere (FV-3, warning):")
+    for n in missing:
+        print(f"       - {n}")
+for f in fails:
+    print(f"  ❌ {f}")
+
+if fails:
+    print(f"\n❌ {len(fails)} stale verification claim(s)")
+    sys.exit(1)
+print("\n✅ No stale verification claims")
+PY

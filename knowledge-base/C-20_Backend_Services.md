@@ -5,9 +5,9 @@
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Code Verified]` — Canonical Port Authority for the platform
 > **Port Scheme:** Gateway `:3000` · Services `:5001`–`:5011` (supersedes any other reference)
-> Last verified against code + runtime: 2026-09-24 — every port below is the `main.ts`
+> Last verified against code + runtime: 2026-09-24 (and weekly by `scripts/check-drift.py`) — every port below is the `main.ts`
 > default on tec-core-backend `main` AND the port in the gateway's boot routing table after
-> ADR-005 (C-02 Session 56m). The 4000-series table in tec-core-backend's CLAUDE.md is wrong.
+> ADR-005 (C-02 Session 56m). tec-core-backend's CLAUDE.md carried a 4000-series table until its #333; it now matches.
 
 ---
 
