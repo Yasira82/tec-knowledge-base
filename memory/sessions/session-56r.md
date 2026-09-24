@@ -57,14 +57,27 @@ through; `readFollowUp` makes 202 "delivering shortly" and 409 a refund, not "al
 - Cause not identified; npm's banner shows the command ran under a shell. The documented
   method therefore changed to a **pre-deploy step** (tec-core-backend #335).
 
-## 4. Left open
+## 4. The second half — `provision` and the owner routes (tec-core-backend #336)
 
-- `POST /assets/provision` is still unverified for its other callers: Hub domain
-  registration + NFT mint, Assets `domains/add`, Estate `property`. Closing it needs
-  receipts for sources `hub` and `estate`.
-- Marketplace `list` / `cancel` / `price` take `sellerId` from the body; the gateway's
-  `x-user-id` should be enforced there too.
-- Payments before the deploy are not replayed (the group starts at `$`) — paid-but-undelivered
-  Assets purchases from before are reconciled by hand against payment-service.
+- `POST /assets/provision` never looked the payment up — a domain, NFT or property could be
+  registered with an invented id. Worse, Tec-Assets registers domains through the Hub's
+  `/pay` page, which takes its **price from the URL**: `price=0.01` bought a 5π domain, and
+  the approve check from #334 could not see it (record and Pi payment both said 0.01).
+- Now provision asks payment-service (`/payments/internal/verify`, which gained `ref` = our
+  id or Pi's): completed · same user · not Test-Pi · made FOR this kind of asset
+  (`domain-reg-*`, `nft-mint-*`, `estate_listing_fee`) · covers the fee (domain 5/3/2/1π by
+  length, NFT 2π, property 3π). The stored transactionId is payment-service's id — one
+  payment, one asset. Unverifiable → 503, never a free asset. No caller had to change.
+- Marketplace `list` / `price` / `cancel` and asset `delete` took the owner from the body;
+  they now require the gateway-verified `x-user-id` to be that owner.
+- Ops before deploy: `PAYMENT_SERVICE_URL` on asset-service.
+
+## 5. Left open
+
+- Tec-Assets `assets/transfer` calls `/api/assets/:id/transfer`, which asset-service does not have.
+- Hub / Estate registrations have no event-driven repair path (receipts cover `source: assets` only).
+- Payments before the #334 deploy are not replayed (the group starts at `$`) — paid-but-undelivered
+  Assets purchases from before, notably every paid domain→NFT mint (the BFF answered 400), are
+  reconciled by hand against payment-service.
 - Tec-Assets `npm run lint` fails on main (ESLint 9, no `eslint.config.js`); CI runs it with
   `continue-on-error`.
