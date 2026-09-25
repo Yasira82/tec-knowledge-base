@@ -307,6 +307,53 @@ error, so nothing else will ever surface it.
 
 ---
 
+## §10 — AN APP SIGNS ITSELF IN (the standalone visit)
+
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** on a phone, 2026-09-25
+> (FundX from the Quest and the campaign, first try; Explorer from the Quest, fourth try) ·
+> tec-template-base #42 · Explorer #51 · FundX #33, then the other 18 apps.
+
+**The symptom.** Opened from the Founding Quest or the reward campaign, an app rendered `/app`
+and Settings read *Not signed in · no_token*. The same app opened from the Hub's grid, or
+directly, showed the name.
+
+**Why.** Both surfaces open an app as a standalone visit on purpose (no referrer, no Hub SSO,
+§9), so the app loads the Pi SDK and Pi counts the visit. The warm-up already ran
+`Pi.authenticate`, but the 20 template apps had no `pi-login`, so nothing turned it into a TEC
+session. The app depended on whatever cookies the context held, and the view its own fetches
+saw held none. The page guard admitted `/app` in the same visit. Why the navigation and the
+fetch saw different jars is **not established**, because the runtime logs were not readable.
+The fix does not depend on the answer.
+
+**The flow (§3, run by the app itself):**
+
+```
+warm-up Pi.authenticate → token kept IN MEMORY (ADR-001)
+/api/auth/me → 401 ?  →  POST /api/auth/pi-login  → tec-auth-service (ADR-002)
+                      ←  one-time token, audience = this origin   (no cookies: LAW 1)
+top-level → /api/auth/sso-callback?token=…&redirect=<same path+query>
+          → 200 landing sets cookies in THIS context (LAW 2), checks /me, returns
+```
+
+**It must not:**
+- run in a Hub-owned Pi session (ADR-007, C-76);
+- run when `/me` already answers, or on a `/me` failure that is not a 401;
+- run more than once per tab per 10 minutes. If the context refuses cookies, the landing
+  still comes back (§7), and without this limit the visit would loop;
+- run without sessionStorage, since that is the loop guard;
+- send `scopes`, because the Hub's recorded consent (`wallet_address` for campaign payouts)
+  must not be overwritten.
+
+`/api/auth/pi-login` is CSRF-guarded in middleware, and the landing still sets
+`__tec_hub_entry` only for a Hub referrer (§8.5).
+
+**Open:** Explorer needed four opens where FundX needed one. The likeliest cause is §9's
+silent bridge: Pi answers the app that last used it, so an app opened right after another
+may wait until the context moves. `ensureAuth` has no timeout, so a silent Pi means no
+sign-in on that visit rather than an error. Record the next phone observation here.
+
+---
+
 ## Related Documents
 
 - `C-02___CURRENT_STATE_.md` — Session 16 (full incident narrative)

@@ -189,6 +189,19 @@ same session that closed it, and was carried into C-02 on 24 Sep without re-chec
 left is only `CAMPAIGN_APPS` 8 → 24, and that is the owner's decision. Code Verified, not
 Runtime Verified: the production column was not inspected from here.
 
+## 4h. "The name is missing when I open an app from the Quest or the campaign"
+
+The `reason` field added in 56p answered on the phone: `no_token`. The page guard had admitted
+`/app` in the same visit. The Quest and the campaign open apps standalone on purpose (§9), the
+warm-up already ran `Pi.authenticate`, and the 20 template apps had no `pi-login` to turn that
+into a session. Only the Hub, Assets, Commerce and Ecommerce did.
+
+Fix: the app signs itself in with the Hub's own flow (C-123 §10). Template #42 came first,
+then Explorer #51 and FundX #33 as the phone test. Both are verified: FundX signed in on the
+first try from both pages, and Explorer from the Quest on the fourth. The other 18 apps
+followed with the same patch. Brookfield and NBF needed a hand merge, keeping their Pi error
+record alongside the new token.
+
 ## 5. Left open
 
 - Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is
