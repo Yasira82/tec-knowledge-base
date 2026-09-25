@@ -218,6 +218,12 @@ loads it — so there is no page guard and **no CSRF enforcement** in production
 prepared locally and **not pushed**; it should not be. Moving the middleware is the owner's
 decision, because it switches the guard and CSRF on for the first time.
 
+The owner chose "what is right engineering-wise". #82/#38/#39 moved the middleware and sent a
+session-less page into the Hub's SSO; on the phone the apps stopped opening (307, never back — §9).
+Rolled back on Vercel within minutes (the three projects now need a manual promote). #83/#39/#40
+keep the move, drop the guard. Lesson recorded as a rule in C-123 §11: no automatic off-origin
+redirect on a page load in Pi Browser.
+
 ## 5. Left open
 
 - Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is

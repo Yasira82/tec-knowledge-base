@@ -388,15 +388,21 @@ still holds a session from an earlier Hub SSO.
 **The bridge** stays for now — it is harmless (one 307 per tab per 10 minutes) — and is not rolled
 to the other apps. It should be removed once the guard runs.
 
-**Open decisions (the owner's):**
-1. Move `middleware.ts` into `src/` in the 20 apps + template. This turns ON the guard and CSRF
-   for the first time in production; verify on Connection · DX · Alert first (a Mode-2 payment and
-   a Quest open), because a POST whose Origin is missing and whose `tec_csrf` was never issued would
-   now 403, and a client that believes it is signed in while the server does not could bounce
-   between `/` and `/app`.
-2. What a session-less Quest visit should do: go through Hub SSO (silent when the Hub is signed in,
-   but the landing then marks the tab Hub-owned — §9 — and the app's own Pi context is not used),
-   or stay standalone and show sign-in.
+**Open:** after Connection #83 · DX #39 · Alert #40 are live and a Quest open plus a POST pass on a
+phone, the same move goes to the other 17 apps and the template. How a standalone Quest visit gets a
+session is still open: the app's own Pi sign-in (§10) waits on a Pi that answers another app, and
+the Hub cannot be reached from there (above).
+
+**What was tried, and the rule it left (2026-09-25).** Connection #82 · DX #38 · Alert #39 moved
+the middleware into `src/` AND made the guard redirect a session-less page into the Hub's SSO. On a
+phone every Quest open ended at that 307 and never returned: the app is opened standalone with Pi
+bound to it (§9), and the Hub cannot sign in inside that context. Production was rolled back on
+Vercel within minutes. Connection #83 · DX #39 · Alert #40 keep the middleware in `src/` (CSRF on)
+and **remove the page guard**: a session-less visit opens the page, which shows its own sign-in
+state; the BFF re-checks the session on every call (P6).
+
+> **Rule:** never redirect a page load off-origin automatically in Pi Browser. A trip into the Hub
+> from an app's Pi context is §9's silent bridge; from a Quest visit it strands the visitor.
 
 **Anti-regression:** a CI check that the middleware is where Next.js loads it — e.g. after
 `next build`, `middleware-manifest.json` must list `/`. A unit test importing the file is not
