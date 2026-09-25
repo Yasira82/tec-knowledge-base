@@ -155,7 +155,7 @@ Railway sets `PORT` per service.
 | `NODE_ENV` | 11 — not asset |
 | `NOTIFICATION_SERVICE_URL` | api-gateway |
 | `OUTBOX_WORKER_INTERVAL_MS` | payment |
-| `PAYMENT_SERVICE_URL` | api-gateway, commerce |
+| `PAYMENT_SERVICE_URL` | api-gateway, asset, commerce |
 | `PI_A2U_FEE` | payment |
 | `PI_A2U_MAX_PI` | payment |
 | `PI_A2U_TIMEOUT` | payment |
@@ -207,7 +207,7 @@ Railway sets `PORT` per service.
 | `RECONCILE_APPROVED_THRESHOLD_MS` | payment |
 | `RECONCILE_CREATED_THRESHOLD_MS` | payment |
 | `RECONCILE_CRON` | payment |
-| `REDIS_URL` | 10 — not asset, storage |
+| `REDIS_URL` | 11 — not storage |
 | `SCORING_INTERVAL_MS` | analytics |
 | `SEED_DEMO_DATA` | identity |
 | `SENTRY_DSN` | 10 — not asset, auth |
