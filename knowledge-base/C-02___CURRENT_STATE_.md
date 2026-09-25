@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 24 September 2026 (Session 56q — the weekly KB ↔ code drift job; C-02 split into current state + `memory/sessions/`)
+**Last Updated:** 25 September 2026 (Session 56r — Assets payment integrity; Hub-bought Pro and Estate Mode 1 fixed and verified on a phone)
 
 > **This file holds only what is true now, and it is edited in place.** Until 2026-09-24 every
 > session appended its narrative here; the file reached 5,929 lines and could no longer
@@ -40,25 +40,26 @@ Replace rows as they close — do not strike them through and keep them.
 
 | # | Item | Why it is open | From |
 |---|---|---|---|
-| 1 | **Re-deploy 8 apps + the Hub** (Estate · FundX · Nx · Titan · Vip · Insure · Brookfield · NBF; Hub #256) | Vercel Hobby build quota ran out on 24 Sep; merged ≠ deployed | 56q |
-| 2 | **Phone checks**: Hub keeps the name a day after sign-in (#256)? "Try again" recovers a silent Pi (#253)? | Only a device can answer; record in C-123 §9 | 56p · 56q |
+| 1 | **Re-deploy 7 apps from `main`** — production lacks the `resolve-incomplete` `Partitioned` fix in Nx #36 · Titan #35 · Vip #35 · Insure #37 · Brookfield #19 · NBF #24; Insure also #36 (Settings says why it thinks you are signed out); FundX #32 (the session-is-both-cookies fix + `Partitioned`). Hub and Estate are current (25 Sep) | Vercel Hobby build quota ran out on 24 Sep; merged ≠ deployed. Checked against Vercel on 25 Sep 07:30Z | 56q · 56r |
+| 2 | **Phone checks**: Hub keeps the name a day after sign-in (#256 — live since 24 Sep 11:47Z, so answerable now)? "Try again" recovers a silent Pi (#253)? | Only a device can answer; record in C-123 §9 | 56p · 56q |
 | 3 | **Campaign payout evidence** — the queue shows no proof of qualification; record it AT CLAIM TIME (additive nullable column). Also `CAMPAIGN_APPS` → all 24 | Will not scale to 50 claims | 56o |
-| 4 | **Merge + deploy in order:** tec-core-backend #342 → tec-app #257 → Tec-Estate #40 (+ template #41). #257 fixes Mode-1 Pro for 17 apps (the Hub read `product_id`, the template sends `item`: every Hub-bought Pro was paid and never activated); #342 + #40 make an Estate registration survive the Hub round trip. Then test: open Estate FROM the Hub, register a property, and buy a Pro from any template app via the Hub | Until then: Mode-1 Pro activates nothing in 17 apps; an Estate registration from the Hub is lost | 56r |
-| 5 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
-| 6 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
-| 7 | VIP benefits not implemented in any owning app (fees, support SLA, dashboards) | Must exist before VIP is marketed | 56n |
-| 8 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
-| 9 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
-| 10 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
-| 11 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
+| 4 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
+| 5 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
+| 6 | VIP benefits not implemented in any owning app (fees, support SLA, dashboards) | Must exist before VIP is marketed | 56n |
+| 7 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
+| 8 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
+| 9 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
+| 10 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
 ---
 
 ## 3. The last three sessions
 
-- **[56r](../memory/sessions/session-56r.md) — 24 Sep.** Assets delivered paid actions on any
-  payment id, so a listing could be taken for free; approve never compared Pi's amount with the
-  recorded one. Both fixed (receipts from `payment.completed.v1`, #334 · #59) — not yet deployed.
+- **[56r](../memory/sessions/session-56r.md) — 24–25 Sep.** Assets delivered paid actions on any
+  payment id, and approve never compared Pi's amount with the recorded one — both fixed and live
+  (receipts from `payment.completed.v1`). The Hub read `product_id`, 17 apps sent `item`: every
+  Hub-bought Pro was paid and never activated. Fixed; Zone Pro and an Estate registration via the
+  Hub verified on a phone 25 Sep.
 - **[56q](../memory/sessions/session-56q.md) — 24 Sep.** The KB now checks itself against the
   code every week. Its first run found `resolve-incomplete` setting the token without
   `Partitioned` in 22 repos, 20 unmerged name-fix PRs, and the Hub's refresh never renewing
