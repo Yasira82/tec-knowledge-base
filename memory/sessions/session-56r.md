@@ -1,8 +1,8 @@
 # Session 56r — anyone could take an Assets listing for free, and approve never compared the amounts (24 Sep 2026)
 
-> Truth State: **[Current State]** once the PRs below are merged and deployed; until then
-> **[Planned State]** · Verification: **[Code Verified]** (tests below), not yet runtime.
-> PRs: tec-core-backend **#334** · Tec-Assets **#59** · tec-knowledge-base (this record).
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** on a phone, 24–25 Sep
+> (§4b · §4g). PRs: tec-core-backend #334–#342 · Tec-Assets #59–#62 · tec-app #257 ·
+> Tec-Estate #39–#40 · tec-template-base #41 · tec-knowledge-base (this record).
 
 ## 1. What was asked, and what was found
 
@@ -159,6 +159,22 @@ no reconciliation.
 
 Lesson for C-12's anti-regression list: a Mode-1 contract field that the app side and the
 Hub side name differently fails silently — the payment succeeds, only its meaning is lost.
+
+## 4g. Verified on the phone (25 Sep, morning)
+
+All five PRs squash-merged; each branch's files are identical to `main`. Production on Vercel:
+Hub `4981a46` (#257, 07:11Z) and Estate `6f6cea3` (#40, 07:17Z); tec-core-backend #342 on
+Railway.
+
+- **Estate opened FROM the Hub (Mode 1)**: registered the property "Test t". The Hub modal took
+  the payment, and asset-service recorded the property from `payment.completed.v1`. The form
+  no longer has to survive the round trip.
+- **Zone Pro bought through the Hub**: shows "Zone Pro active". The Hub now reads `item`, so
+  the payment carries `zone_pro_monthly` and commerce's SubscriptionConsumer activates it.
+  This is the path that failed silently in the 17 template apps.
+
+C-02 §2 item 4 is closed. Checked against Vercel: seven apps still serve a build one PR behind
+`main` (C-02 §2 item 1).
 
 ## 5. Left open
 
