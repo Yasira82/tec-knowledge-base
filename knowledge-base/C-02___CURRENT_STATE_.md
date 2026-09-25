@@ -17,7 +17,7 @@
 ## 1. The platform right now
 
 Each line names its source. Where the code can confirm a fact, `scripts/check-drift.py`
-checks it every Monday (`drift.yml`); last run 2026-09-24: **34 pass · 0 fail · 0 skip**.
+checks it every Monday (`drift.yml`); last run 2026-09-25: **36 pass · 0 fail · 0 skip**.
 
 | Area | State | Source |
 |---|---|---|
@@ -40,16 +40,15 @@ Replace rows as they close — do not strike them through and keep them.
 
 | # | Item | Why it is open | From |
 |---|---|---|---|
-| 1 | **Re-deploy 7 apps from `main`** — production lacks the `resolve-incomplete` `Partitioned` fix in Nx #36 · Titan #35 · Vip #35 · Insure #37 · Brookfield #19 · NBF #24; Insure also #36 (Settings says why it thinks you are signed out); FundX #32 (the session-is-both-cookies fix + `Partitioned`). Hub and Estate are current (25 Sep) | Vercel Hobby build quota ran out on 24 Sep; merged ≠ deployed. Checked against Vercel on 25 Sep 07:30Z | 56q · 56r |
-| 2 | **Phone checks**: Hub keeps the name a day after sign-in (#256 — live since 24 Sep 11:47Z, so answerable now)? "Try again" recovers a silent Pi (#253)? | Only a device can answer; record in C-123 §9 | 56p · 56q |
-| 3 | **Campaign payout evidence** — the queue shows no proof of qualification; record it AT CLAIM TIME (additive nullable column). Also `CAMPAIGN_APPS` → all 24 | Will not scale to 50 claims | 56o |
-| 4 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
-| 5 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
-| 6 | VIP benefits not implemented in any owning app (fees, support SLA, dashboards) | Must exist before VIP is marketed | 56n |
-| 7 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
-| 8 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
-| 9 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
-| 10 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
+| 1 | **Phone checks**: Hub keeps the name a day after sign-in (#256 — live since 24 Sep 11:47Z, so answerable now)? "Try again" recovers a silent Pi (#253)? | Only a device can answer; record in C-123 §9 | 56p · 56q |
+| 2 | **Campaign round size — `CAMPAIGN_APPS` 8 → 24?** A decision, not code: env var + restart on `tec-identity-service`. Safe since 19 Sep, because each claim freezes what it was asked for (`qualified`, tec-core-backend #327, shown in the Hub payout queue #241), so an earned claim cannot read "7 of 24". Against it: the service is designed around a short list of the apps below Pi's threshold | The owner's call — the round ran on 8 | 56o · 56r |
+| 3 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
+| 4 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
+| 5 | VIP benefits not implemented in any owning app (fees, support SLA, dashboards) | Must exist before VIP is marketed | 56n |
+| 6 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
+| 7 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
+| 8 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
+| 9 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
 ---
 

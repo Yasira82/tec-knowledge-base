@@ -173,8 +173,21 @@ Railway.
   the payment carries `zone_pro_monthly` and commerce's SubscriptionConsumer activates it.
   This is the path that failed silently in the 17 template apps.
 
-C-02 §2 item 4 is closed. Checked against Vercel: seven apps still serve a build one PR behind
-`main` (C-02 §2 item 1).
+C-02 §2 item 4 is closed.
+
+**Production caught up with `main` (25 Sep, ~07:35Z).** Vercel showed seven apps serving a
+build one PR behind `main`. Nx, Titan, Vip, Insure, Brookfield and NBF lacked the
+`resolve-incomplete` `Partitioned` fix. FundX lacked #32. Each was deployed to production from
+its exact `main` SHA through the Vercel API. The other 15 apps, the Hub and Estate already
+matched `main`, so every app in the fleet now serves its `main` (C-02 §2 item 1 closed).
+
+**A stale open item, found while starting the next one.** C-02 listed "campaign payout evidence:
+record it at claim time" as open since 56o. The evidence shipped on **19 Sep**: tec-core-backend
+#327 added `CampaignClaim.qualified` (`{at, required, done[{app, at}]}`, written in `claim()`),
+and the Hub payout queue shows it (#241, `Qualification`). The item was recorded as open in the
+same session that closed it, and was carried into C-02 on 24 Sep without re-checking. What is
+left is only `CAMPAIGN_APPS` 8 → 24, and that is the owner's decision. Code Verified, not
+Runtime Verified: the production column was not inspected from here.
 
 ## 5. Left open
 
