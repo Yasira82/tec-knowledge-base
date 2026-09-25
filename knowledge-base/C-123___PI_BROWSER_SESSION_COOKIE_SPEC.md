@@ -410,6 +410,37 @@ evidence that it runs.
 
 ---
 
+## §12 — THE HUB SIGNS THE LINK BEFORE THE VISIT LEAVES (Quest · campaign)
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-app #258 · Last verified
+> in code: 2026-09-25. Runtime verification on a phone is **pending**.
+
+**Why the Hub grid shows the name and the Quest did not.** A Hub grid tile goes through the Hub's
+own `/api/auth/sso?target=…`: the Hub, signed in, mints a one-time token and sends the visitor to
+the app's `sso-callback`, whose 200 landing (§3, LAW 2) sets the cookies. The Quest and the campaign
+link to the app directly, standalone and without a referrer, so Pi counts the visit as the APP's
+(§9) — and nothing gives the app a session.
+
+**The fix.** The page asks the Hub, while the visitor is still on it, for the link each app will be
+opened with: `POST /api/auth/sso-links {targets}` → the same handoff `/api/auth/sso` produces, called
+in process (same allowlist, refresh, 5-minute one-time token), for the app's own
+`/api/auth/sso-callback?token=…&redirect=<path+query>`. The link keeps `rel="noreferrer"`.
+
+```
+Quest page (Hub, signed in) ── POST /api/auth/sso-links ──► { target → app/api/auth/sso-callback?token }
+tap ─► app/api/auth/sso-callback (200, sets cookies, no Hub referrer → not Hub-owned) ─► app/app?q=1
+```
+
+The tab holds only the app's domain, so Pi still counts the visit; the app loads its SDK as a
+standalone visit; and it arrives signed in. Nothing redirects off-origin on a page load (§11).
+
+**It must:** match target origins exactly (stricter than the handoff's prefix test); run targets
+one after another (a rotating refresh must carry to the next — refresh tokens are single-use); be
+POST, CSRF-guarded and `no-store` (it returns tokens); refresh links every 4 minutes, on return to
+the page, and after a tap (tokens are single-use); fall back to the plain link on any failure.
+
+---
+
 ## Related Documents
 
 - `C-02___CURRENT_STATE_.md` — Session 16 (full incident narrative)

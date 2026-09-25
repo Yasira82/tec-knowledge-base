@@ -224,6 +224,12 @@ Rolled back on Vercel within minutes (the three projects now need a manual promo
 keep the move, drop the guard. Lesson recorded as a rule in C-123 §11: no automatic off-origin
 redirect on a page load in Pi Browser.
 
+With the apps stable again (#83/#39/#40 merged, promoted), the actual question: why the Hub grid
+shows the name and the Quest does not. The grid goes through the Hub's handoff; the Quest links
+straight to the app (on purpose, §9). tec-app #258 has the Hub sign each Quest/campaign link while
+the visitor is still on the Hub (`POST /api/auth/sso-links`, reusing `/api/auth/sso` in process), so
+the app opens on its own domain, standalone, already signed in (C-123 §12).
+
 ## 5. Left open
 
 - Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is
