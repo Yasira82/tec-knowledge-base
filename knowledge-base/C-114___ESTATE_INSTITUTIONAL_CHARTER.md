@@ -37,8 +37,11 @@
   purchase of one as a refund.
 - **Where it is shown.** In Estate only. Tec-Assets leaves `REAL_ESTATE` out of its list —
   Estate owns property screens (§4) and Assets has nothing it may do with one.
-- **Open.** A registration started from the Hub (Mode 1) loses the form on the way back, so
-  the property is not recorded; standalone (Mode 2) works.
+- **How it is recorded (from 25 Sep 2026, tec-core-backend #342 + Tec-Estate #40).** The
+  property travels inside the payment — product id `estate-property:<base64 UTF-8 {t,y,o,l}>`
+  — and asset-service registers it from `payment.completed.v1`, like an Assets purchase.
+  Estate only claims the payment to show the result. Before this, a registration started
+  from the Hub (Mode 1) lost the form on the way back: 3π paid, nothing recorded.
 - **Tokenizing a property** ("why not an NFT?"): never as a tradable token; a
   non-transferable, Zone-verified Property Certificate is proposed and hard-gated in
   C-64 ADR-014 (ACCEPTED 24 Sep 2026).

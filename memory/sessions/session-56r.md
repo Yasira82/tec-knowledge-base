@@ -139,9 +139,30 @@ Evidence that the fix post-dates 3 Jul; nothing to repair.
 C-02 §2 item 4 now carries the next real Assets-side gap: Estate Mode 1 loses the
 registration on the return trip.
 
+## 4f. Fixing Estate's Mode 1 found a fleet-wide one: Hub-bought Pro never activated
+
+Reading how Estate hands a payment to the Hub: `redirectToHubPayment` sends the product as
+**`item`** — tec-template-base's code, cloned into **17 apps** (Alert, DX, Elite, Epic,
+Estate, Explorer, FundX, Insure, Legend, Nexus, NX, Titan, VIP, Zone, System, Brookfield,
+NBF); only Life, Analytics and Connection send `product_id`. The Hub's `useExternalPayment`
+read **`product_id` only**, so every Mode-1 payment from those apps was created with an
+empty product, and commerce's SubscriptionConsumer (plan from `<slug>_pro_monthly`) activated
+nothing. **A Pro bought from the Hub — the path of anyone who opens an app from the Hub —
+was paid for and never activated.** The owner is the only user so far (their own tests);
+no reconciliation.
+
+- tec-app **#257**: the Hub reads `product_id || item` — one fix covers all 17 deployed apps.
+- tec-template-base **#41**: the template sends `product_id` (and `item`), so new apps are right.
+- Then Estate itself — the property travels in the payment's product id and asset-service
+  records it from the event: tec-core-backend **#342**, Tec-Estate **#40**. Estate stops
+  provisioning; it claims. EstatePro no longer treats a property payment's return as its own.
+
+Lesson for C-12's anti-regression list: a Mode-1 contract field that the app side and the
+Hub side name differently fails silently — the payment succeeds, only its meaning is lost.
+
 ## 5. Left open
 
-- Hub / Estate registrations have no event-driven repair path (receipts cover `source: assets` only),
-  and Estate Mode 1 does not resume the registration after the Hub returns.
+- Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is
+  reached by nothing in the UI since 30 Apr.
 - Tec-Assets `npm run lint` fails on main (ESLint 9, no `eslint.config.js`); CI runs it with
   `continue-on-error`.
