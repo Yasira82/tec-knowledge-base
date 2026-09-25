@@ -102,9 +102,27 @@ through; `readFollowUp` makes 202 "delivering shortly" and 409 a refund, not "al
   and by Estate in another — now one owner per concern (record: asset-service · verification:
   Zone · with the property: Estate · as an achievement, from an event: Legend).
 
+## 4d. Checking the leftovers before fixing them — one was wrong
+
+Asked "are you sure we haven't done Assets?", each leftover was checked against git history:
+- **Undelivered domain→NFT mints — real, narrower than recorded.** The button sent
+  `assetId` + `userId` from 3 May (it worked); from **30 May** (`78a1916`, `8ab0fc6`) it sent
+  `asset_id` and the BFF answered 400, until **24 Sep** (#59). Not "every" mint — that window.
+  A read-only report now lists them (backend #339: payment-service
+  `GET /payments/internal/completed` + asset-service `dist/scripts/reconcile-purchases.js`).
+- **Transfer — real.** `/api/assets/:id/transfer` never existed in asset-service; the button
+  failed every time (no Pi involved). Removed rather than built — a new, sensitive feature
+  (Tec-Assets #62).
+- **"No domain-registration entry point" — not a gap.** `AddDomainModal` was unmounted on
+  30 Apr, the day it was added (`9e10817`): a decision. Its leftover code was deleted (#62).
+
+Pushes now go without force: the branch is rebuilt on its remote copy with `main` merged in.
+Tec-Assets' and tec-knowledge-base's rulesets still report "bypassed" for a plain fast-forward
+push to a `claude/*` branch (tec-core-backend's does not) — rulesets that cover every branch,
+not only `main`.
+
 ## 5. Left open
 
-- Tec-Assets `assets/transfer` calls `/api/assets/:id/transfer`, which asset-service does not have.
 - Hub / Estate registrations have no event-driven repair path (receipts cover `source: assets` only),
   and Estate Mode 1 does not resume the registration after the Hub returns.
 - Payments before the #334 deploy are not replayed (the group starts at `$`) — paid-but-undelivered
