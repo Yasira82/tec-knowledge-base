@@ -40,7 +40,7 @@ Replace rows as they close — do not strike them through and keep them.
 
 | # | Item | Why it is open | From |
 |---|---|---|---|
-| 1 | **Phone checks**: Hub keeps the name a day after sign-in (#256)? "Try again" recovers a silent Pi (#253)? **Quest "Not signed in"**: the page's own requests use a cookie store without the session (C-123 §11) — does the session bridge (Connection #81 · DX #37 · Alert #38) end it? Then roll it to the other 17 apps (prepared, not pushed) | Only a device can answer; record in C-123 §9/§11 | 56p · 56q · 56r |
+| 1 | **Phone checks**: Hub keeps the name a day after sign-in (#256)? "Try again" recovers a silent Pi (#253)? **The middleware never ran** in 20 apps + the template (root `middleware.ts`, `src/app`): no page guard, **no CSRF enforcement** in production (C-123 §11). Move it into `src/` — Connection · DX · Alert first — and decide what a session-less Quest visit does | The owner's call: it turns the guard and CSRF on for the first time | 56p · 56q · 56r |
 | 2 | **Campaign round size — `CAMPAIGN_APPS` 8 → 24?** A decision, not code: env var + restart on `tec-identity-service`. Safe since 19 Sep, because each claim freezes what it was asked for (`qualified`, tec-core-backend #327, shown in the Hub payout queue #241), so an earned claim cannot read "7 of 24". Against it: the service is designed around a short list of the apps below Pi's threshold | The owner's call — the round ran on 8 | 56o · 56r |
 | 3 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
 | 4 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |

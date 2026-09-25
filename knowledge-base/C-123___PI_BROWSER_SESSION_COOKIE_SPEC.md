@@ -311,8 +311,7 @@ error, so nothing else will ever surface it.
 
 > Truth State: **[Current State]** · Verification: **[Runtime Verified] — and found NOT to be the
 > fix for the Quest** (second phone test, 2026-09-25: `pi-login` never called in 30 minutes of
-> logs; Settings read `pi_waiting` or `hub_session`). The cause is §11; the bridge there repairs
-> it without Pi. tec-template-base #42 · Explorer #51 · FundX #33, then the other 18 apps.
+> logs; Settings read `pi_waiting` or `hub_session`). See §11. tec-template-base #42 · Explorer #51 · FundX #33, then the other 18 apps.
 
 **The symptom.** Opened from the Founding Quest or the reward campaign, an app rendered `/app`
 and Settings read *Not signed in · no_token*. The same app opened from the Hub's grid, or
@@ -323,8 +322,8 @@ directly, showed the name.
 `Pi.authenticate`, but the 20 template apps had no `pi-login`, so nothing turned it into a TEC
 session. The app depended on whatever cookies the context held, and the view its own fetches
 saw held none. The page guard admitted `/app` in the same visit. **That last sentence was the
-real finding, and this section misread it:** the session was never missing — the page's own
-requests were using a different cookie store. See §11.
+clue, and it was misread:** the guard never ran (§11), so `/app` rendering proved nothing — the
+context had no session.
 
 **The flow (§3, run by the app itself):**
 
@@ -353,59 +352,55 @@ Settings read `pi_waiting` (Connection, DX) and `hub_session` (Alert — a `__te
 left in that tab by an earlier Hub SSO visit, so the SDK is never loaded). `/api/auth/pi-login`
 did not appear once in 30 minutes of Vercel logs across three apps. The self sign-in stays —
 it is harmless and it covers a truly session-less standalone visit — but **it is not what
-repairs the Quest**; §11 is. Explorer's "fourth try" and FundX's "first try" were the §11
-store flipping between visits, not Pi.
+repairs the Quest**. See §11: the middleware meant to route a session-less visit never ran.
 
 ---
 
-## §11 — THE PAGE'S REQUESTS USE ANOTHER COOKIE STORE (the session bridge)
+## §11 — THE MIDDLEWARE THAT NEVER RAN (20 apps + the template)
 
-> Truth State: **[Current State]** · Verification: **[Code Verified]** — Connection #81 · DX #37 ·
-> Alert #38 · tec-template-base #43 · Last verified in code: 2026-09-25. Runtime verification
-> on a phone is **pending**; the other 17 apps follow once it passes.
+> Truth State: **[Current State]** · Verification: **[Code Verified]** by build, 2026-09-25 —
+> Tec-Dx `next build` emits `.next/server/middleware-manifest.json` = `{"middleware": {}}`; the
+> same build with the file under `src/` prints `ƒ Middleware 32.7 kB`. Last verified in code:
+> 2026-09-25.
 
-**The evidence** (Vercel runtime logs, 2026-09-25 11:38–12:19 GMT+3, Connection, DX, Alert):
+**The finding.** Next.js loads `middleware.ts` only beside the `app` directory: at the repo root
+when the app is `./app`, inside `src/` when it is `src/app`. The template and the 20 apps cloned
+from it keep `src/app` and a ROOT `middleware.ts`, so **none of it runs in production**:
 
-```
-GET /app                200     ← the guard admits only a navigation carrying BOTH
-                                  tec_access_token and tec_user (middleware.ts)
-GET /api/auth/me        401     ← same page, < 1 s later
-  auth.me_refused · reason no_token · cookies none · cookieCount 0 or 1
-  · sec-fetch-site same-origin · sec-fetch-mode cors · sec-fetch-storage-access (absent)
-```
+- the page guard (`/app` only with both session cookies) — `/app` is served to anyone;
+- CSRF enforcement (double-submit OR first-party Origin) — **not enforced on any POST**, although
+  every rule here and in C-12 §11 says it lives "in middleware ONLY";
+- the `tec_csrf` issuance on safe requests.
 
-The one cookie that sometimes arrived is the `tec_csrf` the middleware sets on any request
-without one — so the store the page's requests use **keeps what is written into it**; it never
-received the session. Loads alternate: DX failed at 12:13:10 and worked at 12:13:15, failed at
-12:15:25 and worked at 12:15:27, with no sign-in in between. This is the "works on one visit,
-not the next" reported since the session layer first shipped. Why Pi Browser keeps two stores is
-not established; the repair does not depend on it.
+Unaffected: tec-app (`tec-frontend/src/middleware.ts`), Tec-Assets and Tec-Commerce
+(`src/middleware.ts`); Tec-Ecommerce has both, and its `src/` copy is the one that runs. The unit
+tests import the root file directly, so they passed against code production never loaded.
 
-**The bridge (`/api/auth/bridge`, LAW 2):**
+**What this corrects.** §10's "the page guard admitted `/app` in the same visit" and the first
+draft of this section ("the page's requests use another cookie store") both rested on the guard
+running. It does not. The phone test showed it: the session bridge (`/api/auth/bridge`, Connection
+#81 · DX #37 · Alert #38), a navigation, arrived with no session and answered 307. **A visit that
+says "Not signed in" simply has no session in that browser context** — the Quest opens the app
+standalone (§9), nothing signs it in (§10's Pi path does not answer from the Quest), and the guard
+that would have sent it to sign-in was never loaded. The name appears on the visits whose context
+still holds a session from an earlier Hub SSO.
 
-```
-guarded page · /me → 401 no_token|no_user        (its navigation DID carry the session)
-  → top-level  /api/auth/bridge?redirect=<same path+query>     (a navigation → has the session)
-  → 200 page: document.cookie ← the three cookies, host-only · Secure · SameSite=None,
-              NOT partitioned (the §6 / sso-callback REVERSAL: the partitioned copy is the
-              one this store is not receiving) → location.replace(redirect)
-```
+**The bridge** stays for now — it is harmless (one 307 per tab per 10 minutes) — and is not rolled
+to the other apps. It should be removed once the guard runs.
 
-**It must not:**
-- run on a page the guard does not protect — there the navigation proves nothing;
-- run more than once per tab per 10 minutes (sessionStorage), or at all without sessionStorage;
-- copy anything when the navigation carried no session either — it goes straight back;
-- accept a redirect that is not a same-origin path (`//host`, `/\host`, a scheme);
-- set a cookie in its own headers: the copy is the page script's job, into the page's store.
+**Open decisions (the owner's):**
+1. Move `middleware.ts` into `src/` in the 20 apps + template. This turns ON the guard and CSRF
+   for the first time in production; verify on Connection · DX · Alert first (a Mode-2 payment and
+   a Quest open), because a POST whose Origin is missing and whose `tec_csrf` was never issued would
+   now 403, and a client that believes it is signed in while the server does not could bounce
+   between `/` and `/app`.
+2. What a session-less Quest visit should do: go through Hub SSO (silent when the Hub is signed in,
+   but the landing then marks the tab Hub-owned — §9 — and the app's own Pi context is not used),
+   or stay standalone and show sign-in.
 
-Nothing new is exposed: the session cookies are already `httpOnly: false` and the §3 landing
-already writes them from script; the response is `no-store`, and a cross-site page that sends a
-visitor here cannot read it. Settings prints `· bridged` when it ran and `/me` still said no —
-that, with the `auth.bridge` log line (which cookies the bridge navigation carried), is the next
-thing to read if it fails.
-
-**Order of repair in the template's `self-sign-in`:** the bridge first (no Pi needed), Pi (§10)
-only when the bridge does not apply.
+**Anti-regression:** a CI check that the middleware is where Next.js loads it — e.g. after
+`next build`, `middleware-manifest.json` must list `/`. A unit test importing the file is not
+evidence that it runs.
 
 ---
 

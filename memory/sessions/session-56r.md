@@ -202,23 +202,21 @@ first try from both pages, and Explorer from the Quest on the fourth. The other 
 followed with the same patch. Brookfield and NBF needed a hand merge, keeping their Pi error
 record alongside the new token.
 
-## 4i. The self sign-in was not the fix — two cookie stores are
+## 4i. The self sign-in was not the fix — and neither was the bridge
 
-The second phone test read the new Settings diagnostics: `no_token · pi_waiting · got:none`
-(Connection, DX) and `no_token · hub_session · got:none` (Alert). `/api/auth/pi-login` never
-appeared in the logs. The `auth.me_refused` lines settled it: `cookieCount 0` or `1`,
-`sec-fetch-site same-origin` — while the page guard had admitted `/app` in the same visit.
-The navigation carries the session; the page's own requests use another store, which keeps
-what is written into it (the middleware's `tec_csrf` arrived there) but never got the session.
-The owner had said so first: "it was flaky from the start."
+The second phone test read the new diagnostics: `no_token · pi_waiting · got:none` and
+`hub_session`; `/api/auth/pi-login` never appeared in the logs. The `auth.me_refused` lines
+(`cookieCount 0/1`, `same-origin`) looked like two cookie stores, because `/app` had been served
+in the same visit and the guard "only serves it with a session". A session bridge was built on
+that (Connection #81 · DX #37 · Alert #38, template #43) and merged. On the phone the bridge
+answered **307**: its navigation carried no session either.
 
-Fix: the session bridge (C-123 §11) — a navigation to `/api/auth/bridge` that answers a 200
-page writing the cookies through `document.cookie`, the landing's own fallback. Connection
-#81, DX #37, Alert #38 for the phone test; template #43. The other 17 apps are prepared and
-tested locally but **not pushed**, because each push is a Vercel preview build and the Hobby
-quota has to carry the three production builds first. 14 of the §10 PRs from 4h were never
-merged (Elite, Epic, Estate, Insure, Legend, Life, Nexus, Nx, Titan, Vip, Zone, System,
-Brookfield, NBF); the bridge sits on top of those branches.
+That broke the premise, and a build showed why: Tec-Dx's `middleware-manifest.json` is empty. The
+template and its 20 apps keep `middleware.ts` at the root beside `src/app`, where Next.js never
+loads it — so there is no page guard and **no CSRF enforcement** in production (C-123 §11). The
+"Not signed in" visits simply have no session. The bridge rollout to the other 17 apps was
+prepared locally and **not pushed**; it should not be. Moving the middleware is the owner's
+decision, because it switches the guard and CSRF on for the first time.
 
 ## 5. Left open
 
