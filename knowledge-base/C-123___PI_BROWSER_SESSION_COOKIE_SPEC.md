@@ -309,9 +309,10 @@ error, so nothing else will ever surface it.
 
 ## §10 — AN APP SIGNS ITSELF IN (the standalone visit)
 
-> Truth State: **[Current State]** · Verification: **[Runtime Verified]** on a phone, 2026-09-25
-> (FundX from the Quest and the campaign, first try; Explorer from the Quest, fourth try) ·
-> tec-template-base #42 · Explorer #51 · FundX #33, then the other 18 apps.
+> Truth State: **[Current State]** · Verification: **[Runtime Verified] — and found NOT to be the
+> fix for the Quest** (second phone test, 2026-09-25: `pi-login` never called in 30 minutes of
+> logs; Settings read `pi_waiting` or `hub_session`). The cause is §11; the bridge there repairs
+> it without Pi. tec-template-base #42 · Explorer #51 · FundX #33, then the other 18 apps.
 
 **The symptom.** Opened from the Founding Quest or the reward campaign, an app rendered `/app`
 and Settings read *Not signed in · no_token*. The same app opened from the Hub's grid, or
@@ -321,9 +322,9 @@ directly, showed the name.
 §9), so the app loads the Pi SDK and Pi counts the visit. The warm-up already ran
 `Pi.authenticate`, but the 20 template apps had no `pi-login`, so nothing turned it into a TEC
 session. The app depended on whatever cookies the context held, and the view its own fetches
-saw held none. The page guard admitted `/app` in the same visit. Why the navigation and the
-fetch saw different jars is **not established**, because the runtime logs were not readable.
-The fix does not depend on the answer.
+saw held none. The page guard admitted `/app` in the same visit. **That last sentence was the
+real finding, and this section misread it:** the session was never missing — the page's own
+requests were using a different cookie store. See §11.
 
 **The flow (§3, run by the app itself):**
 
@@ -347,10 +348,64 @@ top-level → /api/auth/sso-callback?token=…&redirect=<same path+query>
 `/api/auth/pi-login` is CSRF-guarded in middleware, and the landing still sets
 `__tec_hub_entry` only for a Hub referrer (§8.5).
 
-**Open:** Explorer needed four opens where FundX needed one. The likeliest cause is §9's
-silent bridge: Pi answers the app that last used it, so an app opened right after another
-may wait until the context moves. `ensureAuth` has no timeout, so a silent Pi means no
-sign-in on that visit rather than an error. Record the next phone observation here.
+**What the second phone test showed.** From the Quest, Pi does not answer the app:
+Settings read `pi_waiting` (Connection, DX) and `hub_session` (Alert — a `__tec_hub_entry`
+left in that tab by an earlier Hub SSO visit, so the SDK is never loaded). `/api/auth/pi-login`
+did not appear once in 30 minutes of Vercel logs across three apps. The self sign-in stays —
+it is harmless and it covers a truly session-less standalone visit — but **it is not what
+repairs the Quest**; §11 is. Explorer's "fourth try" and FundX's "first try" were the §11
+store flipping between visits, not Pi.
+
+---
+
+## §11 — THE PAGE'S REQUESTS USE ANOTHER COOKIE STORE (the session bridge)
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — Connection #81 · DX #37 ·
+> Alert #38 · tec-template-base #43 · Last verified in code: 2026-09-25. Runtime verification
+> on a phone is **pending**; the other 17 apps follow once it passes.
+
+**The evidence** (Vercel runtime logs, 2026-09-25 11:38–12:19 GMT+3, Connection, DX, Alert):
+
+```
+GET /app                200     ← the guard admits only a navigation carrying BOTH
+                                  tec_access_token and tec_user (middleware.ts)
+GET /api/auth/me        401     ← same page, < 1 s later
+  auth.me_refused · reason no_token · cookies none · cookieCount 0 or 1
+  · sec-fetch-site same-origin · sec-fetch-mode cors · sec-fetch-storage-access (absent)
+```
+
+The one cookie that sometimes arrived is the `tec_csrf` the middleware sets on any request
+without one — so the store the page's requests use **keeps what is written into it**; it never
+received the session. Loads alternate: DX failed at 12:13:10 and worked at 12:13:15, failed at
+12:15:25 and worked at 12:15:27, with no sign-in in between. This is the "works on one visit,
+not the next" reported since the session layer first shipped. Why Pi Browser keeps two stores is
+not established; the repair does not depend on it.
+
+**The bridge (`/api/auth/bridge`, LAW 2):**
+
+```
+guarded page · /me → 401 no_token|no_user        (its navigation DID carry the session)
+  → top-level  /api/auth/bridge?redirect=<same path+query>     (a navigation → has the session)
+  → 200 page: document.cookie ← the three cookies, host-only · Secure · SameSite=None,
+              NOT partitioned (the §6 / sso-callback REVERSAL: the partitioned copy is the
+              one this store is not receiving) → location.replace(redirect)
+```
+
+**It must not:**
+- run on a page the guard does not protect — there the navigation proves nothing;
+- run more than once per tab per 10 minutes (sessionStorage), or at all without sessionStorage;
+- copy anything when the navigation carried no session either — it goes straight back;
+- accept a redirect that is not a same-origin path (`//host`, `/\host`, a scheme);
+- set a cookie in its own headers: the copy is the page script's job, into the page's store.
+
+Nothing new is exposed: the session cookies are already `httpOnly: false` and the §3 landing
+already writes them from script; the response is `no-store`, and a cross-site page that sends a
+visitor here cannot read it. Settings prints `· bridged` when it ran and `/me` still said no —
+that, with the `auth.bridge` log line (which cookies the bridge navigation carried), is the next
+thing to read if it fails.
+
+**Order of repair in the template's `self-sign-in`:** the bridge first (no Pi needed), Pi (§10)
+only when the bridge does not apply.
 
 ---
 
