@@ -121,12 +121,27 @@ Tec-Assets' and tec-knowledge-base's rulesets still report "bypassed" for a plai
 push to a `claude/*` branch (tec-core-backend's does not) — rulesets that cover every branch,
 not only `main`.
 
+## 4e. Reconciliation run on production (25 Sep) — no customer money owed
+
+`node dist/scripts/reconcile-purchases.js --from 2026-05-30 --to 2026-09-25` (backend #339 →
+#340 → #341), read-only: **131** completed Assets payments — **91** delivered, **5** not
+delivered (uploaded NFTs at 2π: "55", "Ere", "Yt", "Ugv", "Ffv"; 10π), **35** with no product
+id at all (1π each, 30 May – 14 Jun).
+
+The owner confirmed every payment was their own testing (two accounts, `cbc4bb46-…` and
+`87a95116-…`): the 35 were test domains converted to NFTs, most then deleted. **No user is
+owed a delivery or a refund; closed with no action.**
+
+One payment (3 Jul, "Ere") was recorded as `user=gateway` — the phantom-user class the
+gateway's internal-key branch now prevents (it injects `x-user-id` from the verified token).
+Evidence that the fix post-dates 3 Jul; nothing to repair.
+
+C-02 §2 item 4 now carries the next real Assets-side gap: Estate Mode 1 loses the
+registration on the return trip.
+
 ## 5. Left open
 
 - Hub / Estate registrations have no event-driven repair path (receipts cover `source: assets` only),
   and Estate Mode 1 does not resume the registration after the Hub returns.
-- Payments before the #334 deploy are not replayed (the group starts at `$`) — paid-but-undelivered
-  Assets purchases from before, notably every paid domain→NFT mint (the BFF answered 400), are
-  reconciled by hand against payment-service.
 - Tec-Assets `npm run lint` fails on main (ESLint 9, no `eslint.config.js`); CI runs it with
   `continue-on-error`.
