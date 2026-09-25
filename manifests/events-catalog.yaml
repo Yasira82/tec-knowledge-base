@@ -88,7 +88,9 @@ events:
       Session 26 / tec-core-backend #188). `asset-purchases` (tec-asset-service, #334) records a
       TEC Assets payment (metadata source/app_source `assets`) as a receipt and delivers what its
       product_id bought — a listing, `domain-nft:<asset>` or `nft:<base64>`; the receipt is the
-      only proof of payment the asset-service accepts. Dual with the direct `payment.completed`
+      only proof of payment the asset-service accepts. It also registers TEC Estate properties
+      (metadata source/app_source `estate`, product `estate-property:…`, #342) — Estate's
+      other payments are commerce's and are ignored. Dual with the direct `payment.completed`
       above (audit F-2).
 
   # ── Commerce ──────────────────────────────────────────────────────────────
