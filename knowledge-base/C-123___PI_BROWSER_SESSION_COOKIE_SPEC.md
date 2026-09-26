@@ -307,6 +307,149 @@ error, so nothing else will ever surface it.
 
 ---
 
+## §10 — AN APP SIGNS ITSELF IN (the standalone visit)
+
+> Truth State: **[Current State]** · Verification: **[Runtime Verified] — and found NOT to be the
+> fix for the Quest** (second phone test, 2026-09-25: `pi-login` never called in 30 minutes of
+> logs; Settings read `pi_waiting` or `hub_session`). See §11. tec-template-base #42 · Explorer #51 · FundX #33, then the other 18 apps.
+
+**The symptom.** Opened from the Founding Quest or the reward campaign, an app rendered `/app`
+and Settings read *Not signed in · no_token*. The same app opened from the Hub's grid, or
+directly, showed the name.
+
+**Why.** Both surfaces open an app as a standalone visit on purpose (no referrer, no Hub SSO,
+§9), so the app loads the Pi SDK and Pi counts the visit. The warm-up already ran
+`Pi.authenticate`, but the 20 template apps had no `pi-login`, so nothing turned it into a TEC
+session. The app depended on whatever cookies the context held, and the view its own fetches
+saw held none. The page guard admitted `/app` in the same visit. **That last sentence was the
+clue, and it was misread:** the guard never ran (§11), so `/app` rendering proved nothing — the
+context had no session.
+
+**The flow (§3, run by the app itself):**
+
+```
+warm-up Pi.authenticate → token kept IN MEMORY (ADR-001)
+/api/auth/me → 401 ?  →  POST /api/auth/pi-login  → tec-auth-service (ADR-002)
+                      ←  one-time token, audience = this origin   (no cookies: LAW 1)
+top-level → /api/auth/sso-callback?token=…&redirect=<same path+query>
+          → 200 landing sets cookies in THIS context (LAW 2), checks /me, returns
+```
+
+**It must not:**
+- run in a Hub-owned Pi session (ADR-007, C-76);
+- run when `/me` already answers, or on a `/me` failure that is not a 401;
+- run more than once per tab per 10 minutes. If the context refuses cookies, the landing
+  still comes back (§7), and without this limit the visit would loop;
+- run without sessionStorage, since that is the loop guard;
+- send `scopes`, because the Hub's recorded consent (`wallet_address` for campaign payouts)
+  must not be overwritten.
+
+`/api/auth/pi-login` is CSRF-guarded in middleware, and the landing still sets
+`__tec_hub_entry` only for a Hub referrer (§8.5).
+
+**What the second phone test showed.** From the Quest, Pi does not answer the app:
+Settings read `pi_waiting` (Connection, DX) and `hub_session` (Alert — a `__tec_hub_entry`
+left in that tab by an earlier Hub SSO visit, so the SDK is never loaded). `/api/auth/pi-login`
+did not appear once in 30 minutes of Vercel logs across three apps. The self sign-in stays —
+it is harmless and it covers a truly session-less standalone visit — but **it is not what
+repairs the Quest**. See §11: the middleware meant to route a session-less visit never ran.
+
+---
+
+## §11 — THE MIDDLEWARE THAT NEVER RAN (20 apps + the template)
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** by build, 2026-09-25 —
+> Tec-Dx `next build` emits `.next/server/middleware-manifest.json` = `{"middleware": {}}`; the
+> same build with the file under `src/` prints `ƒ Middleware 32.7 kB`. Last verified in code:
+> 2026-09-25.
+
+**The finding.** Next.js loads `middleware.ts` only beside the `app` directory: at the repo root
+when the app is `./app`, inside `src/` when it is `src/app`. The template and the 20 apps cloned
+from it keep `src/app` and a ROOT `middleware.ts`, so **none of it runs in production**:
+
+- the page guard (`/app` only with both session cookies) — `/app` is served to anyone;
+- CSRF enforcement (double-submit OR first-party Origin) — **not enforced on any POST**, although
+  every rule here and in C-12 §11 says it lives "in middleware ONLY";
+- the `tec_csrf` issuance on safe requests.
+
+Unaffected: tec-app (`tec-frontend/src/middleware.ts`), Tec-Assets and Tec-Commerce
+(`src/middleware.ts`); Tec-Ecommerce has both, and its `src/` copy is the one that runs. The unit
+tests import the root file directly, so they passed against code production never loaded.
+
+**What this corrects.** §10's "the page guard admitted `/app` in the same visit" and the first
+draft of this section ("the page's requests use another cookie store") both rested on the guard
+running. It does not. The phone test showed it: the session bridge (`/api/auth/bridge`, Connection
+#81 · DX #37 · Alert #38), a navigation, arrived with no session and answered 307. **A visit that
+says "Not signed in" simply has no session in that browser context** — the Quest opens the app
+standalone (§9), nothing signs it in (§10's Pi path does not answer from the Quest), and the guard
+that would have sent it to sign-in was never loaded. The name appears on the visits whose context
+still holds a session from an earlier Hub SSO.
+
+**The bridge** stays for now — it is harmless (one 307 per tab per 10 minutes) — and is not rolled
+to the other apps. It should be removed once the guard runs.
+
+**Open:** after Connection #83 · DX #39 · Alert #40 are live and a Quest open plus a POST pass on a
+phone, the same move goes to the other 17 apps and the template. How a standalone Quest visit gets a
+session is still open: the app's own Pi sign-in (§10) waits on a Pi that answers another app, and
+the Hub cannot be reached from there (above).
+
+**What was tried, and the rule it left (2026-09-25).** Connection #82 · DX #38 · Alert #39 moved
+the middleware into `src/` AND made the guard redirect a session-less page into the Hub's SSO. On a
+phone every Quest open ended at that 307 and never returned: the app is opened standalone with Pi
+bound to it (§9), and the Hub cannot sign in inside that context. Production was rolled back on
+Vercel within minutes. Connection #83 · DX #39 · Alert #40 keep the middleware in `src/` (CSRF on)
+and **remove the page guard**: a session-less visit opens the page, which shows its own sign-in
+state; the BFF re-checks the session on every call (P6).
+
+> **Rule:** never redirect a page load off-origin automatically in Pi Browser. A trip into the Hub
+> from an app's Pi context is §9's silent bridge; from a Quest visit it strands the visitor.
+
+**Anti-regression:** a CI check that the middleware is where Next.js loads it — e.g. after
+`next build`, `middleware-manifest.json` must list `/`. A unit test importing the file is not
+evidence that it runs.
+
+---
+
+## §12 — THE HUB SIGNS THE LINK BEFORE THE VISIT LEAVES (Quest · campaign)
+
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** on a phone, 2026-09-26 —
+> tec-app #258 + #259 · Connection #84 · DX #40 · Alert #41. Last verified in code: 2026-09-26.
+
+**Why the Hub grid shows the name and the Quest did not.** A Hub grid tile goes through the Hub's
+own `/api/auth/sso?target=…`: the Hub, signed in, mints a one-time token and sends the visitor to
+the app's `sso-callback`, whose 200 landing (§3, LAW 2) sets the cookies. The Quest and the campaign
+link to the app directly, standalone and without a referrer, so Pi counts the visit as the APP's
+(§9) — and nothing gives the app a session.
+
+**The fix.** The page asks the Hub, while the visitor is still on it, for the link each app will be
+opened with: `POST /api/auth/sso-links {targets}` → the same handoff `/api/auth/sso` produces, called
+in process (same allowlist, refresh, 5-minute one-time token), for the app's own
+`/api/auth/sso-callback?token=…&redirect=<path+query>`. The link keeps `rel="noreferrer"`.
+
+```
+Quest page (Hub, signed in) ── POST /api/auth/sso-links ──► { target → app/api/auth/sso-callback?token }
+tap ─► app/api/auth/sso-callback (200, sets cookies, no Hub referrer → not Hub-owned) ─► app/app?q=1
+```
+
+The tab holds only the app's domain, so Pi still counts the visit; the app loads its SDK as a
+standalone visit; and it arrives signed in. Nothing redirects off-origin on a page load (§11).
+
+**The bug that hid it for one deploy (#259).** `sso-links` answered 200 on every visit and no app
+received an `sso-callback`: the click handler removed the spent link from state, React applied that
+before the browser read the anchor's `href`, and the tap followed the plain link. **Never change a
+link's `href` inside its own click handler** — refresh it afterwards.
+
+**The app side (Connection #84 · DX #40 · Alert #41):** `sso-callback` carries on to the page,
+signed out, for any token it cannot use (replayed, expired, foreign, SSO not configured) instead of
+a JSON error — a second tap on a spent link must never be a dead end.
+
+**It must:** match target origins exactly (stricter than the handoff's prefix test); run targets
+one after another (a rotating refresh must carry to the next — refresh tokens are single-use); be
+POST, CSRF-guarded and `no-store` (it returns tokens); refresh links every 4 minutes, on return to
+the page, and after a tap (tokens are single-use); fall back to the plain link on any failure.
+
+---
+
 ## Related Documents
 
 - `C-02___CURRENT_STATE_.md` — Session 16 (full incident narrative)

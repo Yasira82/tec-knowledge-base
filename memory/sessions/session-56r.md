@@ -189,6 +189,52 @@ same session that closed it, and was carried into C-02 on 24 Sep without re-chec
 left is only `CAMPAIGN_APPS` 8 → 24, and that is the owner's decision. Code Verified, not
 Runtime Verified: the production column was not inspected from here.
 
+## 4h. "The name is missing when I open an app from the Quest or the campaign"
+
+The `reason` field added in 56p answered on the phone: `no_token`. The page guard had admitted
+`/app` in the same visit. The Quest and the campaign open apps standalone on purpose (§9), the
+warm-up already ran `Pi.authenticate`, and the 20 template apps had no `pi-login` to turn that
+into a session. Only the Hub, Assets, Commerce and Ecommerce did.
+
+Fix: the app signs itself in with the Hub's own flow (C-123 §10). Template #42 came first,
+then Explorer #51 and FundX #33 as the phone test. Both are verified: FundX signed in on the
+first try from both pages, and Explorer from the Quest on the fourth. The other 18 apps
+followed with the same patch. Brookfield and NBF needed a hand merge, keeping their Pi error
+record alongside the new token.
+
+## 4i. The self sign-in was not the fix — and neither was the bridge
+
+The second phone test read the new diagnostics: `no_token · pi_waiting · got:none` and
+`hub_session`; `/api/auth/pi-login` never appeared in the logs. The `auth.me_refused` lines
+(`cookieCount 0/1`, `same-origin`) looked like two cookie stores, because `/app` had been served
+in the same visit and the guard "only serves it with a session". A session bridge was built on
+that (Connection #81 · DX #37 · Alert #38, template #43) and merged. On the phone the bridge
+answered **307**: its navigation carried no session either.
+
+That broke the premise, and a build showed why: Tec-Dx's `middleware-manifest.json` is empty. The
+template and its 20 apps keep `middleware.ts` at the root beside `src/app`, where Next.js never
+loads it — so there is no page guard and **no CSRF enforcement** in production (C-123 §11). The
+"Not signed in" visits simply have no session. The bridge rollout to the other 17 apps was
+prepared locally and **not pushed**; it should not be. Moving the middleware is the owner's
+decision, because it switches the guard and CSRF on for the first time.
+
+The owner chose "what is right engineering-wise". #82/#38/#39 moved the middleware and sent a
+session-less page into the Hub's SSO; on the phone the apps stopped opening (307, never back — §9).
+Rolled back on Vercel within minutes (the three projects now need a manual promote). #83/#39/#40
+keep the move, drop the guard. Lesson recorded as a rule in C-123 §11: no automatic off-origin
+redirect on a page load in Pi Browser.
+
+With the apps stable again (#83/#39/#40 merged, promoted), the actual question: why the Hub grid
+shows the name and the Quest does not. The grid goes through the Hub's handoff; the Quest links
+straight to the app (on purpose, §9). tec-app #258 has the Hub sign each Quest/campaign link while
+the visitor is still on the Hub (`POST /api/auth/sso-links`, reusing `/api/auth/sso` in process), so
+the app opens on its own domain, standalone, already signed in (C-123 §12).
+
+It did not work at first: `sso-links` 200 on every visit, no `sso-callback` in any app — the click
+handler dropped the spent link before the browser read the href (my bug, and my test pinned it).
+tec-app #259 fixed it; with Connection #84 · DX #40 · Alert #41 (an unusable token carries on to the
+page) the owner confirmed on a phone: opened from the Quest, the apps are signed in. After two weeks.
+
 ## 5. Left open
 
 - Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is
