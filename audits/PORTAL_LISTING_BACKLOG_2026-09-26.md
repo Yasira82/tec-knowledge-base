@@ -14,6 +14,7 @@ and done **at the end**, in one pass, once every app has been reviewed.
 - **Name counter ≠ visible name → there is a stray space.** It happened on three apps
   (TEC-APP, LIFE-APP, Fundx). The name has to match brainstorm.pi exactly.
 - **Description = brainstorm.pi "project summary".** Change both, or they diverge.
+- **At least 3 previews per app** (the Portal will not take fewer).
 - **Previews are real screenshots only.** Crop the browser + Android bars; never mock.
 - **Another user's name or messages never go into a public preview** — redact, or ask.
 - **Test data does not go into a preview** ("T", "Re", "Test Villa"): rename it first.
@@ -53,7 +54,7 @@ Legend: ✅ checked and right · ✏️ change · 🖼️ upload · ⏳ not revi
 | CONNECTION-APP | ✅ | ✏️ `Your trusted Pi network.` | ✏️ *Build connections, trust, and collaboration — the relationship graph of the Pi economy.* | the 12 app locales | 🖼️ logo · intro · 3 previews (redacted) · Category Social |
 | ESTATE-APP | ✅ | ✏️ `Real estate on Pi.` | ✏️ *Explore, lease, and manage property. Pi services only — no full purchase or title transfer.* | ✏️ add AR | 🖼️ logo · intro (check it is the Estate one) · previews (retake Portfolio after §2) |
 | Fundx | ✏️ stray space (6/80 → 5/80) | ✏️ `Educational Pi capital pools` | ✏️ *Browse educational pool charters. No contributions, no yield, no promises — gated on legal + KYC + governance.* | ✏️ add AR | 🖼️ logo · intro · 3 previews (retake Home after C1) |
-| ANALYTICS-APP | ✅ | ✏️ `The real numbers behind Pi.` (was empty) | ✏️ *See your activity and market trends across the Pi economy. Real data only.* | ⏳ | 🖼️ logo · intro · 2 previews (Merchant intelligence + Overview). The Overview's platform totals are the ADMIN view — a user sees only their own (C-105 §6); prefer the own-scope screens |
+| ANALYTICS-APP | ✅ | ✏️ `The real numbers behind Pi.` (was empty) | ✏️ *See your activity and market trends across the Pi economy. Real data only.* | ⏳ | 🖼️ logo · intro · 3 previews (Merchant intelligence + Overview + Sales; an Events screenshot would beat the all-zero Sales). The Overview's platform totals are the ADMIN view — a user sees only their own (C-105 §6); prefer the own-scope screens |
 | Assets · Zone · Nexus · Explorer · System · Alert · NX · DX · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
 
 **Testnet side:** reviewed for TEC-APP and LIFE-APP only. Every other app still needs
@@ -70,4 +71,4 @@ Testnet Portal domain has to move with it. Until that review lands, change nothi
 - 24 Intro Preview images, 1080×1080, < 430 KB each; the gated apps say so
   (FundX educational · Insure "not an insurer" · Brookfield "simulated" · System read-only).
 - Cropped previews: Life (4) · Commerce (4) · Ecommerce (3) · Connection (3, redacted) ·
-  Estate (4) · FundX (3) · Analytics (2).
+  Estate (4) · FundX (3) · Analytics (3).
