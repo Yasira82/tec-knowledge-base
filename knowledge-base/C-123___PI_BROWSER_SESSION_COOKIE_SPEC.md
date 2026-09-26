@@ -388,8 +388,7 @@ still holds a session from an earlier Hub SSO.
 **The bridge** stays for now — it is harmless (one 307 per tab per 10 minutes) — and is not rolled
 to the other apps. It should be removed once the guard runs.
 
-**Open:** after Connection #83 · DX #39 · Alert #40 are live and a Quest open plus a POST pass on a
-phone, the same move goes to the other 17 apps and the template. How a standalone Quest visit gets a
+**Done (2026-09-26):** the move is live in all 20 template apps and the template. How a standalone Quest visit gets a
 session is still open: the app's own Pi sign-in (§10) waits on a Pi that answers another app, and
 the Hub cannot be reached from there (above).
 
@@ -442,6 +441,16 @@ link's `href` inside its own click handler** — refresh it afterwards.
 **The app side (Connection #84 · DX #40 · Alert #41):** `sso-callback` carries on to the page,
 signed out, for any token it cannot use (replayed, expired, foreign, SSO not configured) instead of
 a JSON error — a second tap on a spent link must never be a dead end.
+
+**Back on the page (tec-app #260).** Pi Browser restores the Quest page with its old hrefs; a tap
+before the fresh set arrived reused a spent token (`replay_detected`, 2026-09-26). Spent links are
+kept in a ref and dropped on `pageshow`/`visibilitychange` before the refetch — a quick tap then
+takes the plain link, never a used token.
+
+**Fleet state (2026-09-26, all deployed READY):** every app's `sso-callback` carries on for an
+unusable token — the 20 template apps + the template (middleware PRs), Commerce #71, Assets #63,
+Ecommerce #67 — and the 20 template apps + the template run their middleware from `src/` (CSRF on,
+no page guard), pinned by a location test and a CI manifest check.
 
 **It must:** match target origins exactly (stricter than the handoff's prefix test); run targets
 one after another (a rotating refresh must carry to the next — refresh tokens are single-use); be

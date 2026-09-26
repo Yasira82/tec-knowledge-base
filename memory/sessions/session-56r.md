@@ -235,6 +235,13 @@ handler dropped the spent link before the browser read the href (my bug, and my 
 tec-app #259 fixed it; with Connection #84 · DX #40 · Alert #41 (an unusable token carries on to the
 page) the owner confirmed on a phone: opened from the Quest, the apps are signed in. After two weeks.
 
+## 4j. Closed out (2026-09-26)
+
+The middleware move + `sso-callback` carry-on went to the other 17 apps and the template (all
+merged, all deployed READY). Commerce, Assets and Ecommerce showed `replay_detected` on a quick
+second tap: their callback got the same carry-on (#71 · #63 · #67), and the Hub now drops spent
+links the moment the Quest page is back on screen (tec-app #260). The owner: "تمام".
+
 ## 5. Left open
 
 - Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is
