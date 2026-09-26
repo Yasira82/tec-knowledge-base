@@ -26,9 +26,10 @@ and done **at the end**, in one pass, once every app has been reviewed.
 |---|------|------|-------|-----|
 | C1 | Tec-Fundx | Remove the promise copy: "earn within a compliant framework", "Your funds are always held securely" → educational-preview wording | `src/lib/i18n/en.ts:29,34` (+ the matching `ar.ts` keys) · `src/app/layout.tsx:13` (share description) · `src/app/pool/[id]/page.tsx:95` | Contradicts C-113 (no return promises; legal review not done) and the Preview box directly under it. A financial app promising returns is the likeliest listing rejection. |
 | C2 | Tec-Ecommerce | "Pay with Pi Network" badge overlaps the "PI NETWORK · WEB3 SHOPPING" eyebrow on phones | `src/app/page.tsx:305` (`.hero-badge { position:absolute; top:20px; right:20px }`) | Visible in the first preview screenshot. Put the badge in flow under the CTA on narrow screens. |
-| C3 | all apps (optional, owner decision) | Ship the new app icon as the favicon / manifest icon | each app's `public/` + `app/layout.tsx` icons | The Portal logo and the in-app icon would then match. Life has no icon at all today. |
+| C3 | Tec-Analytics- | The "Payments (last 30 days)" chart draws only 11 of 30 days and runs past the card edge — the tallest visible bar reads as the latest day | `src/app/app/page.tsx` `BarChart` (~line 68): each column is `flex:1` with a `whiteSpace:nowrap` label, so its min-content width is the label; 30 × (label + 6px gap) is wider than a phone | Same chart serves "Users & KYC". Give the column `minWidth: 0` and label every Nth day only; the Daily activity chart on the same screen already renders 30 days correctly. |
+| C4 | all apps (optional, owner decision) | Ship the new app icon as the favicon / manifest icon | each app's `public/` + `app/layout.tsx` icons | The Portal logo and the in-app icon would then match. Life has no icon at all today. |
 
-After C1 and C2 are deployed: retake the FundX home and the Ecommerce home screenshots.
+After C1, C2, C3 are deployed: retake the FundX home, the Ecommerce home and the Analytics payments screenshots.
 
 ## 2. Data to fix inside the apps before the screenshots (owner, in-app)
 
@@ -52,7 +53,8 @@ Legend: ✅ checked and right · ✏️ change · 🖼️ upload · ⏳ not revi
 | CONNECTION-APP | ✅ | ✏️ `Your trusted Pi network.` | ✏️ *Build connections, trust, and collaboration — the relationship graph of the Pi economy.* | the 12 app locales | 🖼️ logo · intro · 3 previews (redacted) · Category Social |
 | ESTATE-APP | ✅ | ✏️ `Real estate on Pi.` | ✏️ *Explore, lease, and manage property. Pi services only — no full purchase or title transfer.* | ✏️ add AR | 🖼️ logo · intro (check it is the Estate one) · previews (retake Portfolio after §2) |
 | Fundx | ✏️ stray space (6/80 → 5/80) | ✏️ `Educational Pi capital pools` | ✏️ *Browse educational pool charters. No contributions, no yield, no promises — gated on legal + KYC + governance.* | ✏️ add AR | 🖼️ logo · intro · 3 previews (retake Home after C1) |
-| Assets · Analytics · Zone · Nexus · Explorer · System · Alert · NX · DX · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
+| ANALYTICS-APP | ✅ | ✏️ `The real numbers behind Pi.` (was empty) | ✏️ *See your activity and market trends across the Pi economy. Real data only.* | ⏳ | 🖼️ logo · intro · 2 previews (Merchant intelligence + Overview). The Overview's platform totals are the ADMIN view — a user sees only their own (C-105 §6); prefer the own-scope screens |
+| Assets · Zone · Nexus · Explorer · System · Alert · NX · DX · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
 
 **Testnet side:** reviewed for TEC-APP and LIFE-APP only. Every other app still needs
 its Testnet General + Domain checked (name, description matching Mainnet, domain =
@@ -68,4 +70,4 @@ Testnet Portal domain has to move with it. Until that review lands, change nothi
 - 24 Intro Preview images, 1080×1080, < 430 KB each; the gated apps say so
   (FundX educational · Insure "not an insurer" · Brookfield "simulated" · System read-only).
 - Cropped previews: Life (4) · Commerce (4) · Ecommerce (3) · Connection (3, redacted) ·
-  Estate (4) · FundX (3).
+  Estate (4) · FundX (3) · Analytics (2).
