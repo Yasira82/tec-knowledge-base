@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0" stop-color="#171A26"/>
+      <stop offset="1" stop-color="#08090D"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- handle: an angular arch -->
+  <polygon points="372,420 418,262 606,262 652,420 594,420 562,318 462,318 430,420" fill="#FDCF7A"/>
+  <!-- bag body, split into two facets by a diagonal cut -->
+  <polygon points="290,444 620,444 470,820 290,820 248,774" fill="#FBB44A"/>
+  <polygon points="662,444 734,444 776,774 734,820 512,820" fill="#E8962A"/>
+</svg>
