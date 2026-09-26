@@ -40,7 +40,7 @@ Replace rows as they close — do not strike them through and keep them.
 
 | # | Item | Why it is open | From |
 |---|---|---|---|
-| 1 | **Roll out to the other 17 apps + template** what is live on Connection · DX · Alert: the middleware in `src/` (CSRF on, no page guard — C-123 §11) and `sso-callback` carrying on for an unusable token (§12). The Quest/campaign sign-in itself is the Hub's (tec-app #258/#259) and is **Runtime Verified** for every app | Vercel Hobby build quota — batch it | 56r |
+| 1 | **Watch for a CSRF 403** on any app's POST (payment, save, follow): the middleware runs for the first time in the 20 template apps (C-123 §11). A 403 on a legitimate same-origin POST means Pi Browser sent no `Origin` and no `tec_csrf` — report the route | New enforcement in production since 2026-09-26 | 56r |
 | 2 | **Campaign round size — `CAMPAIGN_APPS` 8 → 24?** A decision, not code: env var + restart on `tec-identity-service`. Safe since 19 Sep, because each claim freezes what it was asked for (`qualified`, tec-core-backend #327, shown in the Hub payout queue #241), so an earned claim cannot read "7 of 24". Against it: the service is designed around a short list of the apps below Pi's threshold | The owner's call — the round ran on 8 | 56o · 56r |
 | 3 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
 | 4 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
