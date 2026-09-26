@@ -412,8 +412,8 @@ evidence that it runs.
 
 ## §12 — THE HUB SIGNS THE LINK BEFORE THE VISIT LEAVES (Quest · campaign)
 
-> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-app #258 · Last verified
-> in code: 2026-09-25. Runtime verification on a phone is **pending**.
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** on a phone, 2026-09-26 —
+> tec-app #258 + #259 · Connection #84 · DX #40 · Alert #41. Last verified in code: 2026-09-26.
 
 **Why the Hub grid shows the name and the Quest did not.** A Hub grid tile goes through the Hub's
 own `/api/auth/sso?target=…`: the Hub, signed in, mints a one-time token and sends the visitor to
@@ -433,6 +433,15 @@ tap ─► app/api/auth/sso-callback (200, sets cookies, no Hub referrer → not
 
 The tab holds only the app's domain, so Pi still counts the visit; the app loads its SDK as a
 standalone visit; and it arrives signed in. Nothing redirects off-origin on a page load (§11).
+
+**The bug that hid it for one deploy (#259).** `sso-links` answered 200 on every visit and no app
+received an `sso-callback`: the click handler removed the spent link from state, React applied that
+before the browser read the anchor's `href`, and the tap followed the plain link. **Never change a
+link's `href` inside its own click handler** — refresh it afterwards.
+
+**The app side (Connection #84 · DX #40 · Alert #41):** `sso-callback` carries on to the page,
+signed out, for any token it cannot use (replayed, expired, foreign, SSO not configured) instead of
+a JSON error — a second tap on a spent link must never be a dead end.
 
 **It must:** match target origins exactly (stricter than the handoff's prefix test); run targets
 one after another (a rotating refresh must carry to the next — refresh tokens are single-use); be

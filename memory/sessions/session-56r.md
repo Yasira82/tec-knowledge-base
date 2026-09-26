@@ -230,6 +230,11 @@ straight to the app (on purpose, §9). tec-app #258 has the Hub sign each Quest/
 the visitor is still on the Hub (`POST /api/auth/sso-links`, reusing `/api/auth/sso` in process), so
 the app opens on its own domain, standalone, already signed in (C-123 §12).
 
+It did not work at first: `sso-links` 200 on every visit, no `sso-callback` in any app — the click
+handler dropped the spent link before the browser read the href (my bug, and my test pinned it).
+tec-app #259 fixed it; with Connection #84 · DX #40 · Alert #41 (an unusable token carries on to the
+page) the owner confirmed on a phone: opened from the Quest, the apps are signed in. After two weeks.
+
 ## 5. Left open
 
 - Hub `/pay` page registrations (domains, NFTs) have no event-driven repair path; the page is
