@@ -60,7 +60,8 @@ Legend: ✅ checked and right · ✏️ change · 🖼️ upload · ⏳ not revi
 | ANALYTICS-APP | ✅ | ✏️ `The real numbers behind Pi.` (was empty) | ✏️ *See your activity and market trends across the Pi economy. Real data only.* | ⏳ | 🖼️ logo · intro · 3 previews (Merchant intelligence + Overview + Sales; an Events screenshot would beat the all-zero Sales). The Overview's platform totals are the ADMIN view — a user sees only their own (C-105 §6); prefer the own-scope screens |
 | ASSETS-APP | ⏳ counter not seen | ✏️ `Your Pi assets in one place` (was "Premium App"; the KB line is 34 chars) | ✏️ *Own and manage NFTs, domains, and digital assets on Pi, in one portfolio.* | ✏️ add AR (`src/lib/i18n/ar.ts`) | 🖼️ logo · intro (check it is the Assets one) · 4 previews (Marketplace · Home · Portfolio · History) — retake Portfolio after C4 |
 | ZONE-APP | ✅ 8/80 | ✏️ `Verify what can be trusted.` (was "WEB") | ✏️ *The verification runtime for Pi — look up verified businesses, projects, and builders. Evidence, not claims.* | ✏️ add AR (`src/lib/i18n/ar.ts`) | Category **Finance → Utilities** (Zone moves no money) · 🖼️ logo · intro · 4 previews (Registry · Home · Verify · Registry lower). ⚠️ Owner decision: the registry shows TEC's own apps and "The Elite Consortium" as Zone-**Verified** — a reviewer may read that as the operator verifying itself; C-120 §7 asks for human, two-reviewer sign-off on institutional verifications — make sure the evidence behind those badges says who reviewed |
-| Nexus · Explorer · System · Alert · NX · DX · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
+| NEXUS-APP | ✅ 9/80 | ✏️ `Coordination across TEC apps` (was "Web") | ✏️ *Ties multi-step actions across TEC apps together so workflows just work.* | ✏️ add AR (`src/lib/i18n/ar.ts`) | 🖼️ logo · intro · 3 previews (Templates · Home · Settings). Home is mostly empty — a running workflow (`/workflow/[id]`, the WorkflowRunner) would beat it and Settings |
+| Explorer · System · Alert · NX · DX · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
 
 **Testnet side:** reviewed for TEC-APP and LIFE-APP only. Every other app still needs
 its Testnet General + Domain checked (name, description matching Mainnet, domain =
@@ -76,4 +77,4 @@ Testnet Portal domain has to move with it. Until that review lands, change nothi
 - 24 Intro Preview images, 1080×1080, < 430 KB each; the gated apps say so
   (FundX educational · Insure "not an insurer" · Brookfield "simulated" · System read-only).
 - Cropped previews: Life (4) · Commerce (4) · Ecommerce (3) · Connection (3, redacted) ·
-  Estate (4) · FundX (3) · Analytics (3) · Assets (4) · Zone (4).
+  Estate (4) · FundX (3) · Analytics (3) · Assets (4) · Zone (4) · Nexus (3).
