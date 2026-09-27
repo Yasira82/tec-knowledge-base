@@ -10,7 +10,7 @@ const A=[
 ['connection','Connection','Your trusted Pi network.','Connections, trust, collaboration.'],
 ['zone','Zone','Verify what can be trusted.','Evidence, not claims.'],
 ['nexus','Nexus','Coordination across TEC apps.','Multi-step actions, tied together.'],
-['explorer','Explorer','Discover who accepts Pi,','ranked by trust.'],
+['explorer','Explorer','Discover who accepts Pi','near you — search or map.'],
 ['system','System','The rules, in plain terms.','A read-only governance console.'],
 ['alert','Alert','One smart inbox.','Your TEC activity + Pi news.'],
 ['nx','NX','Your next Pi opportunity.','Jobs, grants, hackathons.'],
