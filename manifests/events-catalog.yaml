@@ -167,11 +167,16 @@ events:
   - name: epic.project.completed.v1
     owner: tec-identity-service/epic
     subject: piUsername
-    consumers: [tec-identity-service/legend]
+    consumers: [tec-identity-service/legend, tec-analytics-service]
     status: live
     verified: true
     binds_to: [C-125, C-126, C-121]
-    note: create → earn. Emitted by epic.completeProject.
+    note: >-
+      create → earn. Emitted by epic.completeProject once every milestone is done.
+      Carries `zoneVerified` (the project's Zone badge): Legend records the
+      achievement as verified, and Analytics counts it toward Creator, ONLY when
+      it is true — the owner triggers this event, so without Zone it is a claim
+      (C12, tec-core-backend #344).
   - name: connection.milestone.v1
     owner: tec-identity-service/connection
     subject: piUsername
