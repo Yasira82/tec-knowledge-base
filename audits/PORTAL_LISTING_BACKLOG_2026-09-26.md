@@ -77,7 +77,8 @@ Legend: ✅ checked and right · ✏️ change · 🖼️ upload · ⏳ not revi
 | EPIC-APP | ✅ 8/80 | ✏️ `Build your Pi project.` (was "Web") | ✏️ *Create, launch, and grow a project — startup, community, or campaign — on Pi.* | ✏️ **None → English + Arabic** | Category **None → Utilities** · **Developer Public Name empty → "Yasira"** · 🖼️ logo · intro · 3 previews (Projects · Home · Settings) — ⛔ no Discover preview until C11. The owner's "Atlas" reads Legend with milestones 0/1 |
 | INSURE-APP | ✅ 10/80 | ✏️ `See your Pi risk.` (was "Web") | ✏️ *A risk platform (not an insurer). View your risk score and protection surfaces. Escrow is gated.* (96) | ✏️ **None → English + Arabic** | Category **None → Utilities** (not Finance — no custody, no policies) · **Developer Public Name empty → "Yasira"** · 🖼️ logo · intro · 3 previews (Protection · Protection cont. · Settings); Home left out until C10 |
 | LEGEND-APP | ✅ 10/80 | ✏️ `Reputation, earned not bought` (29) (was "Web") | ✏️ *A permanent, evidence-based reputation from real Pi activity that follows you everywhere.* | ✏️ **None → English + Arabic** | Category **None → Social** or Utilities · **Developer Public Name empty → "Yasira"** · 🖼️ logo · intro · 3 previews (Profile · Scores · Settings) — Records left out until C12 (its only entry is the self-completed "Atlas") |
-| Elite · VIP · NBF · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
+| ELITE-APP | ✅ 9/80 | ✏️ `Earned recognition on Pi` (24; the KB line is 33) (was "Web") | ✏️ *Official, criteria-based recognition from verified evidence — earned, never bought.* | ✏️ **None → English + Arabic** | Category **None → Social** or Utilities · **Developer Public Name empty → "Yasira"** · 🖼️ logo · intro · 3 previews (Home · Awards · Settings). Clean — no findings. Note: once C12 lands, Elite's evidence input is sound; until then its criteria read self-claimed Legend records |
+| VIP · NBF · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
 
 **Testnet side:** reviewed for TEC-APP and LIFE-APP only. Every other app still needs
 its Testnet General + Domain checked (name, description matching Mainnet, domain =
@@ -93,4 +94,4 @@ Testnet Portal domain has to move with it. Until that review lands, change nothi
 - 24 Intro Preview images, 1080×1080, < 430 KB each; the gated apps say so
   (FundX educational · Insure "not an insurer" · Brookfield "simulated" · System read-only).
 - Cropped previews: Life (4) · Commerce (4) · Ecommerce (3) · Connection (3, redacted) ·
-  Estate (4) · FundX (3) · Analytics (3) · Assets (4) · Zone (4) · Nexus (3) · Explorer (3) · DX (4) · NX (2 of 3 — the third waits on C7 or a New-post/Pro screenshot) · System (4) · Alert (3) · Titan (4) · Epic (3) · Insure (3) · Legend (3).
+  Estate (4) · FundX (3) · Analytics (3) · Assets (4) · Zone (4) · Nexus (3) · Explorer (3) · DX (4) · NX (2 of 3 — the third waits on C7 or a New-post/Pro screenshot) · System (4) · Alert (3) · Titan (4) · Epic (3) · Insure (3) · Legend (3) · Elite (3).
