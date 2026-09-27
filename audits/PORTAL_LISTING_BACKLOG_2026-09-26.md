@@ -66,7 +66,8 @@ Legend: ✅ checked and right · ✏️ change · 🖼️ upload · ⏳ not revi
 | EXPLORER-APP | ✅ 12/80 | ✏️ `Discover who accepts Pi.` (was "Web") | ✏️ *Find Pi-accepting businesses near you — search, map, and Zone-verified badges. Your location is never stored.* (the old KB line said "ranked by trust" — the app itself says it does not score trust; copy + intro corrected) | ✏️ **None → the 12 app locales** (en · ar · es · fa · fr · hi · id · ko · tr · ur · vi · zh) | Category **None → Utilities** · 🖼️ logo · intro (re-generated) · 3 previews (Discover · My Business · Settings). The only listing is the owner's "YM · Designer" — a photo, hours and a full name would make Discover read better; a Map screenshot would beat Settings |
 | DX-APP | ✅ 6/80 | ✏️ `Build on Pi fast.` (was "Web") | ✏️ *SDKs, templates, certified capabilities, and copy-paste guides for developers.* | ✏️ **None → English + Arabic** (`src/lib/i18n/ar.ts`) | Category **None → Utilities** (or a Developer category if the Portal has one) · 🖼️ logo · intro · 4 previews (Build · Starter template · Guides · Capabilities) |
 | NX-APP | ✅ 6/80 | ✏️ `Your next Pi opportunity.` (was "Web") | ✏️ *Jobs, partnerships, grants, and hackathons — the Pi opportunity marketplace.* | ✏️ **None → English + Arabic** | Category **None → Utilities** · **Developer Public Name is empty → "Yasira"** · 🖼️ logo · intro · ⛔ **no Board previews until C7** — every Board screenshot today advertises the invented verified listings. Owner's own post "D" / "3" is test data too |
-| System · Alert · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
+| SYSTEM-APP | ✅ 10/80 | ✏️ `The rules, in plain terms.` (was "Web") | ✏️ *A read-only governance console — what's allowed on the platform, and why.* | ✏️ **None → English + Arabic** | Category **None → Utilities** · **Developer Public Name empty → "Yasira"** · 🖼️ logo · intro · 4 previews (Policies · Tiers/Capabilities · Support · Policies cont.) |
+| Alert · Titan · Epic · Legend · Elite · VIP · NBF · Insure · Brookfield | ⏳ | copy ready in `marketing/pi-portal-copy.md` | ⏳ | ⏳ | logos + intro images already generated |
 
 **Testnet side:** reviewed for TEC-APP and LIFE-APP only. Every other app still needs
 its Testnet General + Domain checked (name, description matching Mainnet, domain =
@@ -82,4 +83,4 @@ Testnet Portal domain has to move with it. Until that review lands, change nothi
 - 24 Intro Preview images, 1080×1080, < 430 KB each; the gated apps say so
   (FundX educational · Insure "not an insurer" · Brookfield "simulated" · System read-only).
 - Cropped previews: Life (4) · Commerce (4) · Ecommerce (3) · Connection (3, redacted) ·
-  Estate (4) · FundX (3) · Analytics (3) · Assets (4) · Zone (4) · Nexus (3) · Explorer (3) · DX (4).
+  Estate (4) · FundX (3) · Analytics (3) · Assets (4) · Zone (4) · Nexus (3) · Explorer (3) · DX (4) · NX (2 of 3 — the third waits on C7 or a New-post/Pro screenshot) · System (4).
