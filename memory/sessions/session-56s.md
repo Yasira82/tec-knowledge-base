@@ -96,3 +96,24 @@ the signature of exhausted Actions minutes on the private-repo allowance. Until 
 - Portal: add Arabic where it applies, set the Hub's Mainnet app wallet, submit the listings,
   review the Testnet side of 22 apps, a third NX preview, and retake the screenshots the fixes
   changed (FundX home, Ecommerce home, Analytics payments, Assets portfolio, Zone registry).
+
+## 8. The same day, after: campaign round 2 in production (28 Sep)
+
+The owner opened round 2 and took it to Reddit, X and Fireside. Every fix below came
+from something a real user hit that afternoon.
+
+| What was reported | Cause | Fix |
+|---|---|---|
+| Round-2 missions never ticked for apps visited in round 1 | `campaign_visits` is one row per (owner, app) stamped at the FIRST tap; `CAMPAIGN_VISITS_FROM` filtered it out and a re-tap never restamped it | a new-round tap restamps a row below the floor — tec-core-backend #349 |
+| "Reply" posted without the quote (TEC group) | the messages BFF zod schema named only `body`; zod drops unnamed keys, so `reply_to` never left the app | Tec-Connection #87 |
+| "Delete for everyone" did nothing | Railway: `FST_ERR_CTP_EMPTY_JSON_BODY`. The Connection BFF sent `Content-Type: application/json` on every call and Fastify (4.28, inside `@nestjs/platform-fastify`) refuses it with no body — delete, mark-read, clear chat, join/leave, story-seen all failed | header only with a body — Tec-Connection #87 |
+| A group owner could not take down a member's message | delete-for-everyone was sender-only | owner over anyone, admin over members, audited (`connection.message.moderated`) — tec-core-backend #350 + Tec-Connection #87 |
+| Two Connection users invisible in Analytics | active users = distinct ids in the event log; nothing recorded opening an app | `app.arrived.v1`, once per user/app/day, active users only — tec-core-backend #351 |
+| (found while checking the above) platform analytics exposed | an INVALID Bearer fell through to the internal key; the Analytics BFF checks only that a cookie exists and always adds the key | a present Bearer must verify — tec-core-backend #351 |
+| "Testnet wallets also start with G" (a Pioneer on Reddit, twice) | the page asked for "your public address" | Mainnet named everywhere the address is asked, EN + AR — tec-app #263 |
+
+Two process notes. **Rewards are paid by hand** (`Mark sent`): `PI_A2U_WALLET_SEED` is
+unset, and A2U from another Pi app's wallet cannot work anyway — a `uid` is per app.
+**One reward was sent before its claim existed** (seat for `GDPDTK…`); when that claim
+arrives, `Mark sent` takes the same hash (`518b9d30…`) — the check matches the address,
+the amount and an unused hash, not the order.
