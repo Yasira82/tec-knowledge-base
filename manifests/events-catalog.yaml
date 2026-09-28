@@ -177,6 +177,22 @@ events:
       achievement as verified, and Analytics counts it toward Creator, ONLY when
       it is true — the owner triggers this event, so without Zone it is a claim
       (C12, tec-core-backend #344).
+  - name: app.arrived.v1
+    owner: tec-identity-service/pioneer
+    subject: userId
+    consumers: [tec-analytics-service]
+    status: live
+    verified: true
+    binds_to: [C-105, C-70]
+    note: >-
+      PRESENCE — an app's own server reported that a user reached it
+      (POST pioneer/arrived; Hub taps never emit). At most once per user, per
+      app, per UTC day (Redis SET NX, claimOncePerWindow): an arrival fires on
+      every page load and Analytics scans a bounded window. Keyed by the auth
+      user id, the id user.created.v1 and payments carry, so one person is one
+      active user. Analytics stores only app + eventId and counts it toward
+      ACTIVE USERS alone — excluded from every activity read and event total
+      (NOT_ACTIVITY_TYPES). tec-core-backend #351, 2026-09-28.
   - name: connection.milestone.v1
     owner: tec-identity-service/connection
     subject: piUsername

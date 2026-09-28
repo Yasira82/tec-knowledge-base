@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 28 September 2026 (Session 56s — Portal listing pass; the gateway's `/internal/` door closed; invented "verified" data purged)
+**Last Updated:** 28 September 2026 (Session 56s — Portal listing pass; the gateway's `/internal/` door closed; invented "verified" data purged; campaign round 2 live)
 
 > **This file holds only what is true now, and it is edited in place.** Until 2026-09-24 every
 > session appended its narrative here; the file reached 5,929 lines and could no longer
@@ -27,9 +27,9 @@ checks it every Monday (`drift.yml`); last run 2026-09-25: **36 pass · 0 fail �
 | Caller identity | The gateway adds `x-internal-key` to every forwarded request, so the key alone never proves a service. It refuses `/internal/` paths to callers without the key and marks every request `x-tec-caller` = service · user · anonymous; payment, wallet and identity check it too | tec-core-backend #345 · Session 56s |
 | Packages | tec-ui **3.0.0** · tec-auth **1.2.0** · tec-sdk **1.4.0** · tec-shared **1.1.0** | C-14 |
 | Session | Cookies `Secure; SameSite=None; Partitioned`, set only on a 200. A session = token **and** `tec_user`; refresh renews both | C-123 §2 · C-13 §1/§4 |
-| Events | 15 live · 1 planned (`fundx.investment.closed.v1`) | `manifests/events-catalog.yaml` |
+| Events | 16 live · 1 planned (`fundx.investment.closed.v1`). Newest: `app.arrived.v1` — an app's arrival report, once per user/app/day, counted by Analytics as an active user only (#351) | `manifests/events-catalog.yaml` |
 | SLOs | Auth / payments / gateway 99.9 % · PAL 99.95 % · Hub 99.5 % | C-78 §2 + `manifests/slo-definitions.yaml` |
-| Violations | All P0/P1/P2 closed — C17 (any signed-in user could reach A2U payout, add-funds and 10 owner-scoped modules) found and closed 2026-09-27, live-verified | C-40 · Session 56s |
+| Violations | All P0/P1/P2 closed — C17 (any signed-in user could reach A2U payout, add-funds and 10 owner-scoped modules) found and closed 2026-09-27, live-verified. 2026-09-28: Analytics treated an INVALID Bearer as its internal caller, so a fake `tec_access_token` cookie on the Analytics BFF returned every platform aggregate — closed (tec-core-backend #351) | C-40 · Session 56s |
 | KB gates | `bash scripts/preflight.sh` = what CI runs (24 steps) | `CLAUDE.md` |
 | Repos · env vars | Every repo with its dependencies, every variable the code reads — generated from the code | C-11 · C-44 |
 
@@ -42,7 +42,7 @@ Replace rows as they close — do not strike them through and keep them.
 | # | Item | Why it is open | From |
 |---|---|---|---|
 | 1 | **Watch for a CSRF 403** on any app's POST (payment, save, follow): the middleware runs for the first time in the 20 template apps (C-123 §11). A 403 on a legitimate same-origin POST means Pi Browser sent no `Origin` and no `tec_csrf` — report the route | New enforcement in production since 2026-09-26 | 56r |
-| 2 | **Campaign round 2 is on all 24 apps** — `CAMPAIGN_APPS` = the full roster and `CAMPAIGN_VISITS_FROM=2026-09-28T00:00:00Z` on `tec-identity-service` (set by the owner 2026-09-28), so round-1 visits do not carry anyone to the claim form; a new-round mission tap restamps a visit from an earlier round (tec-core-backend #349 — before it, those missions could never tick). `CAMPAIGN_REQUIRE_ARRIVAL` is unset: a tap counts. Announced on r/PiNetwork 2026-09-28 (flair Pi Apps, Brand Affiliate; link tagged `utm_source=reddit&utm_campaign=pi-reward-r2`; organic, not promoted); seat #1 disclosed there as the owner's own test payout. Round-1 claims keep what they were asked for (`qualified`, #327). Watch the drop-off against the 8-app round: a longer ask converts worse. Rewards go by `Mark sent` until row 6 lands | Running — the owner reads the numbers | 56o · 56r · 56s |
+| 2 | **Campaign round 2 is on all 24 apps** — `CAMPAIGN_APPS` = the full roster and `CAMPAIGN_VISITS_FROM=2026-09-28T00:00:00Z` on `tec-identity-service` (set by the owner 2026-09-28), so round-1 visits do not carry anyone to the claim form; a new-round mission tap restamps a visit from an earlier round (tec-core-backend #349 — before it, those missions could never tick). `CAMPAIGN_REQUIRE_ARRIVAL` is unset: a tap counts. Announced on r/PiNetwork 2026-09-28 (flair Pi Apps, Brand Affiliate; link tagged `utm_source=reddit&utm_campaign=pi-reward-r2`; organic, not promoted); seat #1 disclosed there as the owner's own test payout. Round-1 claims keep what they were asked for (`qualified`, #327). Watch the drop-off against the 8-app round: a longer ask converts worse. Rewards go by `Mark sent` until row 6 lands. The page names the **Mainnet** address, not Testnet (tec-app #263, from a Reddit comment) | Running — the owner reads the numbers | 56o · 56r · 56s |
 | 3 | **npm Trusted Publishing** before tokens expire **25 Nov 2026** | Last expiry broke publishing with `E404` | 46 |
 | 4 | **Node 20 → 22** on the backend before **Jan 2027** (AWS SDK v3 drops Node 20) | Pinned in Dockerfiles, workflows and Railway | 56m |
 | 5 | VIP benefits not implemented in any owning app (fees, support SLA, dashboards) | Must exist before VIP is marketed | 56n |
