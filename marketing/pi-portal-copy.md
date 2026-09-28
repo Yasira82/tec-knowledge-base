@@ -17,7 +17,7 @@ preview/gated apps honestly.
 | Ecommerce | Pi-native online stores. | Browse storefronts, buy real products, and check out with Pi — with delivery. |
 | Assets | Your Pi-native assets, one wallet. | Own and manage NFTs, domains, and digital assets on Pi, in one portfolio. |
 | Zone | Verify what can be trusted. | The verification runtime for Pi — look up verified businesses, projects, and builders. Evidence, not claims. |
-| Explorer | Discover who accepts Pi. | Find real Pi-accepting businesses and opportunities near you, ranked by trust. |
+| Explorer | Discover who accepts Pi. | Find Pi-accepting businesses near you — search, map, and Zone-verified badges. Your location is never stored. |
 | NBF | Start a verified Pi business. | Establish a verified business identity in minutes — the entity that transacts on Pi. |
 | Connection | Your trusted Pi network. | Build connections, trust, and collaboration — the relationship graph of the Pi economy. |
 | Life | Your personal context, private. | Set goals and preferences so the ecosystem works for you — sovereign and private. |
