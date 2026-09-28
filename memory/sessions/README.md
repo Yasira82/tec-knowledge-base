@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 56s | [Session 56s — a Portal listing pass that found the gateway's front door open (26–28 Sep 2026)](session-56s.md) |
 | 56r | [Session 56r — anyone could take an Assets listing for free, and approve never compared the amounts (24 Sep 2026)](session-56r.md) |
 | 56q | [Session 56q — the KB learned to check itself against the code, and its first run found three bugs (24 Sep 2026)](session-56q.md) |
 | 56p | [Session 56p — "Not signed in", an uncounted app, and a sign-in that waited on Pi](session-56p.md) |

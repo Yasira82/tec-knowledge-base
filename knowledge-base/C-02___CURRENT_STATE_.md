@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 25 September 2026 (Session 56r — Assets payment integrity; Hub-bought Pro and Estate Mode 1 fixed and verified on a phone)
+**Last Updated:** 28 September 2026 (Session 56s — Portal listing pass; the gateway's `/internal/` door closed; invented "verified" data purged)
 
 > **This file holds only what is true now, and it is edited in place.** Until 2026-09-24 every
 > session appended its narrative here; the file reached 5,929 lines and could no longer
@@ -24,11 +24,12 @@ checks it every Monday (`drift.yml`); last run 2026-09-25: **36 pass · 0 fail �
 | Apps | **24 live on Pi Mainnet** — 21 `live-verified`, 3 `live-readonly-gated` (FundX pools · Insure escrow · Brookfield investment stay read-only until legal + payment-service custody + SYSTEM) | `architecture/app-fleet.yaml` |
 | Users | Real Pi payments work in every app, but there are **effectively no external paying users yet** — the next question is what gets the first one | Session 56n |
 | Backend | 12 Railway services: gateway `:3000` + services `:5001`–`:5011`. **Public = gateway + realtime only**; the other nine are `*.railway.internal` (ADR-005) | C-20 |
+| Caller identity | The gateway adds `x-internal-key` to every forwarded request, so the key alone never proves a service. It refuses `/internal/` paths to callers without the key and marks every request `x-tec-caller` = service · user · anonymous; payment, wallet and identity check it too | tec-core-backend #345 · Session 56s |
 | Packages | tec-ui **3.0.0** · tec-auth **1.2.0** · tec-sdk **1.4.0** · tec-shared **1.1.0** | C-14 |
 | Session | Cookies `Secure; SameSite=None; Partitioned`, set only on a 200. A session = token **and** `tec_user`; refresh renews both | C-123 §2 · C-13 §1/§4 |
 | Events | 15 live · 1 planned (`fundx.investment.closed.v1`) | `manifests/events-catalog.yaml` |
 | SLOs | Auth / payments / gateway 99.9 % · PAL 99.95 % · Hub 99.5 % | C-78 §2 + `manifests/slo-definitions.yaml` |
-| Violations | All P0/P1/P2 closed | C-40 |
+| Violations | All P0/P1/P2 closed — C17 (any signed-in user could reach A2U payout, add-funds and 10 owner-scoped modules) found and closed 2026-09-27, live-verified | C-40 · Session 56s |
 | KB gates | `bash scripts/preflight.sh` = what CI runs (24 steps) | `CLAUDE.md` |
 | Repos · env vars | Every repo with its dependencies, every variable the code reads — generated from the code | C-11 · C-44 |
 
@@ -48,24 +49,26 @@ Replace rows as they close — do not strike them through and keep them.
 | 6 | A2U payout wallet from Pi | When it arrives, set the seed — no code change | 56o |
 | 7 | Elite has two Vercel projects on one repo; previews build on every `claude/*` push | Each doubles deploy cost against the daily quota | 56q |
 | 8 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
+| 10 | **Backend CI has not run since 2026-09-23** — the private `Tec-core-backend` ran out of Actions minutes (job never gets a runner). Nothing merged there is CI-tested; Railway "Wait for CI" must stay OFF until it is green | Owner: Billing → Actions budget, or the monthly reset | 56s |
+| 11 | **Payout wallet history before 2026-09-24** — the only way to rule out C17 abuse earlier than Railway's log retention | Owner: Pi Block Explorer / wallet | 56s |
+| 12 | Platform findings ("Payments are 34% of normal") reach every signed-in user's Alert inbox. **Decided 2026-09-28: operators (ADMIN) only** — fix in tec-core-backend #348 · Tec-Alert #44; `PLATFORM_ADMIN_USERNAMES` on identity-service must list the operators | Until both are merged and deployed | 56s |
+| 13 | Portal listings: submit; Arabic where it applies; Hub Mainnet app wallet; Testnet side of 22 apps; retake the screenshots the fixes changed | `audits/PORTAL_LISTING_BACKLOG_2026-09-26.md` | 56s |
 | 9 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
 ---
 
 ## 3. The last three sessions
 
+- **[56s](../memory/sessions/session-56s.md) — 26–28 Sep.** A Pi Portal listing pass for all 24
+  apps found 19 issues. The gravest: the gateway's own internal key made every service's
+  `/internal/` route — A2U payout, wallet add-funds — and 10 owner-scoped modules reachable by any
+  signed-in user (C17, closed and live-verified). Invented "verified" fixtures purged from
+  production; self-granted reputation closed; backend CI found starved of Actions minutes.
 - **[56r](../memory/sessions/session-56r.md) — 24–25 Sep.** Assets delivered paid actions on any
-  payment id, and approve never compared Pi's amount with the recorded one — both fixed and live
-  (receipts from `payment.completed.v1`). The Hub read `product_id`, 17 apps sent `item`: every
-  Hub-bought Pro was paid and never activated. Fixed; Zone Pro and an Estate registration via the
-  Hub verified on a phone 25 Sep.
+  payment id, and approve never compared Pi's amount with the recorded one — both fixed and live.
+  Every Hub-bought Pro was paid and never activated (`product_id` vs `item`) — fixed, verified.
 - **[56q](../memory/sessions/session-56q.md) — 24 Sep.** The KB now checks itself against the
-  code every week. Its first run found `resolve-incomplete` setting the token without
-  `Partitioned` in 22 repos, 20 unmerged name-fix PRs, and the Hub's refresh never renewing
-  `tec_user` (#256) — the likeliest cause of the name vanishing on Hub pages.
-- **[56p](../memory/sessions/session-56p.md) — 24 Sep.** "Not signed in" traced through three
-  causes (guard, refresh, reason word); arrivals made countable; the Hub's sign-in stall is
-  Pi's silent bridge (C-123 §9, #253).
+  code every week; its first run found three bugs (#256 among them).
 
 Older: [`memory/sessions/README.md`](../memory/sessions/README.md).
 
