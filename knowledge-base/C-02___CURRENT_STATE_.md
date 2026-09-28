@@ -51,7 +51,7 @@ Replace rows as they close — do not strike them through and keep them.
 | 8 | Assets / Commerce / Ecommerce still on the pre-3.0 palette (104 / 149 / 202 hard-coded hexes) | A re-skin, deliberately not a sweep | 46 |
 | 10 | **Backend CI has not run since 2026-09-23** — the private `Tec-core-backend` ran out of Actions minutes (job never gets a runner). Nothing merged there is CI-tested; Railway "Wait for CI" must stay OFF until it is green | Owner: Billing → Actions budget, or the monthly reset | 56s |
 | 11 | **Payout wallet history before 2026-09-24** — the only way to rule out C17 abuse earlier than Railway's log retention | Owner: Pi Block Explorer / wallet | 56s |
-| 12 | Platform findings ("Payments are 34% of normal") reach every signed-in user's Alert inbox — operators only? | Owner decision (C-111) | 56s |
+| 12 | Platform findings ("Payments are 34% of normal") reach every signed-in user's Alert inbox. **Decided 2026-09-28: operators (ADMIN) only** — fix in tec-core-backend #348 · Tec-Alert #44; `PLATFORM_ADMIN_USERNAMES` on identity-service must list the operators | Until both are merged and deployed | 56s |
 | 13 | Portal listings: submit; Arabic where it applies; Hub Mainnet app wallet; Testnet side of 22 apps; retake the screenshots the fixes changed | `audits/PORTAL_LISTING_BACKLOG_2026-09-26.md` | 56s |
 | 9 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
