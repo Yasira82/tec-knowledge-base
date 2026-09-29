@@ -98,7 +98,12 @@ A community developer published an on-chain Mainnet migration tracker in r/PiNet
 - `total_coins`. On Pi it may be the whole genesis supply, not what circulates, and shown as "supply" it would be wrong.
 - Any supply or migration figure (step 1).
 
-**Runtime status, 2026-09-29 18:40 (GMT+3), `[Runtime Verified]`:**
+**Live, 2026-09-29 19:01 (GMT+3), `[Runtime Verified]`.** The service ran #352 (Railway `948c41c3` ACTIVE, started 18:43). The public BFF returned:
+`"network":{"available":true,"source":"pi-horizon","latestLedger":28964676,"latestClosedAt":"2026-09-29T16:01:16Z","windowLedgers":200,"windowStartedAt":"2026-09-29T15:44:03Z","transactions":736,"operations":1645}`.
+
+Pi's Horizon ledger shape matches Stellar Horizon's, so the parser needed no change. 200 ledgers covered about 17 minutes.
+
+**Before that, 18:40 (GMT+3):**
 - Both PRs are merged and the frontend is live.
 - The card reads "Pi Network data is unavailable right now". The BFF response carries **no `network` field**, because the service deploy of #352 was stuck at "Publishing image" during a Railway incident ("API degradation causing slow or stuck deployments"). The running service was still #351.
 - **Next check:** once #352 is ACTIVE, `GET analytics.tecosystem.app/api/bff/analytics/pulse` must end in `"network":{"available":true,…}`.
