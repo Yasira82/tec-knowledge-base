@@ -5,10 +5,10 @@
 **Date:** 2026-09-29
 
 **Truth State:**
-- §1 is `[Current State]`.
-- §2–§4 are `[Planned State]`, a proposal.
+- §1 and §3 are `[Current State]`.
+- §2 is the design that §3 built.
 
-**Governance State:** `[Draft]`. §2 widens C-105's scope, which is the owner's decision (§4).
+**Governance State:** `[Governance Approved]`. The owner approved widening C-105's scope on 2026-09-29 (§4).
 
 **Verification:**
 - §1 is `[Runtime Verified]`, from the owner's Supabase dashboard on 2026-09-29.
@@ -85,20 +85,34 @@ A community developer published an on-chain Mainnet migration tracker in r/PiNet
 
 ---
 
-## 3 · Build order, if approved
+## 3 · Build status
 
-1. **Verify the supply endpoint** from a network that can reach it. Record the response shape here. If it does not exist, the card is Horizon plus TEC volume only.
-2. **Service.** `tec-analytics-service`: `GET /analytics/pi-network`. It is cached (for example, hourly) and makes no writes beyond one cache row. Unit-tested against recorded responses.
-3. **Frontend.** Tec-Analytics: a BFF route and one card, with the source and "read at" on each number.
-4. **Records.** C-105 gets a scope line (§4) and the events or endpoints are recorded; C-02 row 14 closes.
+| # | Step | Status |
+|---|---|---|
+| 1 | Verify a supply endpoint | ☐ **Not found.** No source this session names its URL, and this environment cannot reach `minepi.com`. The owner may ask the community developer which endpoint the tracker's "Mainnet Metrics" panel uses. Until then there is no supply figure, by design |
+| 2 | Service | ✅ tec-core-backend **#352**. Not a new endpoint: `GET /analytics/pulse` (the existing public Pulse, C-122 §5.2) now carries `network`. `pi-network.ts` reads `/ledgers?order=desc&limit=200` from `PI_HORIZON_URL` (default `api.mainnet.minepi.com`, the host `tec-payment-service` already uses). It is cached 10 min (1 min after a failure) with a 5 s timeout, and writes nothing |
+| 3 | Frontend | ✅ Tec-Analytics- **#55**. A "Pi Network · live from the Pi blockchain" card on `/pulse`, showing the latest ledger and when it closed, plus transactions and operations over the window, with source and read time |
+| 4 | Records | ✅ C-105 §4 carries the scope line. **Open:** C-44 (generated) picks up the new `PI_HORIZON_URL` read by analytics-service on its next regeneration |
+
+**Deliberately left out:**
+- `total_coins`. On Pi it may be the whole genesis supply, not what circulates, and shown as "supply" it would be wrong.
+- Any supply or migration figure (step 1).
+
+**Runtime status, 2026-09-29 18:40 (GMT+3), `[Runtime Verified]`:**
+- Both PRs are merged and the frontend is live.
+- The card reads "Pi Network data is unavailable right now". The BFF response carries **no `network` field**, because the service deploy of #352 was stuck at "Publishing image" during a Railway incident ("API degradation causing slow or stuck deployments"). The running service was still #351.
+- **Next check:** once #352 is ACTIVE, `GET analytics.tecosystem.app/api/bff/analytics/pulse` must end in `"network":{"available":true,…}`.
+  - `"reason":"unreachable"` means Railway cannot reach Pi's Horizon.
+  - `"reason":"unexpected_response"` means Pi's ledger shape differs from Stellar Horizon's, and the parser needs adjusting.
+  - Either way, the card says "unavailable", never zeros.
 
 ---
 
-## 4 · Open decisions (owner)
+## 4 · Decisions (owner, 2026-09-29)
 
-1. **Scope:** does C-105 widen to "public Pi Network numbers, presented, not interpreted"? It needs the owner's word, and an ADR if it is anything more than a card.
-2. **Placement:** is the public network card visible to everyone, or admin-only like the platform findings?
-3. **Cleanup:** should the unused Vercel Supabase integration (`supabase-claret-blanket`) be removed?
+1. **Scope: decided, yes.** Analytics presents public Pi Network numbers, presented and not interpreted. Recorded in C-105 §4.
+2. **Placement: public**, on the existing public Pulse, next to TEC's de-identified aggregates. TEC-internal platform findings stay operator-only.
+3. **Cleanup: open.** Should the unused Vercel Supabase integration `supabase-claret-blanket` be removed?
 
 ---
 

@@ -165,3 +165,32 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 **Pi Network Pulse.** A community developer's on-chain migration tracker raised the question of doing the same in Analytics. The answer: not the crawl; a small card of public numbers instead.
 - Proposal: `audits/ANALYTICS_PI_NETWORK_PULSE_2026-09-29.md`.
 - The supply endpoint is still unverified. This environment cannot reach `minepi.com`.
+
+## 11. 29 Sep, evening: Analytics built, and why Hub-opened visits never count
+
+**Analytics shows the Pi Network.**
+- **The owner's decisions:**
+  - Analytics may present public Pi Network numbers;
+  - they go on the existing public `/pulse`.
+- **Built:**
+  - tec-core-backend #352: `pi-network.ts`, a Horizon read of the latest 200 ledgers, cached, with no writes;
+  - Tec-Analytics- #55: the card on `/pulse`.
+  - Both are merged.
+- **Left out:**
+  - `total_coins`, which on Pi may be the genesis supply;
+  - any supply figure, because no source names Pi's supply endpoint and this environment cannot reach `minepi.com`.
+- **Status at 18:40:** the card read "unavailable". The BFF response had no `network` field because #352's Railway deploy was stuck at "Publishing image" during a Railway incident. The next check is in the audit §3.
+- **Records:** C-105 §4 now carries the scope. Before building, the question to the community developer, about which endpoint his tracker uses for supply, was drafted for the owner to ask on Reddit.
+
+**Hub-opened visits never count at Pi.**
+- **The finding:** a Hub grid tile goes through the Hub's SSO, so the app marks the tab Hub-entered, skips the Pi SDK (ADR-007) and never signs the visitor in. Pi credits the Hub.
+- **What does count:** the campaign's standalone handoff links.
+- **The proposal:** open grid apps the same way.
+  - Payments inside the app become Mode 2, landing in each app's own wallet.
+  - No new wallets are needed: each app already has one, because Pi requires it for U2A.
+  - The Hub's own payments are unchanged.
+- **Status:** the owner has not decided. Proposal: `audits/HUB_GRID_VISITS_NOT_COUNTED_2026-09-29.md`.
+
+**Claims.** commerce.pi (999 π bid) and analytics.pi (400 π) went to Claim Pending, making nine. commerce.pi opened within hours of Commerce's visit sign-in (#73).
+
+**Rewards.** One more was paid by hand: 1 π to `GBLGT…LUBAY` (tx `967b6b8f…0afba68`, block 28963744), to be recorded with `Mark sent`.
