@@ -117,3 +117,33 @@ unset, and A2U from another Pi app's wallet cannot work anyway — a `uid` is pe
 **One reward was sent before its claim existed** (seat for `GDPDTK…`); when that claim
 arrives, `Mark sent` takes the same hash (`518b9d30…`) — the check matches the address,
 the amount and an unused hash, not the order.
+
+## 9. 29 Sep: why only 7 `.pi` claims opened, and the Agent-Ready Commerce proposal
+
+**The 7 claims.** The Domains screen shows 7 claims pending: life · tec · connection · explorer · legend · elite · dx. The other 17 show "Requirements Not Met", even though `hub/admin/pioneers` puts every app at ≥ 5/5.
+
+The owner sent screenshots of ASSETS-APP and EXPLORER-APP in the Portal, and the two setups are identical: Pi Sign-In Active, PiNet Active, Listing and Ads not set up. So the checklist is not what separates them.
+
+The two tools count different things:
+- **Our coverage** counts an arrival when the page loads. `ArrivalReport` posts on mount, once per session, and does not wait for `Pi.authenticate`.
+- **Pi counts** KYC'd Pioneers who signed in with Pi *inside that app*. A participant rushing through 24 apps can close each one before allowing the sign-in prompt. Anyone without KYC never counts for Pi.
+
+A third path is possible but not verified: if the signed hand-off link was not ready, the plain link bounces through the Hub's SSO. That can set `__tec_hub_entry`, which puts the app in foreign-session mode, so the Pi SDK never loads.
+
+**Next steps:**
+- Immediate: tell participants to allow the prompt in every app.
+- Code fix: report an arrival only after a successful sign-in. It touches all 24 app repos, so it was offered but not started. The owner has not asked for it yet.
+
+**Agent-Ready Commerce.** The owner brought a strategy proposal from another conversation. It is recorded and assessed in `audits/AGENT_READY_COMMERCE_ASSESSMENT_2026-09-29.md`. It covers:
+- agent-ready commerce;
+- Nexus as discovery for all of Pi;
+- Explorer as the human layer and Nexus as the machine layer;
+- Pi Flash.
+
+Findings:
+- Intent, Delta, Gate and Proof already exist (#316, #325). The build order's 4.5 row was stale and has been corrected.
+- On Pi an agent cannot pay.
+- TEC cannot execute inside another Pi app.
+- AP2 and ACP already occupy the general concept.
+
+Recommendation: one measured path inside TEC, on Commerce, first.
