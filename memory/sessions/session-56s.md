@@ -147,3 +147,21 @@ Findings:
 - AP2 and ACP already occupy the general concept.
 
 Recommendation: one measured path inside TEC, on Commerce, first.
+
+## 10. 29 Sep, later: the Hub's black screen, Pi sign-in on a visit, and where Analytics' data lives
+
+| What was reported | Cause | Fix |
+|---|---|---|
+| Back from any app gave the Hub as grey cards, and the next Back left the tab | Pi Browser can reopen the Hub in a context without its cookies (C-123 §7). `/api/auth/me` returns 401, and a silent Pi sign-in could run up to 15 s + 45 s, with nothing on screen | bounded (8 s for `/me`, 20 s for the sign-in), then sign-in with the Hub remembered; "Signing you in with Pi…" shown while it runs. tec-app #264. The owner saw it once and not on the next try — it is intermittent |
+| Commerce and Ecommerce show the username, yet their `.pi` claims stall | The username comes from the Hub's cookie. Ecommerce called `Pi.authenticate` only at payment, Commerce only on `/app`, Assets only when the cookie was readable (and ignored ADR-007) | a visit sign-in on every standalone visit, never in a Hub-owned session. Tec-Commerce #73 · Tec-Ecommerce #70 · Tec-Assets #66 |
+| The Ecommerce menu showed no account | Every page but Home read `tec_user` from client JS, which Pi Browser hides | the drawer asks `/api/auth/me` itself. Tec-Ecommerce #71 |
+
+**Where Analytics' data lives.** It is in Supabase, as C-105 says:
+- project `tec-analytics`, organization Tec-Ecosystem;
+- Free plan, 28 / 500 MB.
+
+The organization is under a secondary GitHub login the owner had forgotten. The main account was invited as Owner.
+
+**Pi Network Pulse.** A community developer's on-chain migration tracker raised the question of doing the same in Analytics. The answer: not the crawl; a small card of public numbers instead.
+- Proposal: `audits/ANALYTICS_PI_NETWORK_PULSE_2026-09-29.md`.
+- The supply endpoint is still unverified. This environment cannot reach `minepi.com`.
