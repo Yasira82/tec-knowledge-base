@@ -37,7 +37,7 @@ Legend: ☐ not started · ◐ in progress (PR open) · ✅ merged · ⊘ droppe
 | **4.2** | `intent.delta.ts` (pure, root-compared) | ✅ | tec-core-backend **#316** — 32 tests, no infrastructure. The asymmetry holds in both directions |
 | **4.3** | Rules-first compiler, human confirms `v1` | ☐ | **still best after 3.3 has run a month** — the store's `confirm()` is the half that already exists |
 | **4.4** | `intent.gate.ts` | ✅ | tec-core-backend **#316** — ships INERT (no run cites an intent yet); runs BEFORE the payment halt |
-| **4.5** | Proof + HMAC | ☐ | |
+| **4.5** | Proof + HMAC | ✅ | tec-core-backend **#325** — refuses a proof without `shown`. (This row stayed ☐ after the merge; corrected 2026-09-29) |
 | **5.1** | SoloHost edition = BYO-key, in writing | ☐ | |
 | **5.2** | Secret-leak gate on package files | ☐ | **before the first publish, not after** |
 | **5.3** | Dockerfile · config_options · publish one | ☐ | |
