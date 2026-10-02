@@ -46,16 +46,20 @@ The Hub grid would use the same signed handoff links, in a new tab, as the campa
 | | Opened from the Hub grid today | After the change |
 |---|---|---|
 | Payment inside the app | **Mode 1**: redirected to the Hub's modal (`/hub?pay=1`) | **Mode 2**: paid inside the app with the Pi wallet |
-| Where the π lands | the **Hub's** app wallet (the Hub creates the payment) | the **app's own** wallet |
+| Where the π lands | the **Hub's** side (the Hub creates the payment) | the **app's** side. **Which wallet that is is not verified (below)** |
 | Fallback | — | if Pi is not ready in the app, it falls back to Mode 1 (existing code in every buy handler) |
 
 - **The Hub's own payments do not change.** Subscriptions and `/hub?pay=1` are untouched, because the Hub tab and its Pi session stay as they are.
-- **No new wallets are needed.**
-  - Pi does not let an app receive a U2A payment without its own app wallet.
-  - All 24 passed Pi's "Process a Transaction" step on Mainnet with a real Mode 2 payment.
-  - `PI_API_KEY_<APP>` is set on payment-service for each.
-  - Mode 2 is already what every standalone visit uses: the campaign page, and Pi Browser's own app list.
-- **What changes is the revenue split.** π paid by grid visitors lands in each app's wallet rather than the Hub's.
+- **Correction (owner, 2026-10-02): no TEC app has a Mainnet app wallet.** The first draft said every app had one, because "Pi does not let an app receive a U2A payment without its own app wallet". That was `[Assumed]`, and it was wrong. **The only Mainnet app wallet** is the Hub's, and it is still under Pi's review (the A2U wallet, C-02 row 6). Every payment so far was paid from the buyer's own Pi wallet.
+- **Open: where a Mode 2 payment's π lands today.** It has to land somewhere: Ecommerce's Sales shows 65π from completed Mode 2 orders. **How to settle it:**
+  1. Open one completed app payment in the payer's Pi Wallet history (for example the 12π Ecommerce order of 2026-10-02 09:08), or its txid in the Pi Block Explorer.
+  2. Read the recipient address.
+  3. Compare it with a Hub payment's recipient.
+  
+  Until then, this proposal's revenue effect is unknown.
+- **Mode 2 itself works.** All 24 apps passed Pi's "Process a Transaction" step on Mainnet with a real Mode 2 payment, and `PI_API_KEY_<APP>` is set on payment-service for each. Mode 2 is what every standalone visit uses: the campaign page, and Pi Browser's own app list.
+- **No wallet is created or changed by this proposal.** The owner's rule stands: no new app wallet without asking.
+- **What changes is the revenue split.** π paid by grid visitors goes to the app's side rather than the Hub's. Where that is exactly is the open question above.
 - **A2U is unaffected.** Campaign reward payouts use a separate wallet (C-02 row 6).
 
 **Risk.** An app whose Mode 2 has silently broken would now be met by Hub-grid visitors instead of being masked by the Hub's modal. **Mitigation:** after the change, run one small test payment in two or three apps opened from the grid.
@@ -64,7 +68,7 @@ The Hub grid would use the same signed handoff links, in a new tab, as the campa
 
 ## 4 · Open decision (owner)
 
-Should the Hub grid switch to standalone handoff links? The revenue split in §3 is the trade-off to accept.
+Should the Hub grid switch to standalone handoff links? The revenue split in §3 is the trade-off to accept. **It waits on the recipient check in §3**, because the trade-off cannot be judged before anyone knows where the π goes.
 
 ---
 
