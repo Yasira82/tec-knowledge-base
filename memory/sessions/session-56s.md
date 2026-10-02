@@ -194,3 +194,35 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 **Claims.** commerce.pi (999 π bid) and analytics.pi (400 π) went to Claim Pending, making nine. commerce.pi opened within hours of Commerce's visit sign-in (#73).
 
 **Rewards.** One more was paid by hand: 1 π to `GBLGT…LUBAY` (tx `967b6b8f…0afba68`, block 28963744), to be recorded with `Mark sent`.
+
+## 12. 2 Oct: payments from Hub-opened apps, the grid, Back, and stock
+
+**Payment failing after "Hub first".**
+- A Mainnet "Show details" trace (tec-app #265) showed the Hub modal's `Pi.authenticate` silent for 89.5 s, in a tab Pi Browser said was Ecommerce's. That is C-123 §9.
+- "App first" worked because it paid Mode 2, inside the app.
+
+**The grid (owner approved).**
+- #266: apps open standalone (signed handoff, new tab). The payment worked.
+- #268: switched to the same tab, so Back would work. Four grid payments then timed out, because Pi stays with the tab's first app.
+- #269: reverted to the new tab, and added HubContinue for a session-less `/hub`.
+- #270: Back was landing on `/`, not `/hub`, so a grid tap now remembers `/hub`. **Phone-verified:** signed-in app, payment completes, Back lands on `/hub`.
+
+**Stock.** Ecommerce took 12π for an out-of-stock Cap, because commerce refuses the order only after payment. Ecommerce #72 checks status, stock and price before any π moves. It also closes a price-tamper hole.
+
+**commerce-service.**
+- #354: Ecommerce orders, seller sales, the first subscription read.
+- #355: the first `order.paid.v1` after a restart is no longer dropped.
+
+**Wallets (owner).**
+- No TEC app has a Mainnet app wallet. The audit's claim that each did was corrected.
+- Mode 2 payments land in the owner's own Pi wallet.
+
+**Process lessons.**
+- The tec-app script is `npm run typecheck`. `type-check` does not exist, and a pipe hid the failure for several runs. CI ran it correctly.
+- Vercel logs and deployments answer 403 to this session's connector, so the owner's screenshots were the evidence.
+
+**Records:**
+- `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md`
+- C-123 §13
+- C-02 row 15
+

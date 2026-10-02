@@ -79,6 +79,8 @@ The Hub grid would use the same signed handoff links, in a new tab, as the campa
 2. Buy something small. It should pay inside the app (Mode 2), not in the Hub modal.
 3. Repeat in 2–3 apps.
 
+**Outcome (2026-10-02, phone-verified):** done through tec-app #266 · #269 · #270. The same-tab attempt (#268) was reverted, and Back lands on `/` (fixed by `rememberReturn`). Full record: `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md`; rules: C-123 §13.
+
 **Still open:** an app's own fallback to Mode 1 (Pi not ready, or `__tec_hub_entry` left in the tab) leads a standalone tab into §9. Removing that fallback in the apps is the follow-up, if the phone check shows it.
 
 ---

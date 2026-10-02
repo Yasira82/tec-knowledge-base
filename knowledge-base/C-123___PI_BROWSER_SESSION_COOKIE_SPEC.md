@@ -457,6 +457,37 @@ one after another (a rotating refresh must carry to the next — refresh tokens 
 POST, CSRF-guarded and `no-store` (it returns tokens); refresh links every 4 minutes, on return to
 the page, and after a tap (tokens are single-use); fall back to the plain link on any failure.
 
+
+---
+
+## §13 — THE HUB GRID OPENS APPS IN A NEW TAB; BACK LANDS ON `/`
+
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** on the owner's phone,
+> 2026-10-02 — tec-app #266 · #269 · #270. Last verified in code: 2026-10-02. Full record:
+> `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md`.
+
+**What the phone showed:**
+- **A Pi session belongs to the tab's first app.**
+  - A tab that started on the Hub stays the Hub's at Pi, even on another domain.
+  - In the same tab, an app's `Pi.authenticate` and `createPayment` are never answered. Four payments from same-tab grid visits were created and never approved.
+  - The visit counts for the Hub.
+- **Only a new tab gives the app its own Pi session.** The app then signs in with Pi (the visit counts for the app) and pays Mode 2.
+- **Back from that tab goes to the Hub app's own URL, `/`, not `/hub`.** The visitor is signed in there.
+
+**Rules:**
+1. **A Hub surface that opens another app uses a real link.**
+   - The link is the signed handoff (§12).
+   - It has `target="_blank"` and `rel="noopener noreferrer"`.
+   - Never `window.location`: it sends the Hub as referrer, and the app marks the tab Hub-owned (ADR-007).
+   - Never the same tab.
+2. **The tap calls `rememberReturn(<where the visitor stood>)`.** `/` forwards a signed-in visitor only to a remembered destination. Without one, Back strands them on the landing page.
+3. **A session-less `/hub` in Pi Browser offers the tap (HubContinue), and makes no silent attempt.**
+   - Pi does not answer an authenticate nobody tapped for.
+   - This does not apply to the Mode 1 pay screen (`?pay=1`).
+   - A desktop browser keeps the redirect to `/`.
+4. **Pi Browser's address bar shows the tab's FIRST URL, not the page on screen.**
+   - Read the logs, not the bar.
+   - A bar showing another app's domain over a Hub screen is the sign of §9.
 ---
 
 ## Related Documents
