@@ -91,6 +91,61 @@ Stream isn't writeable and enableOfflineQueue options is false
 
 ---
 
+### 2.7 · Pro in every template app: the tap waited on a handshake Pi never answered
+
+**The symptom.** After #269, every template app opened from the grid hung at Pro, then showed "Payment timed out". The payment record was created, but Pi never reached approve (NX at 16:47 and 17:10).
+
+**The owner's two tests:**
+1. The same app opened from **Pi's own app list** paid. This held for every app.
+2. Opened from the **Hub grid**, it failed. This also held for every app.
+
+**The cause.**
+- The template's `PiWarmup` authenticates on load, with no tap.
+- `createU2APayment` **joined** that warm-up instead of authenticating itself.
+- In a tab opened through a signed handoff, Pi Browser never answers the warm-up, so the tap waited until the 90 s timeout.
+- Ecommerce authenticates afresh at the tap, which is why it paid from the grid.
+
+**The fix.** tec-template-base #45, plus the same patch in all 18 template apps:
+- The SSO landing records `__tec_handoff_entry`.
+- `ensureAuth({ fresh })` starts the tap's own handshake in such a tab.
+- A generation guard keeps a late warm-up from undoing the result.
+
+**Verified.** `[Runtime Verified]` on NX (Tec-Nx #39), on the owner's phone, 2026-10-02. The other 17 PRs are open.
+
+**Found in the same logs.** Connection's nightly `purge-stories` cron POSTed with `Content-Type: application/json` and **no body**. identity-service refused it every night at 03:37 UTC, so the sweep had **never run**. Fixed in Tec-Connection #88 (`body: '{}'`).
+
+### 2.8 · One app's Pro turned on every app's Pro, and the Hub's
+
+**The report.** After buying NX Pro (8π), the owner found the Hub's plan on PRO and every app's Pro card already active, though only NX had been paid for.
+
+**The cause.**
+- commerce-service had ONE `Subscription` per user, the Hub's plan.
+- Its `payment.completed.v1` consumer mapped every app Pro payment (`item_id` `*_pro_monthly`, ≥ 5π) onto that one plan.
+- Every app read the same `GET /commerce/subscriptions/status`.
+- So one app's Pro was everybody's Pro. It was designed that way, and it was wrong for what the owner sells.
+
+**The decision (owner, 2026-10-02).** `[Governance Approved]`
+- Each app's Pro card is that app's own subscription, with its own cancel button.
+- The Hub's plan "has nothing to do with the apps". It is a separate benefit for the user.
+
+**The implementation.**
+- **tec-core-backend #356.** A new `AppSubscription` (one row per user per app, `@@unique([user_id, app])`).
+  - The consumer sends a payment that names an app to that app's row: Mode 2 `metadata.source`, Mode 1 `metadata.app_source`. A payment with no app (the Hub's own) still goes to the Hub plan.
+  - `GET …/status?app=<slug>` and `PATCH …/cancel?app=<slug>` read and cancel one app.
+  - Not live → `plan: 'FREE'`, because the apps' resolvers treat any paid plan name as Pro.
+  - Buying again while live adds 30 days to the end.
+  - Cancel ends that app's Pro **immediately**. The Hub plan and other apps are untouched.
+- **Legacy.** A Pro bought before the split (Hub plan `current_period_start` before `APP_PRO_CUTOFF`, default 2026-10-03) is honoured in every app until it ends, with `legacy: true`. People paid for what it was then; nothing renews it across apps. The owner's NX Pro of 2 Oct is such a Pro, so it shows in every app until about 1 Nov.
+- **The apps.** Template #45 and 17 apps: Alert, Analytics, Connection, DX, Elite, Epic, Estate, Explorer, FundX, Insure, Legend, Life, Nexus, NX, Titan, VIP, Zone.
+  - Every status read sends `?app=<APP_SOURCE>`.
+  - `POST /api/bff/subscription/cancel` is added.
+  - `CancelProButton` is added. It is hidden on Testnet and for a legacy Pro.
+  - System has no Pro read. Ecommerce, Commerce and Assets have no Pro.
+
+**Order.** #356 deploys first, after a Railway pre-deploy `npm run db:push` on tec-commerce-service: the code reads a new table. An app merged before #356 sends a `?app=` the old service ignores, so it shows the Hub plan as before, and nothing breaks.
+
+---
+
 ## 3 · Fixes
 
 | PR | What it does |
@@ -103,6 +158,10 @@ Stream isn't writeable and enableOfflineQueue options is false
 | tec-app #268 | Same tab. **Reverted by #269** (§2.3) |
 | tec-app #269 | New tab again. In Pi Browser, identified by user agent, a session-less `/hub` shows HubContinue. A desktop keeps the redirect to `/` |
 | tec-app #270 | **The Back fix.** A grid tap calls `rememberReturn('/hub')`. Back → `/` → signed in → `/hub` |
+| tec-template-base #45 + 18 apps (Tec-Nx #39 verified) | A tap in a handoff-opened tab starts its own Pi handshake instead of joining the load-time warm-up (§2.7) |
+| Tec-Connection #88 | The nightly story sweep sends a JSON body. It had never run (§2.7) |
+| tec-core-backend #356 | Per-app Pro: `AppSubscription`, `status?app=` / `cancel?app=`, legacy honoured until it ends (§2.8) |
+| template #45 + 17 app PRs (Tec-Nx #40, Alert #46, Analytics #59, Connection #89, DX #45, Elite #40, Epic #48; stacked on the open #2.7 PRs elsewhere) | Each app reads and cancels its own Pro (§2.8) |
 | Tec-Ecommerce #72 | `payment/create` asks commerce-service before any π moves: ACTIVE, in stock, priced at the amount paid. Otherwise 409 `OUT_OF_STOCK` / `PRODUCT_UNAVAILABLE` / `PRICE_CHANGED`, or 503 `CHECK_FAILED` (P6). Sold-out cards show "Out of stock" |
 
 **Ecommerce #72 also closes a second hole.** A client could have paid 1π for a 580π product. The amount check now refuses it.

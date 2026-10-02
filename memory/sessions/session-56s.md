@@ -226,3 +226,16 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 - C-123 §13
 - C-02 row 15
 
+**Later, 2 Oct: Pro from the grid.**
+- Every template app opened from the grid timed out at Pro, while the same app opened from Pi's own list paid. The owner tested both ways.
+- The cause: the tap joined the load-time warm-up, which Pi does not answer in a handoff-opened tab.
+- The fix: tec-template-base #45 plus 18 app PRs (`ensureAuth({ fresh })` when `__tec_handoff_entry`). Verified on NX (#39).
+- Found in the same logs: Connection's `purge-stories` cron had never run (empty JSON body). Tec-Connection #88.
+
+**Later, 2 Oct: per-app Pro.**
+- **The report.** NX Pro had switched on the Hub plan and every app's Pro. commerce kept one plan per user, and every app Pro payment activated it.
+- **The owner's decision.** Each app's Pro card is its own, with a cancel. The Hub plan is a separate benefit.
+- **The backend.** tec-core-backend #356 adds `AppSubscription`, `?app=` on status and cancel, and a legacy rule for a Pro bought before the split.
+- **The apps.** Template #45 and 17 app PRs.
+- **What bit.** A raw-colour theme test in Connection and Explorer; the button now paints from the palette.
+- **Record.** `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md` §2.8.
