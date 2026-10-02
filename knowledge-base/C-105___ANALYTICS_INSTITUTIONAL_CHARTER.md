@@ -48,12 +48,14 @@ Turn data into actionable knowledge.
 - Trend computation and signal generation
 - Dashboard data delivery (merchants, platform admins)
 - Event stream processing (from all 12 services)
+- Presenting **public Pi Network activity** on the public Pulse: the latest ledger and transactions/operations over recent ledgers, read from Pi's Horizon, cached, never crawled or stored as a history. Activity only; never supply, price or interpretation. Owner decision 2026-09-29, `audits/ANALYTICS_PI_NETWORK_PULSE_2026-09-29.md`.
 
 ### Does NOT Own
 - Raw transaction truth (owned by tec-payment-service)
 - Order truth (owned by tec-commerce-service)
 - Identity truth (owned by tec-auth-service)
 - Governance decisions based on analytics (owned by SYSTEM)
+- Pi Network data itself (owned by Pi). Analytics presents a cached snapshot and does not keep a copy of the chain
 
 ### Interface Points
 ```
