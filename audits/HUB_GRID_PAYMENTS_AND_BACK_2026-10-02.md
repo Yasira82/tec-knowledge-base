@@ -141,6 +141,8 @@ Stream isn't writeable and enableOfflineQueue options is false
   - `POST /api/bff/subscription/cancel` is added.
   - `CancelProButton` is added. It is hidden on Testnet and for a legacy Pro.
   - System has no Pro read. Ecommerce, Commerce and Assets have no Pro.
+- **NBF and Brookfield were missed.** They were not attached to the session that rolled out both fixes, so after the merge they had neither (owner, 2026-10-02: "apps are missing"). Tec-Nbf #28 and Tec-Brookfield #24 bring both fixes. Their `pi-session` is newer than the fleet's, so the handshake fix was applied by hand.
+- **Lesson.** A fleet rollout starts from `architecture/app-fleet.yaml` (24 apps), not from the repos a session happens to have attached.
 
 **Order.** #356 deploys first, then the app PRs. An app merged before #356 sends a `?app=` the old service ignores, so it shows the Hub plan as before, and nothing breaks.
 
@@ -164,7 +166,7 @@ Stream isn't writeable and enableOfflineQueue options is false
 | tec-app #268 | Same tab. **Reverted by #269** (§2.3) |
 | tec-app #269 | New tab again. In Pi Browser, identified by user agent, a session-less `/hub` shows HubContinue. A desktop keeps the redirect to `/` |
 | tec-app #270 | **The Back fix.** A grid tap calls `rememberReturn('/hub')`. Back → `/` → signed in → `/hub` |
-| tec-template-base #45 + 18 apps (Tec-Nx #39 verified) | A tap in a handoff-opened tab starts its own Pi handshake instead of joining the load-time warm-up (§2.7) |
+| tec-template-base #45 + 18 apps (Tec-Nx #39 verified) + NBF #28 · Brookfield #24 | A tap in a handoff-opened tab starts its own Pi handshake instead of joining the load-time warm-up (§2.7) |
 | Tec-Connection #88 | The nightly story sweep sends a JSON body. It had never run (§2.7) |
 | tec-core-backend #356 | Per-app Pro: `AppSubscription`, `status?app=` / `cancel?app=`, legacy honoured until it ends (§2.8) |
 | template #45 + 17 app PRs (Tec-Nx #40, Alert #46, Analytics #59, Connection #89, DX #45, Elite #40, Epic #48; stacked on the open #2.7 PRs elsewhere) | Each app reads and cancels its own Pro (§2.8) |
