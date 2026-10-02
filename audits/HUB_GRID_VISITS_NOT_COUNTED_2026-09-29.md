@@ -63,9 +63,23 @@ The Hub grid would use the same signed handoff links, in a new tab, as the campa
 
 ---
 
-## 4 · Open decision (owner)
+## 4 · Decision (owner, 2026-10-02): switch
 
-Should the Hub grid switch to standalone handoff links? The revenue split in §3 is the trade-off to accept. The recipient check in §3 is answered for Mode 2: the owner's own wallet. **The change needs no new wallet and no Pi approval.** The pending Mainnet app wallet is the Hub's A2U wallet (TEC paying users), not this.
+**Decided:** the owner approved switching the Hub grid to standalone handoff links. The change is in **tec-app #266**, which is open.
+- The grid tiles are now real links to each app's signed `sso-callback`, opened in a new tab with `rel="noopener noreferrer"`.
+- Hub routes, Edit mode and the Dashboard launcher are unchanged.
+
+**What #266 also shows.** The same PR adds a `Pi.init: fresh | ALREADY initialized` line to the Hub payment trace.
+- The first Mainnet trace (2026-10-02, Mode 1 from Ecommerce) had `Pi.authenticate` silent for 89.5 s.
+- That is C-123 §9: the Hub inside an app's Pi context.
+- Opening apps standalone removes the path that led there for grid visitors.
+
+**After merge, on a phone:**
+1. Open an app from the grid. It should arrive signed in, with the app's own Pi sign-in.
+2. Buy something small. It should pay inside the app (Mode 2), not in the Hub modal.
+3. Repeat in 2–3 apps.
+
+**Still open:** an app's own fallback to Mode 1 (Pi not ready, or `__tec_hub_entry` left in the tab) leads a standalone tab into §9. Removing that fallback in the apps is the follow-up, if the phone check shows it.
 
 ---
 
