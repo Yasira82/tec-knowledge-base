@@ -239,3 +239,5 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 - **The apps.** Template #45 and 17 app PRs.
 - **What bit.** A raw-colour theme test in Connection and Explorer; the button now paints from the palette.
 - **Record.** `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md` §2.8.
+- **A wrong deploy step.** I asked for a `db:push` pre-deploy step on commerce-service, and Railway refused it: it wanted unique constraints on `orders` plus `--accept-data-loss`. commerce-service runs `migrate deploy` at start, so the table became a migration and the backend CLAUDE.md now maps each service's schema path.
+

@@ -142,7 +142,13 @@ Stream isn't writeable and enableOfflineQueue options is false
   - `CancelProButton` is added. It is hidden on Testnet and for a legacy Pro.
   - System has no Pro read. Ecommerce, Commerce and Assets have no Pro.
 
-**Order.** #356 deploys first, after a Railway pre-deploy `npm run db:push` on tec-commerce-service: the code reads a new table. An app merged before #356 sends a `?app=` the old service ignores, so it shows the Hub plan as before, and nothing breaks.
+**Order.** #356 deploys first, then the app PRs. An app merged before #356 sends a `?app=` the old service ignores, so it shows the Hub plan as before, and nothing breaks.
+
+**The schema step that was wrong.**
+- **What happened.** #356 first asked for a Railway pre-deploy `npm run db:push`. The owner added it, and Railway refused the deploy. Besides `app_subscriptions`, `db push` wanted to add unique constraints on `orders.payment_id` and `orders.pi_payment_id` that production has never had, and it stopped for `--accept-data-loss`. The refusal was right; the live deploy kept serving.
+- **Why the step was wrong.** commerce-service applies its schema with `prisma migrate deploy` in `docker-entrypoint.sh` at every start. The table now ships as migration `20261002000000_add_app_subscriptions`. No pre-deploy step is needed, and the `db:push` step must be removed.
+- **Root cause.** tec-core-backend's CLAUDE.md said "a deploy never touches the database", but that is true only for auth and asset. Seven services run `migrate deploy` at start. CLAUDE.md now says which service applies its schema how.
+- **Rule.** Never `db push` a migrate-deploy service, and never pass `--accept-data-loss` to get past the refusal. `[Code Verified]` on Postgres 16: the pre-#356 schema with earlier migrations marked applied → `migrate deploy` applies only the new one.
 
 ---
 
