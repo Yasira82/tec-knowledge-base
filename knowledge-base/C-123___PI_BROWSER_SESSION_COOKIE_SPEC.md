@@ -463,7 +463,7 @@ the page, and after a tap (tokens are single-use); fall back to the plain link o
 ## §13 — THE HUB GRID OPENS APPS IN A NEW TAB; BACK LANDS ON `/`
 
 > Truth State: **[Current State]** · Verification: **[Runtime Verified]** on the owner's phone,
-> 2026-10-02 — tec-app #266 · #269 · #270. Last verified in code: 2026-10-02. Full record:
+> 2026-10-02 — tec-app #266 · #269 · #270 · tec-template-base #45. Last verified in code: 2026-10-02. Full record:
 > `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md`.
 
 **What the phone showed:**
@@ -485,7 +485,10 @@ the page, and after a tap (tokens are single-use); fall back to the plain link o
    - Pi does not answer an authenticate nobody tapped for.
    - This does not apply to the Mode 1 pay screen (`?pay=1`).
    - A desktop browser keeps the redirect to `/`.
-4. **Pi Browser's address bar shows the tab's FIRST URL, not the page on screen.**
+4. **In a tab opened through a signed handoff, a payment tap authenticates for itself.**
+   - Pi does not answer the load-time warm-up there.
+   - A tap that joins the warm-up waits out the timeout. Every template app did this until tec-template-base #45 (`ensureAuth({ fresh: enteredByHandoff() })`); verified on NX on 2026-10-02.
+5. **Pi Browser's address bar shows the tab's FIRST URL, not the page on screen.**
    - Read the logs, not the bar.
    - A bar showing another app's domain over a Hub screen is the sign of §9.
 ---
