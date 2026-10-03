@@ -199,6 +199,11 @@ Stream isn't writeable and enableOfflineQueue options is false
 - **The problem.** Delivery comes from the payment's own event, a moment after Pi says "paid", so the follow-up answers 202. Every screen refreshed once on that 202.
 - **The fix, Tec-Assets #69.** `followUntilSettled` re-sends while the answer is 202 (the claim is idempotent per payment), then refreshes. It covers NFT upload, domain→NFT, Marketplace buy and the Mode-1 return.
 
+**Verified on the owner's phone, 2026-10-03.** `[Runtime Verified]`
+1. "Upgrade to Pro" opens Pi's payment. After paying, the plan page and the dashboard read Pro, with Cancel.
+2. A new NFT shows in the list right after payment, with no reopen.
+3. On FREE at the cap, a new NFT is refused before any payment.
+
 ---
 
 ## 3 · Fixes
