@@ -247,4 +247,8 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 - **Commerce and Assets.** `usePiAuth` no longer starts a Pi handshake on load (#74, #67). Assets now has the ESLint config it never had, and its CI lint step blocks.
 - **NBF and Brookfield.** Both were outside the earlier rollouts: #28, #24.
 - **Record.** Audit §2.9.
+- **Later on 3 Oct.**
+  - A FREE user minted a 66th asset: the cap lived only on Hub routes. Fixed by Assets #68 and tec-app #272.
+  - "Upgrade to Pro" failed in Pi Browser: no payment record without a readable `tec_user`, plus `Bearer null`. Fixed by tec-app #273, which also makes the plan hook return the plan in force.
+  - A paid NFT was missing until the app was reopened: a single refresh on the 202. Fixed by Assets #69, which re-sends until delivery.
 
