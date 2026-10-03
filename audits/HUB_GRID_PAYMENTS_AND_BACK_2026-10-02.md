@@ -213,6 +213,12 @@ Stream isn't writeable and enableOfflineQueue options is false
   - A referral month stays on the Hub plan only.
   - `[Code Verified]` on Postgres 16.
 - **Ops.** After deploy, press **Re-grant** once on the Hub's admin Pioneers page.
+- **Outcome.** `[Runtime Verified]`
+  - The first Re-grant gave the 5 Pioneers with a stored id their every-app half. It still reported 3 "unresolvable": hamsa2010, mans809 and wilsonjemmy.
+  - The owner's queries found all three in both databases (identity `pi_user_id` = auth `pi_uid`). The lookup had simply never reached a route: identity asked `${AUTH_SERVICE_URL}/auth/user-by-username`, but auth serves at the root, and the gateway rewrites `/api/auth` to ''. Every run had logged "0 resolved by lookup".
+  - Fixed by tec-core-backend #360. #359, which made the name match case-insensitive, is correct but was not the cause.
+  - Final Re-grant: 8 checked, 6 already held, 3 by lookup, **2 recovered**, 0 unresolvable. Every Founding Pioneer now has the Hub plus every-app gift.
+- **Rule.** A service calling auth-service uses the root path (`/user-by-username`, `/users-by-ids`), never `/auth/…`.
 
 ---
 
@@ -238,6 +244,7 @@ Stream isn't writeable and enableOfflineQueue options is false
 | tec-app #273 | "Upgrade to Pro" works in Pi Browser; the plan hook returns the plan in force (§2.9) |
 | Tec-Assets #69 | A paid NFT / mint / purchase is on screen once delivered — no reopen (§2.9) |
 | tec-core-backend #358 | The Founding gift covers the Hub and every app's Pro, for every Pioneer; Re-grant backfills (§2.9) |
+| tec-core-backend #359 · #360 | Auth name lookup case-insensitive (#359); the re-grant's auth path fixed — it had never reached a route (#360). 2 lost gifts recovered (§2.9) |
 | template #45 + 17 app PRs (Tec-Nx #40, Alert #46, Analytics #59, Connection #89, DX #45, Elite #40, Epic #48; stacked on the open #2.7 PRs elsewhere) | Each app reads and cancels its own Pro (§2.8) |
 | Tec-Ecommerce #72 | `payment/create` asks commerce-service before any π moves: ACTIVE, in stock, priced at the amount paid. Otherwise 409 `OUT_OF_STOCK` / `PRODUCT_UNAVAILABLE` / `PRICE_CHANGED`, or 503 `CHECK_FAILED` (P6). Sold-out cards show "Out of stock" |
 

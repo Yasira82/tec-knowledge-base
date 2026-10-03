@@ -251,4 +251,9 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
   - A FREE user minted a 66th asset: the cap lived only on Hub routes. Fixed by Assets #68 and tec-app #272.
   - "Upgrade to Pro" failed in Pi Browser: no payment record without a readable `tec_user`, plus `Bearer null`. Fixed by tec-app #273, which also makes the plan hook return the plan in force.
   - A paid NFT was missing until the app was reopened: a single refresh on the 202. Fixed by Assets #69, which re-sends until delivery.
+- **Founding gift.**
+  - Owner: the Founding gift covers the Hub and every app (#358).
+  - The Re-grant left 3 Pioneers "unresolvable". The real cause was a wrong auth path, `/auth/user-by-username`, which had never worked; fixed by #360.
+  - The owner's two SQL queries in Railway proved the accounts existed.
+  - Result: 2 lost gifts recovered, 0 unresolvable.
 
