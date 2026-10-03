@@ -235,8 +235,10 @@ events:
     verified: true
     binds_to: [C-105, C-111]
     note: >
-      Analytics COMPUTES a platform finding from its OWN DailyMetric counters (an
-      activity drop against the trailing 7-day baseline) and emits it; Alert
+      Analytics COMPUTES a platform finding — an activity drop from its OWN DailyMetric
+      counters against the trailing 7-day baseline, or (code `completion_drop`, hourly)
+      the share of started payments that completed, counted by payment-service's
+      read-only /payments/internal/completion (#363) — and emits it; Alert
       CLASSIFIES it — category + severity + wording — and files it in the unified
       inbox. The payload deliberately carries NO severity and NO recommended action:
       Alert owns classification (C-111 §4), and a producer that graded its own
