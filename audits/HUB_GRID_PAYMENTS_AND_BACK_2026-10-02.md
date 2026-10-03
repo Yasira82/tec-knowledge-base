@@ -204,6 +204,16 @@ Stream isn't writeable and enableOfflineQueue options is false
 2. A new NFT shows in the list right after payment, with no reopen.
 3. On FREE at the cap, a new NFT is refused before any payment.
 
+**The Founding 100 gift covers the Hub and every app.**
+- **Decision (owner, 2026-10-03).** The six months of PRO cover the Hub **and** every app's Pro, for every Pioneer. `[Governance Approved]`
+- **The problem.** The gift wrote only the Hub plan. After the split, Pioneers gifted before 3 Oct had Pro everywhere, because the pre-split rule honoured it. Pioneers gifted later had it in the Hub only.
+- **The fix, tec-core-backend #358.**
+  - `grantEntitlement({ allApps })` also writes one app-subscription row keyed `'*'`, which covers every app, including future ones. Apps read it after their own Pro and before the pre-split rule. It is marked `gift: true` and `legacy: true`, so it has no Cancel in an app.
+  - A gift already granted gets the every-app half dated from the original grant. The admin **Re-grant** therefore brings earlier Pioneers level without adding time.
+  - A referral month stays on the Hub plan only.
+  - `[Code Verified]` on Postgres 16.
+- **Ops.** After deploy, press **Re-grant** once on the Hub's admin Pioneers page.
+
 ---
 
 ## 3 · Fixes
@@ -227,6 +237,7 @@ Stream isn't writeable and enableOfflineQueue options is false
 | Tec-Assets #68 · tec-app #272 | A new asset over the FREE cap is refused before any π moves, in both payment paths (§2.9) |
 | tec-app #273 | "Upgrade to Pro" works in Pi Browser; the plan hook returns the plan in force (§2.9) |
 | Tec-Assets #69 | A paid NFT / mint / purchase is on screen once delivered — no reopen (§2.9) |
+| tec-core-backend #358 | The Founding gift covers the Hub and every app's Pro, for every Pioneer; Re-grant backfills (§2.9) |
 | template #45 + 17 app PRs (Tec-Nx #40, Alert #46, Analytics #59, Connection #89, DX #45, Elite #40, Epic #48; stacked on the open #2.7 PRs elsewhere) | Each app reads and cancels its own Pro (§2.8) |
 | Tec-Ecommerce #72 | `payment/create` asks commerce-service before any π moves: ACTIVE, in stock, priced at the amount paid. Otherwise 409 `OUT_OF_STOCK` / `PRODUCT_UNAVAILABLE` / `PRICE_CHANGED`, or 503 `CHECK_FAILED` (P6). Sold-out cards show "Out of stock" |
 
