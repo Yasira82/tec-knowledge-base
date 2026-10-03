@@ -152,6 +152,39 @@ Stream isn't writeable and enableOfflineQueue options is false
 - **Root cause.** tec-core-backend's CLAUDE.md said "a deploy never touches the database", but that is true only for auth and asset. Seven services run `migrate deploy` at start. CLAUDE.md now says which service applies its schema how.
 - **Rule.** Never `db push` a migrate-deploy service, and never pass `--accept-data-loss` to get past the refusal. `[Code Verified]` on Postgres 16: the pre-#356 schema with earlier migrations marked applied → `migrate deploy` applies only the new one.
 
+
+### 2.9 · 3 October: the pre-split Pro, the Hub plan page, and one handshake on load
+
+**NX showed Pro with no Cancel.**
+- **What happened.** The owner's NX Pro (2 Oct) predates the split, so it sat on the Hub plan. #356 honoured it in every app as `legacy`, and the apps hide Cancel for a legacy Pro.
+- **The owner's ruling.** "I want a Cancel button, like the other apps."
+- **The fix, tec-core-backend #357.** On the first read from any app, a pre-split Hub-plan Pro is **moved to the app it was bought in**:
+  - The app comes from the payment's own metadata (`source` / `app_source`). Commerce asks payment-service by id (`POST /payments/internal/verify {ref}`).
+  - That app gets its own Pro with the remaining days. Other apps read FREE.
+  - The Hub plan is closed (`CANCELLED`, with a `SubscriptionHistory` row saying why).
+  - A payment that names no app stays the Hub's.
+  - If the origin cannot be told, nothing moves; this needs `PAYMENT_SERVICE_URL` on commerce-service.
+  - `[Code Verified]` on Postgres 16 with the built service.
+
+**The Hub plan page showed "Pro" after a cancel.**
+- **What happened.** Commerce keeps `plan: PRO` with `status: CANCELLED`. `/hub/subscription`, `/hub/profile` and `/dashboard/subscription` read `plan` alone, so they showed "Pro · Expires …". The Cancel button reads the status, so it vanished.
+- **Nothing was granted.** The server gate (`plan.server.ts`) already required `ACTIVE`.
+- **The fix, tec-app #271.** Adds `effectivePlan(sub)`: only a live `ACTIVE` subscription is its plan.
+- **Rule.** A screen that names a plan reads `effectivePlan`, never `sub.plan`.
+
+**What the Hub plan grants today.**
+- **Assets.** FREE allows 5 assets; PRO (10π) and ENTERPRISE (50π) are unlimited. This is enforced server-side at `/api/assets` and `/api/assets/provision`.
+- **Everything else.** Every other row in the plan table is "Soon" and is not built.
+- **Duration.** A plan lasts 30 days with no auto-renewal. It reads FREE once cancelled or lapsed.
+
+**One Pi handshake on load (Tec-Commerce #74, Tec-Assets #67).**
+- **The problem.** Commerce's `usePiAuth` called `window.Pi.authenticate` on load. That ran at the same moment as `PiVisitSignIn`, with no Hub-session check, and Pi Browser answers neither of two concurrent calls.
+- **The fix.** It was removed. Assets' copy was already deduplicated and was removed for parity. The payment still authenticates at the tap.
+
+**Assets lint had never run.**
+- **The problem.** ESLint 9 needs a flat config file and Assets had none. CI's Lint step was `continue-on-error`, so it stayed green.
+- **The fix, Tec-Assets #67.** Adds Commerce's flat config, turns `no-img-element` off (as Ecommerce does), and makes the CI Lint step blocking.
+
 ---
 
 ## 3 · Fixes
@@ -169,6 +202,9 @@ Stream isn't writeable and enableOfflineQueue options is false
 | tec-template-base #45 + 18 apps (Tec-Nx #39 verified) + NBF #28 · Brookfield #24 | A tap in a handoff-opened tab starts its own Pi handshake instead of joining the load-time warm-up (§2.7) |
 | Tec-Connection #88 | The nightly story sweep sends a JSON body. It had never run (§2.7) |
 | tec-core-backend #356 | Per-app Pro: `AppSubscription`, `status?app=` / `cancel?app=`, legacy honoured until it ends (§2.8) |
+| tec-core-backend #357 | A pre-split Pro moves to the app it was bought in, with its Cancel; the Hub plan is closed (§2.9) |
+| tec-app #271 | A cancelled or lapsed Pro shows as Free: `effectivePlan` (§2.9) |
+| Tec-Commerce #74 · Tec-Assets #67 | `usePiAuth` starts no Pi handshake on load; Assets gets an ESLint config and a blocking CI lint step (§2.9) |
 | template #45 + 17 app PRs (Tec-Nx #40, Alert #46, Analytics #59, Connection #89, DX #45, Elite #40, Epic #48; stacked on the open #2.7 PRs elsewhere) | Each app reads and cancels its own Pro (§2.8) |
 | Tec-Ecommerce #72 | `payment/create` asks commerce-service before any π moves: ACTIVE, in stock, priced at the amount paid. Otherwise 409 `OUT_OF_STOCK` / `PRODUCT_UNAVAILABLE` / `PRICE_CHANGED`, or 503 `CHECK_FAILED` (P6). Sold-out cards show "Out of stock" |
 
