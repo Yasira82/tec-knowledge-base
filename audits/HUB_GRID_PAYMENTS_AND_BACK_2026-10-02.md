@@ -255,6 +255,13 @@ Stream isn't writeable and enableOfflineQueue options is false
 2. Then merge #73 and #274 in either order.
 3. Until the backend is deployed, Ecommerce falls back to today's flow.
 
+**After the deploy (owner's phone, same evening).** `Order Consumer started` appeared in the logs, and it was settling orders (`already`). Three problems showed up:
+- **`/orders` went black.** commerce sends DECIMAL totals as strings and the page called `.toFixed` on one. The page had never handled the real order shape; it crashed as soon as the list contained an order with a total.
+- **A cancelled purchase stayed "Out of stock".** The Hub's Cancel returns to the app with no status, and nothing read it. In Mode 2, only Pi's Cancel released the hold. Now the tab remembers the hold it sent to the Hub and settles it on return, and Mode 2 releases on any outcome except success.
+- **Every store page read "Merchant not found".** Its BFF called routes that never existed. Fixed with `?seller=`.
+
+PRs: Tec-Ecommerce #74 · tec-core-backend #362.
+
 ## 3 · Fixes
 
 | PR | What it does |
