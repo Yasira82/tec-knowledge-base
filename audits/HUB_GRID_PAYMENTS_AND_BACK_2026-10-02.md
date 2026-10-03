@@ -188,7 +188,7 @@ Stream isn't writeable and enableOfflineQueue options is false
 **A FREE user minted a 66th asset.**
 - **The problem.** The asset cap was checked only on the Hub's `/api/assets(/provision)`. An NFT minted in Assets goes upload → payment → claim, and the Hub-modal path posts to `/api/payment/create`. Neither passed the check.
 - **The fix.** Both `payment/create` routes (Tec-Assets #68, tec-app #272) refuse a new asset (`nft:`) over the cap with 402 `UPGRADE_REQUIRED` **before any π moves**. Assets' upload screen asks `/api/bff/assets/quota` first, so it can say why. `domain-nft:` re-mints an owned asset and is not checked.
-- **Still open.** Marketplace purchases are not capped; that is the owner's call.
+- **Marketplace purchases are not capped, by decision.** Buying a listed asset still adds one to the buyer's count. Owner, 2026-10-03: not now — revisit when the user base grows. `[Governance Approved]`
 
 **"Upgrade to Pro" stopped at "Payment setup failed" in Pi Browser.**
 - **The problem.** The Hub's `createU2APayment` created its payment record only when page JS could read `tec_user`, which Pi Browser hides (C-123 §3). Its calls also sent `Bearer null`.
