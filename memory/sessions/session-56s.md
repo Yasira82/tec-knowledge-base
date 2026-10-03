@@ -257,3 +257,12 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
   - The owner's two SQL queries in Railway proved the accounts existed.
   - Result: 2 lost gifts recovered, 0 unresolvable.
 
+**The last unit (3 Oct).**
+- Owner: "fix the last unit in stock."
+- The pre-check (#72) only told buyers the unit was there. The new hold actually takes it: the stock is reserved atomically before Pi opens, and the payment's own event settles the order.
+- Found along the way, both fixed:
+  - the order consumer had never run;
+  - `checkout` marked orders PAID on an unverified `payment_id`.
+- Hub-paid Ecommerce purchases now get an order.
+- PRs: tec-core-backend #361, Tec-Ecommerce #73, tec-app #274.
+- Audit §2.10.

@@ -222,6 +222,46 @@ Stream isn't writeable and enableOfflineQueue options is false
 
 ---
 
+### 2.10 · 3 October: the last unit is held before payment
+
+**The race.**
+- Ecommerce #72 asked commerce "is it in stock?" before payment.
+- Two buyers could both hear "yes" for the last unit, and both would pay.
+- commerce then decremented stock with a read-then-write, so the second order was refused after its money had already moved.
+
+**The fix: a hold.**
+- Stock is taken with one conditional `UPDATE … WHERE stock >= qty`, so exactly one buyer wins.
+- On Postgres 16, 10 concurrent holds on stock 1 gave 1 success and 9 `Insufficient stock`, and stock ended at 0.
+
+| Step | Where |
+|---|---|
+| Hold the units: a PENDING order, before Pi opens. The payment carries `metadata.order_id` (the server's own; a client's is dropped) | commerce `POST /commerce/orders/hold` · Ecommerce `payment/create` and, for Mode 1, `/api/bff/orders/hold` |
+| The hold turns PAID | `payment.completed.v1` (`OrderConsumer`), or the buyer's confirm. The confirm is checked with payment-service first: completed, this buyer, this order, the full amount |
+| Release | Pi Cancel (`PATCH …/cancel`), or the sweep after `ORDER_HOLD_TTL_MIN` (default 30). Each hold is released once only |
+| A payment lands after its hold was released | A new order if the units are still free. Otherwise `REFUND_OWED` goes on the timeline and is logged as an error |
+| Mode 1 | The Hub copies `?order_id=` (UUIDs only) into the payment metadata. Before this, a Hub-paid Ecommerce purchase created no order at all |
+
+**Also found.**
+- The old `order.consumer.ts` was never registered, and it listened on `payment.completed`, a stream nothing writes to.
+- `POST /commerce/orders/checkout` marked an order PAID on a client-supplied `payment_id` alone. The Hub's `/dashboard/orders/checkout` page called it before Pi ever opened. It now verifies the payment, so that page's unpaid orders are refused.
+
+**PRs.**
+- tec-core-backend #361
+- Tec-Ecommerce #73
+- tec-app #274
+
+**Deploy order.**
+1. Deploy the backend first.
+2. Then merge #73 and #274 in either order.
+3. Until the backend is deployed, Ecommerce falls back to today's flow.
+
+**After the deploy (owner's phone, same evening).** `Order Consumer started` appeared in the logs, and it was settling orders (`already`). Three problems showed up:
+- **`/orders` went black.** commerce sends DECIMAL totals as strings and the page called `.toFixed` on one. The page had never handled the real order shape; it crashed as soon as the list contained an order with a total.
+- **A cancelled purchase stayed "Out of stock".** The Hub's Cancel returns to the app with no status, and nothing read it. In Mode 2, only Pi's Cancel released the hold. Now the tab remembers the hold it sent to the Hub and settles it on return, and Mode 2 releases on any outcome except success.
+- **Every store page read "Merchant not found".** Its BFF called routes that never existed. Fixed with `?seller=`.
+
+PRs: Tec-Ecommerce #74 · tec-core-backend #362.
+
 ## 3 · Fixes
 
 | PR | What it does |
@@ -268,7 +308,7 @@ Stream isn't writeable and enableOfflineQueue options is false
 
 **The apps' Mode 1 fallback.** In a standalone tab, the app owns the Pi session. If an app falls back to Mode 1 there (Pi not ready, or a `__tec_hub_entry` left in the tab), it sends the buyer into §2.1. **Remedy, if seen:** the app shows a retry message instead of bouncing to the Hub.
 
-**The last unit.** Ecommerce #72 is a pre-check, not a reservation. Two buyers can still race for the last unit, and commerce-service's order-time check stays the final word. **The full fix:** reserve the unit before payment (`/commerce/orders/reserve` exists).
+**The last unit.** Closed in §2.10: the unit is held before payment (tec-core-backend #361, Tec-Ecommerce #73, tec-app #274). **Watch for:** a `REFUND OWED` error in commerce-service's logs. It means a payment landed after its hold expired and the unit had sold, so that buyer is owed a refund by hand.
 
 ---
 
