@@ -241,3 +241,10 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 - **Record.** `audits/HUB_GRID_PAYMENTS_AND_BACK_2026-10-02.md` §2.8.
 - **A wrong deploy step.** I asked for a `db:push` pre-deploy step on commerce-service, and Railway refused it: it wanted unique constraints on `orders` plus `--accept-data-loss`. commerce-service runs `migrate deploy` at start, so the table became a migration and the backend CLAUDE.md now maps each service's schema path.
 
+**3 Oct.**
+- **NX Pro had no Cancel.** It was the owner's pre-split Pro, honoured everywhere as legacy. Owner: "a Cancel button, like the other apps." tec-core-backend #357 moves a pre-split Pro to the app it was bought in and closes the Hub plan.
+- **The Hub plan page showed "Pro" after a cancel.** It read `plan` and not `status`. tec-app #271 adds `effectivePlan`; Profile and the dashboard page had the same bug.
+- **Commerce and Assets.** `usePiAuth` no longer starts a Pi handshake on load (#74, #67). Assets now has the ESLint config it never had, and its CI lint step blocks.
+- **NBF and Brookfield.** Both were outside the earlier rollouts: #28, #24.
+- **Record.** Audit §2.9.
+
