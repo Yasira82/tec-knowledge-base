@@ -307,3 +307,9 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
   from them). The 69-repo map is not adopted. A fleet check found one E1 break — Insure showed a
   missing risk band as MODERATE — fixed in Tec-Insure #43. Record:
   `audits/TECO_DECISION_CORE_ASSESSMENT_2026-10-04.md`.
+- **Pi Community Expansion Map (4 Oct).** Owner: an engineering map for the apps to serve the
+  Pi community. Found: C-135 already decided "focus" and Round 2 ran on all 24 anyway; no app can
+  pay a Pioneer seller (payout gap still open in code); Pi counts sign-ins, TEC counts page loads.
+  Map: Phase 0 foundations (F1–F4) → Round 3 on the launch set → seven slices, one at a time.
+  Split into 15 issues across 11 repos + tracker tec-knowledge-base #191. Record:
+  `audits/PI_COMMUNITY_EXPANSION_MAP_2026-10-04.md`. C-02 row 19.
