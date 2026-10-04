@@ -206,6 +206,47 @@ Phase 3:
   → Economic trajectory planning (5-year Pi wealth building)
 ```
 
+### 10a. Personal Continuity — a direction for the Pi community (owner, 2026-10-04)
+
+**Truth State:** [Future Vision] · **Governance State:** [Draft] — the owner's direction; not
+scheduled · **Verification:** [Documentation Verified]
+
+**The question.** *"If my phone were lost today — or I were gone — what would be lost with it?"*
+It comes from the owner's Continuity Network drafts (Detect · Assess · Preserve · Transfer ·
+Reconnect) and was first asked of TEC itself (`audits/SINGLE_POINTS_OF_FAILURE_2026-10-04.md`).
+On Pi the answer is unusually harsh: a lost passphrase is lost Pi, permanently, and no one asks
+a Pioneer beforehand whether they are covered.
+
+**Why it matters beyond TEC.** The owner's rule for growth: the apps must serve the **Pi
+community**, not only each other. Personal continuity is a need every Pioneer has whether or not
+they use any other TEC app.
+
+**Where it lives.** Life holds the **personal view**; it does not become a new engine or a new
+app. Each step stays with the runtime that already owns it:
+
+| Step | Personal (Life's view) | Owned by |
+|---|---|---|
+| Detect / Assess | A self-declared checklist — passphrase backed up offline? 2FA on the email? someone trusted who knows what to do? Shown as "3 of 5 covered" — never a score, never a rank | Life (self-declared, strong consistency) |
+| Preserve | Skills and knowledge in a transferable form | Life (skills ladder, §11b) |
+| Transfer | An EXPERT skill can surface as mentorship | NX (C-112) |
+| Reconnect | A trusted person and what they should do — no secrets in it | Insure's beneficiary + recovery surfaces (C-129) |
+| Organisational continuity | "Only one person understands this system" | Titan — not Life |
+
+**Non-negotiable (P6).**
+- **TEC never asks for, displays, stores or transmits a passphrase — not whole, not in part,
+  not "for verification".** Every answer is yes / no / not sure. A screen that asks a Pioneer
+  to type a passphrase is the scam's own screen, whoever builds it.
+- The checklist is private Life data under §5: sovereign, consent-gated, never read by another
+  app or TEC AI without the category grant (absence is a no).
+- No "continuity score" and no comparison between Pioneers (the same rule as C-133's growth
+  layer: no Pioneer level, rank or quality score).
+
+**What decides whether it is built.** Not this section. The Round 3 MVP asks one question —
+*"If your phone were lost today, would your Pi be safe?"* (yes / no / not sure) — and only
+aggregate counts are read (`audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md` §4). If "not sure"
+is common, this is the first thing TEC offers the Pi community that no one else does. If it is
+not, this section stays a vision.
+
 ---
 
 ## 11. ENGINEERING UPDATES REQUIRED

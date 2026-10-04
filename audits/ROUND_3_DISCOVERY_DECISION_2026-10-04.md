@@ -32,7 +32,7 @@ Engine is unbuilt.**
 ```
 1. Interview          (no code)  — the 2026-08-16 decision, still ACTIVE
 2. Funnel             (small)    — Campaign Funnel Instrumentation
-3. Round 3 MVP        (small)    — one mission, then look at the data
+3. Round 3 MVP        (small)    — one mission (1–3 apps, the Pioneer's pick), then look at the data
 4. Evidence Engine    (deferred) — only when real data shows the need
 ```
 
@@ -69,7 +69,7 @@ the Round 2 campaign engine (identity-service), `ArrivalReport`, and Analytics.
 `Choose → (Trust Preview variant) → Discover → Report → reward after verification`
 
 - **One mission to start, not three.** Whether the number of steps is itself the friction is
-  not yet known.
+  not yet known — which is why the mission's size is the Pioneer's choice (below).
 - **Built on what exists:**
   - missions, the claim form and the chain-checked `Mark sent` — the Round 2 campaign engine;
   - the report — the feedback module in identity-service;
@@ -79,6 +79,18 @@ the Round 2 campaign engine (identity-service), `ArrivalReport`, and Analytics.
 - **The reward is downstream.** It is not a score. There is no Pioneer level, rank or quality
   score (C-134).
 - **Payouts go out by hand** (`Mark sent`) until TEC's A2U wallet is approved (C-02 row 6).
+- **Mission scope is the Pioneer's choice: 1 to 3 apps**, rewarded per app whose report is
+  accepted (owner, 2026-10-04). The owner thinks one app is too little; the only Round 2 comment
+  asked to focus on one app instead of 24. The choice settles it as a measurement: how many
+  pick 1 versus 3 is the answer.
+- **One continuity question, asked once with the report** (owner, 2026-10-04):
+  *"If your phone were lost today, would your Pi be safe?"* — `yes` / `no` / `not sure`, one tap.
+  - **Never a text field.** Nothing is typed, and nothing about the passphrase is asked or
+    stored. A follow-up that asks for any part of it is forbidden (C-106 §10a).
+  - Optional: skipping it does not affect the reward, so the answer is not bought.
+  - Read only as **aggregate counts** on the admin funnel, never per Pioneer and never public.
+  - It decides C-106 §10a (Personal Continuity): many `not sure` → a real need in the Pi
+    community; few → it stays a vision.
 
 ## 5. When the Engine earns its build
 

@@ -294,3 +294,9 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
   revenue lands in). The knowledge is not concentrated; the access is.
 - Record: `audits/SINGLE_POINTS_OF_FAILURE_2026-10-04.md` (no secrets; account-only facts are
   marked "owner to check"). C-02 row 17.
+- **Personal Continuity (4 Oct).** Owner: the Continuity Engine belongs in Life when it grows, and
+  the apps must serve the Pi community, not only each other. Recorded as C-106 §10a [Future
+  Vision]: Life holds the personal view; each step stays with its owner (NX transfer, Insure
+  reconnect, Titan for organisations). TEC never asks for any part of a passphrase. The Round 3
+  MVP carries one optional one-tap question ("would your Pi be safe if your phone were lost
+  today?") and lets the Pioneer pick 1–3 apps; the answers decide whether §10a is built.
