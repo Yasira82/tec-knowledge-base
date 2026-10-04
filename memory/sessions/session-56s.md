@@ -286,3 +286,11 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
     1. it is a module inside identity-service, because Phase 0 allows no new service;
     2. it starts from `CampaignEvent`;
     3. it gets built only when the funnel raises a question that needs observed evidence.
+
+**Single points of failure (4 Oct).**
+- The owner brought a second project, the Continuity Network (six Foundation Draft docs). Its
+  question — "if this node disappeared, what would disappear with it?" — was asked of TEC first.
+- Answer: the largest single point is one person (every account, the only admin, the wallet
+  revenue lands in). The knowledge is not concentrated; the access is.
+- Record: `audits/SINGLE_POINTS_OF_FAILURE_2026-10-04.md` (no secrets; account-only facts are
+  marked "owner to check"). C-02 row 17.
