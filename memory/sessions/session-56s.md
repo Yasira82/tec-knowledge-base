@@ -300,3 +300,10 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
   reconnect, Titan for organisations). TEC never asks for any part of a passphrase. The Round 3
   MVP carries one optional one-tap question ("would your Pi be safe if your phone were lost
   today?") and lets the Pioneer pick 1–3 apps; the answers decide whether §10a is built.
+- **TECO (4 Oct).** The owner brought TECO V0.1 (a decision core, mostly empty) and a 69-repo
+  Decision Platform map (placeholders). Decided: name + domain = TEC (TECO is TEC's decision
+  product, Future Vision); its three Golden Rules became C-47 §10 E1–E3 with enforcement rows in
+  §12; its five evidence statuses are TEC's shared vocabulary (the deferred Evidence Engine starts
+  from them). The 69-repo map is not adopted. A fleet check found one E1 break — Insure showed a
+  missing risk band as MODERATE — fixed in Tec-Insure #43. Record:
+  `audits/TECO_DECISION_CORE_ASSESSMENT_2026-10-04.md`.

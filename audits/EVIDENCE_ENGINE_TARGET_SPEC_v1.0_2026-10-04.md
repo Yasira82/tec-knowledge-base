@@ -35,6 +35,11 @@ filtered; Analytics reads snapshots only. Three things in it must change before 
    - Example: pioneers *say* (a) "too long" — did they actually spend long, or leave early?
    - Until then, Steps 1–14 stay unbuilt.
 
+**A fourth, later the same day: its vocabulary is C-47 §10.** The owner adopted TECO's Golden
+Rules as E1–E3 and its five evidence statuses (`verified · partial · stale · insufficient ·
+unknown`) as TEC's shared words. Where this spec names evidence states, map them onto those five;
+do not add synonyms (`audits/TECO_DECISION_CORE_ASSESSMENT_2026-10-04.md`).
+
 Identity on this platform is the verified token's Pi username (campaign `owner`) or `sub`.
 Where §6–§9 say `piUserId`, read that. It is never a client field.
 
