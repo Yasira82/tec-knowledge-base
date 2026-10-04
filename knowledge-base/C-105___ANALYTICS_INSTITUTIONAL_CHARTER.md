@@ -287,8 +287,21 @@ Shipped Session 22 (2026-07-31, code-verified — tec-core-backend #161):
      boundary held). Explorer degrades gracefully when the signal is absent. This closed
      the events-catalog `planned → live` gap for that event (no consumer was left dangling).
 
+Shipped 3 Oct 2026 (Session 56s, code-verified):
+  ✅ §11 P1-1 — the Hub's `/hub/analytics` page exists (platform overview + 24h payment
+     metrics); it was built earlier and this list had not caught up.
+  ✅ §11 P1-2 — Commerce's Sales tab opens on the seller's own sales (earned · items ·
+     orders · best sellers) from commerce-service's sales-summary — Tec-Commerce #75.
+  ✅ §11 P2-2 (payment half) — a payment-health finding: of the payments STARTED in the
+     last 6 hours, the share that completed, against the trailing 7 days. payment-service
+     COUNTS (`/payments/internal/completion`, read-only, counts only); Analytics COMPARES
+     (`completion_drop`, hourly); Alert CLASSIFIES (PAYMENT · CRITICAL ≤ 20% of normal).
+     It sees what the daily count cannot: an approve answered 502 leaves payments
+     `created` or `cancelled`, never `failed` — tec-core-backend #363.
+
 Still pending:
-  □ §11 P1-1/P1-2 embeds (Hub `/hub/analytics`, Commerce embed) — to-build
+  □ A push to the operator's phone for a CRITICAL finding — today it waits in the Alert
+    inbox (notification-service consumes only payment.completed and user.created)
   □ Richer multi-signal scoring (weighting/decay) + historical backfill — ADR-013 revision
 ```
 

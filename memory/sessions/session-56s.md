@@ -266,3 +266,50 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 - Hub-paid Ecommerce purchases now get an order.
 - PRs: tec-core-backend #361, Tec-Ecommerce #73, tec-app #274.
 - Audit §2.10.
+
+**Round 3 (4 Oct).**
+- The owner brought reports from another conversation. They describe a 19-stage Evidence
+  Engine and call most of it SEALED.
+- A search of all 28 repos (every branch) and the KB found none of its code.
+- Decided with the owner:
+  1. the interview first, still active from 2026-08-16;
+  2. a small funnel table;
+  3. a one-mission MVP;
+  4. the Engine only when the data asks for it.
+- The "fear" theory is a hypothesis, to be tested A/B.
+- Record: `audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md`.
+- **Later on 4 Oct.**
+  - Owner: "they will not reply — I am not looking back". So the interview was dropped.
+  - In its place, the funnel was built, and it asks everyone who stops why: tec-core-backend #366 and tec-app #275.
+  - The owner's "Evidence Engine Final Implementation Spec v1.0" is stored in `audits/`. The spec itself says it is a target, not built code.
+  - It carries three adjustments for this platform:
+    1. it is a module inside identity-service, because Phase 0 allows no new service;
+    2. it starts from `CampaignEvent`;
+    3. it gets built only when the funnel raises a question that needs observed evidence.
+
+**Single points of failure (4 Oct).**
+- The owner brought a second project, the Continuity Network (six Foundation Draft docs). Its
+  question — "if this node disappeared, what would disappear with it?" — was asked of TEC first.
+- Answer: the largest single point is one person (every account, the only admin, the wallet
+  revenue lands in). The knowledge is not concentrated; the access is.
+- Record: `audits/SINGLE_POINTS_OF_FAILURE_2026-10-04.md` (no secrets; account-only facts are
+  marked "owner to check"). C-02 row 17.
+- **Personal Continuity (4 Oct).** Owner: the Continuity Engine belongs in Life when it grows, and
+  the apps must serve the Pi community, not only each other. Recorded as C-106 §10a [Future
+  Vision]: Life holds the personal view; each step stays with its owner (NX transfer, Insure
+  reconnect, Titan for organisations). TEC never asks for any part of a passphrase. The Round 3
+  MVP carries one optional one-tap question ("would your Pi be safe if your phone were lost
+  today?") and lets the Pioneer pick 1–3 apps; the answers decide whether §10a is built.
+- **TECO (4 Oct).** The owner brought TECO V0.1 (a decision core, mostly empty) and a 69-repo
+  Decision Platform map (placeholders). Decided: name + domain = TEC (TECO is TEC's decision
+  product, Future Vision); its three Golden Rules became C-47 §10 E1–E3 with enforcement rows in
+  §12; its five evidence statuses are TEC's shared vocabulary (the deferred Evidence Engine starts
+  from them). The 69-repo map is not adopted. A fleet check found one E1 break — Insure showed a
+  missing risk band as MODERATE — fixed in Tec-Insure #43. Record:
+  `audits/TECO_DECISION_CORE_ASSESSMENT_2026-10-04.md`.
+- **Pi Community Expansion Map (4 Oct).** Owner: an engineering map for the apps to serve the
+  Pi community. Found: C-135 already decided "focus" and Round 2 ran on all 24 anyway; no app can
+  pay a Pioneer seller (payout gap still open in code); Pi counts sign-ins, TEC counts page loads.
+  Map: Phase 0 foundations (F1–F4) → Round 3 on the launch set → seven slices, one at a time.
+  Split into 15 issues across 11 repos + tracker tec-knowledge-base #191. Record:
+  `audits/PI_COMMUNITY_EXPANSION_MAP_2026-10-04.md`. C-02 row 19.

@@ -1,5 +1,5 @@
 # C-47 — KERNEL SPEC & ARCHITECTURE BINDING
-## TEC Constitutional Layer v1.1.1
+## TEC Constitutional Layer v1.2.0
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
@@ -77,6 +77,37 @@
 
 ---
 
+## 10. EVIDENCE RULES (E1–E3)
+
+> Adopted 2026-10-04 by the owner from TECO's Decision Core (its "Golden Rules"); TECO is TEC's
+> decision product, under the TEC name and domain (`audits/TECO_DECISION_CORE_ASSESSMENT_2026-10-04.md`).
+> They govern anything TEC shows as a verdict, a rank, a score or a status — trust, risk,
+> verification, recognition, discovery.
+
+| Rule | Statement |
+|---|---|
+| **E1** Unknown is never positive evidence | What was not observed is not counted, and is **never worded as favourable or neutral**. "No problems found" for something nobody checked is forbidden; the wording is "There is not enough evidence to assess X." A missing value is never filled in with a default that reads as a finding (`?? 'MODERATE'`, `?? 0`). E1 is P6 applied to what TEC *says*. |
+| **E2** Integrity status precedes score | Rank by status first; a score orders only within one status. Verified before unverified, whatever the score — and paid visibility never outranks verification. |
+| **E3** Hard constraints exclude before scoring | A candidate that fails a hard constraint (budget, stock, a required criterion) is **removed**, not given a low score. It is not shown as "a bad match"; it is not a match. |
+
+**Evidence status — the shared words.** When a TEC record says how much it knows, it uses these
+five and no synonyms:
+
+| Status | Meaning | Counts toward a verdict? |
+|---|---|---|
+| `verified` | Observed and confirmed | yes |
+| `partial` | Observed, degraded | yes — but lowers coverage |
+| `stale` | Was verified, now past its freshness window | no |
+| `insufficient` | Observation attempted, unreliable | no |
+| `unknown` | Never observed | no — and its value is `null`, never a default |
+
+Every record also carries **when** it was observed and **where** it came from (manual · api ·
+licensed · partner, or the TEC service that produced it). A record states an observation; it
+never contains the score, rank or recommendation made from it. This is the vocabulary the
+deferred Evidence Engine starts from (`audits/EVIDENCE_ENGINE_TARGET_SPEC_v1.0_2026-10-04.md`).
+
+---
+
 ## 12. ARCHITECTURE BINDING — ENFORCEMENT MAP
 
 | Rule | Enforced At | File/Location |
@@ -97,5 +128,8 @@
 | BFF isolation | All frontend apps | /api/* routes only ✅ |
 | CSRF double-submit | middleware.ts | All frontend apps ✅ |
 | Non-root Docker USER | All Dockerfiles | USER appuser ✅ |
+| E1 unknown is no finding | Insure · Explorer · Alert | `riskFromBackend` → null on a missing band (Tec-Insure #43) · Explorer BFF `source:'unavailable'`, no fixture · Alert files no finding for an unclassified metric ✅ |
+| E2 status before score | Explorer ranking | identity-service `explorer.service.ts`: trust tier first, paid `featured` only within a tier ✅ |
+| E3 constraints before scoring | Commerce hold · Elite (planned) | out-of-stock excluded before payment (tec-core-backend #361) ✅ · Elite criteria all-pass — when recognition is built |
 
 **Binding compliance: ~98% (post-May 2026 audit) | Target: 100%**
