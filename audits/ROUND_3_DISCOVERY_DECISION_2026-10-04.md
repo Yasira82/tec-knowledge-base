@@ -92,6 +92,36 @@ the Round 2 campaign engine (identity-service), `ArrivalReport`, and Analytics.
   - It decides C-106 §10a (Personal Continuity): many `not sure` → a real need in the Pi
     community; few → it stays a vision.
 
+## 4a. Step 3 is built (2026-10-04) — and off until the owner opens it
+
+tec-core-backend #373 (identity-service campaign module) and tec-app #277 (the Hub page).
+
+- **Switch:** `CAMPAIGN_MODE=pick` on identity-service. If it is unset, the campaign runs exactly
+  as Round 2 did.
+- **The apps:** `CAMPAIGN_APPS` limited in code to the launch set (C-135 §2.1: commerce,
+  ecommerce, explorer, zone, connection, nbf, analytics, assets). Hub is not a mission.
+- **Pick:** 1 to 3. The latest choice stands until claim, but an app already reported on stays
+  picked.
+- **Report:** 10–1000 characters, accepted only after the app itself reported the arrival this
+  round (ArrivalReport, after that app's own Pi sign-in — F3). Its C-47 §10 status is `partial`:
+  declared plus one observation. An unobserved arrival is refused, not stored as `unknown` (E1).
+- **Where the report lives:** with its mission (`campaign_missions`), not in the feedback inbox.
+  It is campaign evidence that is read before a payout (`GET /identity/campaign/reports`, admin).
+  This deviates from §4's "the feedback module".
+- **Reward:** `CAMPAIGN_REWARD_PI` × picked apps. It is frozen on the claim, so `Mark sent`'s
+  chain check asks for that amount. Budget = seats × reward × 3 at most.
+- **Continuity question:** answered once, after a report. The Pioneer's own screen learns only
+  *whether* they answered. The admin funnel shows counts only.
+
+To open the round:
+
+```
+CAMPAIGN_MODE=pick
+CAMPAIGN_APPS=explorer,zone,commerce,ecommerce,assets,analytics,connection,nbf   # or fewer
+CAMPAIGN_VISITS_FROM=<the round's start, ISO>
+CAMPAIGN_REWARD_PI=1          # per app
+```
+
 ## 5. When the Engine earns its build
 
 When the MVP's real data raises questions only it can answer: did the Pioneer do what they said
