@@ -278,3 +278,11 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
   4. the Engine only when the data asks for it.
 - The "fear" theory is a hypothesis, to be tested A/B.
 - Record: `audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md`.
+- **Later on 4 Oct.**
+  - Owner: "they will not reply — I am not looking back". So the interview was dropped.
+  - In its place, the funnel was built, and it asks everyone who stops why: tec-core-backend #366 and tec-app #275.
+  - The owner's "Evidence Engine Final Implementation Spec v1.0" is stored in `audits/`. The spec itself says it is a target, not built code.
+  - It carries three adjustments for this platform:
+    1. it is a module inside identity-service, because Phase 0 allows no new service;
+    2. it starts from `CampaignEvent`;
+    3. it gets built only when the funnel raises a question that needs observed evidence.

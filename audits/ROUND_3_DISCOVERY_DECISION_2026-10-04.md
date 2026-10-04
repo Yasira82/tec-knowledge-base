@@ -45,6 +45,9 @@ Engine is unbuilt.**
   Preview, if built, ships as an **A/B variable**, measured on start rate, completion rate and
   report rate. It is not built as a fix for an assumed cause.
 - **The Engine spec is kept as the target architecture.** It is not deleted and not built now.
+  Its implementation version is stored at `audits/EVIDENCE_ENGINE_TARGET_SPEC_v1.0_2026-10-04.md`.
+- **Step 2 is built:** `CampaignEvent` and the funnel in tec-core-backend #366, the stop-reason
+  card and the admin funnel in tec-app #275.
 
 ## 3. Step 2 — Campaign Funnel Instrumentation (not "Evidence Engine")
 
@@ -100,6 +103,10 @@ incrementally from the funnel table, and never as 19 stages ahead of the need.
   them is step 1.
 
 ## Related Documents
+
+- `audits/EVIDENCE_ENGINE_TARGET_SPEC_v1.0_2026-10-04.md` — the Engine's target spec, stored with
+  its three adjustments for this platform (a module in identity-service, not a new service; it
+  starts from `CampaignEvent`; the trigger in §5 above)
 
 - `audits/PIONEER_ACQUISITION_INTERVIEW_FIRST_2026-08-16.md` — the active interview-first decision
 - `audits/CAMPAIGN_SURFACES_ENGINEERING_REPORT_2026-09-19.md` — the Round 2 engine this builds on
