@@ -266,3 +266,15 @@ The organization is under a secondary GitHub login the owner had forgotten. The 
 - Hub-paid Ecommerce purchases now get an order.
 - PRs: tec-core-backend #361, Tec-Ecommerce #73, tec-app #274.
 - Audit §2.10.
+
+**Round 3 (4 Oct).**
+- The owner brought reports from another conversation. They describe a 19-stage Evidence
+  Engine and call most of it SEALED.
+- A search of all 28 repos (every branch) and the KB found none of its code.
+- Decided with the owner:
+  1. the interview first, still active from 2026-08-16;
+  2. a small funnel table;
+  3. a one-mission MVP;
+  4. the Engine only when the data asks for it.
+- The "fear" theory is a hypothesis, to be tested A/B.
+- Record: `audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md`.
