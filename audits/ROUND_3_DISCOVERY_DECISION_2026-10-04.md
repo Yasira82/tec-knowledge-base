@@ -169,6 +169,12 @@ ASSIGNED → SUBMITTED → (NEEDS_REVISION → SUBMITTED)* → APPROVED
   5 π. Budget ceiling: 100 seats × 5.1 π = 510 π. Raised before any claim of the round, because the
   amount is frozen on each claim. If the stop reasons show "too many apps / too long", the lever is
   `CAMPAIGN_APPS_PER_PIONEER`, not the reward. Setting: `CAMPAIGN_REWARD_PI=0.85`.
+- **25 seats per round, then the next six apps (owner, 2026-10-05).** `CAMPAIGN_SEATS=25`: the
+  budget is 25 × 5.1 π = 127.5 π a round, and the next round is six other apps at the same reward.
+  Seats are counted per round (claims carry the round), so a new round is a new
+  `CAMPAIGN_VISITS_FROM` and a new `CAMPAIGN_APPS`; a Pioneer of this round may take the next one.
+  A seat is taken at the CLAIM, after all six are approved — so Pioneers still working when the
+  25th claim lands find the round full.
 - **Coverage arithmetic (for a `short` round):** 13 domains × 5 Pioneers ≈ 65 sign-ins ≈ 22 Pioneers at 3 each. That is a
   target, not a guarantee: assignments overlap, and the Pioneers who drop out leave gaps.
 - **Built on the campaign engine,** as §4 required (tec-core-backend #376, tec-app #280). It
