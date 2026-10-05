@@ -110,6 +110,11 @@ tec-core-backend #373 (identity-service campaign module) and tec-app #277 (the H
   This deviates from §4's "the feedback module".
 - **Reward:** `CAMPAIGN_REWARD_PI` × picked apps. It is frozen on the claim, so `Mark sent`'s
   chain check asks for that amount. Budget = seats × reward × 3 at most.
+- **A claim is per round** (tec-core-backend #374, 2026-10-05). Until then a claim was for
+  life (`owner` and `wallet_address` were unique across all rounds), so Round 2's claimants could
+  not take part in Round 3, and their old claims held seats. Claims now carry a `round`, and the
+  uniques are per round. A claim from before this change is `legacy` and belongs to the round
+  it was made in. One transfer still pays one claim across all rounds.
 - **Continuity question:** answered once, after a report. The Pioneer's own screen learns only
   *whether* they answered. The admin funnel shows counts only.
 
