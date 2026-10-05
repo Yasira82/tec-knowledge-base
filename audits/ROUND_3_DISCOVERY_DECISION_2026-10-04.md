@@ -110,6 +110,15 @@ tec-core-backend #373 (identity-service campaign module) and tec-app #277 (the H
   This deviates from §4's "the feedback module".
 - **Reward:** `CAMPAIGN_REWARD_PI` × picked apps. It is frozen on the claim, so `Mark sent`'s
   chain check asks for that amount. Budget = seats × reward × 3 at most.
+- **The round serves the domains Pi has not opened (owner, 2026-10-05)** — `CAMPAIGN_TARGET=short`
+  (tec-core-backend #374). This replaces "the launch set only" for this round:
+  - The list is read live: every app under Pi's threshold (5 unique KYC'd Pioneers who signed in
+    with Pi in the app), minus the domains Pi has already accepted, neediest first.
+  - A domain leaves the list once it is covered.
+  - A Pioneer is not offered an app they already count for.
+  - The arrival is the moment Pi counts: this app's own Pi sign-in (F3), now in all 23 apps.
+    The last 13 are dx, elite, epic, estate, fundx, insure, legend, nexus, nx, titan, vip,
+    system and brookfield.
 - **A claim is per round** (tec-core-backend #374, 2026-10-05). Until then a claim was for
   life (`owner` and `wallet_address` were unique across all rounds), so Round 2's claimants could
   not take part in Round 3, and their old claims held seats. Claims now carry a `round`, and the
@@ -122,7 +131,8 @@ To open the round:
 
 ```
 CAMPAIGN_MODE=pick
-CAMPAIGN_APPS=explorer,zone,commerce,ecommerce,assets,analytics,connection,nbf   # or fewer
+CAMPAIGN_TARGET=short          # the domains Pi has not opened, read live
+CAMPAIGN_APPS=                 # empty; or a list, to narrow it
 CAMPAIGN_VISITS_FROM=<the round's start, ISO>
 CAMPAIGN_REWARD_PI=1          # per app
 ```
