@@ -155,7 +155,15 @@ ASSIGNED → SUBMITTED → (NEEDS_REVISION → SUBMITTED)* → APPROVED
 3/3 APPROVED → claim 3π → Mark sent
 ```
 
-- **Coverage arithmetic:** 13 domains × 5 Pioneers ≈ 65 sign-ins ≈ 22 Pioneers at 3 each. That is a
+- **The round as opened (owner, 2026-10-05): the same 6 apps for everyone, 0.5 π each, 3 π in all.**
+  The 6 are **tec · commerce · life**, domains Pi opened but still under Core Team review, and
+  **ecommerce · assets · zone**, domains not opened. The review is taking long, perhaps because Pi
+  asks for real utility beyond the 5 KYC'd users, so the round collects product evidence on
+  opened and unopened domains alike. The service assigns the whole list, offers no swap (there is
+  nothing to swap to), and treats the Hub as arrived (the Pioneer is signed in to it).
+  Settings: `CAMPAIGN_TARGET` unset · `CAMPAIGN_APPS=tec,commerce,ecommerce,assets,life,zone` ·
+  `CAMPAIGN_APPS_PER_PIONEER=6` · `CAMPAIGN_REWARD_PI=0.5`.
+- **Coverage arithmetic (for a `short` round):** 13 domains × 5 Pioneers ≈ 65 sign-ins ≈ 22 Pioneers at 3 each. That is a
   target, not a guarantee: assignments overlap, and the Pioneers who drop out leave gaps.
 - **Built on the campaign engine,** as §4 required (tec-core-backend #376, tec-app #280). It
   replaces the pick-1-to-3 flow and the one-question MVP (§4a). Still not the Evidence Engine
