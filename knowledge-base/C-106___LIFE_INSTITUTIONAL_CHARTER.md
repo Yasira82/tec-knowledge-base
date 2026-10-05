@@ -241,11 +241,11 @@ app. Each step stays with the runtime that already owns it:
 - No "continuity score" and no comparison between Pioneers (the same rule as C-133's growth
   layer: no Pioneer level, rank or quality score).
 
-**What decides whether it is built.** Not this section. The Round 3 MVP asks one question —
-*"If your phone were lost today, would your Pi be safe?"* (yes / no / not sure) — and only
-aggregate counts are read (`audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md` §4). If "not sure"
-is common, this is the first thing TEC offers the Pi community that no one else does. If it is
-not, this section stays a vision.
+**What decides whether it is built.** Not this section. A one-tap question was planned for the
+Round 3 MVP — *"If your phone were lost today, would your Pi be safe?"* (yes / no / not sure).
+On 2026-10-05 the owner replaced it with a per-app suggestion, so no measurement is running for
+it (`audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md` §4). Until a later round asks it, this
+section stays a vision.
 
 ---
 
