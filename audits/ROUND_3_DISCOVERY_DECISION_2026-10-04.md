@@ -112,10 +112,12 @@ tec-core-backend #373 (identity-service campaign module) and tec-app #277 (the H
   chain check asks for that amount. Budget = seats × reward × 3 at most.
 - **The round serves the domains Pi has not opened (owner, 2026-10-05)** — `CAMPAIGN_TARGET=short`
   (tec-core-backend #374). This replaces "the launch set only" for this round:
-  - The list is read live: every app under Pi's threshold (5 unique KYC'd Pioneers who signed in
-    with Pi in the app), minus the domains Pi has already accepted, neediest first.
-  - A domain leaves the list once it is covered.
-  - A Pioneer is not offered an app they already count for.
+  - **Pi's word decides, not our count.** Every app stays on the list until the owner adds it
+    to `PI_CLAIMED_APPS` (the domains Pi has accepted, from Pi's Domains screen). Our arrival
+    count only orders the list, fewest first. Until F3 it counted page loads, so it reads 5/5
+    for apps Pi still calls "Requirements Not Met" (C-02 row 2).
+  - A Pioneer is not excluded from apps they "visited" before. Those records were page loads,
+    and the people they would exclude are the ones Pi never counted.
   - The arrival is the moment Pi counts: this app's own Pi sign-in (F3), now in all 23 apps.
     The last 13 are dx, elite, epic, estate, fundx, insure, legend, nexus, nx, titan, vip,
     system and brookfield.
