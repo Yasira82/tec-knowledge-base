@@ -136,6 +136,39 @@ CAMPAIGN_VISITS_FROM=<the round's start, ISO>
 CAMPAIGN_REWARD_PI=1          # per app
 ```
 
+## 4b. The round as it runs — three assigned apps, reviewed (owner, 2026-10-05)
+
+The owner tested the pick MVP (§4a) and changed it. The decision, with the owner's own three
+corrections:
+
+| Stage | Decision |
+|---|---|
+| Assignment | **Exactly 3 apps, assigned by the service, not chosen.** The service skips apps the Pioneer already holds or tested in an earlier round, spreads the round (fewest open assignments first, a cap per app), and works through the domains Pi has not opened. A swap is allowed for a technical problem, with the reason kept as evidence (2 per round). |
+| Report | **What happened** (required) · **a problem? yes / no** (required) · **the problem** (where, what you did, what you saw) **or what was clear or useful** (required) · a suggestion (optional). |
+| Why that shape | A report that found nothing wrong is evidence too. The round looks for **product evidence, not bugs only**. Requiring a problem would bias every report toward finding one. |
+| Review | The owner reviews each report: **APPROVED**, or **NEEDS_REVISION** with a note the Pioneer reads and answers. **NEEDS_REVISION ≠ REJECTED.** The goal is better evidence, not catching Pioneers out. |
+| Acceptance bar | Shown before anyone writes: *"A report is approved when it describes a real experience specifically. If you hit a problem, say where it happened and what you saw. If you did not, say what you tried and what was clear or useful. General words like 'nice' are not enough. We are not asking you to criticise TEC: try it, and tell us what happened."* |
+| Reward | **3/3 approved → 3π**, claimed on a button, then the same `Mark sent`. |
+
+```
+ASSIGNED → SUBMITTED → (NEEDS_REVISION → SUBMITTED)* → APPROVED
+3/3 APPROVED → claim 3π → Mark sent
+```
+
+- **The round as opened (owner, 2026-10-05): the same 6 apps for everyone, 0.5 π each, 3 π in all.**
+  The 6 are **tec · commerce · life**, domains Pi opened but still under Core Team review, and
+  **ecommerce · assets · zone**, domains not opened. The review is taking long, perhaps because Pi
+  asks for real utility beyond the 5 KYC'd users, so the round collects product evidence on
+  opened and unopened domains alike. The service assigns the whole list, offers no swap (there is
+  nothing to swap to), and treats the Hub as arrived (the Pioneer is signed in to it).
+  Settings: `CAMPAIGN_TARGET` unset · `CAMPAIGN_APPS=tec,commerce,ecommerce,assets,life,zone` ·
+  `CAMPAIGN_APPS_PER_PIONEER=6` · `CAMPAIGN_REWARD_PI=0.5`.
+- **Coverage arithmetic (for a `short` round):** 13 domains × 5 Pioneers ≈ 65 sign-ins ≈ 22 Pioneers at 3 each. That is a
+  target, not a guarantee: assignments overlap, and the Pioneers who drop out leave gaps.
+- **Built on the campaign engine,** as §4 required (tec-core-backend #376, tec-app #280). It
+  replaces the pick-1-to-3 flow and the one-question MVP (§4a). Still not the Evidence Engine
+  (§5): if the reports prove their value, the Engine is built from them, step by step.
+
 ## 5. When the Engine earns its build
 
 When the MVP's real data raises questions only it can answer: did the Pioneer do what they said
