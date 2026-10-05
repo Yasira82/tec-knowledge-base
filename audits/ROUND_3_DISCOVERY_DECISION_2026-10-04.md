@@ -83,14 +83,11 @@ the Round 2 campaign engine (identity-service), `ArrivalReport`, and Analytics.
   accepted (owner, 2026-10-04). The owner thinks one app is too little; the only Round 2 comment
   asked to focus on one app instead of 24. The choice settles it as a measurement: how many
   pick 1 versus 3 is the answer.
-- **One continuity question, asked once with the report** (owner, 2026-10-04):
-  *"If your phone were lost today, would your Pi be safe?"* — `yes` / `no` / `not sure`, one tap.
-  - **Never a text field.** Nothing is typed, and nothing about the passphrase is asked or
-    stored. A follow-up that asks for any part of it is forbidden (C-106 §10a).
-  - Optional: skipping it does not affect the reward, so the answer is not bought.
-  - Read only as **aggregate counts** on the admin funnel, never per Pioneer and never public.
-  - It decides C-106 §10a (Personal Continuity): many `not sure` → a real need in the Pi
-    community; few → it stays a vision.
+- **One optional suggestion per app, with the report** (owner, 2026-10-05): *"What update would
+  you suggest for this app?"* (≤ 500 characters). It pays nothing and is read with each report
+  before payout. It **replaced** the continuity question that shipped first ("If your phone were
+  lost today, would your Pi be safe?"). The owner chose to spend this round's question on the
+  apps themselves. C-106 §10a is therefore undecided, and no measurement is running for it.
 
 ## 4a. Step 3 is built (2026-10-04) — and off until the owner opens it
 
@@ -126,8 +123,8 @@ tec-core-backend #373 (identity-service campaign module) and tec-app #277 (the H
   not take part in Round 3, and their old claims held seats. Claims now carry a `round`, and the
   uniques are per round. A claim from before this change is `legacy` and belongs to the round
   it was made in. One transfer still pays one claim across all rounds.
-- **Continuity question:** answered once, after a report. The Pioneer's own screen learns only
-  *whether* they answered. The admin funnel shows counts only.
+- **Suggestion:** an optional field beside every report, stored with its mission
+  (tec-core-backend #375, tec-app #278). The continuity question and its counts were removed.
 
 To open the round:
 
