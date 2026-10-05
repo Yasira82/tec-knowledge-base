@@ -163,6 +163,12 @@ ASSIGNED → SUBMITTED → (NEEDS_REVISION → SUBMITTED)* → APPROVED
   nothing to swap to), and treats the Hub as arrived (the Pioneer is signed in to it).
   Settings: `CAMPAIGN_TARGET` unset · `CAMPAIGN_APPS=tec,commerce,ecommerce,assets,life,zone` ·
   `CAMPAIGN_APPS_PER_PIONEER=6` · `CAMPAIGN_REWARD_PI=0.5`.
+- **Reward raised before the announcement (owner, 2026-10-05): 0.85 π each, 5.1 π for all six.**
+  3 π was judged low for six reports. 5 π does not divide into six (0.8333… × 6 = 4.9999998), so
+  the per-app reward rounds up to 0.85: the page shows a clean number and nobody receives less than
+  5 π. Budget ceiling: 100 seats × 5.1 π = 510 π. Raised before any claim of the round, because the
+  amount is frozen on each claim. If the stop reasons show "too many apps / too long", the lever is
+  `CAMPAIGN_APPS_PER_PIONEER`, not the reward. Setting: `CAMPAIGN_REWARD_PI=0.85`.
 - **Coverage arithmetic (for a `short` round):** 13 domains × 5 Pioneers ≈ 65 sign-ins ≈ 22 Pioneers at 3 each. That is a
   target, not a guarantee: assignments overlap, and the Pioneers who drop out leave gaps.
 - **Built on the campaign engine,** as §4 required (tec-core-backend #376, tec-app #280). It
