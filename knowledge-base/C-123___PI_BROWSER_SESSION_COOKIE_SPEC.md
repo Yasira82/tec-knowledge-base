@@ -493,6 +493,53 @@ the page, and after a tap (tokens are single-use); fall back to the plain link o
    - A bar showing another app's domain over a Hub screen is the sign of §9.
 ---
 
+## §14 — THE DOOR: `/app` OPENS ON A SIGN-IN BUTTON WHEN THERE IS NO SESSION
+
+> Truth State: **[Current State]** · Verification: **[Code Verified]** — tec-template-base #49 ·
+> Tec-Life #72 · Tec-Commerce #85 · Tec-Assets #75 and the 17 template-app PRs, each with
+> `sign-in-gate.test.tsx`; merged 2026-10-06. Last verified in code: 2026-10-06. Not yet opened on a
+> phone. Record: `memory/sessions/session-56t.md` §4.2.
+
+**Owner, 2026-10-06:** *"there should be a login button at the very start, before I enter any
+app."* Life's `/app` rendered the whole app with *Not signed in · no_token* in Settings and
+nothing to press. `no_token` means the browser sent no `tec_access_token`: the cookies live 24 h
+(§2), and the self sign-in (§10) refuses to run while the tab carries a stale `__tec_hub_entry`
+— a Pi Browser tab lives for days. Either way the person needed a button.
+
+**The gate (`SignInGate`, `src/components/pi`) wraps `/app` and has three states:**
+
+| `/api/auth/me` | What renders |
+|---|---|
+| not answered yet | neither the gate nor the app — a member must never see a gate flash on every load |
+| 401 | a **Sign in with Pi** button and nothing of the app |
+| 200 | the app, as before |
+
+**The button runs the app's own sign-in (§10), forced past the 10-minute attempt window.** The
+window exists to stop a loop (§10 "must not run more than once per tab per 10 minutes"), not to
+stop a person pressing a button; the attempt is still recorded. When Pi cannot answer on this
+page — a Hub-owned session (ADR-007), no SDK, a refusal — the Hub signs them in and returns them
+to this exact page (`ssoRedirect` with the current path), and a secondary link goes through the
+Hub directly.
+
+**Laws it keeps:**
+- **LAW 2 (cookies are set by a 200 landing in this context):** the button ends in the same
+  `sso-callback` landing as §10 and §12; nothing new sets a cookie.
+- **A Hub-signed visit never sees the door (§12 · §13):** the Quest, the campaign and the grid open
+  an app through the signed handoff, so it arrives with a session and `/me` answers 200.
+- **Not a redirect guard (§7 · §9 · §11):** a server redirect for a session-less visit was tried and
+  rolled back; a page load never leaves the origin. The door is a render decision on the client.
+- **Pi counts the sign-in for the app (§9):** Commerce and Assets, which used to send a
+  session-less visit straight to the Hub's SSO (a sign-in nobody chose, counted for the Hub), now
+  run their own Pi sign-in — `visit-sign-in` keeps Pi's token → `POST /api/auth/pi-self-login`
+  (the template's `pi-login`, ported: a one-time token for this origin, no cookies — LAW 1) → the
+  existing `sso-callback`.
+
+**Fleet (2026-10-06):** the template and its 17 apps, Life, Commerce, Assets — 21. **Ecommerce has
+no door on purpose**: it is a public shop, and the door would stand between a Pioneer and the
+catalogue. NBF and Brookfield were outside the rollout's branch set.
+
+---
+
 ## Related Documents
 
 - `C-02___CURRENT_STATE_.md` — Session 16 (full incident narrative)
