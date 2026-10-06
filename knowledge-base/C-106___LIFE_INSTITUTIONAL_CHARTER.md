@@ -465,6 +465,8 @@ This charter (C-106) depends on:
 
 Other charters depend on this one for:
   C-104 TEC AI    → personal context (consent-gated)
+                    ← proposes a goal (C-104 §10.1): /app?goal=… pre-fills Life's Add form;
+                      Life saves nothing until the person taps Add
   C-107 CONNECTION → relationship baseline (activity overlap)
   C-103 ECOMMERCE → personalized product recommendations
   C-101 COMMERCE  → merchant context (if merchant has Life profile)
