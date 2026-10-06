@@ -175,3 +175,47 @@ Deleting the finished repos' `.next` directories and reinstalling fixed it (134 
 - The two Ecommerce payments reconciliation closed on 3 Oct (§1.3) — only matter if a buyer reports.
 - KB #196's "a seat is taken at the CLAIM" was overtaken by #379 the same afternoon — corrected in
   this record's PR.
+- **The Life + TEC AI expansion (§6):** merge and deploy Tec-Life #75; then A1 (Tec-App #286) and A2
+  (Tec-core-backend #386 → Tec-App #287); then the C-104 line (#197) before the A3 code; V2 stays
+  gated (#198). Campaign rewards are not in the cash flow (the claim payload carries no amount). A
+  refused preferences save clears its own error on rollback.
+- **The two M1 numbers** exist but have not been read: after identity and analytics redeploy, open
+  `/hub/admin/life-ai` once — the first real reading is the baseline every later step is judged
+  against.
+
+## 6. 6 Oct, afternoon — what is missing to expand Life and TEC AI, and the first two steps
+
+The owner asked what was missing. The answer came from the two charters and the code, not memory,
+and is recorded in `audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`: Life's Phase 1 (budget, cash
+flow) was never built, nothing writes into Life from outside, no §8 metric had ever been measured;
+the assistant's context was five goal titles while the door already served skills and a pace, the
+intent-observation compiler wrote rows nobody read, and V2 waits on C-94 and C-97. The loop runs
+one way (Life → AI); the other direction — the assistant proposes a goal, Life's own form confirms
+— is C-104 §1.5's sentence but sits under V2 in §10, so a charter line comes first.
+
+**The order (owner):** M1 measure → L1 Life Phase 1 → A1 · A2 widen the assistant from what exists
+→ A3 close the loop → V2 gated. Eleven issues across four repos and a tracker (tec-knowledge-base
+#199), each carrying the same three rules: measure before building; Life data leaves Life only
+through its consent door; the assistant proposes, it never executes.
+
+| Step | What shipped | PRs |
+|---|---|---|
+| **M1 backend** | `GET /identity/life/admin/consent-coverage` — people who granted TEC AI at least one Life category, and per category, every category present with its zero; admin only, granted rows only (a revoke and absence are both a no), audited with the actor and the size of the answer, never its members. `GET /analytics/admin/ai/usage?weeks=8` — messages and people per ISO week. **No new write:** the Hub already stores one `ai.intent.observed` row per assistant message, including a message that matched no objective, so the count is those rows; only `created_at` and `user_id` are read. Platform scope: a user token is 403 even with the gateway's internal key | tec-core-backend **#387** merged |
+| **M1 Hub** | `/hub/admin/life-ai`, linked from the profile's Admin section. The BFF reads both services in parallel with the session only; a half that could not be read is `null` with its status and the card says *Could not read this (HTTP n)* — never 0 ("nobody granted consent" and "could not read" are different facts, E1). Arabic and English | Tec-App **#289** merged |
+| **L1 backend** | `LifeBudget`: one cap per (owner, app slug, UTC month), DECIMAL(20,8) in the row and a string on the wire; `BUDGET` consent category added the way INTENT was (no row for anyone, denied until granted); the context door serves this month's caps only when granted and never reads the table otherwise; purge deletes budgets in the same transaction. The schema diff ran through `isAdditiveOnly` from `migrate.cjs`: additive. **One narrowing of the issue, recorded on it:** identity-service keeps to the caps; spending is presented at the BFF with the person's own session, the way Activity is — identity never calls payment-service on a user's behalf, and a `spent` figure inside Life's table would be a second copy of money nobody keeps correct | tec-core-backend **#388** merged |
+| **L1 Life** | Budget and Cash flow sections on Home under the focus goal. `/api/bff/life/budget` reads the caps from identity and the month's completed payments from payment-service (grouped by the app each was for, `source`), `/cashflow` adds payouts SENT to the person from commerce-service; both compose in `lib/life/money.ts` with exact micro-π (BigInt). An amount that could not be read says *couldn't read* — never 0, a bar or "under budget"; more than a page of payments is *partial* (an understated sum reads as under budget); no net while a side is unknown. The Privacy screen gains the Budget switch; the purge copy names the caps; 12 languages | Tec-Life **#75** open |
+
+**What the gates caught.** A `"0"` cap passed the BFF's decimal regex (the budget-bff test expected
+a 400 and got a 200) — closed with a refine. Loading `useLife.ts` into the coverage denominator
+showed that **none of the Life hooks had a unit test**: functions fell from 62.6 % to 53 % and the
+floor failed; the fix was sixteen tests for every hook (goals · skills · trajectory · preferences
+· consent · intent · purge · subscription · activity), not a smaller denominator, and coverage
+rose to 82 / 70 / 76 / 87. Playwright in this session needs the environment's Chromium
+(`/opt/pw-browsers/chromium`) through a project-local config; with it, 5/5 including the new
+Home case.
+
+**Process.** Backend CI runs again — both backend PRs were green on every check before merging, so
+C-02 row 10 closes. The development branch in two repos still carried squash-merged commits that
+`git cherry` could not match against `main`; the check that settled it was the PR's
+`merge_commit_sha` being an ancestor of `main` and the touched files being identical, then a
+force-with-lease.

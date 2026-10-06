@@ -435,6 +435,24 @@ Tec-Life #44 (theme + 12 locales + skills) · #46 (Home + Pace) · #47 (Privacy)
 #48 · #49 · #50 (design passes). **Ops:** `prisma db push` for `life_goal_progress` and
 `life_consents`.
 
+### L1 — the budget (October 2026): Phase 1 begins, on the same boundary
+
+**Truth State:** [Current State] · **Verification:** [Code Verified] — tec-core-backend #388
+(merged 2026-10-06) · Tec-Life #75 (open). Last verified in code: 2026-10-06.
+
+§10 Phase 1 named a spending timeline, a budget by category and a cash flow; none existed until
+now, and it is the one slice that serves a Pioneer who uses no other TEC app. Built the way §4
+demands: **Life owns the caps** — `LifeBudget`, one per (owner, category, UTC month), the category
+an app slug (the only classification a payment carries, its `source`) or `other`, the amount
+DECIMAL(20,8) — and **nothing else**. What was spent is payment-service's; what was received is
+commerce-service's; the Life BFF reads both with the person's own session and puts them beside the
+cap, the Activity-timeline rule. An amount that could not be read is said, never shown as 0, and
+there is no net while a side is unknown (C-47 §10 E1). `BUDGET` is a consent category added the
+way INTENT was — no row for anyone, denied until granted — and the context door serves this
+month's caps when granted, never a payment line. The right to delete covers the caps. The first
+reader that could use them (TEC AI) is not yet widened to them; see
+`audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`.
+
 ---
 
 ## 12. INTEGRATION MAP
