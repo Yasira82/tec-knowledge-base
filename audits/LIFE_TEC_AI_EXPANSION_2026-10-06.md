@@ -1,8 +1,8 @@
 # Life + TEC AI expansion — what is missing, the order, and the state (2026-10-06)
 
 > Truth State: **[Current State]** for §1–§2 (read from the charters and the code on 2026-10-06)
-> and for the steps marked merged in §4; **[Planned State]** for the rest of §4; **[Future Vision]**
-> for V2. Governance: **[Draft]** — the owner's question ("what is missing to expand Life and TEC
+> and for M1 · L1 · A1 · A2 · A3, all merged on 2026-10-06 (§4); **[Future Vision]** for V2, which
+> stays a gate. Governance: **[Draft]** — the owner's question ("what is missing to expand Life and TEC
 > AI?") answered and turned into issues the same day; no ADR, nothing in this plan changes a charter.
 > Verification: **[Code Verified]** where a PR is named. Tracker: tec-knowledge-base #199.
 
@@ -72,10 +72,10 @@ precondition, listed there).
 | M1 backend | Tec-core-backend #384 | **#387** | **merged** — `GET /identity/life/admin/consent-coverage` (admin, counts only, audited) · `GET /analytics/admin/ai/usage?weeks=` (platform scope; the count is the `ai.intent.observed` rows the Hub already writes per message, no new write) |
 | M1 Hub | Tec-App #285 | **#289** | **merged** — `/hub/admin/life-ai`, linked from the profile's Admin section; the two halves fail independently and a failed half says *Could not read this (HTTP n)*, never 0 |
 | L1 backend | Tec-core-backend #385 | **#388** | **merged** — `LifeBudget` (one cap per owner · app slug · UTC month, DECIMAL(20,8), string on the wire), `BUDGET` consent category (denied until granted), the door serves this month's caps only, purge deletes them. **Narrowing recorded on the issue:** identity-service keeps to the caps; spending is presented at the BFF, not fetched by identity |
-| L1 Life | Tec-Life #73 | **#75** | **open** — Budget and Cash flow on Home; `/api/bff/life/budget` and `/cashflow` read identity + payment-service + commerce-service with the session only and compose in `lib/life/money.ts` (exact micro-π); an unreadable amount is said, never 0; no net while a side is unknown. Campaign rewards not in "In" yet (the claim payload carries no amount) |
-| A1 | Tec-App #286 | — | after L1 |
-| A2 backend · Hub | Tec-core-backend #386 · Tec-App #287 | — | after L1 |
-| A3 KB · Life · Hub | tec-knowledge-base #197 · Tec-Life #74 · Tec-App #288 | — | the KB line first |
+| L1 Life | Tec-Life #73 | **#75** | **merged** — Budget and Cash flow on Home; `/api/bff/life/budget` and `/cashflow` read identity + payment-service + commerce-service with the session only and compose in `lib/life/money.ts` (exact micro-π); an unreadable amount is said, never 0; no net while a side is unknown. Campaign rewards not in "In" yet (the claim payload carries no amount) |
+| A1 | Tec-App #286 | **#290** | **merged** — the assistant keeps what Life's door serves: skills (ladder word, max 5) when SKILLS is granted, the pace only when Life calls it projectable; signed in the context token and re-narrowed on the way out; the prompt routes toward a skill, never grades it, and states no number the context does not hold |
+| A2 backend · Hub | Tec-core-backend #386 · Tec-App #287 | **#389 · #291** | **merged** — `GET /analytics/admin/ai/intent-observations` (the unmatched asks with their excerpt, no identity — `user_id` is never selected) and `/intent-objectives` (counts, `null` at zero); the card on `/hub/admin/life-ai` informs the closed set, never edits it |
+| A3 KB · Life · Hub | tec-knowledge-base #197 · Tec-Life #74 · Tec-App #288 | **#200 · #76 · #292** | **merged** — C-104 §10.1 (pre-fill with confirmation in the owning app is V1); `/app?goal=&target=` fills Life's Add form, read inside the sign-in door and removed from the URL once read, nothing saved until Add; `[[go:life:goal?title=…]]` with a key whitelist, a required title, through the signed handoff |
 | V2 | tec-knowledge-base #198 | — | closed to work, open as a record; its gate lists five conditions |
 
 ## 5. Found along the way

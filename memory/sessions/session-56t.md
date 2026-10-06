@@ -219,3 +219,21 @@ C-02 row 10 closes. The development branch in two repos still carried squash-mer
 `git cherry` could not match against `main`; the check that settled it was the PR's
 `merge_commit_sha` being an ancestor of `main` and the touched files being identical, then a
 force-with-lease.
+
+## 7. 6 Oct, evening — A1 · A2 · A3: the rest of the plan, merged the same day
+
+| Step | What shipped | PRs |
+|---|---|---|
+| **A1** | The assistant keeps what Life's door already served and the Hub dropped: up to five skills with their ladder word when SKILLS is granted (a numeric or unknown level drops the row), and the pace only when TRAJECTORY is granted **and** Life says `projectable` — a refusal stays a refusal. Not served → `undefined`, not `[]`. Signed in the context token, re-narrowed on the way out. The prompt: route toward a skill (NX, DX), never grade it; encourage a pace, never judge it; never a number the context does not hold | tec-app #290 |
+| **A2** | `GET /analytics/admin/ai/intent-observations?objective=null` — the asks that matched nothing, with their excerpt and date; a matched row never carries an excerpt; **`user_id` is never selected**, and a test plants one in a payload to prove nothing leaks. `/intent-objectives` counts per objective, `null` listed at zero. A bad filter is a 400, never widened. The card under the M1 numbers informs the closed objective set and never edits it | tec-core-backend #389 · tec-app #291 |
+| **A3** | **C-104 §10.1**: pre-fill with confirmation in the owning app is V1 — a whitelist per `(slug, action)`, only values the person said, the app saves nothing until its own submit, the signed handoff. Life: `/app?goal=&target=` fills the Add form under *Suggested by TEC AI*, read **inside the sign-in door** (the query survives a sign-in) and removed from the URL once read; nothing is written until Add. Hub: `[[go:life:goal?title=…&target=…]]`, keys renamed to Life's own, every value checked, opened through `useHandoffLinks` in a new tab | KB #200 · Tec-Life #76 · tec-app #292 |
+
+**What the gates caught.** A `?target=50` with no title still produced a chip — a target is not a
+goal. The title rule is now `required`: a missing required key voids the whole pre-fill, and no chip
+is shown. And the Hub's system prompt is a template literal, so backticks inside it closed the
+string early — the build said so before any test did.
+
+**Left open (this step).** Nothing of A1–A3 has been seen on a phone. After identity and analytics
+redeploy: read the two M1 numbers and the A2 card once — they are the baseline — and propose one
+goal through the assistant to see Life open on a filled form. Budget caps are served by the door but
+not yet read by the assistant; campaign rewards are not in the cash flow. V2 stays a gate (#198).
