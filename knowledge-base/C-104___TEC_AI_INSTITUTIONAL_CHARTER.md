@@ -490,9 +490,9 @@ V3 — Institutional Intelligence
 
 ### 10.1 Pre-fill with confirmation is V1 — the line between proposing and doing
 
-**Truth State:** [Planned State] until Tec-Life #74 and Tec-App #288 merge, then [Current State] ·
+**Truth State:** [Current State] — Tec-Life #76 and Tec-App #292 merged 2026-10-06 ·
 **Governance State:** [Governance Approved] (owner, 2026-10-06 — step A3 of the Life + TEC AI
-expansion, `audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`) · **Verification:** [Documentation Verified]
+expansion, `audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`) · **Verification:** [Code Verified] — `goal-prefill.test.tsx` (Life) · `ai-goal-prefill.test.tsx` (Hub); not yet seen on a phone. Last verified in code: 2026-10-06
 
 V2 above lists "navigation + pre-filled intents into owning apps" beside tool-calling, as if they
 were one capability. They are not. §1.5 already draws the line that matters — *the AI may
@@ -507,7 +507,8 @@ the person reads, edits and submits themselves executes nothing. So pre-fill, on
 | The link is the signed handoff (C-123 §12/§13): real link, new tab, the person arrives signed in | A same-tab redirect or a `window.location` hop |
 
 **First and only use (A3):** `[[go:life:goal?title=…&target=…]]` → Life's Add-goal form on `/app`
-(Tec-App #288 · Tec-Life #74). Any further `(slug, action)` pair is added the same way — a
+(Tec-App #292 · Tec-Life #76). A required key that is missing (no usable title) voids the pre-fill:
+no chip is shown, never an empty form under a label that promises a goal. Any further `(slug, action)` pair is added the same way — a
 whitelist entry with a test — and never as a free-form passthrough.
 
 **It does NOT need C-94 or C-97.** No capability is executed and no cross-service context is
