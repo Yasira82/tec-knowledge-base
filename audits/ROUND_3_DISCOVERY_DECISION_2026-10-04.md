@@ -173,8 +173,22 @@ ASSIGNED → SUBMITTED → (NEEDS_REVISION → SUBMITTED)* → APPROVED
   budget is 25 × 5.1 π = 127.5 π a round, and the next round is six other apps at the same reward.
   Seats are counted per round (claims carry the round), so a new round is a new
   `CAMPAIGN_VISITS_FROM` and a new `CAMPAIGN_APPS`; a Pioneer of this round may take the next one.
-  A seat is taken at the CLAIM, after all six are approved — so Pioneers still working when the
-  25th claim lands find the round full.
+- **A seat is held from the ASSIGNMENT, not the claim (tec-core-backend #379, the same afternoon).**
+  Taking it at the claim meant forty Pioneers could each work six apps and the last fifteen find
+  the round full after writing every report. Now a Pioneer past `CAMPAIGN_SEATS` is refused at
+  "Get my apps" (*This round is full — all N seats are taken*). A holder is anyone with a claim, or
+  with apps assigned who sent at least one report or was assigned less than `CAMPAIGN_HOLD_HOURS`
+  (48) ago; no report within the hold gives the seat back, and a lapsed holder needs a free seat
+  again before reporting.
+- **A mission opens on the TAP, like the Founding Quest (owner, 2026-10-05; #380 · #382 ·
+  tec-app #282 · #283).** The first phone test showed five of six missions never opening while the
+  app's own report waited on a chain (Pi Browser's new tab, a deploy, a re-sent Hub tap) that
+  failed somewhere every time. Now a mission opens once it was tapped from the campaign page
+  **after the assignment** (`tapped_at`; an older or re-sent tap cannot open it) or once the app
+  saw the Pi sign-in this round. The report keeps the evidence for the reviewer — `partial` (the
+  app saw the sign-in) or `declared` (it did not) — and the review shows it. **The owner's review
+  is the gate before any π moves**, and an APPROVED report can be sent back (`reopen`, with a note,
+  audited) until the Pioneer claims (#383).
 - **Coverage arithmetic (for a `short` round):** 13 domains × 5 Pioneers ≈ 65 sign-ins ≈ 22 Pioneers at 3 each. That is a
   target, not a guarantee: assignments overlap, and the Pioneers who drop out leave gaps.
 - **Built on the campaign engine,** as §4 required (tec-core-backend #376, tec-app #280). It

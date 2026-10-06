@@ -101,6 +101,12 @@ F1 · F2 · F3 · F4  →  Round 3 on the launch set  →  S1 Explorer  →  S6 
 **Tracker: tec-knowledge-base #191.** It lists all 15 items with their links and states: F1 #189 · F2 Tec-core-backend #367, Tec-Commerce #78, Tec-Assets #70 · F3 tec-template-base #47 · F4 #190 · Round 3 Tec-core-backend #368, Tec-App #276 · S1 Tec-Explorer #56 · S2 Tec-Analytics- #61 · S3 Tec-Commerce #79 · S4 Tec-Zone #59 · S5 Tec-Alert #48 · S6 Tec-Dx #47 · S7 Tec-Life #67. The state
 lives there, not here: this document holds the plan, and the issues hold the progress.
 
+**Phase 0 as of 2026-10-06** (`memory/sessions/session-56t.md`): **F2 built** — tec-core-backend
+#369 (one desk for both marketplaces; NFT sales swept in from asset-service) · Tec-Commerce #80 ·
+#82; no Assets screen, and no fee (none decided). **F3 done in all 23 apps** — tec-template-base #48
+and the app PRs (session 56t §2). **F1** waits on Pi; **F4** is the owner's. Round 3 opened on the
+same 6 apps for everyone (`audits/ROUND_3_DISCOVERY_DECISION_2026-10-04.md` §4b).
+
 ## Related Documents
 
 - `knowledge-base/C-135___LAUNCH_STRATEGY_FOCUSED_8.md` — the launch set and the Professional Bar
