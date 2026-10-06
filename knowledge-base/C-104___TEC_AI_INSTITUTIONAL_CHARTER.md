@@ -219,7 +219,7 @@ called the parser. A third AI surface MUST import these, never re-implement them
 | `src/lib/ai-stream.ts` | Line-buffered SSE reader + the light-markdown tokeniser |
 | `src/components/ai/RichText.tsx` | Rendering that markdown (bold · code · bullets · headings) |
 | `src/components/ai/NavChips.tsx` | Rendering a nav intent as a chip |
-| `src/lib/ai/nav-intents.ts` | Parsing the `[[go:slug]]` marker out of the prose |
+| `src/lib/ai/nav-intents.ts` | Parsing the `[[go:slug]]` marker out of the prose — and, per §10.1, an optional whitelisted query (`[[go:life:goal?title=…]]`) |
 | `src/lib/ai-session.ts` | Transcript persistence (load · save · archive list) + assistant settings |
 | `src/components/ai/AIMenu.tsx` | The assistant's menu — archived chats · starter questions · settings · support (§5.6) |
 
@@ -472,6 +472,9 @@ V1 — Honest Concierge  ✅ SHIPPED (Hub /ai)
   → Auth-gated (logged-in TEC users only; protects the paid AI budget)
   → Text-only guide — it recommends + explains; it does NOT execute
   → Does NOT require the full C-94 Capability Registry (that gate is a V2 prerequisite)
+  → May PRE-FILL a form in the owning app through a nav chip — [[go:<slug>:<action>?field=…]] —
+    and the owning app saves NOTHING until the person confirms there (§10.1). Tool-calling
+    and execution stay V2.
 
 V2 — Cross-App Orchestrator  (AFTER the economy is running; not before the C-135 launch)
   → Tool/function-calling → navigation + pre-filled intents into owning apps
@@ -484,6 +487,31 @@ V3 — Institutional Intelligence
   → External Pi-ecosystem AI services (via DX API)
   → Economic forecasting + market intelligence
 ```
+
+### 10.1 Pre-fill with confirmation is V1 — the line between proposing and doing
+
+**Truth State:** [Planned State] until Tec-Life #74 and Tec-App #288 merge, then [Current State] ·
+**Governance State:** [Governance Approved] (owner, 2026-10-06 — step A3 of the Life + TEC AI
+expansion, `audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`) · **Verification:** [Documentation Verified]
+
+V2 above lists "navigation + pre-filled intents into owning apps" beside tool-calling, as if they
+were one capability. They are not. §1.5 already draws the line that matters — *the AI may
+recommend and pre-fill; the human confirms inside the owning app* — and a pre-filled form that
+the person reads, edits and submits themselves executes nothing. So pre-fill, on its own, is V1:
+
+| Allowed in V1 | Still V2 |
+|---|---|
+| A nav chip carrying values the person **said in their own words** into an owning app's form: `[[go:<slug>:<action>?key=value]]` | The assistant calling any service, tool or function |
+| Each `(slug, action)` **whitelists its keys**; anything else in the query is dropped, never forwarded | A value the person did not state (an inferred amount, a guessed title) |
+| The owning app shows the value in an editable field, marked *suggested by TEC AI*, and **saves nothing until the person taps its own submit** | Saving, paying or committing anything on the assistant's side |
+| The link is the signed handoff (C-123 §12/§13): real link, new tab, the person arrives signed in | A same-tab redirect or a `window.location` hop |
+
+**First and only use (A3):** `[[go:life:goal?title=…&target=…]]` → Life's Add-goal form on `/app`
+(Tec-App #288 · Tec-Life #74). Any further `(slug, action)` pair is added the same way — a
+whitelist entry with a test — and never as a free-form passthrough.
+
+**It does NOT need C-94 or C-97.** No capability is executed and no cross-service context is
+assembled; the value travels in a URL the person can see, into a form they submit.
 
 > **Sequencing discipline (C-135 + C-121):** the Intelligence Layer is the moat, but it
 > is built **on top of a running economy** — C-121 requires Analytics + Zone live first
