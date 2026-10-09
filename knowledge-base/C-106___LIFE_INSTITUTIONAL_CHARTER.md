@@ -453,6 +453,43 @@ month's caps when granted, never a payment line. The right to delete covers the 
 reader that could use them (TEC AI) is not yet widened to them; see
 `audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`.
 
+
+### M1 — the mentor (October 2026): a plan with its steps, and a weekly check-in
+
+**Truth State:** steps [Current State] · check-in [Planned State] · **Governance State:**
+[Governance Approved] — the owner's decision, 2026-10-08 ("a guide who builds the person, in
+everything") and 2026-10-09 (step 2). **Verification:** steps [Code Verified] — Tec-App #297 and
+Tec-Life #77, both merged; the check-in is in open PRs (tec-core-backend · Tec-Life). Last
+verified in code: 2026-10-09.
+
+The owner asked for TEC AI (C-104) to be a mentor for the whole person — money, work, skills,
+learning, health habits, discipline, relationships, character — and not only for TEC's apps. Life
+is where that mentoring lands, and its §4 boundary does not move:
+
+- **A plan arrives with its steps; Life saves nothing until Add.** The assistant's
+  `[[go:life:goal?title=…&steps=a;b;c]]` (C-104 §10.1) opens the Add form with the goal and up to
+  five steps, each removable. The steps are kept **inside** the goal — its `description`, as
+  `- [ ] step` lines — not as goals of their own, so a five-step plan neither fills the free
+  plan's active-goal cap nor buries the goal it serves. Ticking a step rewrites the description
+  with the person's own session. No schema change.
+- **The weekly check-in is a permission, not a data share.** `CHECKIN` joins the consent
+  categories the way INTENT and BUDGET did — no row for anyone, so off until switched on. When
+  on, identity-service files at most **one** TEC Alert a week (C-111 presents it) about an active
+  goal with no tick, edit or logged step for seven days, naming the next unticked step, in the
+  person's Life language. One per ISO week however many goals are quiet; an alert already read
+  stays read. Nothing is sent to anyone else.
+- **The mentor's limits are part of the charter, not a prompt detail.** It is not a doctor,
+  psychologist, lawyer or financial adviser: for a symptom, a condition, medication, a legal
+  problem or an investment it gives general guidance and names the professional to see. It
+  gives no diets, medication or doses. When a person speaks of harming themselves or someone
+  else, or of being in danger, it stops coaching and points to emergency help and someone they
+  trust. It respects their values and faith and never moralises. These live in the assistant's
+  prompt, which a model follows but does not guarantee — the reason every write still waits for
+  the person's own tap in Life.
+
+**What is NOT claimed.** The model is not proven to keep those limits in every reply; nothing
+measures it yet. The monthly review (step 3) is not built.
+
 ---
 
 ## 12. INTEGRATION MAP
@@ -466,7 +503,9 @@ This charter (C-106) depends on:
 Other charters depend on this one for:
   C-104 TEC AI    → personal context (consent-gated)
                     ← proposes a goal (C-104 §10.1): /app?goal=… pre-fills Life's Add form;
-                      Life saves nothing until the person taps Add
+                      Life saves nothing until the person taps Add; `&steps=` brings up to
+                      five steps, kept inside the goal (§11b M1)
+  C-111 ALERT     ← weekly check-in (CHECKIN granted): one alert a week about a quiet goal
   C-107 CONNECTION → relationship baseline (activity overlap)
   C-103 ECOMMERCE → personalized product recommendations
   C-101 COMMERCE  → merchant context (if merchant has Life profile)

@@ -1,4 +1,4 @@
-# Session 56t — the seller gets paid, Round 3 as it runs, and a door on every app (4–6 Oct 2026)
+# Session 56t — the seller gets paid, Round 3 as it runs, and a door on every app (4–7 Oct 2026)
 
 > Truth State: **[Current State]** · Verification: **[Runtime Verified]** for the Round 3 bugs
 > (each was seen on the owner's phone, §3) and the storage outage (§1.3); **[Code Verified]** for
@@ -237,3 +237,28 @@ string early — the build said so before any test did.
 redeploy: read the two M1 numbers and the A2 card once — they are the baseline — and propose one
 goal through the assistant to see Life open on a filled form. Budget caps are served by the door but
 not yet read by the assistant; campaign rewards are not in the cash flow. V2 stays a gate (#198).
+
+## 8. 7 Oct — the first reading: the assistant answers in the language it is spoken to, and the Hub speaks twelve
+
+**Truth State:** [Current State] · **Verification:** [Code Verified] — tests, tsc, lint, build; the
+built landing opened in Chromium with a `zh-CN` and an `ar-EG` browser. Not yet seen on a phone.
+
+The owner read `/hub/admin/life-ai` for the first time (four screenshots): **25 messages, 24 matched
+no objective**, and the largest group was people asking for their own language — *"بالعربي"*,
+*"انتا كل مره لازم اقولك تكتب بالعربي"*, *"转中文"*, *"全是英文看不懂"* (it is all English, I can't
+read it). The card also showed a raw `BUDGET`. All four fixes in **tec-app #293** (merged):
+
+| # | What | How |
+|---|---|---|
+| 1 | **The reply language** | The route rendered `Language preference: English` from the **interface** language and the model obeyed it over the question; both clients folded the reply setting and the UI locale into one field; the route accepted `en`/`ar` only; `useAiChat` sent `'ar'` for any non-English UI. Now `lib/ai/reply-language.ts`: setting → script of the last message → mirror (C-104 §5.5). Two fields, both narrowed against the twelve |
+| 2 | **Five objectives from the real asks** | `change_language` (first — a request about the conversation outranks its topic) · `platform_trust` · `compare_apps` · `recommend_app` · `explain_app` (last). 20 of the 21 real asks land; *"没找到"* stays `null`, honestly. The real asks are the test fixtures |
+| 3 | **The admin card** | `BUDGET` → *Budget* / *الميزانية* |
+| 4 | **The Hub in twelve languages** | en · ar · zh · vi · ko · id · hi · es · pt · fr · tr · ru — the fleet's list. Ten new dictionaries, each `typeof en`; `i18n-parity.test.ts` runs over all twelve (every key and no other, no empty string, every `{placeholder}`, no long English sentence standing in). A first visit follows the browser (`zh-CN` → 中文); the switcher is a native select, each language named in itself. Inline en/ar ternaries (landing, `/ai`, the assistant menu) moved into the dictionaries |
+
+**Stays en/ar on purpose:** app names and registry descriptions (the .pi domains and Portal
+listings are English); the Pioneers and FAQ pages (copy exists in en/ar — the other ten read
+English); older `/dashboard/*` pages still format dates as `en-US`.
+
+**Left open.** The ten translations were written by the session, not reviewed by native speakers —
+Chinese and Indonesian first, since the Pioneers who asked were Chinese. Read the A2 card again
+after a week: the unmatched share should fall, and a language ask should now be rare.
