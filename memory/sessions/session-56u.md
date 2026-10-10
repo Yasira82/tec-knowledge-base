@@ -160,7 +160,7 @@ Portal showed what that wallet is:
   [Assumed] that connecting one moves that app's U2A payments there — the screen names it, Pi's
   documentation is not in hand; verify with one 1π payment after connecting.
 
-`GA52Q…D364` is a wallet the owner holds; it is not an app wallet and is not under review.
+`GA52Q…D364` was then a wallet the owner held; since §4f it is the wallet of Ecommerce's Mainnet App Wallet application.
 
 **The owner's call (same night):** apply for Ecommerce's Mainnet App Wallet anyway, because Pi's
 approvals take weeks and he does not want to wait on them later. The gate needs Ecommerce's Testnet
@@ -177,6 +177,29 @@ faucet), `TESTNET_GATE_SOURCES=ecommerce` on payment-service. The part no code r
 different Pi accounts** must open `ecommerce-test.tecosystem.app/testnet-payout` in Pi Browser.
 `PI_APP_WALLETS` (#410) is for incoming wallets once connected — not set until then.
 
+## 4f. Ecommerce's Mainnet App Wallet — submitted (10 Oct, late night)
+
+The owner's call (§4e) was carried through. **Ecommerce's Testnet app paid 5 unique wallets, the
+Portal's red line cleared, and the application was submitted** — `GA52Q4CNC6Z6AMP5GBPPEWNIK5F4FHYNUQG4CW545XSYZ4MHN6EJD364`,
+*pending review* (owner's phone, Runtime Verified). Applied as an Individual. Ecommerce's Testnet
+app wallet is `GA6TX…HX6XU`.
+
+| PR | What |
+|---|---|
+| Tec-Ecommerce #78 · #79 | `/testnet-payout` on the Testnet host: sign in with Pi (`wallet_address` scope), one tap, 0.01 Test-Pi; a visitor with no session is signed in with the same Pi sign-in. |
+| Tec-Ecommerce #80 | **Why every account but the owner's got "Sign in first":** `pi-login`, `refresh` and `logout` set `Domain=.tecosystem.app` (`COOKIE_DOMAIN`), which the browser drops silently on `tec-ecommerce.vercel.app`. `sso-callback` already used `cookieDomainFor`; now all four do. The owner's account worked only because it had signed in through `sso-callback` before. |
+| Tec-Commerce #87 · Tec-Assets #76 | Same family: Commerce's `logout`; Assets' `refresh` (hard-coded `.tecosystem.app`) and `logout`. |
+| Tec-Commerce #88 · Tec-Assets #76 | The same Testnet payout page, for Commerce's and Assets' own gates. |
+
+**What it took, for the next app:** on tec-payment-service `PI_API_KEY_<APP>_TESTNET`,
+`PI_A2U_WALLET_SEED_TESTNET_<APP>` (the **Testnet app wallet's** 24 words — the `G…` address is
+not it) and `<app>` in `TESTNET_GATE_SOURCES`; Test-Pi in that wallet; the **Testnet host** the Portal
+registers (`tec-<app>.vercel.app`; the `<app>-test.tecosystem.app` hosts did not load); five
+different Pi accounts in Pi Browser. Empty `TESTNET_GATE_SOURCES` after a submit closes the page.
+
+Still open, unexplained: a new account opening a Testnet app's **home** is sent to the Hub's
+"Sign in with Pi" and does not come back. The payout page does not depend on it.
+
 ## 5. Open at the end of the session
 
 1. ~~Unbacked balances~~ — reversed (§4b).
@@ -185,4 +208,6 @@ different Pi accounts** must open `ecommerce-test.tecosystem.app/testnet-payout`
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
 6. Decide on Incoming Multisig wallets for the selling apps (Ecommerce · Commerce · Assets); once connected, list them in `PI_APP_WALLETS`.
+7. Commerce and Assets Mainnet App Wallets — their Testnet rounds (§4f).
+8. A new account's Testnet-app sign-in through the Hub does not come back (§4f).
 5. Turn on `SELLER_BALANCE_CREDIT` after reviewing the OWED queue (mark own sales DIRECT).
