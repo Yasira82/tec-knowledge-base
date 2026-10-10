@@ -101,10 +101,21 @@ deposits, and magy888's 29.5π with no ledger row) and one `void_unbacked` audit
 the payout address · 5 app Pros · 1 referral; the re-run after #404 moved `subscription 1`. Six rows stay on
 duplicates as reported conflicts (three Hub plan rows, including the old FREE one, and three referral codes).
 
+### Assets · KYC · notifications (same evening)
+
+| PR | What |
+|---|---|
+| tec-core-backend #405 · tec-app #308 | asset-service merge: each asset owned moves with an `AssetHistory` row; listings sold and bought re-point; payment receipts stay. asset-service has no JWT secret, so the admin check is auth-service `/me` with the caller's token. |
+| #406 · tec-app #309 | kyc: the oldest keeps the most advanced record (VERIFIED > PENDING > REJECTED > NOT_STARTED, then level, then later update), swapped with a `KycAuditLog` row each. notification: inbox and devices move; settings only into an empty place. |
+
+**Runtime (owner's phone):** yas55eR82 — 158 assets · 35 listings · KYC 1 · 506 notifications; the other nine
+names — KYC 1 each for gzer0023 · magy888 · luckypat00 · zbieracz, a few notifications, nothing in assets.
+The Founding 100 page is unchanged (it keys on the Pi username in identity-service): #1, 8 of 100.
+
 ## 5. Open at the end of the session
 
 1. ~~Unbacked balances~~ — reversed (§4b).
-2. ~~Merge duplicates in commerce~~ — yas55eR82 done (§4c); the other names next, then assets · kyc · notification.
+2. ~~Merge duplicate accounts~~ — done in commerce · assets · kyc · notifications (§4c).
 3. The Hub's Mainnet app wallet is again under Pi review (`GBXU6DHS…MIQQ3R`). On approval:
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
