@@ -90,10 +90,21 @@ Each wallet has one `VOID_UNBACKED` ledger row with its breakdown (purchase echo
 deposits, and magy888's 29.5π with no ledger row) and one `void_unbacked` audit row. Only a `SALE`
 (a seller's share, #398) is backed from here on. **Runtime Verified** (owner's phone).
 
+## 4c. Duplicate accounts merged — commerce (10 Oct, evening)
+
+| PR | What |
+|---|---|
+| tec-core-backend #403 · tec-app #307 | auth-service `GET /admin/duplicate-accounts` (admin, read-only); commerce-service `GET/POST /commerce/admin/account-merge` — the accounts come from auth-service by exact name, oldest canonical, never from the request; the dry run executes the real code in a rolled-back transaction; the merge is one transaction + one `account_merges` row. Needs `AUTH_SERVICE_URL` on commerce-service. |
+| #404 | The owner's live PRO (to 2026-11-03) sat on duplicate `cbc4bb46` while the oldest had a FREE row, and the first rule ("the oldest keeps its own") left the owner on FREE. The oldest now keeps the **better** plan (live paid > FREE, then later end); the rows swap, nothing deleted. |
+
+**yas55eR82 (Runtime Verified, owner's phone):** first run moved 13 products · 71 orders · 3 seller payouts ·
+the payout address · 5 app Pros · 1 referral; the re-run after #404 moved `subscription 1`. Six rows stay on
+duplicates as reported conflicts (three Hub plan rows, including the old FREE one, and three referral codes).
+
 ## 5. Open at the end of the session
 
 1. ~~Unbacked balances~~ — reversed (§4b).
-2. Merge the duplicate accounts' references (products, payouts, subscriptions) into the oldest.
+2. ~~Merge duplicates in commerce~~ — yas55eR82 done (§4c); the other names next, then assets · kyc · notification.
 3. The Hub's Mainnet app wallet is again under Pi review (`GBXU6DHS…MIQQ3R`). On approval:
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
