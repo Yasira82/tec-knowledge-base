@@ -133,6 +133,50 @@ Consequence: until each app has its own app wallet, a real customer's payment la
 personal wallet. The seller-share model (#398) and withdrawals (#400) assume π held by the platform's
 app wallet; they stay off until that wallet exists.
 
+## 4e. Owed to sellers, and the app wallets (10 Oct, night)
+
+| PR | What |
+|---|---|
+| tec-core-backend #409 · tec-app #312 | `/hub/admin/seller-liabilities`, read-only: **owed** = π in TEC balances (only sellers' shares since the void) + withdrawals not yet sent + sales not yet credited (`OWED`), next to the Hub app wallet's balance on the chain, and the difference to move in by hand. A part that cannot be read makes the total *incomplete*, never smaller (P6). Endpoints: wallet `GET /wallets/admin/liabilities`, commerce `GET /commerce/payouts/summary`, payment `GET /payments/admin/app-wallet`. |
+| #410 · tec-app #313 | The same view reads every other app's Mainnet wallet from `PI_APP_WALLETS="app=G…,…"` (public addresses; never paid out from — their seeds are not on the server). |
+
+**Runtime (owner's phone):** owed 0π; the Hub wallet reads **"the payout wallet (seed set)"** at
+`GBXU6…MIQQ3R` — the seed on payment-service derives exactly the wallet under Pi review — and is
+"not on the chain yet" (not approved, not funded).
+
+**App wallets — corrected the same night, from the Portal's own screens.** The plan was a wallet per
+selling app (Ecommerce first, `GA52Q4CNC6Z6AMP5GBPPEWNIK5F4FHYNUQG4CW545XSYZ4MHN6EJD364`). The
+Portal showed what that wallet is:
+
+- **"Apply for Mainnet App Wallet" is the OUTGOING wallet** (App-to-User). Ecommerce's form refuses
+  to submit: *"The paired Testnet app needs App to User transactions to 5 unique wallets"* — the same
+  gate the Hub passed in September (`audits/A2U_FIRST_PAYOUT_ROUND_2026-09-13.md`), which needs four
+  other people to sign into **Ecommerce's** Testnet app. Ecommerce does not pay anyone; withdrawals go
+  from the Hub wallet (#400). **Not submitted, and not needed** — exactly
+  `audits/PI_TESTNET_HOST_OWNERSHIP_2026-09-12.md` §11b ("one app does").
+- **Where an app's sales land is the "Incoming Multisig Wallet"** — Ecommerce shows *Connected Wallet:
+  None*, which is why every Mainnet payment went `GAKCH → GAKCH` (§4d): with none connected, the π
+  reaches the developer's wallet. A multisig needs ≥ 2 signer addresses whose weights reach 10.
+  [Assumed] that connecting one moves that app's U2A payments there — the screen names it, Pi's
+  documentation is not in hand; verify with one 1π payment after connecting.
+
+`GA52Q…D364` is a wallet the owner holds; it is not an app wallet and is not under review.
+
+**The owner's call (same night):** apply for Ecommerce's Mainnet App Wallet anyway, because Pi's
+approvals take weeks and he does not want to wait on them later. The gate needs Ecommerce's Testnet
+app to pay 5 unique wallets, and the Hub's September method (list uids from auth, run the workflow)
+no longer works: since #394–#396 a sign-in through another app leaves no row with that app's uid.
+
+| PR | What |
+|---|---|
+| tec-core-backend #410 | `POST /payments/testnet-gate/claim` — the person signs in with Pi **in that Testnet app** and taps once; the uid is Pi's answer for that sign-in and must be the signed-in TEC user. Testnet only (fixed in code), 0.01 Test-Pi, once per Pi account per app (Redis NX; no Redis → refused), capped at 10, closed unless `TESTNET_GATE_SOURCES` lists the app. A Testnet app other than the Hub signs with `PI_A2U_WALLET_SEED_TESTNET_<SOURCE>` — no fallback; Mainnet stays the Hub's one wallet. |
+| Tec-Ecommerce #78 | `/testnet-payout` on the Testnet host (404 on Mainnet): sign in with Pi (`wallet_address` scope) and receive 0.01 Test-Pi. |
+
+Ops: `PI_API_KEY_ECOMMERCE_TESTNET`, `PI_A2U_WALLET_SEED_TESTNET_ECOMMERCE` (fund it from the Testnet
+faucet), `TESTNET_GATE_SOURCES=ecommerce` on payment-service. The part no code removes: **five
+different Pi accounts** must open `ecommerce-test.tecosystem.app/testnet-payout` in Pi Browser.
+`PI_APP_WALLETS` (#410) is for incoming wallets once connected — not set until then.
+
 ## 5. Open at the end of the session
 
 1. ~~Unbacked balances~~ — reversed (§4b).
@@ -140,4 +184,5 @@ app wallet; they stay off until that wallet exists.
 3. The Hub's Mainnet app wallet is again under Pi review (`GBXU6DHS…MIQQ3R`). On approval:
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
+6. Decide on Incoming Multisig wallets for the selling apps (Ecommerce · Commerce · Assets); once connected, list them in `PI_APP_WALLETS`.
 5. Turn on `SELLER_BALANCE_CREDIT` after reviewing the OWED queue (mark own sales DIRECT).
