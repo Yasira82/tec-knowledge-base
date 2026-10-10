@@ -454,13 +454,13 @@ reader that could use them (TEC AI) is not yet widened to them; see
 `audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`.
 
 
-### M1 — the mentor (October 2026): a plan with its steps, and a weekly check-in
+### M1 — the mentor (October 2026): a plan with its steps, a weekly check-in, a monthly review
 
-**Truth State:** steps [Current State] · check-in [Planned State] · **Governance State:**
-[Governance Approved] — the owner's decision, 2026-10-08 ("a guide who builds the person, in
-everything") and 2026-10-09 (step 2). **Verification:** steps [Code Verified] — Tec-App #297 and
-Tec-Life #77, both merged; the check-in is in open PRs (tec-core-backend · Tec-Life). Last
-verified in code: 2026-10-09.
+**Truth State:** [Current State] · **Governance State:** [Governance Approved] — the owner's
+decision, 2026-10-08 ("a guide who builds the person, in everything") and 2026-10-09 (steps 2
+and 3). **Verification:** [Code Verified] — steps: Tec-App #297 · Tec-Life #77; check-in:
+tec-core-backend #391 · Tec-Life #78; monthly review: tec-core-backend #392 · Tec-Life #79; all
+merged. Last verified in code: 2026-10-10.
 
 The owner asked for TEC AI (C-104) to be a mentor for the whole person — money, work, skills,
 learning, health habits, discipline, relationships, character — and not only for TEC's apps. Life
@@ -478,6 +478,11 @@ is where that mentoring lands, and its §4 boundary does not move:
   goal with no tick, edit or logged step for seven days, naming the next unticked step, in the
   person's Life language. One per ISO week however many goals are quiet; an alert already read
   stays read. Nothing is sent to anyone else.
+- **The monthly review rides the same switch.** In the first seven days of a month, one Alert
+  about the month just ended: goals finished, goals added, π logged and the days it was logged
+  on. Only what Life can vouch for is counted — a ticked step carries no date, so ticks are not;
+  a DONE goal edited later counts in the later month, and the copy says "finished", never "on
+  time". A month with nothing done and nothing open sends nothing.
 - **The mentor's limits are part of the charter, not a prompt detail.** It is not a doctor,
   psychologist, lawyer or financial adviser: for a symptom, a condition, medication, a legal
   problem or an investment it gives general guidance and names the professional to see. It
@@ -488,7 +493,7 @@ is where that mentoring lands, and its §4 boundary does not move:
   the person's own tap in Life.
 
 **What is NOT claimed.** The model is not proven to keep those limits in every reply; nothing
-measures it yet. The monthly review (step 3) is not built.
+measures it yet.
 
 ---
 
@@ -505,7 +510,7 @@ Other charters depend on this one for:
                     ← proposes a goal (C-104 §10.1): /app?goal=… pre-fills Life's Add form;
                       Life saves nothing until the person taps Add; `&steps=` brings up to
                       five steps, kept inside the goal (§11b M1)
-  C-111 ALERT     ← weekly check-in (CHECKIN granted): one alert a week about a quiet goal
+  C-111 ALERT     ← CHECKIN granted: one alert a week about a quiet goal, one review a month
   C-107 CONNECTION → relationship baseline (activity overlap)
   C-103 ECOMMERCE → personalized product recommendations
   C-101 COMMERCE  → merchant context (if merchant has Life profile)

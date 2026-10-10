@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 56u | [Session 56u — one Pioneer was ten accounts, and the TEC balance had nothing behind it (8–10 Oct 2026)](session-56u.md) |
 | 56t | [Session 56t — the seller gets paid, Round 3 as it runs, and a door on every app (4–7 Oct 2026)](session-56t.md) |
 | 56s | [Session 56s — a Portal listing pass that found the gateway's front door open (26–28 Sep 2026)](session-56s.md) |
 | 56r | [Session 56r — anyone could take an Assets listing for free, and approve never compared the amounts (24 Sep 2026)](session-56r.md) |
