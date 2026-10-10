@@ -71,11 +71,28 @@ goes to the seller's TEC wallet; from TEC the seller withdraws to their Pi Netwo
   credited. payment-db confirms no payment before September carries a network marker. Only the
   chain can classify them — #401 / #305.
 
+## 4b. The unbacked balances were reversed (10 Oct, evening)
+
+The chain check (#401, `/hub/admin/payment-networks`) settled who paid what:
+
+| Payer | Mainnet (real π) | Testnet (Test-Pi) |
+|---|---|---|
+| Owner's five accounts | 2795.2π | 548.5π |
+| `gateway` | 2412π — every product name and date matches the owner's launch-day "Process a Transaction" tests (19 Jun – 12 Jul) | 0 |
+| magy888 · `f2e3de66` · `current` | **0** | 316π |
+
+No outside customer has paid real π yet. Every real π is the owner's, sitting in the apps' Pi wallets.
+
+**Reversed** with the tool built for it (tec-core-backend #402 · tec-app #306, `/hub/admin/void-balances`):
+the dry run listed 10 wallets — 5589π + 1.3 TEC, exactly the census — the owner typed `VOID-UNBACKED`,
+and the run answered **"Reversed 10 wallet(s)"**, none skipped; a second dry run shows **0 wallets**.
+Each wallet has one `VOID_UNBACKED` ledger row with its breakdown (purchase echoes, transfers,
+deposits, and magy888's 29.5π with no ledger row) and one `void_unbacked` audit row. Only a `SALE`
+(a seller's share, #398) is backed from here on. **Runtime Verified** (owner's phone).
+
 ## 5. Open at the end of the session
 
-1. Read `/hub/admin/payment-networks` for magy888, `f2e3de66`, `gateway`, `current` and the owner's
-   accounts; then the owner decides what happens to unbacked balances (proposal: reverse each with
-   its own ledger row + audit, dry run first — a tool, never hand SQL).
+1. ~~Unbacked balances~~ — reversed (§4b).
 2. Merge the duplicate accounts' references (products, payouts, subscriptions) into the oldest.
 3. The Hub's Mainnet app wallet is again under Pi review (`GBXU6DHS…MIQQ3R`). On approval:
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
