@@ -133,6 +133,24 @@ Consequence: until each app has its own app wallet, a real customer's payment la
 personal wallet. The seller-share model (#398) and withdrawals (#400) assume π held by the platform's
 app wallet; they stay off until that wallet exists.
 
+## 4e. Owed to sellers, and the app wallets (10 Oct, night)
+
+| PR | What |
+|---|---|
+| tec-core-backend #409 · tec-app #312 | `/hub/admin/seller-liabilities`, read-only: **owed** = π in TEC balances (only sellers' shares since the void) + withdrawals not yet sent + sales not yet credited (`OWED`), next to the Hub app wallet's balance on the chain, and the difference to move in by hand. A part that cannot be read makes the total *incomplete*, never smaller (P6). Endpoints: wallet `GET /wallets/admin/liabilities`, commerce `GET /commerce/payouts/summary`, payment `GET /payments/admin/app-wallet`. |
+| #410 · tec-app #313 | The same view reads every other app's Mainnet wallet from `PI_APP_WALLETS="app=G…,…"` (public addresses; never paid out from — their seeds are not on the server). |
+
+**Runtime (owner's phone):** owed 0π; the Hub wallet reads **"the payout wallet (seed set)"** at
+`GBXU6…MIQQ3R` — the seed on payment-service derives exactly the wallet under Pi review — and is
+"not on the chain yet" (not approved, not funded).
+
+**App wallets — the owner's decision (2026-10-10):** a wallet for each app where people sell to people,
+because those payments are mostly owed to sellers — **Ecommerce first** (created:
+`GA52Q4CNC6Z6AMP5GBPPEWNIK5F4FHYNUQG4CW545XSYZ4MHN6EJD364`, under Pi review), then Commerce and Assets.
+Explorer and Life later: their payments are the platform's own revenue. Withdrawals are sent from the
+Hub wallet only, so π is moved from the app wallets into it by hand, by the owner; no app-wallet seed
+goes on a server.
+
 ## 5. Open at the end of the session
 
 1. ~~Unbacked balances~~ — reversed (§4b).
@@ -140,4 +158,5 @@ app wallet; they stay off until that wallet exists.
 3. The Hub's Mainnet app wallet is again under Pi review (`GBXU6DHS…MIQQ3R`). On approval:
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
+6. Set `PI_APP_WALLETS` on payment-service (Ecommerce now; Commerce and Assets as created).
 5. Turn on `SELLER_BALANCE_CREDIT` after reviewing the OWED queue (mark own sales DIRECT).
