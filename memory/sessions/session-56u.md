@@ -161,6 +161,20 @@ Portal showed what that wallet is:
   documentation is not in hand; verify with one 1π payment after connecting.
 
 `GA52Q…D364` is a wallet the owner holds; it is not an app wallet and is not under review.
+
+**The owner's call (same night):** apply for Ecommerce's Mainnet App Wallet anyway, because Pi's
+approvals take weeks and he does not want to wait on them later. The gate needs Ecommerce's Testnet
+app to pay 5 unique wallets, and the Hub's September method (list uids from auth, run the workflow)
+no longer works: since #394–#396 a sign-in through another app leaves no row with that app's uid.
+
+| PR | What |
+|---|---|
+| tec-core-backend #410 | `POST /payments/testnet-gate/claim` — the person signs in with Pi **in that Testnet app** and taps once; the uid is Pi's answer for that sign-in and must be the signed-in TEC user. Testnet only (fixed in code), 0.01 Test-Pi, once per Pi account per app (Redis NX; no Redis → refused), capped at 10, closed unless `TESTNET_GATE_SOURCES` lists the app. A Testnet app other than the Hub signs with `PI_A2U_WALLET_SEED_TESTNET_<SOURCE>` — no fallback; Mainnet stays the Hub's one wallet. |
+| Tec-Ecommerce #78 | `/testnet-payout` on the Testnet host (404 on Mainnet): sign in with Pi (`wallet_address` scope) and receive 0.01 Test-Pi. |
+
+Ops: `PI_API_KEY_ECOMMERCE_TESTNET`, `PI_A2U_WALLET_SEED_TESTNET_ECOMMERCE` (fund it from the Testnet
+faucet), `TESTNET_GATE_SOURCES=ecommerce` on payment-service. The part no code removes: **five
+different Pi accounts** must open `ecommerce-test.tecosystem.app/testnet-payout` in Pi Browser.
 `PI_APP_WALLETS` (#410) is for incoming wallets once connected — not set until then.
 
 ## 5. Open at the end of the session
