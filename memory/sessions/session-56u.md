@@ -207,6 +207,19 @@ checksum-verified. Those apps are built on the template, whose `pi-login` return
 cookies — so the page signs a visitor in through that door, returns, and claims on arrival. Their
 `refresh` (and Explorer's `logout`) carried the same cookie-domain bug, fixed there too.
 
+**The six Mainnet App Wallets, all pending Pi's review (owner's phone, 10 Oct; addresses checksum-verified):**
+
+| App | Address | Notes |
+|---|---|---|
+| Hub | `GBXU6DHSY7WRMS4BDUZDYI4P7HXF6VXASRSXK4JBEAMJINTLGJMIQQ3R` | the payout wallet — `PI_A2U_WALLET_SEED` on payment-service derives it (§4e); withdrawals go from here only |
+| Ecommerce | `GA52Q4CNC6Z6AMP5GBPPEWNIK5F4FHYNUQG4CW545XSYZ4MHN6EJD364` | Testnet wallet `GA6TX…HX6XU` |
+| Commerce | `GAILA4ZXWEEXU6JADYVXBKR2HC5A6VTQDWSKNQI6PUWEBHH4OO27IFGG` | |
+| Assets | `GBVXSFHAY6YPLMPPXW46WLXOHRWD7LK3E22MKEVANHPXRZJOW5OZALN4` | |
+| Explorer | `GBGXDUT2ML2KY2GRWFXDTMJEK4PERB5WETQQ5ROSOWNFQCP3KBFIFN6J` | |
+| Life | `GCBNHDR74XBXWDK6VQ7VW2WUVKCWFDBUQUNNNXZT6JZMZLXOJTL3MOHV` | |
+
+The 24 words of every one are the owner's alone; only the Hub's seed is on a server.
+
 Still open, unexplained: a new account opening a Testnet app's **home** is sent to the Hub's
 "Sign in with Pi" and does not come back. The payout page does not depend on it.
 
