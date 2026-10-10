@@ -200,8 +200,10 @@ different Pi accounts in Pi Browser. Empty `TESTNET_GATE_SOURCES` after a submit
 **Commerce and Assets submitted the same night** (owner's phone): Commerce
 `GAILA4ZXWEEXU6JADYVXBKR2HC5A6VTQDWSKNQI6PUWEBHH4OO27IFGG`, Assets
 `GBVXSFHAY6YPLMPPXW46WLXOHRWD7LK3E22MKEVANHPXRZJOW5OZALN4` — both *pending review*, addresses
-checksum-verified. **Explorer and Life next** (Tec-Explorer #59 · Tec-Life #80): those apps are built
-on the template, whose `pi-login` returns a one-time token for `sso-callback` rather than setting
+checksum-verified. **Explorer and Life submitted later that night** (Tec-Explorer #59 · Tec-Life #80): Explorer
+`GBGXDUT2ML2KY2GRWFXDTMJEK4PERB5WETQQ5ROSOWNFQCP3KBFIFN6J`, Life
+`GCBNHDR74XBXWDK6VQ7VW2WUVKCWFDBUQUNNNXZT6JZMZLXOJTL3MOHV` — both *pending review*,
+checksum-verified. Those apps are built on the template, whose `pi-login` returns a one-time token for `sso-callback` rather than setting
 cookies — so the page signs a visitor in through that door, returns, and claims on arrival. Their
 `refresh` (and Explorer's `logout`) carried the same cookie-domain bug, fixed there too.
 
@@ -216,6 +218,6 @@ Still open, unexplained: a new account opening a Testnet app's **home** is sent 
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
 6. Decide on Incoming Multisig wallets for the selling apps (Ecommerce · Commerce · Assets); once connected, list them in `PI_APP_WALLETS`.
-7. ~~Commerce and Assets~~ submitted (§4f); Explorer and Life — their Testnet rounds (Tec-Explorer #59 · Tec-Life #80).
+7. ~~Ecommerce · Commerce · Assets · Explorer · Life~~ — all five applications submitted (§4f); wait for Pi's review. Empty `TESTNET_GATE_SOURCES` on payment-service.
 8. A new account's Testnet-app sign-in through the Hub does not come back (§4f).
 5. Turn on `SELLER_BALANCE_CREDIT` after reviewing the OWED queue (mark own sales DIRECT).
