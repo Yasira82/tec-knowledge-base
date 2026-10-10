@@ -112,6 +112,27 @@ duplicates as reported conflicts (three Hub plan rows, including the old FREE on
 names — KYC 1 each for gzer0023 · magy888 · luckypat00 · zbieracz, a few notifications, nothing in assets.
 The Founding 100 page is unchanged (it keys on the Pi username in identity-service): #1, 8 of 100.
 
+## 4d. Who sent the π and who received it (10 Oct, late)
+
+The owner's Pi wallet `GAKCH…PXFAX` showed the System 1π payment as **"Payment Received — From:
+GAKCH…PXFAX"**: paid and received by the same wallet. He has created exactly one app wallet — the Hub's
+(`GBXU6…MIQQ3R`, under Pi review); no other app has one.
+
+| PR | What |
+|---|---|
+| tec-core-backend #407 · tec-app #310 | The Payment networks report reads each transaction's transfer operation (Horizon `/transactions/{hash}/operations`) and shows sender → receiver per payer, summed by route; `(same wallet)` when they match. |
+| #408 · tec-app #311 | Horizon refuses a burst (429): 473 of 499 payments came back "chain did not answer". 429 / 5xx / timeout are now retried with a short wait; concurrency 8 → 4; 25 payments per request. |
+
+**Runtime (owner's phone):** every **Mainnet** payment the chain answered for — `afa10fec` 5 · 17π,
+`cbc4bb46` 77 · 323.2π — went `GAKCH…PXFAX → GAKCH…PXFAX`. **The real π of the owner's test purchases
+never left his wallet.** Mainnet U2A payments of an app with no app wallet land in the developer's
+wallet ([Assumed] — Pi's rule is not documented to us; the chain shows the result). **Testnet** payments
+went from `GAKCH…` to many different addresses — each app's Test wallet.
+
+Consequence: until each app has its own app wallet, a real customer's payment lands in the owner's
+personal wallet. The seller-share model (#398) and withdrawals (#400) assume π held by the platform's
+app wallet; they stay off until that wallet exists.
+
 ## 5. Open at the end of the session
 
 1. ~~Unbacked balances~~ — reversed (§4b).
