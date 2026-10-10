@@ -128,6 +128,14 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | NEW-J | Ecommerce Mode 1 + ADR-007 | June 3, 2026 |
 | ECM-01 | Commerce schema snake_case fix | PR #20, June 14, 2026 |
 
+### 2026-10 — closed in Session 56u
+
+| ID | الوصف | PR |
+|----|-------|----|
+| W-01 (P0) | wallet-service: `deposit` أضاف أي مبلغ لأي محفظة، و`withdraw` و`transfer` ما اتأكدوش إن المحفظة بتاعة المستخدم — أي حد عامل دخول كان يقدر يحوّل رصيد غيره لنفسه. الإيداع اتشال، والملكية إجبارية | tec-core-backend #399, 10 Oct 2026 |
+| W-02 (P1) | `payment.completed.v1` كان بيزوّد رصيد TEC للمشتري نفسه (876 مرة، 5559.5π من غير غطا) — Invariant #4 | tec-core-backend #397, 10 Oct 2026 |
+| I-01 (P1) | Invariant #3: الحساب كان مربوط بـ `pi_uid` اللي بيختلف في كل تطبيق — Pioneer واحد بقى عشر حسابات. كل دخول وتجديد بقى على أقدم حساب بنفس الاسم | tec-core-backend #394–#396 · tec-app #301–#303, 9 Oct 2026 |
+
 ### Security Foundations
 
 ```
