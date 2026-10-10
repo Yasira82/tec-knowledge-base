@@ -144,12 +144,24 @@ app wallet; they stay off until that wallet exists.
 `GBXU6…MIQQ3R` — the seed on payment-service derives exactly the wallet under Pi review — and is
 "not on the chain yet" (not approved, not funded).
 
-**App wallets — the owner's decision (2026-10-10):** a wallet for each app where people sell to people,
-because those payments are mostly owed to sellers — **Ecommerce first** (created:
-`GA52Q4CNC6Z6AMP5GBPPEWNIK5F4FHYNUQG4CW545XSYZ4MHN6EJD364`, under Pi review), then Commerce and Assets.
-Explorer and Life later: their payments are the platform's own revenue. Withdrawals are sent from the
-Hub wallet only, so π is moved from the app wallets into it by hand, by the owner; no app-wallet seed
-goes on a server.
+**App wallets — corrected the same night, from the Portal's own screens.** The plan was a wallet per
+selling app (Ecommerce first, `GA52Q4CNC6Z6AMP5GBPPEWNIK5F4FHYNUQG4CW545XSYZ4MHN6EJD364`). The
+Portal showed what that wallet is:
+
+- **"Apply for Mainnet App Wallet" is the OUTGOING wallet** (App-to-User). Ecommerce's form refuses
+  to submit: *"The paired Testnet app needs App to User transactions to 5 unique wallets"* — the same
+  gate the Hub passed in September (`audits/A2U_FIRST_PAYOUT_ROUND_2026-09-13.md`), which needs four
+  other people to sign into **Ecommerce's** Testnet app. Ecommerce does not pay anyone; withdrawals go
+  from the Hub wallet (#400). **Not submitted, and not needed** — exactly
+  `audits/PI_TESTNET_HOST_OWNERSHIP_2026-09-12.md` §11b ("one app does").
+- **Where an app's sales land is the "Incoming Multisig Wallet"** — Ecommerce shows *Connected Wallet:
+  None*, which is why every Mainnet payment went `GAKCH → GAKCH` (§4d): with none connected, the π
+  reaches the developer's wallet. A multisig needs ≥ 2 signer addresses whose weights reach 10.
+  [Assumed] that connecting one moves that app's U2A payments there — the screen names it, Pi's
+  documentation is not in hand; verify with one 1π payment after connecting.
+
+`GA52Q…D364` is a wallet the owner holds; it is not an app wallet and is not under review.
+`PI_APP_WALLETS` (#410) is for incoming wallets once connected — not set until then.
 
 ## 5. Open at the end of the session
 
@@ -158,5 +170,5 @@ goes on a server.
 3. The Hub's Mainnet app wallet is again under Pi review (`GBXU6DHS…MIQQ3R`). On approval:
    `PI_A2U_WALLET_SEED` on payment-service, fund it, then `WITHDRAW_TO_PI_ALLOWLIST` on wallet-service.
 4. An admin tool to resolve a pending withdrawal against Pi's incomplete list.
-6. Set `PI_APP_WALLETS` on payment-service (Ecommerce now; Commerce and Assets as created).
+6. Decide on Incoming Multisig wallets for the selling apps (Ecommerce · Commerce · Assets); once connected, list them in `PI_APP_WALLETS`.
 5. Turn on `SELLER_BALANCE_CREDIT` after reviewing the OWED queue (mark own sales DIRECT).
