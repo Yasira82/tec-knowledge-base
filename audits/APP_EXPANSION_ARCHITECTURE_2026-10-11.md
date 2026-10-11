@@ -171,8 +171,26 @@ One step in flight at a time; a step starts when the one before is merged **and 
 - The ADR-007 payment modes, C-123 cookie law, the Hub SSO contract.
 - The financial gates (FundX · Insure · Brookfield): legal + custody + SYSTEM first, as written.
 
-## 5. Open questions for the owner
+## 5. Decided (owner, 2026-10-11)
 
-1. The T5 threshold: **8 domain modules** per host — or another number?
-2. The performance budget (E15): start at 250 KB gzip for `/app`?
-3. The first domain host's name: `tec-business-service`?
+1. T5 threshold: **8 domain modules** per host.
+2. Performance budget (E15): **250 KB gzip** first-load JS for `/app`.
+3. The first domain host: **`tec-business-service`**.
+
+The ADR and C-doc numbers are still the owner's to assign.
+
+## 6. Language policy for new services (owner, 2026-10-11)
+
+**TypeScript + NestJS is the default** for every new service. A service may be written in **Go**
+only when a trigger is **measured** in production, not expected — e.g. the Nexus dispatcher,
+once in its own service, showing CPU, memory or event-processing lag that TypeScript cannot
+meet — and only after the CI guards that today scan TypeScript (no `body.userId`, no
+`jwt.decode`, `timingSafeEqual`, the internal-key check) exist for Go as well: a service the
+guards cannot read is a service the rules do not reach. Nexus is the first to be evaluated;
+nothing moves now.
+
+## 7. Progress
+
+| Step | State |
+|---|---|
+| S1 — template: E1 · E3 · E11 · scorecard | tec-template-base **#52** (open). Floor 9/13 + E15 (`/app` 108 KB); next E4 · E10 · E12 · E14 |
