@@ -220,7 +220,8 @@ called the parser. A third AI surface MUST import these, never re-implement them
 | `src/components/ai/RichText.tsx` | Rendering that markdown (bold · code · bullets · headings) |
 | `src/components/ai/NavChips.tsx` | Rendering a nav intent as a chip |
 | `src/lib/ai/nav-intents.ts` | Parsing the `[[go:slug]]` marker out of the prose — and, per §10.1, an optional whitelisted query (`[[go:life:goal?title=…]]`) |
-| `src/lib/ai-session.ts` | Transcript persistence (load · save · archive list) + assistant settings |
+| `src/lib/ai-session.ts` | The device copy of the transcript (load · save · archive list · account-scoped key · sign-out wipe) + assistant settings |
+| `src/lib-client/ai/history-sync.ts` | The server copy (§5.4): the sink that mirrors every change, and `hydrate` on open |
 | `src/components/ai/AIMenu.tsx` | The assistant's menu — archived chats · starter questions · settings · support (§5.6) |
 
 ### 5.2 The model-pinning law (P0 — earned by a self-inflicted outage)
@@ -295,18 +296,37 @@ own-scope only, assembled server-side, and fail-soft — a missing context degra
 answer, never blocks it. Text only: V1 executes nothing, so §6's "cannot initiate
 financial transactions" holds **by construction**, not by policy.
 
-### 5.4 Conversation state — `sessionStorage`, and why not `localStorage`
+### 5.4 Conversation state — kept for the account, on the server; the device holds a copy
+
+**Truth State:** [Planned State] — merged to no `main` yet: tec-core-backend #411 (the store) ·
+tec-app #314 (the Hub), 2026-10-11 · **Verification:** [Code Verified] in those PRs
+(`ai-conversations.spec.ts` · `ai-history-server.test.ts` · `ai-history-device.test.ts`).
+Last verified in code: 2026-10-11
 
 The transcript survives closing the drawer and reloading the page
 (`src/lib/ai-session.ts`, shared by both surfaces). Without it, asking a question,
 following the app the assistant recommended, and coming back lost the thread — for an
 assistant, the single largest quality gap.
 
-**`sessionStorage`, deliberately.** A transcript is personal content: it can name goals,
-balances, and what the user is trying to do. `sessionStorage` dies with the tab, so a
-borrowed or shared device does not hand the next person a history. It is **not** a token,
-so ADR-001 (session tokens are cookie-only, never storage) is untouched — but it sits
-close enough to that line that the reasoning is recorded rather than assumed.
+**Where it lives — and why it moved.** A transcript is personal content: it can name goals,
+balances, and what the user is trying to do. It was kept in `sessionStorage`, which dies
+with the tab, so a borrowed device would not hand the next person a history. In Pi Browser
+that also meant losing it constantly — Pi Browser closes tabs freely, and the owner lost
+every conversation (2026-10-11). TEC AI owns "AI session context and memory" (§4), so it
+now keeps it **for the account**:
+
+| Who | Record | Device copy |
+|---|---|---|
+| Signed in | **identity-service** `ai_conversations` (a module, ADR-011): one live thread per surface + ≤ 10 archived, ≤ 40 turns, only user/assistant text; keyed on the verified token; FK cascade with the account; "clear all" audited by count, never content | `localStorage` under a key scoped to the account (`tec_ai_drawer@<id>`) — paints at once, works if the service is down |
+| Guest | — | `sessionStorage`, as before |
+
+`lib-client/ai/history-sync.ts` mirrors every change through `/api/bff/ai/history`
+(debounced, one ordered queue); when the assistant opens, `hydrate` replaces the device copy
+with the server's, or uploads the device's conversations once when the server has none.
+Review and delete stay in the menu (§5.6): restore · delete one · clear all — each reaches
+the server. **Signing out wipes every conversation on the device** (`forgetAllConversations`
+in `logout()`); the record stays with the account. It is **not** a token, so ADR-001
+(session tokens are cookie-only, never storage) is untouched.
 
 Three rules the implementation enforces, each from a way this can go wrong:
 
@@ -323,10 +343,11 @@ list (most recent first) reachable from the menu (§5.6). Restoring one archives
 is on screen first, so no path through the UI destroys a thread without the user having
 chosen "clear all" — which arms once and confirms before it wipes.
 
-**Settings are `localStorage`; transcripts are `sessionStorage`.** Reply language and
-reply length are *preferences* — they say nothing about the user and are expected to
-persist across tabs. The split is deliberate: the storage a value lives in follows what
-the value reveals, not which API was nearer to hand.
+**Settings are device preferences; transcripts are the account's.** Reply language and
+reply length say nothing about the user and stay in `localStorage` on the device. A
+transcript is personal content: it belongs to the account (the server record) and leaves
+the device on sign-out. The storage a value lives in follows what the value reveals, not
+which API was nearer to hand.
 
 **A greeting is not worth a conversation.** The `/ai` welcome was seeded inside an effect
 keyed on `[user, locale]` that replaced the whole message array — so changing language,
@@ -344,7 +365,7 @@ restored thread suppresses it.
 | **New chat** | **Archives** the thread, then clears the screen and restores the greeting. It is not a delete — a user who taps it to start a fresh question has not asked to lose the previous one (§5.6). |
 | **Copy** | Every assistant reply is copyable. An answer the user cannot take with them is an answer they retype. |
 | **Rendered markdown** | Bold · inline code · bullets · headings · rules · **tables** · autolinked TEC hosts. A table scrolls **inside** its own container; a bubble is never allowed to widen past the screen, and table cells never wrap mid-token (`hub.tec / osyste / m.app` was a real render). |
-| **Reply settings** | Reply **language** (auto · any of the fleet's twelve, `lib/locales.ts`) and **length** (detailed · short) are user settings in `localStorage` — a preference, not personal content, so unlike the transcript it survives the tab (§5.4). The reply choice and the interface language travel as **two fields** (`replyLocale` · `locale`), both narrowed against the twelve. |
+| **Reply settings** | Reply **language** (auto · any of the fleet's twelve, `lib/locales.ts`) and **length** (detailed · short) are user settings in `localStorage` — a preference, not personal content, so it stays on the device even when the transcript leaves it at sign-out (§5.4). The reply choice and the interface language travel as **two fields** (`replyLocale` · `locale`), both narrowed against the twelve. |
 | **Bidirectional text** | `dir="auto"` on inputs, bubbles, and **every rendered line** — per line, not per bubble, so an Arabic sentence containing `Pi` or `NX` still resolves. |
 | **Reply language** | A reply follows the **question's** language, never the UI locale, in this order (`lib/ai/reply-language.ts`): the person's explicit setting → the script of their last message where the script alone decides (Arabic · Chinese · Korean · Hindi · Russian · Vietnamese letters) → otherwise mirror the message, the UI locale a tiebreak only. The prompt carries one `Reply language` line; it once carried `Language preference: English` from the interface, and the model obeyed it over the question (owner's first reading of `/hub/admin/life-ai`, 2026-10-07 — tec-app #293). |
 | **Machine markers** | `[[go:slug]]` is a machine channel. It MUST be parsed out before render — it reached users as literal text on the surface that skipped the parser. |

@@ -1,7 +1,7 @@
 # Session 56v — signed in, and shown "Sign in with Pi": a cookie encoded twice (10–11 Oct 2026)
 
-> Truth State: **[Current State]** · Verification: **[Runtime Verified]** for the symptom and the
-> diagnosis (the owner's phone: `/api/auth/me` answered `authenticated:true` for `mans809` while
+> Truth State: **[Current State]** · Verification: **[Runtime Verified]** for the symptom, the
+> diagnosis and the fix on Connection (§5) (the owner's phone: `/api/auth/me` answered `authenticated:true` for `mans809` while
 > `/` showed the sign-in; auth-service logs showed every sign-in); **[Code Verified]** for every PR —
 > a test that failed before the fix and passes after, tsc, lint, the full suite. Same branch as
 > 56s–56u (`claude/tec-knowledge-base-review-6wzngc`).
@@ -66,10 +66,61 @@ pushed at once; both built locally, and main deployed — the build quota, not t
 - **Never push with the output silenced.** Two "pushed" branches had been rejected; found only by
   the stop hook.
 
-## 5. Open
+## 5. Deployed, and verified on a phone (11 Oct)
 
-- The owner: merge NBF #30 · Brookfield #26 and round 2 (the 11 Oct PRs above), then test a non-owner account on Connection's
-  `/`, Testnet and Mainnet. A browser that still holds the old cookie heals on its next sign-in
-  or refresh.
+Every PR above is merged (round 1 and round 2, NBF #30 and Brookfield #26 included, KB #211).
+
+**What production runs (the owner's Vercel screens, 11 Oct):**
+- **Round 1 is live.** Connection's Production is `9829c54` (#93); System's is #49.
+- **Round 2 is live only on Zone (#65, `f060eac`) and Life.** On every other app, Vercel refused
+  the build: "Deployment rate limited — retry in 24 hours". The Hobby plan's daily build limit
+  was spent by this session: two rounds × 24 repos, a preview for every push, the force pushes
+  that re-authored the commits (§6), then the merges. Connection's Production is still #93, and
+  the commit #94 merged as (`8b9bb89`) has no deployment at all.
+- **Runtime Verified:** a non-owner account signed in to Connection (`tec-connection.vercel.app`)
+  on the owner's phone, against round 1 alone. It pressed the sign-in once (Hub SSO → a fresh,
+  once-encoded cookie) and stayed in.
+
+**How it was misread first:** the "Vercel" commit status on `main` said rate-limited for 20 apps,
+and that was reported as "nothing reached users". The owner asked for proof; the Vercel
+Deployments screen showed round 1 in Production. A commit status describes one build, not what
+is serving. Read the Deployments list (Production badge) before saying what is live.
+
+## 6. Commit identity
+
+The session committed as `yasserrr.fox17@gmail.com`, which GitHub attributes to a second account
+(`Yasser1728`). The owner's account is **Yasira82 / `e23305707@gmail.com`** (owner, 11 Oct). The
+30 commits in the 26 open PRs were re-authored to it (code identical before and after, checked
+per branch; pushed with `--force-with-lease`), and git is set to it from now on. Commits merged
+before that keep the old email.
+
+## 7. Open
+
+- **After the limit resets (~24 h):** Redeploy the latest `main` in Vercel for every app except
+  Zone and Life — Connection first. Push nothing new before it. That ships round 2: the
+  landing's server check, the healing refresh, and refresh/logout on `*.vercel.app`.
+- Then test a non-owner account on a Mainnet app's `/`.
 - `@yasser172/tec-auth` `getStoredUser()` decodes once — correct for cookies written right; no
   package change made.
+- **Lesson for the next fleet-wide change:** one commit per repo, pushed once, and a count of the
+  day's builds before starting (Hobby: each push to a PR branch is a preview build).
+
+## 8. TEC AI: the Life budget, and conversations that follow the account (11 Oct)
+
+The owner asked what links TEC AI and Life and what is missing (the answer came from
+`audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`, C-02 row 22 and the V2 gate,
+tec-knowledge-base #198). Then: build item 1, and make conversations survive.
+
+| What | Where | State |
+|---|---|---|
+| **The budget in the assistant's context.** Life's door already served this month's caps when BUDGET is granted. The Hub now keeps them, narrowed: a positive decimal string ≤ 8 places, an app slug, ≤ 12. The prompt calls them **limits, not spending**, and says the assistant does not know what was spent. "What TEC AI can see now" has a Budget row | tec-app #314 | open |
+| **Conversations kept on the device.** sessionStorage died with the tab, and Pi Browser closes tabs freely. A signed-in person's chats now go to localStorage under an account-scoped key, and signing out wipes them | tec-app #314 | open |
+| **Conversations kept for the account.** The owner: "it will be built anyway — build it now". identity-service `ai_conversations`: one live thread + ≤ 10 archived per surface, keyed on the verified token, clear-all audited by count. The Hub mirrors every change and hydrates on open; it falls back to the device copy when the service is absent | tec-core-backend #411 · tec-app #314 | open — **#411 first** |
+
+C-104 §5.4 is rewritten as [Planned State] until both are merged and deployed. Tests: 14
+backend, 9 + 9 + 14 Hub. Each new test was red before its code; the sync tests were checked
+by breaking the mirror on purpose (4 failed).
+
+**Open:** merge #411, then #314. Both wait for the Vercel limit to reset and for the round-2
+redeploys, so they don't take one of those builds. Then on a phone: chat, close Pi Browser,
+reopen → the conversation is there; then sign in on a second device → the same one.
