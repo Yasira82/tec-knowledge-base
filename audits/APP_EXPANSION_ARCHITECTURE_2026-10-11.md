@@ -193,4 +193,4 @@ nothing moves now.
 
 | Step | State |
 |---|---|
-| S1 — template: E1 · E3 · E11 · scorecard | tec-template-base **#52** (open). Floor 9/13 + E15 (`/app` 108 KB); next E4 · E10 · E12 · E14 |
+| S1 — template: E1 · E3 · E4 · E10 · E11 · E12 · E14 · scorecard | tec-template-base **#52** (open). Floor **13/13** + E15 (`/app` 112 KB of 250); jsx-a11y on with zero findings; `/help` + feedback to the fleet inbox; Pi Browser e2e 4/4. Next: S2 (scorecard into every app at today's floor) |
