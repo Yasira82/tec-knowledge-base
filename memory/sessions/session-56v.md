@@ -104,3 +104,23 @@ before that keep the old email.
   package change made.
 - **Lesson for the next fleet-wide change:** one commit per repo, pushed once, and a count of the
   day's builds before starting (Hobby: each push to a PR branch is a preview build).
+
+## 8. TEC AI: the Life budget, and conversations that follow the account (11 Oct)
+
+The owner asked what links TEC AI and Life and what is missing (the answer came from
+`audits/LIFE_TEC_AI_EXPANSION_2026-10-06.md`, C-02 row 22 and the V2 gate,
+tec-knowledge-base #198). Then: build item 1, and make conversations survive.
+
+| What | Where | State |
+|---|---|---|
+| **The budget in the assistant's context.** Life's door already served this month's caps when BUDGET is granted. The Hub now keeps them, narrowed: a positive decimal string ≤ 8 places, an app slug, ≤ 12. The prompt calls them **limits, not spending**, and says the assistant does not know what was spent. "What TEC AI can see now" has a Budget row | tec-app #314 | open |
+| **Conversations kept on the device.** sessionStorage died with the tab, and Pi Browser closes tabs freely. A signed-in person's chats now go to localStorage under an account-scoped key, and signing out wipes them | tec-app #314 | open |
+| **Conversations kept for the account.** The owner: "it will be built anyway — build it now". identity-service `ai_conversations`: one live thread + ≤ 10 archived per surface, keyed on the verified token, clear-all audited by count. The Hub mirrors every change and hydrates on open; it falls back to the device copy when the service is absent | tec-core-backend #411 · tec-app #314 | open — **#411 first** |
+
+C-104 §5.4 is rewritten as [Planned State] until both are merged and deployed. Tests: 14
+backend, 9 + 9 + 14 Hub. Each new test was red before its code; the sync tests were checked
+by breaking the mirror on purpose (4 failed).
+
+**Open:** merge #411, then #314. Both wait for the Vercel limit to reset and for the round-2
+redeploys, so they don't take one of those builds. Then on a phone: chat, close Pi Browser,
+reopen → the conversation is there; then sign in on a second device → the same one.
