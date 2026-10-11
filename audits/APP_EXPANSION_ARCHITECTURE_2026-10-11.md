@@ -15,7 +15,7 @@
 
 ---
 
-## 1. Domain hosts — a service per DOMAIN, not per app, and not one for everything
+## 1. Where things run — own services where the code earns one, domain hosts for the rest
 
 ### 1.1 Why neither extreme
 
@@ -23,19 +23,50 @@
 |---|---|
 | One host for everything (today) | One deploy, one database, one event loop for ~20 apps: a bad migration or a hot path in one app takes down sign-in-adjacent identity for all (C-02 row 17). |
 | One service per app | ~15 new Railway services, databases, secrets and dashboards, run by one person (C-02 row 17 again — the largest single point of failure is the operator). Most of these apps are read-heavy previews with a few tables. |
-| **One host per domain** | Apps that share a lifecycle, a data shape and a failure mode share a host. A failure is contained to one domain; the operator runs a handful of services, not dozens. This is what C-132's own §2 seam was built to make mechanical. |
+| **Own service where a trigger exists; one host per domain otherwise** | Apps that share a lifecycle, a data shape and a failure mode share a host. A failure is contained to one domain; the operator runs a handful of services, not dozens. This is what C-132's own §2 seam was built to make mechanical. |
 
-### 1.2 The map
+### 1.2 The map — the target (owner, 2026-10-11)
 
-| Host | Domain | Apps / modules | Today |
+Two kinds of new service: **own-service apps**, each with a T1–T3 trigger read from its code,
+and **domain hosts** for the light apps that have none.
+
+**Own service — the trigger is already in the code:**
+
+| Service | App | Trigger (C-132 §5) | Evidence (2026-10-11) |
 |---|---|---|---|
-| `tec-identity-service` | **The person** | identity core · Life · Connection · TEC AI conversations (#411) | stays — closed to new domains |
-| **`tec-business-service`** *(new)* | **Business & opportunity** | NBF → Titan (formation → scale, C-124 → C-130) · NX · Epic | modules in identity → move here |
-| **`tec-trust-service`** *(new, later)* | **Evidence → recognition → privilege** | Zone → Legend → Elite → VIP | modules in identity → move when that chain is worked on |
-| **`tec-platform-service`** *(new)* | **Governance, coordination & builders** | System · DX · Nexus (workflows, C-109) · Pioneer / campaign registry · Feedback · Intent | modules in identity → move here |
-| `tec-search-service` *(C-132 T1, unchanged)* | Discovery | Explorer | already the flagged T1 candidate; extract on load |
-| `tec-notification-service` | Signals | Alert | the Alert module belongs with its owning service |
-| financial **state** host *(later)* | Pools, protection, property | FundX · Insure · Estate · Brookfield state | stays gated (legal + custody + SYSTEM); custody is payment-service forever (R-4) |
+| **`tec-life-service`** | Life + the coach's data and schedule | **T3** — changes weekly, and every change redeploys identity (sign-in-adjacent) · **T2** — the most sensitive personal data (goals, budget, cash flow, intent) with its own consent model and purge · **T1 (soon)** — the weekly check-in and monthly review sweep every user | mentor steps 1–3 + budget shipped in one week (56u · 56t) |
+| **`tec-ai-service`** | TEC AI — reasoning, provider keys, conversations | **T1** — long streaming calls to model providers, cost and rate limits, today inside the Hub's Vercel functions · **T3** — changes more than anything else · **T2** — provider keys and the prompt boundary | conversations land in identity first (tec-core-backend #411) and move here |
+| **`tec-connection-service`** | Connection | **T1** — messages, reactions, groups, stories: write-heavy with realtime fan-out · **T2** — reports, blocks, moderation | `Message · MessageReaction · Story · StoryView · GroupJoinRequest · ConnectionBlock · ConnectionReport` |
+| **`tec-nexus-service`** | Nexus | **T1** — a dispatcher loop running workflow steps inside identity's event loop (the NEW-W failure shape) | `NexusRun · NexusStep · nexus.dispatcher.ts · nexus.consumer.ts` |
+| **`tec-search-service`** | Explorer | **T1** — full-text, geo and ranking (C-132's first flagged candidate) | `ExplorerBusiness · ExplorerReview · ExplorerReport`, Arabic normaliser |
+
+**Domain hosts — light apps, no trigger of their own:**
+
+| Host | Domain | Apps |
+|---|---|---|
+| **`tec-business-service`** | Business & opportunity | NBF → Titan · NX · Epic |
+| **`tec-platform-service`** | Governance & builders | System · DX · Pioneer / campaign registry · Feedback · Intent |
+| **`tec-trust-service`** *(later)* | Evidence → recognition → privilege | Zone · Legend · Elite · VIP records — their **scores** computed in Analytics |
+| financial **state** host *(when unlocked)* | Pools, protection, property | FundX · Insure · Brookfield — **T2 pre-emptive**; custody in payment-service forever (R-4) |
+
+**Existing platform services take what is already theirs:**
+
+| Service | Takes | Why |
+|---|---|---|
+| `tec-notification-service` | the Alert app's notifications (today `AlertNotification` in identity duplicates it) · Life's weekly/monthly alerts | one inbox, one table |
+| `tec-analytics-service` | the computations its charters name: Legend scores · Elite criteria · Insure risk · Titan reports | computes, never owns records (eventual consistency). **Its database is the free Supabase tier (28 / 500 MB, C-02 row 14) — upgrade before adding load** |
+| `tec-realtime-service` | live delivery for every app (notifications, Connection messages, a seller's new order, Nexus steps) | a transport with no database; today it relays `payment.completed` only |
+
+**What stays in `tec-identity-service`:** identity, profile, KYC, roles — the core, stable,
+deployed rarely.
+
+**Cost, said plainly:** this is ~7–8 new Railway services beside today's 11, run by one person.
+It is affordable only with the three rules of §1.4: create a service when its app is next worked
+on (never all at once), from one backend template, watched on one page.
+
+**Today: nothing moves.** Every module stays where it is and every open PR merges as written
+(the owner, 2026-10-11 — including the AI conversations in identity, #411). This section is the
+destination; §1.4 is how each step is taken, later.
 
 The 11 core services and their ownership (C-68) do not change. A domain host changes **where a
 module runs**, never **who owns its data** or its event names (C-132 §3).
@@ -53,9 +84,12 @@ app with a clear growth path), and every host it creates is a line in this map f
 
 ### 1.4 How a module moves (no big-bang)
 
-A module moves **when it is next worked on**, never all at once:
+A module moves **when it is next worked on**, never all at once. Three rules keep the cost bearable:
+a **`tec-service-template`** backend (health/ready · internal key · `migrate.cjs` · non-root Docker ·
+tests · CI) so a new service is minutes, not days; **one monitoring page** for every service; and
+**the order**: Life → TEC AI → Connection → Nexus → Explorer → business → platform.
 
-1. Create the domain host from `tec-template` backend conventions (NestJS · Prisma ·
+1. Create the service from `tec-service-template` (NestJS · Prisma ·
    `migrate.cjs` · `/health` + `/ready` · internal key · non-root Docker) — once per host.
 2. Copy the module folder (R-2 makes this a move: own tables, no cross-module joins).
 3. Its tables: a new database for the host; data copied with a one-off, audited script
@@ -127,10 +161,9 @@ One step in flight at a time; a step starts when the one before is merged **and 
 | **S1** | Template: E1, E3 (12 locales scaffold), E11, scorecard script | every later app inherits it |
 | **S2** | Scorecard into all apps at today's floor (one commit per repo, pushed once) | stops the gaps from growing |
 | **S3** | **Real-data apps to the standard**: Life · Connection · Explorer · Commerce · Ecommerce · Assets — E1/E2/E10/E11/E12 first | the apps people already use |
-| **S4** | **Business & opportunity**: create `tec-business-service`; move NBF + Titan modules (§1.4); NBF → Titan graduation with real data | the first domain host, created by real work |
-| **S5** | NX + Epic onto the business host; opportunities and projects from real postings | same host, same domain |
-| **S6** | **Governance & developers**: create `tec-platform-service`; move System + DX; System's policy registry and DX's guides read live, not from fixtures | the platform's own tooling |
-| later | Trust chain (Zone → Legend → Elite → VIP) onto `tec-trust-service`; Explorer → search on load | when that chain is next worked on |
+| **S4** | `tec-service-template` (backend) + one monitoring page | every later service is generated from it |
+| later — one at a time, **when that app is next worked on** | Move to its own service, in this order: **Life** → **TEC AI** (with the conversations from #411) → **Connection** → **Nexus** → **Explorer** (search). Then the domain hosts: **business** (NBF → Titan · NX · Epic) and **platform** (System · DX · …); Alert into notification-service; scores into Analytics (after its database is upgraded) | the owner: "leave everything as it is now, and move later" (2026-10-11) |
+| later | Trust chain onto `tec-trust-service`; FundX · Insure · Brookfield state host when their gates open | when that work starts |
 
 ## 4. What this does not change
 
