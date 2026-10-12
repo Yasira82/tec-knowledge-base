@@ -1,0 +1,33 @@
+# The first restore check of the nightly database backups (tec-core-backend
+# tec-backup-job + restore-check.yml). Read by the owner from the GitHub Actions run
+# "Backup restore check #1" (workflow_dispatch, main @ 16ee778) and the Railway cron
+# run of backup-job the same day. A live run, not a documentation claim.
+#
+# What it proves: the backup taken 2026-10-12 was downloaded from Cloudflare R2,
+# its checksum matched, it decrypted with the owner's passphrase, pg_restore
+# --exit-on-error restored every database into a throwaway Postgres 18, and the
+# row count of EVERY table equalled the count recorded at dump time (same snapshot).
+evidence_id: ev-2026-10-12-025
+kind: metric
+timestamp: "2026-10-12T12:22:25Z"
+source: tec-core-backend:restore-check.yml
+binds_to: [C-71, C-78]
+name: backup.restore_check.databases_verified
+value: 18
+unit: databases
+dimensions:
+  backup_run: {service: backup-job, at: "2026-10-12T11:52:59Z", result: complete, databases: 18, bytes: 1408993, failures: 0, duration_s: 27}
+  restore_check: {ok: true, backup_date: "2026-10-12", age_days: 0, problems: 0}
+  # tables / rows per server's `railway` database; each server's `postgres` database is empty (0 / 0)
+  restored:
+    - {server: auth-db,               tables: 11, rows: 63}
+    - {server: db-asset,              tables: 4,  rows: 536}
+    - {server: db-commerce,           tables: 14, rows: 532}
+    - {server: db-identity,           tables: 73, rows: 963}
+    - {server: db-kyc,                ok: true}
+    - {server: db-storage,            tables: 4,  rows: 3}
+    - {server: notification-realtime, tables: 6,  rows: 962}
+    - {server: payment-db,            tables: 3,  rows: 8308}
+    - {server: wallet-db,             tables: 6,  rows: 2852}
+  storage: {provider: cloudflare-r2, bucket: tec-db-backups, encryption: aes-256-gcm-scrypt-passphrase, retention: "14 daily + 8 weekly"}
+  schedule: {backup: "23 1 * * * UTC (Railway cron)", restore_check: "monthly, 3rd 04:17 UTC (GitHub Actions)"}

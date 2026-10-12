@@ -197,13 +197,16 @@ so it needs nothing more.
 | **Restore test** | **Monthly, and before the setup is called done:** restore the latest dump of each database into a throwaway Postgres, compare row counts table by table with production (read-only queries), record the result in `runtime-evidence/`. Until the first restore passes, the databases count as **not backed up** |
 | Credentials | A read-only backup role per server (`pg_read_all_data`), its password in Railway Variables only |
 
-**Built (2026-10-12): `tec-core-backend/tec-backup-job` + `.github/workflows/restore-check.yml`,
-in PR #412 (open).** Storage: **Cloudflare R2** (owner's choice). Counts and `pg_dump` come from one
-exported read-only snapshot, so the restore check demands exact equality. Verified end to end against
-a real PostgreSQL. Not yet deployed: it needs the owner's R2 bucket and tokens, the age key pair, and a
-Railway cron service (setup in the job's README). Until the first restore check passes, the
-databases are still **not backed up**. Later hardening: a `pg_read_all_data` role per server instead
-of the superuser URL.
+**Live and restore-verified (2026-10-12).** `tec-core-backend/tec-backup-job` (PRs #412, #413)
+runs as the Railway cron service `backup-job` (01:23 UTC nightly, no volume). Storage: Cloudflare R2
+bucket `tec-db-backups`, with two tokens scoped to that bucket only (read-write for Railway,
+read-only for GitHub). Encryption: AES-256-GCM with an scrypt key from the owner's passphrase
+(the owner chose a passphrase over an age key pair, which needed a terminal on the phone).
+First run: 18 databases, 1.4 MB, 0 failures. **First restore check (GitHub Actions, manual):
+all 18 restored into a throwaway Postgres 18, every table's row count equal** —
+`runtime-evidence/ev-2026-10-12-025.yaml`. From here the databases count as backed up.
+The check repeats monthly; a failed night or check exits non-zero. Later hardening: a
+`pg_read_all_data` role per server instead of the superuser URL; an alert webhook.
 
 Pro would replace §4 with Railway's own daily backups. That remains an option the owner may
 take at any time; it is not needed for §2–§3.
@@ -211,7 +214,7 @@ take at any time; it is not needed for §2–§3.
 ## 5. Order
 
 1. §2 report → choose `tec_life`'s server (owner). **Done: `notification-realtime` (owner, 2026-10-12).**
-2. §4 backups first, **before** any data is copied into a new database: a migration of data
+2. §4 backups first, **before** any data is copied into a new database — **done 2026-10-12**: a migration of data
    with no backup to fall back on is the riskiest moment there is.
 3. §3 on the chosen server, with the proof.
 4. `tec-life-service` from `tec-service-template`, deployed against `tec_life`. Data copy and
