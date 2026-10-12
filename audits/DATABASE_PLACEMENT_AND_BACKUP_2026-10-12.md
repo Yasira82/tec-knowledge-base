@@ -114,6 +114,21 @@ server to leak. `db-storage` is the second choice. Before §3, read on the chose
 `SELECT datname, pg_size_pretty(pg_database_size(datname)) FROM pg_database;` ·
 `SHOW max_connections;`.
 
+**Read on `notification-realtime` (owner, Railway Data tab, 2026-10-12):**
+
+| Fact | Value |
+|---|---|
+| Roles | one: `postgres` (superuser, login) — every connection uses it |
+| Connections now | 3 × `postgres`, 7 system; `max_connections` 500 |
+| Databases | `railway` 9.0 MB · `postgres` 7.5 MB · templates |
+| Tables in `railway` | `notifications` (960 rows, last write 2026-10-10) · `notification_preferences` · `device_tokens` · `_prisma_migrations` (2 migrations — the same 2 the repo holds) · **`analytics_events` and `daily_metrics`, both empty** |
+| analytics-service `DATABASE_URL` | points at **Supabase** (owner checked the variable) |
+
+The two analytics tables are **empty leftovers**, not a second live owner: tec-analytics-service
+writes to Supabase. Nothing is removed now; dropping them is a later, separate cleanup. The
+recommendation stands: **`notification-realtime`**, with only tec-notification-service holding
+its superuser credential.
+
 ## 3. Step 2: creating a logical database with full isolation (runbook draft)
 
 `CREATE ROLE` + `CREATE DATABASE` is **not** isolation by itself. In PostgreSQL every role
