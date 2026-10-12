@@ -237,7 +237,10 @@ take at any time; it is not needed for §2–§3.
    was removed from Life once the copy was done.
    **Rollback:** delete `LIFE_SERVICE_URL` on the gateway (and swap the two check-in flags) —
    identity's tables are untouched, but writes made since the cutover live only in `tec_life`.
-6. **Still open:** contract — remove the Life module and its tables from identity in a later,
-   separate deploy, once Life has run cleanly for a while. Rotate identity's database password:
+6. **Contract, part 1 — done 2026-10-12 (tec-core-backend #417):** the Life module (routes,
+   sweeper, review, intent store) removed from identity; every caller reaches Life through the
+   gateway. **Still open:** part 2 — drop Life's tables from identity (kept, marked frozen in
+   its `schema.prisma`: `migrate.cjs` refuses a non-additive diff, and they are the pre-cutover
+   copy) — a deliberate, separate step. Rotate identity's database password:
    it was shown in a screenshot during step 5 (private network only; do it with the owner, step by
    step, so identity does not lose its connection).
