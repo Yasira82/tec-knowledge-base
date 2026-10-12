@@ -177,6 +177,14 @@ One step in flight at a time; a step starts when the one before is merged **and 
 2. Performance budget (E15): **250 KB gzip** first-load JS for `/app`.
 3. The first domain host: **`tec-business-service`**.
 
+4. **Databases (owner, 2026-10-12).** Shared infrastructure, separate data: a new service gets a
+   **logical database** on an existing PostgreSQL server (Railway Hobby allows 10 volumes per
+   project and all 10 are used), with its own role, migrations and no read of another
+   service's data. Not on `db-identity` by default, never on the payment / wallet / auth / KYC
+   servers; the server is chosen from a read-only resource report. No Pro upgrade for volumes;
+   restorable backups are a separate priority. Details and runbooks:
+   `audits/DATABASE_PLACEMENT_AND_BACKUP_2026-10-12.md`.
+
 The ADR and C-doc numbers are still the owner's to assign.
 
 ## 6. Language policy for new services (owner, 2026-10-11)
@@ -193,4 +201,6 @@ nothing moves now.
 
 | Step | State |
 |---|---|
-| S1 — template: E1 · E3 · E4 · E10 · E11 · E12 · E14 · scorecard | tec-template-base **#52** (open). Floor **13/13** + E15 (`/app` 112 KB of 250); jsx-a11y on with zero findings; `/help` + feedback to the fleet inbox; Pi Browser e2e 4/4. Next: S2 (scorecard into every app at today's floor) |
+| S1 — template: E1 · E3 · E4 · E10 · E11 · E12 · E14 · scorecard | tec-template-base **#52** (merged). Floor **13/13** + E15 (`/app` 112 KB of 250); jsx-a11y on with zero findings; `/help` + feedback to the fleet inbox; Pi Browser e2e 4/4. |
+| S2 — scorecard in every app | 24 PRs (2026-10-11, open), one commit each; floors 3–6 of 13 (Commerce · Ecommerce 3 → Life · Hub 6). Template **#53** (open): E6 reads the ADR-009 drift step; the Hub's CI one level up. Found on the way: Commerce `refresh` sets cookies without `cookieDomainFor`; Analytics `logout` clears them without it |
+| S4 — `tec-service-template` | tec-core-backend **#412** (open): never deployed, CI builds and tests it; `scripts/new-service.mjs <name> <port>`. Verified against a real Postgres 16. Next: database placement (decision 4), then `tec-life-service` |
