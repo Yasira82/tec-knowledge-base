@@ -64,6 +64,56 @@ To paste into Railway's agent. It asks for reading only:
 The candidates left by these rules are `db-asset`, `db-storage` and `notification-realtime`.
 The report decides between them.
 
+### The report (Railway agent, 2026-10-12 — metrics window ≈ Oct 4–12)
+
+| Server | PG | Volume used / allocated | CPU peak (vCPU) | RAM (approx.) |
+|---|---|---|---|---|
+| payment-db | 17 (on disk) | 0.119 / **0.5 GB** (24 %) | 0.0003 | 0.049–0.053 GB |
+| wallet-db | 17 (image tag) | 0.117 / **0.5 GB** (23 %) | < 0.0004 | 0.04–0.05 GB |
+| auth-db | 17 (image tag) | 0.116 / **0.5 GB** (23 %) | < 0.0004 | 0.04–0.08 GB |
+| db-identity | 18 (image tag) | 0.230 / 5 GB (4.6 %) | < 0.0004 | 0.04–0.08 GB |
+| db-kyc | 18 | 0.216 / 5 GB (4.3 %) | < 0.0004 | 0.04–0.08 GB |
+| db-commerce | 18 | 0.220 / 5 GB (4.4 %) | < 0.0004 | 0.04–0.08 GB |
+| db-asset | 18 | 0.217 / 5 GB (4.3 %) | < 0.0004 | 0.04–0.08 GB |
+| db-storage | 18 | 0.215 / 5 GB (4.3 %) | < 0.0004 | 0.04–0.08 GB |
+| notification-realtime | 18 | 0.221 / 5 GB (4.4 %) | < 0.0004 | 0.04–0.08 GB |
+
+Not retrieved (the agent has no SQL access): database sizes, roles, connected users and
+`max_connections` except payment-db's (100). The service ↔ database mapping is inferred
+from names, not verified.
+
+**What it means**
+
+- **Load decides nothing.** Every server idles (< 0.0004 vCPU, < 0.1 GB RAM). The three
+  candidates are identical in resources, so the choice is made on trust (below).
+- **The trust question is the superuser, not the neighbour's data.** Railway's default
+  `DATABASE_URL` connects as `postgres`, the server's superuser. Whatever service owns the
+  host server holds a credential that can read every database on it, `tec_life` included —
+  role isolation (§3) protects against `tec_life_svc`, not against that service. So `tec_life`
+  belongs on the server whose owning service is the least exposed and changes least. Moving
+  each existing service off the superuser onto its own role is the follow-up that closes this
+  (not part of this change).
+- **Two findings to keep, not to act on now:** payment · wallet · auth have **0.5 GB**
+  volumes (about 24 % used), the other six 5 GB — watch their growth. payment-db's data
+  directory holds `.railway-major-upgrade.lock` (2026-08-10), left by the PG 17 upgrade;
+  ask Railway what it means before any change to that server.
+
+**Recommendation (for the owner to decide): `notification-realtime`.** Its owning service has
+the smallest surface of the three, read from `tec-core-backend` main on 2026-10-12:
+
+| Owning service | Commits, last 60 days | HTTP routes | Handles uploads | Stream consumers |
+|---|---|---|---|---|
+| tec-notification-service → `notification-realtime` | **6** | **9** | **no** | 2 |
+| tec-storage-service → `db-storage` | 8 | 11 | yes | 0 |
+| tec-asset-service → `db-asset` | 16 | 22 | yes | 6 |
+
+Fewer changes and no file parsing mean fewer chances for the superuser credential on that
+server to leak. `db-storage` is the second choice. Before §3, read on the chosen server only
+(read-only): `SELECT usename, count(*) FROM pg_stat_activity GROUP BY 1;` ·
+`SELECT rolname, rolsuper, rolcanlogin FROM pg_roles WHERE rolname NOT LIKE 'pg\_%';` ·
+`SELECT datname, pg_size_pretty(pg_database_size(datname)) FROM pg_database;` ·
+`SHOW max_connections;`.
+
 ## 3. Step 2: creating a logical database with full isolation (runbook draft)
 
 `CREATE ROLE` + `CREATE DATABASE` is **not** isolation by itself. In PostgreSQL every role
