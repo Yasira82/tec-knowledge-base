@@ -197,12 +197,20 @@ so it needs nothing more.
 | **Restore test** | **Monthly, and before the setup is called done:** restore the latest dump of each database into a throwaway Postgres, compare row counts table by table with production (read-only queries), record the result in `runtime-evidence/`. Until the first restore passes, the databases count as **not backed up** |
 | Credentials | A read-only backup role per server (`pg_read_all_data`), its password in Railway Variables only |
 
+**Built (2026-10-12): `tec-core-backend/tec-backup-job` + `.github/workflows/restore-check.yml`,
+in PR #412 (open).** Storage: **Cloudflare R2** (owner's choice). Counts and `pg_dump` come from one
+exported read-only snapshot, so the restore check demands exact equality. Verified end to end against
+a real PostgreSQL. Not yet deployed: it needs the owner's R2 bucket and tokens, the age key pair, and a
+Railway cron service (setup in the job's README). Until the first restore check passes, the
+databases are still **not backed up**. Later hardening: a `pg_read_all_data` role per server instead
+of the superuser URL.
+
 Pro would replace §4 with Railway's own daily backups. That remains an option the owner may
 take at any time; it is not needed for §2–§3.
 
 ## 5. Order
 
-1. §2 report → choose `tec_life`'s server (owner).
+1. §2 report → choose `tec_life`'s server (owner). **Done: `notification-realtime` (owner, 2026-10-12).**
 2. §4 backups first, **before** any data is copied into a new database: a migration of data
    with no backup to fall back on is the riskiest moment there is.
 3. §3 on the chosen server, with the proof.
