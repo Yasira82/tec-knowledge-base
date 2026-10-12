@@ -223,5 +223,21 @@ take at any time; it is not needed for §2–§3.
    `tec_life_svc` can connect to `tec_life` only (`railway` false, `postgres` false), and
    notification-service still holds 4 connections to `railway`. The nightly backup picks
    `tec_life` up with no change (it dumps every database on each server).
-4. `tec-life-service` from `tec-service-template`, deployed against `tec_life`. Data copy and
-   gateway switch remain separate steps (`APP_EXPANSION_ARCHITECTURE_2026-10-11.md` §1.4).
+4. `tec-life-service` from `tec-service-template`, deployed against `tec_life`. **Done 2026-10-12**
+   (tec-core-backend #414 · #415 · #416). Private only, port 5012, Healthcheck Path `/ready`;
+   `DATABASE_URL` uses `${{notification-realtime.RAILWAY_PRIVATE_DOMAIN}}` — the server's private
+   host is `postgres-1e8b.railway.internal`, not its display name (the first deploy failed P1001
+   on the hand-written host). The init migration ran as `tec_life_svc`.
+5. **Cutover, 2026-10-12, owner + console:** copy (`--apply`) → 73 rows, every count equal
+   (goals 5 · progress 2 · consents 8 · skills 1 · preferences 2 · budgets 3 · Life audit 52) →
+   gateway `LIFE_SERVICE_URL` set → copy again: 0 new rows. Proof from the app: a new goal and a
+   progress entry landed in `tec_life` (goals 6 / progress 3 there, still 5 / 2 in identity), old
+   goals shown unchanged, Arabic and π amounts intact. Weekly check-in moved:
+   `LIFE_CHECKIN_ENABLED=false` on identity, `true` on Life. The temporary `SOURCE_DATABASE_URL`
+   was removed from Life once the copy was done.
+   **Rollback:** delete `LIFE_SERVICE_URL` on the gateway (and swap the two check-in flags) —
+   identity's tables are untouched, but writes made since the cutover live only in `tec_life`.
+6. **Still open:** contract — remove the Life module and its tables from identity in a later,
+   separate deploy, once Life has run cleanly for a while. Rotate identity's database password:
+   it was shown in a screenshot during step 5 (private network only; do it with the owner, step by
+   step, so identity does not lose its connection).
