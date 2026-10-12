@@ -216,6 +216,12 @@ take at any time; it is not needed for §2–§3.
 1. §2 report → choose `tec_life`'s server (owner). **Done: `notification-realtime` (owner, 2026-10-12).**
 2. §4 backups first, **before** any data is copied into a new database — **done 2026-10-12**: a migration of data
    with no backup to fall back on is the riskiest moment there is.
-3. §3 on the chosen server, with the proof.
+3. §3 on the chosen server, with the proof. **Done 2026-10-12 (owner, Railway console + Data tab):** `tec_life`
+   owned by `tec_life_svc` (no superuser / createdb / createrole / replication / bypassrls,
+   connection limit 20, password generated in the container and kept by the owner only);
+   `REVOKE CONNECT … FROM PUBLIC` on `railway` and `postgres`. Proof read back:
+   `tec_life_svc` can connect to `tec_life` only (`railway` false, `postgres` false), and
+   notification-service still holds 4 connections to `railway`. The nightly backup picks
+   `tec_life` up with no change (it dumps every database on each server).
 4. `tec-life-service` from `tec-service-template`, deployed against `tec_life`. Data copy and
    gateway switch remain separate steps (`APP_EXPANSION_ARCHITECTURE_2026-10-11.md` §1.4).
