@@ -34,6 +34,19 @@ Companion to `audits/APP_EXPANSION_ARCHITECTURE_2026-10-11.md` (§1.4 and step S
    Hobby: an external `pg_dump` of every database **with a real restore test**. An export
    that succeeded is not a backup until a restore from it has been seen to work (§4).
 6. **`tec-life-service` does not touch production** until §2 has picked its server.
+7. **Where the next services' databases go (owner, 2026-10-13)** — three servers only, never the
+   money / identity / orders ones (decision 3 extended to `db-commerce` and `db-identity`):
+
+   | Server | Logical databases (existing + planned) |
+   |---|---|
+   | `notification-realtime` | notifications · `tec_life` · `tec_ai` · `tec_platform` |
+   | `db-storage` | files · `tec_connection` · `tec_trust` |
+   | `db-asset` | assets · `tec_search` · `tec_business` · `tec_nexus` |
+
+   **Considered and not taken (2026-10-13):** moving KYC's database onto `db-identity` to free
+   the `db-kyc` volume. Not needed while the three servers above have room (each is under 5 %
+   of 5 GB), it puts KYC data beside identity's (the shared-failure concern of decision 2), and
+   it reverses decision 3. Kept as the option to revisit **if** the volumes run out.
 
 ## 2. Step 1: a read-only resource report (Railway agent)
 
@@ -257,3 +270,14 @@ deploy, both about the connection string and neither about the code:
   Railway's variable editor (its autocomplete rewrites `${{`). Fixed by writing the private host
   literally: `postgres-1e8b.railway.internal`.
 
+
+### `tec_connection` — the third logical database (2026-10-13)
+
+On `db-storage` (decision 7), same recipe: role `tec_connection_svc` (no superuser / createdb,
+connection limit 20, password generated in the container), `tec_connection` owned by it,
+`REVOKE ALL … FROM PUBLIC` on it. Before closing the server's other databases the owner read
+who connects: only `postgres` (storage-service), 2 connections — so
+`REVOKE CONNECT ON DATABASE railway / postgres FROM PUBLIC` was safe. Proof read back:
+`tec_connection_svc` connects to `tec_connection` only (`railway` false, `postgres` false), and
+storage-service still holds its 2 connections. The private host was written literally
+(`postgres-1wvb.railway.internal`) from the start, per the P1013 lesson above.
