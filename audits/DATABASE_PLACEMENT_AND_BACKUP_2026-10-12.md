@@ -244,3 +244,16 @@ take at any time; it is not needed for §2–§3.
    copy) — a deliberate, separate step. Rotate identity's database password:
    it was shown in a screenshot during step 5 (private network only; do it with the owner, step by
    step, so identity does not lose its connection).
+
+### `tec_ai` — the second logical database (2026-10-12 → 13)
+
+Same server (`notification-realtime`, owner's choice), same recipe as `tec_life`: role
+`tec_ai_svc` (no superuser / createdb), `REVOKE ALL … FROM PUBLIC` on `tec_ai`. Read back:
+`tec_ai_svc` connects to `tec_ai` only; `tec_life_svc` cannot reach `tec_ai`. Lessons from the
+deploy, both about the connection string and neither about the code:
+- **P1000** (wrong password) — the password was rotated with `ALTER ROLE` and a 32-character
+  hex value, short enough to copy on a phone without a line break.
+- **P1013 `empty host`** — a `${{…RAILWAY_PRIVATE_DOMAIN}}` reference broken while editing in
+  Railway's variable editor (its autocomplete rewrites `${{`). Fixed by writing the private host
+  literally: `postgres-1e8b.railway.internal`.
+
