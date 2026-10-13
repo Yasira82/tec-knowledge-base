@@ -281,3 +281,19 @@ who connects: only `postgres` (storage-service), 2 connections — so
 `tec_connection_svc` connects to `tec_connection` only (`railway` false, `postgres` false), and
 storage-service still holds its 2 connections. The private host was written literally
 (`postgres-1wvb.railway.internal`) from the start, per the P1013 lesson above.
+
+### `tec_nexus` — the fourth logical database (2026-10-13)
+
+On `db-asset` (decision 7), same recipe in one console command: role `tec_nexus_svc`,
+`tec_nexus` owned by it, `REVOKE ALL … FROM PUBLIC` on it, and `REVOKE CONNECT` on `railway` /
+`postgres` after the owner read that only `postgres` (asset-service, 2 connections) connects.
+Proof read back: `tec_nexus_svc` connects to `tec_nexus` only, not superuser; asset-service
+still holds its 2 connections. Private host written literally: `postgres-hwjm.railway.internal`.
+- **Password exposed, rotated the same hour.** A screenshot of the service's Variables showed
+  `DATABASE_URL` with the eye open. Rotated with `ALTER ROLE tec_nexus_svc PASSWORD …` (32 hex,
+  generated in the container) before anything called the service; the next copy dry run
+  connected with the new value.
+- **Service name collision.** The first create attempt left a second service named
+  `tec-nexus-service`, so the working one kept the repo's name. After removing the duplicate and
+  renaming, Railway kept the original private host (`tec-core-backend-2db203ab.railway.internal`)
+  and it cannot be edited — the gateway's `NEXUS_SERVICE_URL` uses it. Harmless; just not the name.
