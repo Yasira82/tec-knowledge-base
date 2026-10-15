@@ -297,3 +297,27 @@ still holds its 2 connections. Private host written literally: `postgres-hwjm.ra
   `tec-nexus-service`, so the working one kept the repo's name. After removing the duplicate and
   renaming, Railway kept the original private host (`tec-core-backend-2db203ab.railway.internal`)
   and it cannot be edited — the gateway's `NEXUS_SERVICE_URL` uses it. Harmless; just not the name.
+
+### `db-identity` superuser password rotated (2026-10-15)
+
+The password shown in a screenshot on 2026-10-12 (§5 step 6) was `postgres`'s — the only role
+that connects to `db-identity` (owner read `pg_stat_activity`: 5 + 1 connections, all `postgres`)
+— and the server **has a public TCP proxy** (`autorack.proxy.rlwy.net`), so the exposure was
+reachable from the internet, not only the private network. Rotated, owner + console, in this order:
+1. `ALTER ROLE postgres PASSWORD …` (32 hex, generated in the container; open connections survive).
+2. identity-service `DATABASE_URL` — written literally, not a reference — edited, deployed:
+   `[PrismaService] Connected to database`, every consumer started.
+3. backup-job `BACKUP_DB_DB_IDENTITY` (also literal) edited. **The first manual run still failed**
+   (`INCOMPLETE … server: db-identity … password authentication failed`) — the variable had been
+   saved but the cron service not redeployed. After the redeploy: `backup: complete … databases: 22
+   … failures: []`. The job reported its own failure loudly, as §4 requires.
+4. `db-identity`'s own `POSTGRES_PASSWORD` updated (the Data tab); the server restarted (~30 s).
+
+Verified: Hub login works.
+
+**Still open (not done):**
+- Every Postgres server here has a public TCP proxy, and each one hands out its superuser. Nothing
+  found so far needs them (services and the backup job use `*.railway.internal`). Removing them
+  is the next hardening step — one server at a time, after checking that nothing uses its public URL.
+- `DATABASE_URL` on identity-service and the backup job's entries are literal strings. As
+  references (`${{db-identity.DATABASE_URL}}`), the next rotation would be one change, not three.
