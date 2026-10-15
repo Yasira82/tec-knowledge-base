@@ -329,3 +329,11 @@ On `db-asset` beside `tec_nexus` (decision 7): role `tec_search_svc`, `tec_searc
 (`tec_nexus`, `railway`, `postgres` false), not superuser, and `tec_nexus_svc` cannot reach
 `tec_search`. The service was renamed **before** its first deploy, so its private host is the
 right one this time (`tec-search-service.railway.internal`) — the Nexus lesson applied.
+
+### `tec_platform` — the sixth logical database (2026-10-15)
+
+On `notification-realtime` beside `tec_life` and `tec_ai` (decision 7): role `tec_platform_svc`,
+`tec_platform` owned by it, `REVOKE ALL … FROM PUBLIC`. Proof read back: `tec_platform_svc`
+connects to `tec_platform` only (`tec_life`, `tec_ai`, `railway`, `postgres` false), not
+superuser; `tec_ai_svc` cannot reach `tec_platform`. Service renamed before its first deploy —
+private host `tec-platform-service.railway.internal`.
