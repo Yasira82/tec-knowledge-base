@@ -321,3 +321,11 @@ Verified: Hub login works.
   is the next hardening step — one server at a time, after checking that nothing uses its public URL.
 - `DATABASE_URL` on identity-service and the backup job's entries are literal strings. As
   references (`${{db-identity.DATABASE_URL}}`), the next rotation would be one change, not three.
+
+### `tec_search` — the fifth logical database (2026-10-15)
+
+On `db-asset` beside `tec_nexus` (decision 7): role `tec_search_svc`, `tec_search` owned by it,
+`REVOKE ALL … FROM PUBLIC`. Proof read back: `tec_search_svc` connects to `tec_search` only
+(`tec_nexus`, `railway`, `postgres` false), not superuser, and `tec_nexus_svc` cannot reach
+`tec_search`. The service was renamed **before** its first deploy, so its private host is the
+right one this time (`tec-search-service.railway.internal`) — the Nexus lesson applied.
