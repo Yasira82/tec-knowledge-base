@@ -337,3 +337,14 @@ On `notification-realtime` beside `tec_life` and `tec_ai` (decision 7): role `te
 connects to `tec_platform` only (`tec_life`, `tec_ai`, `railway`, `postgres` false), not
 superuser; `tec_ai_svc` cannot reach `tec_platform`. Service renamed before its first deploy —
 private host `tec-platform-service.railway.internal`.
+
+### `tec_business` — the seventh logical database (2026-10-15)
+
+On `db-asset` beside `tec_nexus` and `tec_search` (decision 7), which completes that server's
+planned set: role `tec_business_svc`, `tec_business` owned by it, `REVOKE ALL … FROM PUBLIC`.
+Proof read back: `tec_business_svc` connects to `tec_business` only (`tec_nexus`, `tec_search`,
+`railway`, `postgres` false), not superuser; the other two roles cannot reach `tec_business`.
+Service renamed before its first deploy — private host `tec-business-service.railway.internal`.
+The first deploy failed only at the healthcheck: its path had been entered as the root
+directory (`/tec-business-service`), which the internal-key guard answers with 403. The app had
+started; setting the path to `/ready` fixed it. Every new service's healthcheck is `/ready`.
