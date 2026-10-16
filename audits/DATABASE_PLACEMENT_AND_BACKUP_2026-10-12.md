@@ -316,9 +316,8 @@ reachable from the internet, not only the private network. Rotated, owner + cons
 Verified: Hub login works.
 
 **Still open (not done):**
-- Every Postgres server here has a public TCP proxy, and each one hands out its superuser. Nothing
-  found so far needs them (services and the backup job use `*.railway.internal`). Removing them
-  is the next hardening step — one server at a time, after checking that nothing uses its public URL.
+- ~~Every Postgres server here has a public TCP proxy~~ — **closed 2026-10-16**, see
+  "Public TCP proxies removed" below.
 - `DATABASE_URL` on identity-service and the backup job's entries are literal strings. As
   references (`${{db-identity.DATABASE_URL}}`), the next rotation would be one change, not three.
 
@@ -367,3 +366,32 @@ cannot reach `tec_trust`. Private host of the server written literally
 - **A Railway reference to a name that does not exist resolves to an empty string, silently.**
   `SOURCE_DATABASE_URL=${{tec-identity-service.DATABASE_URL}}` was empty: the service is named
   `identity-service` on Railway. Pick the service from the `${{` picker instead of typing it.
+
+### Public TCP proxies removed — all nine Postgres servers (2026-10-16)
+
+Every server had a public TCP proxy that handed out its superuser to anyone holding the
+string. All nine are now **Unexposed**: db-identity · db-kyc · notification-realtime ·
+db-storage · db-asset · db-commerce · auth-db · wallet-db · payment-db, in that order (the money
+servers last, at a quiet hour).
+
+**Checked before each removal, read-only, on the server itself** — Railway's agent could not
+read variable values, so the question was asked of Postgres instead:
+`SELECT CASE WHEN client_addr IS NULL THEN 'local' WHEN host(client_addr) LIKE 'fd%' THEN 'private'
+ELSE 'OTHER ' || host(client_addr) END …, usename, datname, count(*) FROM pg_stat_activity WHERE
+backend_type = 'client backend' GROUP BY 1,2,3` (in a `default_transaction_read_only` session).
+Every connection was `private` except one on auth-db from `10.215.0.133`; auth-service's own
+`DATABASE_URL` host, printed without its password
+(`node -e "…new URL(process.env.DATABASE_URL).hostname…"`), was `postgres.railway.internal` —
+the private network answers over IPv4 too — so it was auth-service itself.
+
+**After each removal:** the server restarts (~30 s, Postgres logs `not properly shut down` →
+`automatic recovery` → `ready to accept connections`, nothing lost), and the owner checked the
+apps it serves: Hub login (identity, auth), Life + System (notification-realtime), Zone +
+Connection (db-storage), Assets + Explorer (db-asset), Commerce + Ecommerce (db-commerce), the
+wallet balance (wallet-db), payment history (payment-db). All worked.
+
+**What this costs:** a tool run from a laptop can no longer reach a database directly — notably
+`tec-auth-service/scripts/list-pi-uids.mjs`, which asks for `DATABASE_PUBLIC_URL`. Use
+`railway connect <server>` (an encrypted tunnel, no public access needed), or add the proxy back
+for the duration of the job and remove it again. The backup job is unaffected: it reaches every
+server through `${{<server>.DATABASE_URL}}`, the private address.
