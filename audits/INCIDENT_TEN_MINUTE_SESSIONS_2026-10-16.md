@@ -84,3 +84,12 @@ was refused (expired vs signature) and **how long it lived** — after a day of 
 - Two C17 holes — the gateway adds `x-internal-key` to every proxied request, so a key alone
   never proves a service called: Feedback triage readable by any signed-in user (#426), and
   `pioneer/arrived` creditable by a person for an app never opened (#427).
+- tec-api-gateway logged `MaxListenersExceededWarning: 11 close listeners added to [Server]`
+  on every boot. Not a leak: http-proxy-middleware v2 adds ONE `server.on('close')` per proxy
+  middleware, on that middleware's first request, and the gateway mounts more proxy routes than
+  Node's default limit of 10. The count is fixed by the route table. tec-core-backend #434 sets
+  the server's limit to the number of proxy routes + 10 (`ProxyService.proxyCount`), so a real
+  leak elsewhere would still be reported above it; `proxy-close-listeners.test.ts` hits every
+  route twice and pins the count as stable and under the limit. [Runtime Verified] 2026-10-16,
+  first deploy after the merge: the owner searched api-gateway's Deploy Logs for `MaxListeners`
+  — no result.
