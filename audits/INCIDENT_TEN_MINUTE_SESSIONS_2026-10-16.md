@@ -69,7 +69,8 @@ was refused (expired vs signature) and **how long it lived** — after a day of 
   refresh token, and `Pi.authenticate` is refused in the Hub's foreign session (ADR-007). So
   instead: a 401 from the app's own `/api/bff/*` shows a "session expired" notice with one
   button that reopens the app through the Hub (Tec-Assets #80, Tec-Connection #95). Done when merged.
-- ◐ **Detection** — tec-auth-service logs `Token lifetimes: access Xs, refresh Ys` at boot,
+- ✅ **Detection** — [Runtime Verified] 2026-10-16 11:00 GMT+3, first deploy after the merge:
+  `Token lifetimes: access 604800s, refresh 604800s` (7 days each, no ERROR). tec-auth-service logs `Token lifetimes: access Xs, refresh Ys` at boot,
   measured from real signed tokens, and logs an ERROR when access < 1 hour or refresh <
   access (tec-core-backend #430). A unit mix-up like this one is visible in the first deploy log.
 - □ **Alert** — a synthetic check that signs in, refreshes once, and asserts the refreshed
