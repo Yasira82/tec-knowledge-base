@@ -62,10 +62,16 @@ was refused (expired vs signature) and **how long it lived** — after a day of 
   bare seconds, unit strings and the defaults, with real signed tokens.
 - ✅ **New control** — Tec-Assets #79: `GET /api/bff/pioneer/arrived` reports `tokenProblem`,
   `lifetimeMinutes`, `expiredMinutesAgo` (labels and minutes only — never a value or a claim).
-- □ **Preventive** — the same diagnostic in the template (`tec-template-base`) and every app, so
-  the next session problem is one link away in any app.
-- □ **Preventive** — apps that verify the token in their BFF should renew it on a 401 (as the
-  Hub's `bffFetch` does) instead of leaving the screen empty.
+- ◐ **Preventive** — the same diagnostic in the template (`tec-template-base`) and all 20 other
+  apps, so the next session problem is one link away in any app. Pushed to each app's open PR
+  (2026-10-16); tests + type-check green in every app. Done when merged.
+- ◐ **Preventive** — renewing on a 401 is not possible for a Hub-entered session: it carries no
+  refresh token, and `Pi.authenticate` is refused in the Hub's foreign session (ADR-007). So
+  instead: a 401 from the app's own `/api/bff/*` shows a "session expired" notice with one
+  button that reopens the app through the Hub (Tec-Assets #80, Tec-Connection #95). Done when merged.
+- ◐ **Detection** — tec-auth-service logs `Token lifetimes: access Xs, refresh Ys` at boot,
+  measured from real signed tokens, and logs an ERROR when access < 1 hour or refresh <
+  access (tec-core-backend #430). A unit mix-up like this one is visible in the first deploy log.
 - □ **Alert** — a synthetic check that signs in, refreshes once, and asserts the refreshed
   token's lifetime equals `JWT_EXPIRES_IN`.
 
