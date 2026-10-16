@@ -348,3 +348,22 @@ Service renamed before its first deploy — private host `tec-business-service.r
 The first deploy failed only at the healthcheck: its path had been entered as the root
 directory (`/tec-business-service`), which the internal-key guard answers with 403. The app had
 started; setting the path to `/ready` fixed it. Every new service's healthcheck is `/ready`.
+
+### `tec_trust` — the eighth logical database (2026-10-16)
+
+On `db-storage` beside `tec_connection` (decision 7), which completes that server's planned
+set: role `tec_trust_svc` (no superuser / createdb / createrole, connection limit 20),
+`tec_trust` owned by it, `REVOKE ALL … FROM PUBLIC`. Proof read back: `tec_trust_svc` connects
+to `tec_trust` only (`tec_connection`, `railway`, `postgres` false); `tec_connection_svc`
+cannot reach `tec_trust`. Private host of the server written literally
+(`postgres-1wvb.railway.internal`). Lessons, both about the console and neither about the code:
+- **The server's Console is a shell, not `psql`.** SQL pasted straight in is answered by bash
+  (`CREATE: command not found`) and runs nothing. One line does it all:
+  `psql "$DATABASE_URL" -c "…" -c "…"` — the server's own variable, so no password is typed.
+- **A role password must not pass through the chat.** The first two candidates were generated
+  in the session's container and then appeared in screenshots, so the third was generated ON
+  the server (`head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n'`) and set with `ALTER ROLE`
+  in the same command; only the owner saw it, pasted into the service's `DATABASE_URL`.
+- **A Railway reference to a name that does not exist resolves to an empty string, silently.**
+  `SOURCE_DATABASE_URL=${{tec-identity-service.DATABASE_URL}}` was empty: the service is named
+  `identity-service` on Railway. Pick the service from the `${{` picker instead of typing it.
