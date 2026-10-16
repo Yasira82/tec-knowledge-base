@@ -62,7 +62,7 @@ was refused (expired vs signature) and **how long it lived** — after a day of 
   bare seconds, unit strings and the defaults, with real signed tokens.
 - ✅ **New control** — Tec-Assets #79: `GET /api/bff/pioneer/arrived` reports `tokenProblem`,
   `lifetimeMinutes`, `expiredMinutesAgo` (labels and minutes only — never a value or a claim).
-- ◐ **Preventive** — the same diagnostic in the template (`tec-template-base`) and all 20 other
+- ◐ **Preventive** — the same diagnostic in the template (`tec-template-base`) and all 22 other
   apps, so the next session problem is one link away in any app. Pushed to each app's open PR
   (2026-10-16); tests + type-check green in every app. Done when merged.
 - ◐ **Preventive** — renewing on a 401 is not possible for a Hub-entered session: it carries no
