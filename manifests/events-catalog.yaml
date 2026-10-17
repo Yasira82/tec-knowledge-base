@@ -73,7 +73,7 @@ events:
   - name: payment.completed.v1
     owner: tec-payment-service
     subject: paymentId
-    consumers: [tec-identity-service/legend, tec-identity-service/nexus, tec-commerce-service/subscription, tec-asset-service/purchases]
+    consumers: [tec-trust-service/legend, tec-nexus-service/nexus, tec-commerce-service/subscription, tec-asset-service/purchases]
     status: live
     verified: true
     binds_to: [C-70, C-71, C-126]
@@ -97,7 +97,7 @@ events:
   - name: order.paid.v1
     owner: tec-commerce-service
     subject: orderId
-    consumers: [tec-identity-service/connection, tec-analytics-service]
+    consumers: [tec-connection-service/connection, tec-analytics-service]
     status: live
     verified: true
     binds_to: [C-70, C-107]
@@ -110,7 +110,7 @@ events:
   - name: kyc.verified
     owner: tec-kyc-service
     subject: piUsername
-    consumers: [tec-identity-service/explorer, tec-analytics-service, tec-notification-service]
+    consumers: [tec-search-service/explorer, tec-analytics-service, tec-notification-service]
     status: live
     verified: true
     binds_to: [C-70, C-108]
@@ -124,7 +124,7 @@ events:
   - name: kyc.rejected
     owner: tec-kyc-service
     subject: piUsername
-    consumers: [tec-identity-service/explorer, tec-notification-service]
+    consumers: [tec-search-service/explorer, tec-notification-service]
     status: live
     verified: true
     binds_to: [C-70, C-108]
@@ -134,9 +134,9 @@ events:
 
   # ── Value chain (tec-identity-service modules → Legend) ──────────────────
   - name: zone.badge.issued.v1
-    owner: tec-identity-service/zone
+    owner: tec-trust-service/zone
     subject: piUsername
-    consumers: [tec-identity-service/legend, tec-identity-service/explorer, tec-identity-service/connection, tec-identity-service/zone-badge]
+    consumers: [tec-trust-service/legend, tec-search-service/explorer, tec-connection-service/connection, tec-business-service/zone-badge]
     status: live
     verified: true
     binds_to: [C-120, C-126, C-121, C-108]
@@ -152,9 +152,9 @@ events:
       zone-badge consumer serves Epic (PROJECT) and NBF (MERCHANT), whose own
       zone_verified columns were read and ranked by while nothing wrote them.
   - name: zone.badge.revoked.v1
-    owner: tec-identity-service/zone
+    owner: tec-trust-service/zone
     subject: piUsername
-    consumers: [tec-identity-service/explorer, tec-identity-service/connection, tec-identity-service/zone-badge]
+    consumers: [tec-search-service/explorer, tec-connection-service/connection, tec-business-service/zone-badge]
     status: live
     verified: true
     binds_to: [C-120, C-108]
@@ -165,9 +165,9 @@ events:
       cannot be withdrawn is worse than one never given, because it is
       trusted.
   - name: epic.project.completed.v1
-    owner: tec-identity-service/epic
+    owner: tec-business-service/epic
     subject: piUsername
-    consumers: [tec-identity-service/legend, tec-analytics-service]
+    consumers: [tec-trust-service/legend, tec-analytics-service]
     status: live
     verified: true
     binds_to: [C-125, C-126, C-121]
@@ -178,7 +178,7 @@ events:
       it is true — the owner triggers this event, so without Zone it is a claim
       (C12, tec-core-backend #344).
   - name: app.arrived.v1
-    owner: tec-identity-service/pioneer
+    owner: tec-platform-service/pioneer
     subject: userId
     consumers: [tec-analytics-service]
     status: live
@@ -194,17 +194,21 @@ events:
       ACTIVE USERS alone — excluded from every activity read and event total
       (NOT_ACTIVITY_TYPES). tec-core-backend #351, 2026-09-28.
   - name: connection.milestone.v1
-    owner: tec-identity-service/connection
+    owner: tec-connection-service/connection
     subject: piUsername
-    consumers: [tec-identity-service/legend]
-    status: live
+    consumers: [tec-trust-service/legend, tec-analytics-service]
+    status: planned
     verified: false
     binds_to: [C-107, C-126]
-    note: Collaboration milestone. Recorded as a non-verified Legend signal.
+    note: >
+      Collaboration milestone, recorded as a non-verified Legend signal. Consumers are MAPPED
+      (legend.consumer, analytics scoring) but NO service has ever produced it — it read `live`
+      only because identity's stream-health named it. Found 2026-10-17 when the drift check
+      moved Connection's owner to tec-connection-service. Planned until Connection emits it.
   - name: fundx.investment.closed.v1
-    owner: tec-identity-service/fundx
+    owner: tec-fundx (planned — no service yet)
     subject: piUsername
-    consumers: [tec-identity-service/legend]
+    consumers: [tec-trust-service/legend]
     status: planned
     verified: true
     binds_to: [C-113, C-126]
@@ -217,7 +221,7 @@ events:
   - name: analytics.business.popularity.v1
     owner: tec-analytics-service
     subject: owner
-    consumers: [tec-identity-service/explorer]
+    consumers: [tec-search-service/explorer]
     status: live
     verified: true
     binds_to: [C-105, C-108]
@@ -249,9 +253,9 @@ events:
 
   # ── Trust → discovery ranking (Connection → Explorer, C-108 §10) ─────────
   - name: connection.trust.updated.v1
-    owner: tec-identity-service/connection
+    owner: tec-connection-service/connection
     subject: sellerUserId
-    consumers: [tec-identity-service/explorer]
+    consumers: [tec-search-service/explorer]
     status: live
     verified: true
     binds_to: [C-107, C-108]
@@ -273,7 +277,7 @@ events:
   - name: legend.scores.updated.v1
     owner: tec-analytics-service
     subject: owner
-    consumers: [tec-identity-service/legend]
+    consumers: [tec-trust-service/legend]
     status: live
     verified: true
     binds_to: [C-105, C-126, C-127]

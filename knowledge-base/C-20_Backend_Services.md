@@ -1,11 +1,11 @@
 # C-20 — BACKEND SERVICES MAP
-## 12 Microservices — Ports + URLs + Patterns
+## 20 Microservices — Ports + URLs + Patterns
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Code Verified]` — Canonical Port Authority for the platform
-> **Port Scheme:** Gateway `:3000` · Services `:5001`–`:5011` (supersedes any other reference)
-> Last verified against code + runtime: 2026-09-24 (and weekly by `scripts/check-drift.py`) — every port below is the `main.ts`
+> **Port Scheme:** Gateway `:3000` · Services `:5001`–`:5019` (supersedes any other reference)
+> Last verified against code + runtime: 2026-10-17 (and weekly by `scripts/check-drift.py`) — every port below is the `main.ts`
 > default on tec-core-backend `main` AND the port in the gateway's boot routing table after
 > ADR-005 (C-02 Session 56m). tec-core-backend's CLAUDE.md carried a 4000-series table until its #333; it now matches.
 
@@ -27,10 +27,24 @@
 | commerce | 5009 | NestJS | private — `commerce-service.railway.internal` |
 | realtime | 5010 | NestJS+WS | **public** — the browser opens its WebSocket directly (gateway has no `ws: true`) |
 | analytics | 5011 | NestJS+Fastify | private — `analytics-service.railway.internal` · data in Supabase PostgreSQL |
+| life | 5012 | NestJS+Fastify | private — `tec-core-backend-c647b401.railway.internal` · `tec_life` (notification-realtime) |
+| ai | 5013 | NestJS+Fastify | private — `tec-ai-service.railway.internal` · `tec_ai` (notification-realtime) |
+| connection | 5014 | NestJS+Fastify | private — `tec-connection-service.railway.internal` · `tec_connection` (db-storage) |
+| nexus | 5015 | NestJS+Fastify | private · `tec_nexus` (db-asset) |
+| search | 5016 | NestJS+Fastify | private · `tec_search` (db-asset) — Explorer |
+| platform | 5017 | NestJS+Fastify | private · `tec_platform` (notification-realtime) — System · DX · Feedback · Pioneer + campaign |
+| business | 5018 | NestJS+Fastify | private · `tec_business` (db-asset) — NBF · Titan · NX · Epic |
+| trust | 5019 | NestJS+Fastify | private · `tec_trust` (db-storage) — Zone · Legend · Elite · VIP |
 
-The nine private services answer Railway's "Unexposed service" 404 from the internet; the
+The private services answer Railway's "Unexposed service" 404 from the internet; the
 gateway reaches them over `*.railway.internal` with `x-internal-key` (ADR-005). Do not
 re-add a public domain to call one directly — go through the gateway.
+
+**A private URL is `http://<host>.railway.internal:<port>` — never `https://`.** The private
+network carries plain HTTP; an `https://` value fails the TLS handshake and a caller sees it as
+"unreachable" (found 2026-10-17, account erasure's first run —
+`audits/ACCOUNT_ERASURE_PLAN_2026-10-17.md` §6). The eight services from 5012 up moved out of
+identity between 2026-10-12 and 16 (`audits/APP_EXPANSION_ARCHITECTURE_2026-10-11.md`).
 
 ---
 
