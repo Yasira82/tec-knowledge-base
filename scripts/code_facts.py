@@ -65,7 +65,9 @@ def open_repos(repos_dir, ref):
 
 
 SERVICES = ['api-gateway', 'auth', 'wallet', 'payment', 'asset', 'identity',
-            'notification', 'storage', 'kyc', 'commerce', 'realtime', 'analytics']
+            'notification', 'storage', 'kyc', 'commerce', 'realtime', 'analytics',
+            # moved out of identity, 2026-10-12 → 16 (audits/APP_EXPANSION_ARCHITECTURE_2026-10-11.md)
+            'life', 'ai', 'connection', 'nexus', 'search', 'platform', 'business', 'trust']
 def service_dir(svc):
     return 'tec-api-gateway' if svc == 'api-gateway' else f'tec-{svc}-service'
 

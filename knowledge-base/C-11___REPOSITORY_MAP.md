@@ -40,7 +40,7 @@ From `architecture/app-fleet.yaml` (domain, status) and each repo's `package.jso
 | Assets | `Tec-Assets` | `assets.tecosystem.app` | ^15.5.19 | 2.1.0 | ^1.2.0 | ^1.2.2 | live-verified |
 | Ecommerce | `Tec-Ecommerce` | `ecommerce.tecosystem.app` | ^15.5.19 | 2.1.0 | ^1.2.0 | ^1.2.2 | live-verified |
 | Analytics | `Tec-Analytics-` | `analytics.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Life | `Tec-Life` | `life.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Life | `Tec-Life` | `life.tecosystem.app` | 15.5.27 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
 | Connection | `Tec-Connection` | `connection.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
 | Zone | `Tec-Zone` | `zone.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
 | Nexus | `Tec-Nexus` | `nexus.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
@@ -89,6 +89,14 @@ value shown is its `.env.example`). Public vs private: C-20.
 | `tec-commerce-service` | :5009 | NestJS + Fastify | yes |
 | `tec-realtime-service` | :5010 | NestJS | — |
 | `tec-analytics-service` | :5011 | NestJS + Fastify | yes |
+| `tec-life-service` | :5012 | NestJS + Fastify | yes |
+| `tec-ai-service` | :5013 | NestJS + Fastify | yes |
+| `tec-connection-service` | :5014 | NestJS + Fastify | yes |
+| `tec-nexus-service` | :5015 | NestJS + Fastify | yes |
+| `tec-search-service` | :5016 | NestJS + Fastify | yes |
+| `tec-platform-service` | :5017 | NestJS + Fastify | yes |
+| `tec-business-service` | :5018 | NestJS + Fastify | yes |
+| `tec-trust-service` | :5019 | NestJS + Fastify | yes |
 <!-- END GENERATED -->
 
 ## 3. Read the table, not the assumption

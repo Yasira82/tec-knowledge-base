@@ -46,8 +46,10 @@ set by the platform.
 | `AI_MAX_TOKENS` | ✓ | — |
 | `AI_OVERLOAD_RETRY_MS` | ✓ | — |
 | `AI_PROVIDER_TIMEOUT_MS` | ✓ | — |
+| `AI_SERVICE_CHAT` | ✓ | — |
 | `ANALYZE` | ✓ | — |
 | `ANTHROPIC_API_KEY` | ✓ | — |
+| `ANTHROPIC_MODEL` | ✓ | — |
 | `API_GATEWAY_URL` | ✓ | all 23 |
 | `CI` | ✓ | all 23 |
 | `CONNECTION_MODERATORS` | — | Connection |
@@ -80,7 +82,7 @@ set by the platform.
 | `NEXT_PUBLIC_PIONEER_ADMINS` | ✓ | — |
 | `NEXT_PUBLIC_PI_APPROVAL_TIMEOUT` | ✓ | — |
 | `NEXT_PUBLIC_PI_APP_ID` | ✓ | Analytics, Assets, Commerce, Ecommerce, Life |
-| `NEXT_PUBLIC_PI_AUTH_TIMEOUT` | ✓ | all 23 |
+| `NEXT_PUBLIC_PI_AUTH_TIMEOUT` | ✓ | 22 — not Life |
 | `NEXT_PUBLIC_PI_COMPLETION_TIMEOUT` | ✓ | — |
 | `NEXT_PUBLIC_PI_SANDBOX` | ✓ | all 23 |
 | `NEXT_PUBLIC_PI_SDK_TIMEOUT` | ✓ | — |
@@ -88,6 +90,8 @@ set by the platform.
 | `NEXT_PUBLIC_SENTRY_DSN` | ✓ | 20 — not Assets, Commerce, Ecommerce |
 | `NEXT_PUBLIC_SSO_DOMAIN` | — | all 23 |
 | `NODE_ENV` | ✓ | Assets |
+| `OPENROUTER_API_KEY` | ✓ | — |
+| `OPENROUTER_MODEL` | ✓ | — |
 | `PAYMENT_SERVICE_URL` | ✓ | — |
 | `R2_ACCESS_KEY_ID` | — | Commerce |
 | `R2_ACCOUNT_ID` | — | Commerce |
@@ -112,50 +116,88 @@ plus the keys of its zod schema in `src/config/env.ts` where it has one, the gat
 `envVar` service-registry entries, and `env("…")` in its Prisma schema.
 Railway sets `PORT` per service.
 
-| Variable | Services (of 12) |
+| Variable | Services (of 20) |
 |---|---|
 | `ADMIN_PI_USERNAMES` | auth |
-| `ALLOWED_ORIGINS` | 10 — not auth, wallet |
+| `AI_MAX_TOKENS` | ai |
+| `AI_OVERLOAD_RETRY_MS` | ai |
+| `AI_PROVIDER_TIMEOUT_MS` | ai |
+| `AI_PROXY_TIMEOUT_MS` | api-gateway |
+| `AI_SERVICE_URL` | api-gateway, identity |
+| `ALLOWED_ORIGINS` | 18 — not auth, wallet |
 | `ANALYTICS_SERVICE_URL` | api-gateway |
-| `API_GATEWAY_URL` | auth, identity |
-| `ASSET_SERVICE_URL` | api-gateway |
-| `AUTH_SERVICE_URL` | api-gateway, identity |
-| `CAMPAIGN_ALWAYS_APPS` | identity |
-| `CAMPAIGN_APPS` | identity |
-| `CAMPAIGN_CLAIM_ATTEMPTS` | identity |
-| `CAMPAIGN_CLAIM_WINDOW_MS` | identity |
-| `CAMPAIGN_CONNECTION_GROUP_ID` | identity |
-| `CAMPAIGN_CONNECTION_INVITE_URL` | identity |
-| `CAMPAIGN_REQUIRE_ARRIVAL` | identity |
-| `CAMPAIGN_REWARD_PI` | identity |
-| `CAMPAIGN_SEATS` | identity |
-| `CAMPAIGN_VISITS_FROM` | identity |
-| `COMMERCE_SERVICE_URL` | api-gateway, identity |
+| `ANTHROPIC_API_KEY` | ai |
+| `ANTHROPIC_MODEL` | ai |
+| `API_GATEWAY_URL` | ai, auth, platform |
+| `APP_PRO_CUTOFF` | commerce |
+| `ASSET_PAYOUT_SWEEP_MS` | commerce |
+| `ASSET_SERVICE_URL` | api-gateway, commerce |
+| `AUTH_SERVICE_URL` | api-gateway, asset, commerce, connection, kyc, notification, platform |
+| `BUSINESS_CONSUMER_ENABLED` | business |
+| `BUSINESS_SERVICE_URL` | api-gateway |
+| `CAMPAIGN_ALWAYS_APPS` | platform |
+| `CAMPAIGN_APPS` | platform |
+| `CAMPAIGN_APPS_PER_PIONEER` | platform |
+| `CAMPAIGN_ASSIGN_CAP` | platform |
+| `CAMPAIGN_CLAIM_ATTEMPTS` | platform |
+| `CAMPAIGN_CLAIM_WINDOW_MS` | platform |
+| `CAMPAIGN_CONNECTION_GROUP_ID` | platform |
+| `CAMPAIGN_CONNECTION_INVITE_URL` | platform |
+| `CAMPAIGN_HOLD_HOURS` | platform |
+| `CAMPAIGN_MODE` | platform |
+| `CAMPAIGN_REQUIRE_ARRIVAL` | platform |
+| `CAMPAIGN_REWARD_PI` | platform |
+| `CAMPAIGN_SEATS` | platform |
+| `CAMPAIGN_SHORT_CACHE_MS` | platform |
+| `CAMPAIGN_SWAP_MAX` | platform |
+| `CAMPAIGN_TARGET` | platform |
+| `CAMPAIGN_VISITS_FROM` | platform |
+| `COMMERCE_SERVICE_URL` | api-gateway, platform |
+| `CONNECTION_CONSUMER_ENABLED` | connection |
+| `CONNECTION_SERVICE_URL` | api-gateway, identity, platform |
 | `CORS_ORIGIN` | api-gateway, auth, payment, wallet |
-| `DATABASE_URL` | 10 — not api-gateway, realtime |
+| `DATABASE_URL` | 18 — not api-gateway, realtime |
 | `DIRECT_URL` | analytics |
+| `EXPLORER_CONSUMER_ENABLED` | search |
+| `FEEDBACK_SERVICE_URL` | api-gateway |
 | `FINDINGS_INTERVAL_MS` | analytics |
 | `FIREBASE_SERVICE_ACCOUNT` | notification |
-| `FOUNDING_GIFT_DAYS` | identity |
-| `FOUNDING_GIFT_RETRY_MS` | identity |
+| `FOUNDING_GIFT_DAYS` | platform |
+| `FOUNDING_GIFT_RETRY_MS` | platform |
+| `GEMINI_API_KEY` | ai |
+| `GEMINI_MODEL` | ai |
+| `GROQ_API_KEY` | ai |
+| `GROQ_MODEL` | ai |
 | `IDEMPOTENCY_TTL_MS` | payment |
-| `IDENTITY_SERVICE_URL` | api-gateway |
-| `INTENT_PROOF_SECRET` | identity |
-| `INTERNAL_SECRET` | all 12 |
+| `IDENTITY_SERVICE_URL` | ai, api-gateway, business, connection, life, platform, trust |
+| `INTENT_PROOF_SECRET` | nexus |
+| `INTERNAL_SECRET` | all 20 |
 | `JWT_CLOCK_TOLERANCE` | payment |
 | `JWT_EXPIRES_IN` | auth |
 | `JWT_REFRESH_EXPIRES_IN` | auth |
 | `JWT_REFRESH_SECRET` | auth |
-| `JWT_SECRET` | 11 — not asset |
+| `JWT_SECRET` | 18 — not asset, nexus |
 | `KYC_SERVICE_URL` | api-gateway |
-| `LOG_LEVEL` | 11 — not asset |
+| `LIFE_CHECKIN_ENABLED` | life |
+| `LIFE_CHECKIN_SWEEP_MS` | life |
+| `LIFE_SERVICE_URL` | api-gateway, identity |
+| `LOG_LEVEL` | 19 — not asset |
 | `MAX_AMOUNT_LIMIT` | payment |
 | `MAX_EVENT_LOOP_LAG_MS` | api-gateway |
-| `NEXUS_STEP_TIMEOUT_MS` | identity |
-| `NODE_ENV` | 11 — not asset |
+| `NEXUS_CONSUMER_ENABLED` | nexus |
+| `NEXUS_SERVICE_URL` | api-gateway |
+| `NEXUS_STEP_TIMEOUT_MS` | nexus |
+| `NODE_ENV` | 19 — not asset |
 | `NOTIFICATION_SERVICE_URL` | api-gateway |
+| `OPENROUTER_API_KEY` | ai |
+| `OPENROUTER_MODEL` | ai |
+| `ORDER_HOLD_SWEEP_MS` | commerce |
+| `ORDER_HOLD_TTL_MIN` | commerce |
 | `OUTBOX_WORKER_INTERVAL_MS` | payment |
-| `PAYMENT_SERVICE_URL` | api-gateway, asset, commerce |
+| `PAYMENT_HEALTH_INTERVAL_MS` | analytics |
+| `PAYMENT_SERVICE_URL` | analytics, api-gateway, asset, commerce, wallet |
+| `PAYOUT_CREDIT_SWEEP_MS` | commerce |
+| `PIONEER_SERVICE_URL` | api-gateway |
 | `PI_A2U_FEE` | payment |
 | `PI_A2U_MAX_PI` | payment |
 | `PI_A2U_TIMEOUT` | payment |
@@ -172,16 +214,22 @@ Railway sets `PORT` per service.
 | `PI_API_RETRIES` | payment |
 | `PI_API_URL` | auth, payment |
 | `PI_APP_ID` | payment |
-| `PI_CLAIMED_APPS` | identity |
-| `PI_ENGAGEMENT_THRESHOLD` | identity |
-| `PI_HORIZON_URL` | payment |
+| `PI_APP_WALLETS` | payment |
+| `PI_CLAIMED_APPS` | platform |
+| `PI_ENGAGEMENT_THRESHOLD` | platform |
+| `PI_HORIZON_URL` | analytics, payment |
 | `PI_HORIZON_URL_TESTNET` | payment |
+| `PI_HUB_APP_WALLET_ADDRESS` | payment |
+| `PI_MAINNET_HORIZON_URL` | payment |
 | `PI_NETWORK_PASSPHRASE` | payment |
 | `PI_NETWORK_PASSPHRASE_TESTNET` | payment |
 | `PI_PLATFORM_BASE_URL` | payment |
 | `PI_SANDBOX` | payment |
+| `PI_SUPPLY_URL` | analytics |
+| `PI_TESTNET_HORIZON_URL` | payment |
 | `PLATFORM_ADMIN_USERNAMES` | identity |
-| `PORT` | all 12 |
+| `PLATFORM_SERVICE_URL` | api-gateway |
+| `PORT` | all 20 |
 | `PROXY_LOG_REQUESTS` | api-gateway |
 | `PROXY_MAX_SOCKETS` | api-gateway |
 | `PROXY_TIMEOUT` | api-gateway |
@@ -190,7 +238,7 @@ Railway sets `PORT` per service.
 | `R2_ENDPOINT` | asset, storage |
 | `R2_PUBLIC_URL` | asset |
 | `R2_SECRET_ACCESS_KEY` | asset, storage |
-| `RAILWAY_GIT_COMMIT_SHA` | identity |
+| `RAILWAY_GIT_COMMIT_SHA` | ai, business, connection, identity, life, nexus, platform, search, trust |
 | `RATE_LIMIT_AUTH_MAX` | api-gateway |
 | `RATE_LIMIT_CANCEL` | payment |
 | `RATE_LIMIT_CONFIRM` | payment |
@@ -207,19 +255,30 @@ Railway sets `PORT` per service.
 | `RECONCILE_APPROVED_THRESHOLD_MS` | payment |
 | `RECONCILE_CREATED_THRESHOLD_MS` | payment |
 | `RECONCILE_CRON` | payment |
-| `REDIS_URL` | 11 — not storage |
+| `REDIS_URL` | 18 — not ai, storage |
 | `SCORING_INTERVAL_MS` | analytics |
-| `SEED_DEMO_DATA` | identity |
-| `SENTRY_DSN` | 10 — not asset, auth |
+| `SEARCH_SERVICE_URL` | api-gateway |
+| `SEED_DEMO_DATA` | search |
+| `SELLER_BALANCE_CREDIT` | commerce |
+| `SENTRY_DSN` | 18 — not asset, auth |
 | `SERVICE_NAME` | api-gateway, payment, wallet |
 | `SERVICE_VERSION` | api-gateway, payment, wallet |
-| `STORAGE_SERVICE_URL` | api-gateway |
+| `STORAGE_SERVICE_URL` | api-gateway, identity |
 | `STREAM_LAG_WARN` | identity |
 | `STREAM_PENDING_WARN` | identity |
 | `SUBSCRIPTION_MIN_PI_ENTERPRISE` | commerce |
 | `SUBSCRIPTION_MIN_PI_PRO` | commerce |
 | `SUPPORTED_CURRENCIES` | wallet |
-| `WALLET_SERVICE_URL` | api-gateway, payment |
+| `TESTNET_GATE_AMOUNT` | payment |
+| `TESTNET_GATE_MAX` | payment |
+| `TESTNET_GATE_SOURCES` | payment |
+| `TRUST_CONSUMER_ENABLED` | trust |
+| `TRUST_SERVICE_URL` | api-gateway |
+| `UPSTASH_REDIS_REST_TOKEN` | ai |
+| `UPSTASH_REDIS_REST_URL` | ai |
+| `WALLET_SERVICE_URL` | api-gateway, commerce, payment |
+| `WITHDRAW_TO_PI_ALLOWLIST` | wallet |
+| `ZONE_SERVICE_URL` | business, connection |
 
 ### Packages
 
