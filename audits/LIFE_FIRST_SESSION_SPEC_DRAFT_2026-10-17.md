@@ -702,7 +702,7 @@ owner can see them — **none is decided until the owner says so.**
 | 7 | Language of the session: Arabic and English first, or all twelve of the Hub's languages? | Arabic and English first |
 | 8 | Phase 0 — when the spec is accepted, is building it approved, and in which order (backend tables + consent + erasure + ledger first, then the session UI)? | **Owner decision, 2026-10-17: stage 1 only is approved** ("Talk it through without saving", below). Stages 2 and 3 are **not** approved; each needs its own approval |
 | 9 | **New in r4:** two consents — `PROBLEM_RECORD` (keep) and `PROBLEM_HYPOTHESES` (analyse) — and a "talk it through without saving" path that keeps nothing (§2 S1, §5.1) — accept? | — |
-| 10 | **New in r4:** S4 uses **one** provider with no fallback (§5.4) — which provider, and who reads and records its terms before building? | **Owner decision, 2026-10-17: Anthropic Claude, one pinned model**, for S4 and the classifier — no `server-side-fallback` header, no other model, no other provider. **The owner reviews the account's terms** and records them (name, date, result) before S4 is built; until then the review is not done |
+| 10 | **New in r4:** S4 uses **one** provider with no fallback (§5.4) — which provider, and who reads and records its terms before building? | **Owner decision, 2026-10-17 (revised the same day): Groq, free tier, one pinned open model** (`openai/gpt-oss-20b`, `LIFE_TALK_MODEL`) — no fallback to any other model or provider; Claude later, when there is revenue. Anthropic Claude was the first choice and is superseded. **Terms reviewed by the owner, 2026-10-17:** Groq Data Controls show that without ZDR, inputs and outputs may be stored up to 30 days for reliability and compliance; **Global Zero Data Retention was switched on** for the TEC organisation (Batch and Fine-tuning off with it) — screenshots in the session. No training on API data (Groq's services terms, as published). Gemini's free tier is excluded: its terms allow using content to improve Google's products |
 | 11 | **New in r4:** the deletion ledger in identity's database, refusing a deletion when identity is unreachable (§6.4) — accept that a deletion can fail visibly rather than proceed unrecorded? | — |
 
 **A proposed order for Q8 — a proposal, not a build approval.** Each stage needs its own explicit
@@ -732,6 +732,17 @@ the first session and **not changed after seeing the results**):
 - **The unit is the session, not the person.** 20–30 people are invited; the counter has no
   identifier, so it counts sessions, and one person's repeated sessions cannot be told apart or
   removed. That is the price of not identifying anyone, and the reading is interpreted with it.
+
+**Stage 1, first reading — the owner's own runs (2026-10-17), and what changed.** On a phone, in
+Arabic, the fixed questions read as a form: «أنا عاوز حد يكلمني وأكلمه، يفهمني، مش أسئلة على
+الفاضي». One person — the builder — is not the reading of 20–30, but the owner judged it enough and
+chose (**owner decision, 2026-10-17**) to replace the questionnaire with a **conversation, still
+saving nothing**: the page holds it, each turn goes to Groq through the AI service, nothing is
+stored, logs carry no words (tec-core-backend #439 · Tec-Life #86). This brings the model in
+before stage 2's storage — a change to the order above, made explicitly by the owner. The
+counters and the decision rule are unchanged. Still open: an output check on the replies (the
+rules live in the prompt only), and a reviewed sample of real replies before more people use it.
+
 
 Limits of stage 1, said now so its result is not over-read:
 - **Not saving is not the same as not sending.** The text stays in the browser: no request to
