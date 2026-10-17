@@ -710,7 +710,7 @@ approval; passing one stage does **not** approve the next.
 
 | Stage | What it builds | It tests | To move on |
 |---|---|---|---|
-| **1. "Talk it through without saving"**, 20–30 people | S1–S3, S6-A, S7 in the page only — no tables, no model, no ledger | one hypothesis only: **do structured questions alone help a person see their problem more clearly?** | G5 (browser side) passed; M1 and M6 read against the stage-1 rule below, fixed **before** the first session |
+| **1. "Talk it through without saving"**, 20–30 people | S1–S3, S6-A, S7 in the page only — no personal tables, no model, no ledger; the one table is the aggregate counter of §3 (day · metric · count — no user id, no session id, no text), without which M1 and M6 cannot be read (built: tec-core-backend #438 · Tec-Life #84) | one hypothesis only: **do structured questions alone help a person see their problem more clearly?** | G5 (browser side) passed; M1 and M6 read against the stage-1 rule below, fixed **before** the first session |
 | **2. Keeping and deleting** | `PROBLEM_RECORD`, the four tables, the ledger, replay and restore (§6) | that deletion and restore behave as §6.4 says | its own approval; every §6.4 acceptance test green |
 | **3. Explanations** | S4–S6-B with Claude, one pinned model, no fallback | whether explanations help | its own approval; the owner's review of the provider's terms recorded (Q10) |
 
