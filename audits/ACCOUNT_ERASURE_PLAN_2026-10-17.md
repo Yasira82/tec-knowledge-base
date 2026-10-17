@@ -1,6 +1,6 @@
 # Account erasure across services — plan (2026-10-17)
 
-> Truth State: **[Planned State]** — code in tec-core-backend #437 + tec-app #319 (open) · Governance State: **[Draft]** — decisions below taken by the
+> Truth State: **[Current State]** — live: tec-core-backend #437 + tec-app #319 (merged 2026-10-17), first run §6 [Runtime Verified] · Governance State: **[Draft]** — decisions below taken by the
 > owner on 2026-10-17 ("the technically right one" for both questions) · Verification:
 > **[Code Verified]** for §1, read from `tec-core-backend` main at `76a566a`.
 > Closes C-02 §2 row 26 when shipped.
@@ -76,3 +76,23 @@ person (commerce referrals, notifications, Explorer reviews, Legend profile, Pio
 2. Owner: set the four URLs on identity-service.
 3. Hub PR: `/hub/admin/erasure` — type the name, read the dry run per service, type it again, apply.
 4. First run on a test account the owner creates for it; read every service's count before and after.
+
+## 6. First run (2026-10-17, Runtime Verified)
+
+- **Dry run on `yas55eR82` (the owner's own account):** first `life` and `ai` answered
+  `failed (unreachable)` while `connection` answered. Cause: identity's `LIFE_SERVICE_URL` and
+  `AI_SERVICE_URL` began with **`https://`** — the private network (`*.railway.internal`) speaks
+  plain HTTP, so the TLS handshake failed; `CONNECTION_SERVICE_URL` and `STORAGE_SERVICE_URL` were
+  `http://`. Changed to `http://` on identity only (identity uses those two for nothing else), and
+  the dry run answered from all four parts. The page showed the failure as a failure, never as a
+  skip — the fail-closed rule did its job. An apply on this account is refused anyway (an operator
+  cannot erase themselves).
+- **Apply on `magy888`** — the owner's own second account (owner, 2026-10-17; C-02 row 23 had
+  listed it as an outside user), reference `test 2026-10-17 owner's own account`:
+  **Erased in every service** — life: goals 1 · ai: nothing · connection: profile 1 · follows 2 ·
+  notifications 5 · reactions 1 · hides 18 · joinRequests 1 · messagesTombstoned 8 ·
+  groupMemberships 2 · identity: nothing · media: nothing to purge.
+- **Lesson:** a private Railway URL is `http://<service>.railway.internal:<port>`. An `https://`
+  value fails as "unreachable", not as a TLS error — `fetch` hides the cause. Worth a log of the
+  underlying error code next time a participant fails.
+
