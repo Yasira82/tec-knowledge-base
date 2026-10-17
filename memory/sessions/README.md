@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 56w | [Session 56w — identity taken apart: eight services, nine private databases, and a session that lived ten minutes (11–17 Oct 2026)](session-56w.md) |
 | 56v | [Session 56v — signed in, and shown "Sign in with Pi": a cookie encoded twice (10–11 Oct 2026)](session-56v.md) |
 | 56u | [Session 56u — one Pioneer was ten accounts, and the TEC balance had nothing behind it (8–10 Oct 2026)](session-56u.md) |
 | 56t | [Session 56t — the seller gets paid, Round 3 as it runs, and a door on every app (4–7 Oct 2026)](session-56t.md) |
