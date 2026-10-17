@@ -5,7 +5,8 @@
 > `tec-core-backend` main on 2026-10-17; the production backup settings **[Runtime Verified]** the
 > same day (§6.3). Everything else is not built.
 
-> **Status: r4.5 — Final Review Draft, for the owner's review only.** Accepting it would approve
+> **Status: r4.5 — Final Review Draft, for the owner's review only.** (Addendum 2026-10-17: Life
+> memory v1 recorded under stage 1 — the owner's decision, built narrower than §3, without §6.4.) Accepting it would approve
 > the wording of the spec — **not** building it, and not any change to a repository or code. Its
 > open decisions (§8, plus the backup retention period and the model provider's terms) are left for
 > the owner, not chosen here.
@@ -742,6 +743,34 @@ stored, logs carry no words (tec-core-backend #439 · Tec-Life #86). This brings
 before stage 2's storage — a change to the order above, made explicitly by the owner. The
 counters and the decision rule are unchanged. Still open: an output check on the replies (the
 rules live in the prompt only), and a reviewed sample of real replies before more people use it.
+
+**Life memory v1 — the owner's decision, 2026-10-17, and what it does not yet have.** The owner
+chose not to wait for the 20–30 external people ("I will be the first person built"), and set two
+rules: keep **only the confirmed summary** ("the engineering-correct, conventional choice"), and make
+it available to **all users**. Built (tec-core-backend #442 · Tec-Life #87, not yet merged at writing):
+- **What is kept:** one `life_journey_entries` row per conversation the person chooses to keep —
+  problem, understanding, an optional step, and later their own closed answer about the step
+  (DONE · PARTLY · NOT_YET). The summary is written by the model **only when the person asks**, and
+  kept **only after they read and edit it**. The conversation itself is never stored.
+- **Consent:** a new category, `JOURNEY` — permission to *keep*, not to share. Absence is a no;
+  turning it on is the "Turn on and keep" tap, which names the switch beside it; turning it off
+  **deletes every entry**. The context door (TEC AI in the Hub) never serves it.
+- **Use:** the talk BFF reads the three newest entries server-side with the person's session and
+  sends them to Groq with the conversation, marked as the person's notes, never instructions. The
+  page cannot supply a memory.
+- **Correction, export, deletion:** each entry can be deleted (two taps) and the whole journey
+  downloaded as JSON; entries are in the person's own purge and in account erasure. Audit rows
+  carry ids and counts, never text.
+
+**What this is not, said plainly:** it is **narrower than §3** (no claims, no experiments, no
+explanations — S4 is not built), and it does **not** have §6.4's deletion ledger. A deleted entry
+is gone from the live database at once, but stays in the encrypted nightly backups for up to
+about 8 weeks (§6.3), and **a restore from a backup would bring it back** — nothing today replays
+deletions after a restore. Until §6.4 is built, a restore of `tec-life-service` must be followed by
+re-applying deletions by hand, from the `life.journey.deleted` / `life.journey.cleared` /
+`life.data.purged` audit rows (the audit table is restored with them, so this is possible but
+manual). The privacy text on the screen does not mention backups yet; that waits for the
+retention decision above.
 
 
 Limits of stage 1, said now so its result is not over-read:
