@@ -34,6 +34,19 @@ Companion to `audits/APP_EXPANSION_ARCHITECTURE_2026-10-11.md` (§1.4 and step S
    Hobby: an external `pg_dump` of every database **with a real restore test**. An export
    that succeeded is not a backup until a restore from it has been seen to work (§4).
 6. **`tec-life-service` does not touch production** until §2 has picked its server.
+7. **Where the next services' databases go (owner, 2026-10-13)** — three servers only, never the
+   money / identity / orders ones (decision 3 extended to `db-commerce` and `db-identity`):
+
+   | Server | Logical databases (existing + planned) |
+   |---|---|
+   | `notification-realtime` | notifications · `tec_life` · `tec_ai` · `tec_platform` |
+   | `db-storage` | files · `tec_connection` · `tec_trust` |
+   | `db-asset` | assets · `tec_search` · `tec_business` · `tec_nexus` |
+
+   **Considered and not taken (2026-10-13):** moving KYC's database onto `db-identity` to free
+   the `db-kyc` volume. Not needed while the three servers above have room (each is under 5 %
+   of 5 GB), it puts KYC data beside identity's (the shared-failure concern of decision 2), and
+   it reverses decision 3. Kept as the option to revisit **if** the volumes run out.
 
 ## 2. Step 1: a read-only resource report (Railway agent)
 
@@ -216,6 +229,169 @@ take at any time; it is not needed for §2–§3.
 1. §2 report → choose `tec_life`'s server (owner). **Done: `notification-realtime` (owner, 2026-10-12).**
 2. §4 backups first, **before** any data is copied into a new database — **done 2026-10-12**: a migration of data
    with no backup to fall back on is the riskiest moment there is.
-3. §3 on the chosen server, with the proof.
-4. `tec-life-service` from `tec-service-template`, deployed against `tec_life`. Data copy and
-   gateway switch remain separate steps (`APP_EXPANSION_ARCHITECTURE_2026-10-11.md` §1.4).
+3. §3 on the chosen server, with the proof. **Done 2026-10-12 (owner, Railway console + Data tab):** `tec_life`
+   owned by `tec_life_svc` (no superuser / createdb / createrole / replication / bypassrls,
+   connection limit 20, password generated in the container and kept by the owner only);
+   `REVOKE CONNECT … FROM PUBLIC` on `railway` and `postgres`. Proof read back:
+   `tec_life_svc` can connect to `tec_life` only (`railway` false, `postgres` false), and
+   notification-service still holds 4 connections to `railway`. The nightly backup picks
+   `tec_life` up with no change (it dumps every database on each server).
+4. `tec-life-service` from `tec-service-template`, deployed against `tec_life`. **Done 2026-10-12**
+   (tec-core-backend #414 · #415 · #416). Private only, port 5012, Healthcheck Path `/ready`;
+   `DATABASE_URL` uses `${{notification-realtime.RAILWAY_PRIVATE_DOMAIN}}` — the server's private
+   host is `postgres-1e8b.railway.internal`, not its display name (the first deploy failed P1001
+   on the hand-written host). The init migration ran as `tec_life_svc`.
+5. **Cutover, 2026-10-12, owner + console:** copy (`--apply`) → 73 rows, every count equal
+   (goals 5 · progress 2 · consents 8 · skills 1 · preferences 2 · budgets 3 · Life audit 52) →
+   gateway `LIFE_SERVICE_URL` set → copy again: 0 new rows. Proof from the app: a new goal and a
+   progress entry landed in `tec_life` (goals 6 / progress 3 there, still 5 / 2 in identity), old
+   goals shown unchanged, Arabic and π amounts intact. Weekly check-in moved:
+   `LIFE_CHECKIN_ENABLED=false` on identity, `true` on Life. The temporary `SOURCE_DATABASE_URL`
+   was removed from Life once the copy was done.
+   **Rollback:** delete `LIFE_SERVICE_URL` on the gateway (and swap the two check-in flags) —
+   identity's tables are untouched, but writes made since the cutover live only in `tec_life`.
+6. **Contract, part 1 — done 2026-10-12 (tec-core-backend #417):** the Life module (routes,
+   sweeper, review, intent store) removed from identity; every caller reaches Life through the
+   gateway. **Still open:** part 2 — drop Life's tables from identity (kept, marked frozen in
+   its `schema.prisma`: `migrate.cjs` refuses a non-additive diff, and they are the pre-cutover
+   copy) — a deliberate, separate step. Rotate identity's database password:
+   it was shown in a screenshot during step 5 (private network only; do it with the owner, step by
+   step, so identity does not lose its connection).
+
+### `tec_ai` — the second logical database (2026-10-12 → 13)
+
+Same server (`notification-realtime`, owner's choice), same recipe as `tec_life`: role
+`tec_ai_svc` (no superuser / createdb), `REVOKE ALL … FROM PUBLIC` on `tec_ai`. Read back:
+`tec_ai_svc` connects to `tec_ai` only; `tec_life_svc` cannot reach `tec_ai`. Lessons from the
+deploy, both about the connection string and neither about the code:
+- **P1000** (wrong password) — the password was rotated with `ALTER ROLE` and a 32-character
+  hex value, short enough to copy on a phone without a line break.
+- **P1013 `empty host`** — a `${{…RAILWAY_PRIVATE_DOMAIN}}` reference broken while editing in
+  Railway's variable editor (its autocomplete rewrites `${{`). Fixed by writing the private host
+  literally: `postgres-1e8b.railway.internal`.
+
+
+### `tec_connection` — the third logical database (2026-10-13)
+
+On `db-storage` (decision 7), same recipe: role `tec_connection_svc` (no superuser / createdb,
+connection limit 20, password generated in the container), `tec_connection` owned by it,
+`REVOKE ALL … FROM PUBLIC` on it. Before closing the server's other databases the owner read
+who connects: only `postgres` (storage-service), 2 connections — so
+`REVOKE CONNECT ON DATABASE railway / postgres FROM PUBLIC` was safe. Proof read back:
+`tec_connection_svc` connects to `tec_connection` only (`railway` false, `postgres` false), and
+storage-service still holds its 2 connections. The private host was written literally
+(`postgres-1wvb.railway.internal`) from the start, per the P1013 lesson above.
+
+### `tec_nexus` — the fourth logical database (2026-10-13)
+
+On `db-asset` (decision 7), same recipe in one console command: role `tec_nexus_svc`,
+`tec_nexus` owned by it, `REVOKE ALL … FROM PUBLIC` on it, and `REVOKE CONNECT` on `railway` /
+`postgres` after the owner read that only `postgres` (asset-service, 2 connections) connects.
+Proof read back: `tec_nexus_svc` connects to `tec_nexus` only, not superuser; asset-service
+still holds its 2 connections. Private host written literally: `postgres-hwjm.railway.internal`.
+- **Password exposed, rotated the same hour.** A screenshot of the service's Variables showed
+  `DATABASE_URL` with the eye open. Rotated with `ALTER ROLE tec_nexus_svc PASSWORD …` (32 hex,
+  generated in the container) before anything called the service; the next copy dry run
+  connected with the new value.
+- **Service name collision.** The first create attempt left a second service named
+  `tec-nexus-service`, so the working one kept the repo's name. After removing the duplicate and
+  renaming, Railway kept the original private host (`tec-core-backend-2db203ab.railway.internal`)
+  and it cannot be edited — the gateway's `NEXUS_SERVICE_URL` uses it. Harmless; just not the name.
+
+### `db-identity` superuser password rotated (2026-10-15)
+
+The password shown in a screenshot on 2026-10-12 (§5 step 6) was `postgres`'s — the only role
+that connects to `db-identity` (owner read `pg_stat_activity`: 5 + 1 connections, all `postgres`)
+— and the server **has a public TCP proxy** (`autorack.proxy.rlwy.net`), so the exposure was
+reachable from the internet, not only the private network. Rotated, owner + console, in this order:
+1. `ALTER ROLE postgres PASSWORD …` (32 hex, generated in the container; open connections survive).
+2. identity-service `DATABASE_URL` — written literally, not a reference — edited, deployed:
+   `[PrismaService] Connected to database`, every consumer started.
+3. backup-job `BACKUP_DB_DB_IDENTITY` (also literal) edited. **The first manual run still failed**
+   (`INCOMPLETE … server: db-identity … password authentication failed`) — the variable had been
+   saved but the cron service not redeployed. After the redeploy: `backup: complete … databases: 22
+   … failures: []`. The job reported its own failure loudly, as §4 requires.
+4. `db-identity`'s own `POSTGRES_PASSWORD` updated (the Data tab); the server restarted (~30 s).
+
+Verified: Hub login works.
+
+**Still open (not done):**
+- ~~Every Postgres server here has a public TCP proxy~~ — **closed 2026-10-16**, see
+  "Public TCP proxies removed" below.
+- `DATABASE_URL` on identity-service and the backup job's entries are literal strings. As
+  references (`${{db-identity.DATABASE_URL}}`), the next rotation would be one change, not three.
+
+### `tec_search` — the fifth logical database (2026-10-15)
+
+On `db-asset` beside `tec_nexus` (decision 7): role `tec_search_svc`, `tec_search` owned by it,
+`REVOKE ALL … FROM PUBLIC`. Proof read back: `tec_search_svc` connects to `tec_search` only
+(`tec_nexus`, `railway`, `postgres` false), not superuser, and `tec_nexus_svc` cannot reach
+`tec_search`. The service was renamed **before** its first deploy, so its private host is the
+right one this time (`tec-search-service.railway.internal`) — the Nexus lesson applied.
+
+### `tec_platform` — the sixth logical database (2026-10-15)
+
+On `notification-realtime` beside `tec_life` and `tec_ai` (decision 7): role `tec_platform_svc`,
+`tec_platform` owned by it, `REVOKE ALL … FROM PUBLIC`. Proof read back: `tec_platform_svc`
+connects to `tec_platform` only (`tec_life`, `tec_ai`, `railway`, `postgres` false), not
+superuser; `tec_ai_svc` cannot reach `tec_platform`. Service renamed before its first deploy —
+private host `tec-platform-service.railway.internal`.
+
+### `tec_business` — the seventh logical database (2026-10-15)
+
+On `db-asset` beside `tec_nexus` and `tec_search` (decision 7), which completes that server's
+planned set: role `tec_business_svc`, `tec_business` owned by it, `REVOKE ALL … FROM PUBLIC`.
+Proof read back: `tec_business_svc` connects to `tec_business` only (`tec_nexus`, `tec_search`,
+`railway`, `postgres` false), not superuser; the other two roles cannot reach `tec_business`.
+Service renamed before its first deploy — private host `tec-business-service.railway.internal`.
+The first deploy failed only at the healthcheck: its path had been entered as the root
+directory (`/tec-business-service`), which the internal-key guard answers with 403. The app had
+started; setting the path to `/ready` fixed it. Every new service's healthcheck is `/ready`.
+
+### `tec_trust` — the eighth logical database (2026-10-16)
+
+On `db-storage` beside `tec_connection` (decision 7), which completes that server's planned
+set: role `tec_trust_svc` (no superuser / createdb / createrole, connection limit 20),
+`tec_trust` owned by it, `REVOKE ALL … FROM PUBLIC`. Proof read back: `tec_trust_svc` connects
+to `tec_trust` only (`tec_connection`, `railway`, `postgres` false); `tec_connection_svc`
+cannot reach `tec_trust`. Private host of the server written literally
+(`postgres-1wvb.railway.internal`). Lessons, both about the console and neither about the code:
+- **The server's Console is a shell, not `psql`.** SQL pasted straight in is answered by bash
+  (`CREATE: command not found`) and runs nothing. One line does it all:
+  `psql "$DATABASE_URL" -c "…" -c "…"` — the server's own variable, so no password is typed.
+- **A role password must not pass through the chat.** The first two candidates were generated
+  in the session's container and then appeared in screenshots, so the third was generated ON
+  the server (`head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n'`) and set with `ALTER ROLE`
+  in the same command; only the owner saw it, pasted into the service's `DATABASE_URL`.
+- **A Railway reference to a name that does not exist resolves to an empty string, silently.**
+  `SOURCE_DATABASE_URL=${{tec-identity-service.DATABASE_URL}}` was empty: the service is named
+  `identity-service` on Railway. Pick the service from the `${{` picker instead of typing it.
+
+### Public TCP proxies removed — all nine Postgres servers (2026-10-16)
+
+Every server had a public TCP proxy that handed out its superuser to anyone holding the
+string. All nine are now **Unexposed**: db-identity · db-kyc · notification-realtime ·
+db-storage · db-asset · db-commerce · auth-db · wallet-db · payment-db, in that order (the money
+servers last, at a quiet hour).
+
+**Checked before each removal, read-only, on the server itself** — Railway's agent could not
+read variable values, so the question was asked of Postgres instead:
+`SELECT CASE WHEN client_addr IS NULL THEN 'local' WHEN host(client_addr) LIKE 'fd%' THEN 'private'
+ELSE 'OTHER ' || host(client_addr) END …, usename, datname, count(*) FROM pg_stat_activity WHERE
+backend_type = 'client backend' GROUP BY 1,2,3` (in a `default_transaction_read_only` session).
+Every connection was `private` except one on auth-db from `10.215.0.133`; auth-service's own
+`DATABASE_URL` host, printed without its password
+(`node -e "…new URL(process.env.DATABASE_URL).hostname…"`), was `postgres.railway.internal` —
+the private network answers over IPv4 too — so it was auth-service itself.
+
+**After each removal:** the server restarts (~30 s, Postgres logs `not properly shut down` →
+`automatic recovery` → `ready to accept connections`, nothing lost), and the owner checked the
+apps it serves: Hub login (identity, auth), Life + System (notification-realtime), Zone +
+Connection (db-storage), Assets + Explorer (db-asset), Commerce + Ecommerce (db-commerce), the
+wallet balance (wallet-db), payment history (payment-db). All worked.
+
+**What this costs:** a tool run from a laptop can no longer reach a database directly — notably
+`tec-auth-service/scripts/list-pi-uids.mjs`, which asks for `DATABASE_PUBLIC_URL`. Use
+`railway connect <server>` (an encrypted tunnel, no public access needed), or add the proxy back
+for the duration of the job and remove it again. The backup job is unaffected: it reaches every
+server through `${{<server>.DATABASE_URL}}`, the private address.
