@@ -773,6 +773,31 @@ download each. The same backup gap applies, with one difference: a restored row 
 ciphertext, readable only with the key. Also on 2026-10-18: a conversation lasts until the person
 ends it (400 messages as a body guard only); each reply sees the first message and the last 30.
 
+**Closing the change loop — "before and after" v1 (owner decision, 2026-10-18; NOT built).**
+The owner chose to close the loop on what exists before any wider model of the person: the
+smallest addition that tells *doing the step* apart from *the change*, on a real problem.
+Order: #447 is tried in a real conversation first (green checks do not show the conversation
+is understood) → this v1 → the change shown in My journey → one tap to make a step a goal (goals
+are not redesigned) → patterns only once real use exists.
+
+| Stage | What is kept (on the confirmed journey entry — no new table, no new consent category) |
+|---|---|
+| Baseline | `measure_kind` = `NUMBER` or `RATING_1_5` · `measure_label` (≤ 60, the person's words) · `measure_period` (DAY · WEEK · MONTH) · `baseline_value` · `baseline_at` |
+| Action | `step_outcome` as today (DONE · PARTLY · NOT_YET) — **independent of the measure** |
+| Follow-up | `followup_value` · `followup_at` · `followup_status` (MEASURED · UNKNOWN · NOT_MEASURED) |
+| Outcome | shown only when both values exist |
+
+Rules (owner, 2026-10-18):
+- **Wholly optional.** No default value, no number guessed by the model, no pressure. The person
+  types the value, may edit it before saving, or skips — and a skip stores **nothing** (no `NONE`
+  value: no measure fields at all).
+- **Doing ≠ improving.** `step_outcome` and the measure never derive one from the other: a step
+  done without change, or change without the step, are both recorded as they are.
+- **No invented duration.** "after two weeks" appears only when the two recorded dates support it;
+  the chosen period ("per day") is the unit, not the time between the two measurements.
+- **What the screen claims.** "A change you recorded — not proof that the step alone caused it."
+- Deleted with its entry, with "Keep my journey" switched off, with the purge and with erasure.
+
 **What this is not, said plainly:** it is **narrower than §3** (no claims, no experiments, no
 explanations — S4 is not built), and it does **not** have §6.4's deletion ledger. A deleted entry
 is gone from the live database at once, but stays in the encrypted nightly backups for up to
