@@ -762,6 +762,17 @@ it available to **all users**. Built (tec-core-backend #442 · Tec-Life #87, not
   downloaded as JSON; entries are in the person's own purge and in account erasure. Audit rows
   carry ids and counts, never text.
 
+**Full conversations, opt-in — the owner's decision, 2026-10-18.** Asked whether Life should keep
+whole conversations "like every AI does", the owner chose an **optional switch** (tec-core-backend
+#444 · Tec-Life #88). The confirmed summary stays the default. When the person turns
+`CONVERSATIONS` on, each answered turn is saved — one row per conversation, rewritten as it goes —
+as **AES-256-GCM ciphertext** under `LIFE_CONVERSATION_KEY`, bound to the owner's id; no key means
+the switch is not offered and nothing is stored, never plain text. Turning it off, the person's
+purge and account erasure delete every kept conversation; the person can continue, delete or
+download each. The same backup gap applies, with one difference: a restored row is still
+ciphertext, readable only with the key. Also on 2026-10-18: a conversation lasts until the person
+ends it (400 messages as a body guard only); each reply sees the first message and the last 30.
+
 **What this is not, said plainly:** it is **narrower than §3** (no claims, no experiments, no
 explanations — S4 is not built), and it does **not** have §6.4's deletion ledger. A deleted entry
 is gone from the live database at once, but stays in the encrypted nightly backups for up to
