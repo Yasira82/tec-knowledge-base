@@ -808,7 +808,22 @@ Rules (owner, 2026-10-18):
   step to a goal (nothing saved until Add); #94 — that goal opens without a π field (a habit is
   not a sum).
 - Runtime: the owner recorded a baseline in production on 2026-10-19 and added a goal from a step.
-- Not built: patterns (wait for real use), and §6.4's ledger (the restore caveat below still holds).
+- Not built: patterns (wait for real use).
+
+**§6.3 retention and §6.4 ledger (owner, 2026-10-19 — items 5 and 6):**
+- Retention stays at the code defaults — 14 daily + 8 weekly sets, so up to ~8 weeks — for every
+  database. The owner asked for "the engineering-correct one": with the ledger, a restore no
+  longer brings a deletion back, so shortening retention would only shorten how far a recovery
+  can reach. Tec-Life #96 states it in the privacy policy (merge after the ledger is on).
+- The ledger is built (Tec-core-backend #453): identity's `deletion_ledger` with L1–L4 (L1 proven
+  on a real Postgres race), and Life recording every deletion first — items, the JOURNEY /
+  CONVERSATIONS withdrawal, the purge, erasure — with the start replay back 57 days that deletes
+  only rows created before each request. It is OFF until `LIFE_DELETION_LEDGER=on` is set on
+  tec-life-service after identity serves the routes. Until then the restore caveat below holds.
+- Narrower than §6.4 in two ways, both recorded in the PR: a held request holds all of that
+  person's Life data (not only its scope); and the "one read gate" is the session/context/check-in
+  funnel (`DeletionGuard.assertServing`), not a repository layer with a CI check — there are no
+  `deletion_pending_at` marks, because a recorded deletion is applied in the same request.
 
 **What this is not, said plainly:** it is **narrower than §3** (no claims, no experiments, no
 explanations — S4 is not built), and it does **not** have §6.4's deletion ledger. A deleted entry
