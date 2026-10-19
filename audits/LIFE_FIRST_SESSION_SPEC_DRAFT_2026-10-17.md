@@ -773,7 +773,7 @@ download each. The same backup gap applies, with one difference: a restored row 
 ciphertext, readable only with the key. Also on 2026-10-18: a conversation lasts until the person
 ends it (400 messages as a body guard only); each reply sees the first message and the last 30.
 
-**Closing the change loop — "before and after" v1 (owner decision, 2026-10-18; NOT built).**
+**Closing the change loop — "before and after" v1 (owner decision, 2026-10-18; built 2026-10-19 — see "Built" below).**
 The owner chose to close the loop on what exists before any wider model of the person: the
 smallest addition that tells *doing the step* apart from *the change*, on a real problem.
 Order: #447 is tried in a real conversation first (green checks do not show the conversation
@@ -797,6 +797,18 @@ Rules (owner, 2026-10-18):
   the chosen period ("per day") is the unit, not the time between the two measurements.
 - **What the screen claims.** "A change you recorded — not proof that the step alone caused it."
 - Deleted with its entry, with "Keep my journey" switched off, with the purge and with erasure.
+
+**Built (2026-10-19)** — in the order the owner set:
+- The real-conversation test of #447 passed on its four steps after Tec-core-backend #448–#450
+  (whole-word cards, relapse before plan, plain text, MSA replies).
+- Backend: Tec-core-backend #451 — the fields of the table above on `life_journey_entries`
+  (all nullable), `PUT journey/:id/measure`, `PUT journey/:id/followup`, `DELETE journey/:id/measure`;
+  the audit records that a measure was saved, never its label or value.
+- UI: Tec-Life #92 — the optional form and the change line in My journey; #93 — one tap from a
+  step to a goal (nothing saved until Add); #94 — that goal opens without a π field (a habit is
+  not a sum).
+- Runtime: the owner recorded a baseline in production on 2026-10-19 and added a goal from a step.
+- Not built: patterns (wait for real use), and §6.4's ledger (the restore caveat below still holds).
 
 **What this is not, said plainly:** it is **narrower than §3** (no claims, no experiments, no
 explanations — S4 is not built), and it does **not** have §6.4's deletion ledger. A deleted entry
