@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 17 October 2026 (Session 56w — identity taken apart into eight services on their own databases; every Postgres server private; a ten-minute session fixed)
+**Last Updated:** 20 October 2026 (Session 56x — Life became a personal life coach: 27 cards and four coaching skills in 12 languages, proposals the person taps, and a quality eval)
 
 > **This file holds only what is true now, and it is edited in place.** Until 2026-09-24 every
 > session appended its narrative here; the file reached 5,929 lines and could no longer
@@ -68,12 +68,17 @@ Replace rows as they close — do not strike them through and keep them.
 | 25 | **Signed in, shown "Sign in with Pi" (10–11 Oct, Runtime Verified).** Every app's SSO landing wrote `tec_user` encoded twice (Next's `cookies.set` encodes again), so `usePiAuth()` read nobody while `/api/auth/me` said yes — every account but the owner's (his browser held an older once-encoded copy). All merged. Round 1 (the writer, all 24 apps + the template) is live and **Runtime Verified** — a non-owner account signed in to Connection on the owner's phone. Round 2 (heal on `refresh`, Connection's landing asks `/me`, `refresh`/`logout` on `*.vercel.app`) is live only on Zone and Life: the Hobby daily build limit ran out ("Deployment rate limited"). Pi's visit count was never affected | Redeploy the latest `main` in Vercel for every app but Zone and Life once the limit resets (Connection first); push nothing before — `memory/sessions/session-56v.md` §5–§7 | 56v |
 | 26 | **Account erasure across services — live, Runtime Verified (17 Oct).** A request to `privacy@tec.pi` is carried out at `/hub/admin/erasure`: every service's dry run, then the name typed again + the request it answers; a part that does not answer is shown, never skipped (tec-core-backend #437 · tec-app #319). First apply (the owner's second account `magy888`): erased in every service. Financial history stays. **Left:** the other services that key on the person (commerce referrals, notifications, Explorer reviews, Legend, Pioneer, …) and Connection avatars | One service at a time on the same contract — `audits/ACCOUNT_ERASURE_PLAN_2026-10-17.md` §4 · §6 | 56w |
 | 27 | **Incident follow-ups (16 Oct) — the last piece is merging.** The session-expired notice and the diagnostic are on `main` in Assets and Connection. In the template + 21 apps the diagnostic rides each app's open scorecard PR (green; retitled `feat(session): say why a session failed (tokenProblem) + …`, 17 Oct). The synthetic sign-in + refresh check is not buildable — a robot cannot complete a Pi sign-in; the boot check that signs real tokens and logs an ERROR on a short lifetime (#430) is that control. C-20 lists ports 5012–5019 (17 Oct) | Merge those 22 PRs — a few a day (each merge is a Vercel production build; row 25's daily limit) | 56w |
+| 28 | **Life's AI is a personal life coach — and its replies are not measured yet (20 Oct).** «مدرّبك الشخصي للحياة» — a coach, not an adviser; not a doctor, lawyer or financial adviser (owner: «احنا مشروع بناء الإنسان»). 27 knowledge cards + 4 coaching skills (understand · options · commit · review), chosen in code, 12 languages; after a yes, one goal/skill proposal written only on the person's tap (tec-core-backend #455, Tec-Life #98, tec-app #320 — merged). Groq only, nothing stored, no word logged. **Next:** the quality eval (#456 — 31 fixed conversations, HARD checks fail the run) → baseline; then the kind of problem in `understand`, evidence marking in summaries, outcome patterns after the real-use bar. **Owner decision open:** TEC AI may send the Life data a person shared to free Gemini/OpenRouter tiers — the tier rejected for Life | The eval needs the `GROQ_API_KEY` repo secret and one run; the privacy gap is the owner's call | 56x |
 | 9 | KB backlog after the remediation plan: 24 `[Code Verified]` docs without a `Last verified` date; 669 Arabic lines inside code blocks of English docs (a ratchet — may only go down) | `audits/KB_REMEDIATION_PLAN_2026-09-24.md` | 56q |
 
 ---
 
 ## 3. The last three sessions
 
+- **[56x](../memory/sessions/session-56x.md) — 17–20 Oct.** Life went from a questionnaire to a
+  personal life coach: a conversation shaped by the owner's own tests, a deletion ledger, a real-use
+  bar set before any number, then 27 cards, four coaching skills and proposals in 12 languages —
+  and a quality eval, because none of it had been measured.
 - **[56w](../memory/sessions/session-56w.md) — 11–17 Oct.** Identity was taken apart: eight
   services on their own databases, one counted cutover each, then its code and 62 tables removed.
   Seven key-only routes closed (C17), every Postgres proxy removed, and refreshed sessions that
@@ -81,12 +86,6 @@ Replace rows as they close — do not strike them through and keep them.
 - **[56v](../memory/sessions/session-56v.md) — 10–11 Oct.** Only the owner's account could get
   past the sign-in: `tec_user` was encoded twice by every SSO landing. Fixed fleet-wide, then the
   cookies browsers already held were healed on refresh.
-- **[56u](../memory/sessions/session-56u.md) — 8–10 Oct.** TEC AI became a mentor (a plan with
-  steps, a weekly check-in, a monthly review — C-106 §11b) and took photos. The owner's wallet
-  showed 5π: he was ten accounts, because a Pi uid is per app — now one Pioneer, one account. Then
-  the balance itself: every purchase had credited the buyer; that stopped, sellers' shares go to
-  their TEC balance, withdrawals to Pi were built, and a P0 that let anyone mint or take a balance
-  was closed. The census found no balance backed by a sale.
 Older: [`memory/sessions/README.md`](../memory/sessions/README.md).
 
 ---
