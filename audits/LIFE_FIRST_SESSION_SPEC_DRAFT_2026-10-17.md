@@ -810,6 +810,14 @@ Rules (owner, 2026-10-18):
 - Runtime: the owner recorded a baseline in production on 2026-10-19 and added a goal from a step.
 - Not built: patterns (wait for real use).
 
+**"Real use" — the bar, set before any number was seen (owner, 2026-10-20):** in the last two
+weeks, at least 5 conversations reached the end AND at least 5 "after" values were recorded.
+Operators (admin tokens) are not counted, so the owner's own testing cannot fill it; counts are
+events, not people (the counter knows no person). Counted weekly with the stage 1 counter —
+summaries kept, conversations continued, measures before, values after, "I don't know", steps
+made goals (Tec-core-backend #454 · Tec-life #97). Patterns are considered only after the bar
+is met. The 20–30 people who will make it real are invited in the owner's round 3.
+
 **§6.3 retention and §6.4 ledger (owner, 2026-10-19 — items 5 and 6):**
 - Retention stays at the code defaults — 14 daily + 8 weekly sets, so up to ~8 weeks — for every
   database. The owner asked for "the engineering-correct one": with the ledger, a restore no
