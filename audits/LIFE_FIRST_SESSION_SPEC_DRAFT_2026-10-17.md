@@ -820,6 +820,10 @@ Rules (owner, 2026-10-18):
   CONVERSATIONS withdrawal, the purge, erasure — with the start replay back 57 days that deletes
   only rows created before each request. It is OFF until `LIFE_DELETION_LEDGER=on` is set on
   tec-life-service after identity serves the routes. Until then the restore caveat below holds.
+  **Switched on 2026-10-20 (Runtime Verified):** the owner set `LIFE_DELETION_LEDGER=on`; the
+  deploy log of tec-life-service shows `deletion ledger replayed (0 request(s)) — Life is ready`
+  at start, and two goals deleted afterwards went through (a refused record would have answered
+  "Not deleted"). The restore caveat below no longer applies to deletions made from then on.
 - Narrower than §6.4 in two ways, both recorded in the PR: a held request holds all of that
   person's Life data (not only its scope); and the "one read gate" is the session/context/check-in
   funnel (`DeletionGuard.assertServing`), not a repository layer with a CI check — there are no
