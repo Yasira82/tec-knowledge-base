@@ -25,3 +25,8 @@
 
 The owner's merges, deploys, a quality run and a phone test (the report's §6); no new feature
 before them.
+- Privacy, after «مش عاوز احصر التطبيق انو يبقى نفسي»: a decision draft,
+  `audits/LIFE_PRIVACY_TIERS_DECISION_2026-10-23.md` — the conversation's sensitivity picks the
+  provider (Tier A on Groq always; Tier B only by the person's separate consent), voice on Groq
+  whisper, images deferred, and a consent text that names the provider. Nothing built; six
+  decisions for the owner (§8).
