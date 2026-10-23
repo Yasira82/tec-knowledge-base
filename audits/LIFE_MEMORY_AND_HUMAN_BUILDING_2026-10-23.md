@@ -1,10 +1,11 @@
 # TEC Life — the memory, «أنا بتغيّر», and how building the human is verified (2026-10-23)
 
-> Truth State: **[Planned State]** — everything built here is in **open** pull requests
-> (tec-core-backend #461, Tec-Life #101), neither merged nor deployed. Governance State:
+> Truth State: **[Current State]** for #461 and Tec-Life #101 (merged and deployed by the owner,
+> 2026-10-23); **[Planned State]** for #462 (open). Governance State:
 > **[Draft]** — the owner's direction in conversation, and decisions the owner still has to make (§7).
-> Verification: **[Code Verified]** on the PR branch only — unit tests, tsc, lint, build. **Not**
-> Runtime Verified: no quality run and no live conversation has used the memory yet (§5).
+> Verification: **[Code Verified]** — unit tests, tsc, lint, build; quality **run 4** used the memory
+> against the real model (§5: the "never again" rules held, using it did not). No live conversation
+> with the memory yet — the owner's phone test is still to come.
 > Continues `audits/LIFE_VISION_HUMAN_DEVELOPMENT_2026-10-17.md` (the vision) and
 > `audits/LIFE_AI_AS_BUILT_2026-10-20.md` (how Life's AI works). Life's charter is C-106; this
 > file proposes, it does not amend it.
@@ -129,10 +130,41 @@ passes on every memory scenario; "uses what they kept" on at least 3 of 4; the j
 does not rise above run 3. Then the owner's own test on the phone: a conversation → keep the summary
 with what was tried → a new conversation → Life does not offer it, and reminds him of what helped.
 
+### Run 4 — 2026-10-23, after #461 merged (`c3bc281`), 52 scenarios, with the judge  *[Runtime Verified — the owner's workflow run]*
+
+| | Run 3 (40) | **Run 4 (52)** |
+|---|---|---|
+| HARD failures | 0 | **0** |
+| checks passed | 99.2 % | 98.2 % |
+| Judge: understood · invented · guess as fact | 89 % · 2 · 1 | **92 %** · 1 · 1 |
+| one question at most | 38 / 40 | 48 / 52 |
+| never offers again what they said failed | 2 / 2 | 6 / 7 (the miss is `ar-useless-twice`: «علبة», a box to lock the cigarettes away) |
+| **Memory scenarios — every check passed** | — | **4 / 8** |
+| **uses what they kept (memory)** | — | **1 / 5** |
+
+Against §5's criteria: 0 HARD ✓ · "never again" on every memory scenario ✓ (the record's tried
+tips, even the 8th of 8, were never offered) · invented not above run 3 ✓ · **"uses what they kept"
+✗** (criterion 3 of 4; got 1 of 5).
+
+**Cause, checked against each scenario's plan:** the moment's card or skill says *ask* — `relapse`
+("ask what they managed"), the `understand` skill ("ask the next missing piece") — and the record
+was a passive block earlier in the prompt. So Life asked what it already knew: «كم استطعت أن تبقى
+بدون سجاير؟» with *fasting helped* kept; «ما الذي يجعلك تشعر بالضعف؟» with their sentence kept.
+
+**Fix — tec-core-backend #462 (open):** `memoryLead()` decides in code which ONE kept item leads
+this moment (a kept hard moment happening now · a slip → what helped · doubt → their own sentence ·
+a decision → their reason · asking again → what helped); the asking skill is dropped; the
+instruction is placed last. Run 5 after it is deployed; same criteria.
+
+Also in run 4, older and not memory: two-question replies (`ar-grief`, `tr-conflict`, `ru-relapse`
+with three, which also offered water and five minutes — no record there); the judge marked
+`ar-tell-me-yourself` as inventing ("you tried many times") and `en-tell-me-yourself` as a guess
+stated as fact ("about two months").
+
 ## 6. The order from here
 
-1. Owner: merge #461 → deploy **life-service** (migration on start) → **ai-service** → merge Tec-Life #101.
-2. Owner: run "Life quality eval" with the judge; compare with run 3 on the criteria above.
+1. ✅ Owner: merged #461 and Tec-Life #101, deployed (2026-10-23).
+2. ✅ Run 4 (above). → Owner: merge #462, deploy ai-service, run 5.
 3. Owner: the end-to-end test on the phone (§5).
 4. Only then: **my future** — the vision first, then life areas, then goals linked to the vision.
 5. Then the engine between conversations: one tap after a step («did you do it?») that writes the
