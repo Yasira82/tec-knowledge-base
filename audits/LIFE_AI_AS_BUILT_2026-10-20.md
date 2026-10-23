@@ -252,6 +252,13 @@ Two rules hold it: **one method per reply** (coaching skill OR research skill), 
 
 **Opener (Tec-Life #100, owner's choice, 12 languages):** «أنا هنا لأسمعك. ما الذي يشغلك اليوم، أو ما الذي تتمنى أن يتغيّر في حياتك؟ ابدأ من أي مكان، وبكلماتك أنت.» — replaces three examples (smoking, a job, procrastination) that narrowed what Life is for. Watch: it joins two questions with «أو», which Life's replies must not; if replies start to copy it, keep only the first question.
 
+### The memory and «أنا بتغيّر» (tec-core-backend #461, Tec-Life #101 — open)
+
+The professional memory (actions, practices, own words checked in code, chosen feelings, «أنا
+أصبحت…»), the whole-record `profile` Life coaches from, the «أنا بتغيّر» page, and eight memory
+scenarios for this eval (52 in all) are recorded in `audits/LIFE_MEMORY_AND_HUMAN_BUILDING_2026-10-23.md`,
+with the success criteria for the next run.
+
 ### Decided and deferred (owner, 2026-10-23)
 
 - **Live web search in Life — built the free way (owner, same day): tec-core-backend #459 + Tec-Life #99, merged.** Tavily's free plan (1,000 searches a month, Pay as you go off, key `tec-railway-life` capped at 1,000) does the lookup; Groq stays the only model. Earlier note, kept for the record: Groq's search (`groq/compound`, `compound-mini`) is not on
