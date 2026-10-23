@@ -43,7 +43,7 @@ admin token; the database passwords can change or plant data.
 | Cloudflare R2 — storage | ✅ new token `tec-storage-2026-10` (Object R/W, `tec-storage` only); old `tec-storage-token` deleted | ✅ storage-service set and Online; Tec-Commerce (Vercel) set and redeployed; asset-service never had them. Checked 2026-10-23: a new product photo in Commerce and an NFT image upload in Assets both worked |
 | R2 — `github-backup-read` | kept: read-only, stored in GitHub secrets, never in Railway | — |
 | R2 — was anything downloaded? | ✅ `tec-db-backups` metrics, 7 days: Class B (reads) ≈ 10 a day at backup time on 21 and 22 Oct as on every other day; one ≈ 37 days earlier (the restore check). A download of the backups would add ≥ 18 reads (one per database). **No sign of it.** ("Data Retrieved = 0" is not evidence: it counts Infrequent Access only.) | — |
-| Groq | ✅ two new keys — `tec-railway-2026-10` (Railway) and `tec-github-eval-2026-10` (the quality eval); old deleted; GitHub secret `GROQ_API_KEY` updated | waiting — Life and TEC AI cannot answer until set |
+| Groq | ✅ two new keys — `tec-railway-2026-10` (Railway) and `tec-github-eval-2026-10` (the quality eval); old deleted; GitHub secret `GROQ_API_KEY` updated | ✅ set in ai-service — Life answers on the new key, ai-service deploy Active with #462 (owner, 2026-10-23) |
 | Gemini | ✅ new key; old `…jqls` deleted (free tier — no spend possible) | waiting |
 | OpenRouter | ✅ new key `tec-railway-2026-10`, credit limit $1/month; old keys deleted; account showed $0 used and no activity | waiting |
 | Anthropic | was never in Railway — nothing leaked | — |
