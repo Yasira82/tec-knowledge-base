@@ -227,11 +227,28 @@ names its site; only what it says (no added number, promise or detail; general s
 what they said failed, medicines, products, anything against Life's rules — say so if nothing fits;
 disagreement said, not settled for them; prose, no list, never "I searched".
 
-**Skills — one per moment (`RESEARCH_SKILLS`):** restart · belief · first_step · learn.
+**Skills — one per moment (`RESEARCH_SKILLS`):** restart (a slip is common · what they managed before · what first this time) · belief (others got there · their will and reason · no technique · ask for the decision) · first_step (≤ 2 findings, one small step each · which suits them) · learn (one finding · which part is closest to them).
 
 **Found in the first real search (owner, 2026-10-23):** results=4, but the reply recited the
 experiences card as a seven-point list with no site. Fixed in #460 — findings replace the card for
 that reply. The eval cannot measure search yet (no key in the workflow).
+
+### One plan per reply — `compose.ts` (#460; owner: «فصل وتنظيم بين الكروت و البحث وامتي الاستخدام»)
+
+| Piece | Job | When |
+|---|---|---|
+| core prompt | who Life is, its rules, safety | always |
+| TONE cards — frustration, resolve, relapse, success, grief | how this moment feels, what to do first | the latest message is that moment; always kept |
+| REQUEST card — plan | numbered options | asked, and nothing was looked up |
+| KNOWLEDGE cards — the topics | what is widely known | the topic is in recent words; with findings → background only |
+| EVIDENCE card — experiences | what people who changed commonly report | slip / rejected tips / "how did others…", and nothing looked up |
+| coaching skill | how to work at this stage | one per reply; none with findings |
+| findings + research rules + research skill | what was looked up, how to use it | only when asked AND found |
+| "cannot look it up now" | honesty | asked, nothing found |
+| memory → reply language | kept notes; the language | when sent; language always last |
+
+Two rules hold it: **one method per reply** (coaching skill OR research skill), and **one source of
+"what others did"** (findings OR the experiences card).
 
 ### Decided and deferred (owner, 2026-10-23)
 
