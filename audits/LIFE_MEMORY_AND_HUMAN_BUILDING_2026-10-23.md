@@ -161,6 +161,23 @@ with three, which also offered water and five minutes — no record there); the 
 `ar-tell-me-yourself` as inventing ("you tried many times") and `en-tell-me-yourself` as a guess
 stated as fact ("about two months").
 
+### Eval phase 1 — fixing the measuring (tec-core-backend #463, draft, not merged)
+
+The owner (with a second reviewer) chose to fix the measuring before measuring more. #463:
+deterministic checks only are scored, each with a dimension; word lists are signals; every scenario
+has criteria judged against **Life's own policy** with a quote from the reply as evidence (a quote
+not in the reply = a judge error, never a Life failure); the judge model is apart from Life's and
+never falls back to them; critical failures first and apart (judged ones "need review" until the
+judge is calibrated); repeats and unstable results; a suite-version hash — different suites are not
+compared; a > 10-point regression gate; a blind 30-item calibration sample whose agreement names
+missed failures apart from false alarms.
+
+**Run 4 classified:** 9 real (4 fixed by #462) · 1 measuring error (`tr-conflict`: a question mark
+inside a quoted sentence — fixed in #463) · 1 judge error (`en-vendor`) · 3 contestable. Correction:
+`ar-useless-twice`'s «علبة» is a **real** repeat (the rejected tip was «ضع العلبة في الخزانة»), not
+a false alarm as first said. A human's calibration labels are written by a person; a model's labels
+are another judge.
+
 ## 6. The order from here
 
 1. ✅ Owner: merged #461 and Tec-Life #101, deployed (2026-10-23).
