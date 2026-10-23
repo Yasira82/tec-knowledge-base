@@ -57,6 +57,20 @@ provider (which needs no Railway) is done first; low-risk keys may go in before.
 | `LIFE_CONVERSATION_KEY` | life — **do not change by hand**: every kept conversation would become unreadable; it needs a re-encryption step in code |
 | `SSO_SECRET` | Vercel only — Vercel was not breached; no change needed |
 
+**Outside Railway, the storage token is also read by the Tec-Commerce Vercel app**
+(`src/app/api/bff/storage/upload/route.ts`: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`,
+`R2_BUCKET_NAME`, `R2_PUBLIC_URL`). Product image uploads there fail until the new
+`tec-storage-…` values are put in Vercel and the app is redeployed.
+
+**Found while rotating (2026-10-23): `tec-storage` has Public Access enabled (r2.dev).** The
+storage-service code assumes the bucket is private, but the bucket also holds `kyc/`, `chat/` and
+`stories/`. Keys contain a uuid, so they cannot be guessed. Still, a key that leaks anywhere (a log,
+a forwarded link) can be read by anyone, with no expiry. Public access cannot simply be switched
+off: Tec-Assets (`nft/upload`, hard-coded r2.dev URL), Tec-Commerce (`products/`) and
+asset-service (`domains/`) hand out public URLs. Follow-up, in code: put private media (`kyc/`,
+`chat/`, `stories/`) in a private bucket, read through signed URLs only. Then decide whether
+the public bucket keeps only public media.
+
 Unused variables found in payment-service (`PI_API_KEY_CN_TESTNET`, `PI_API_KEY_CON_TESTNET`,
 `PI_API_KEY_CONNEN_TESTNET`; the code reads `PI_API_KEY_CONNECTION_TESTNET`) — remove them.
 
