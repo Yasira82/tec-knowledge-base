@@ -103,6 +103,12 @@ there is less to rotate:**
 serving. Restored as a reference, `${{db-identity.DATABASE_URL}}`, which closes the "literal
 string" item in `DATABASE_PLACEMENT_AND_BACKUP_2026-10-12.md`; logs: `Connected to database`.
 
+A second slip, found later the same day: wallet-service's `DATABASE_URL` had gone too. The running
+container kept the old value until a restart during Railway's platform outage (~19:07 GMT+3); then
+`prisma migrate deploy` failed with P1012 `Environment variable not found: DATABASE_URL` in a crash loop.
+Restored as `${{wallet-db.DATABASE_URL}}`; Online (owner, 2026-10-23). **Lesson:** after removing
+variables, restart each touched service once — a removal shows only on the next start.
+
 Kept on purpose: `PI_API_KEY_BROOKFIELD…` (payment resolves `PI_API_KEY_<SOURCE>` by name, and
 `brookfield` is a source); `JWT_PUBLIC_KEY` is not a secret.
 
