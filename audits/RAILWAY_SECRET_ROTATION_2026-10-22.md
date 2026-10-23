@@ -24,6 +24,17 @@ Not a sign of our own account being taken: the "project queued for deletion" ema
 says the breach is **contained** — otherwise a new value could leak the same way. Revoking at the
 provider (which needs no Railway) is done first; low-risk keys may go in before.
 
+**Railway's follow-up (2026-10-23):** an email to the workspace's admins says the workspace is of
+likely interest to the actor (environments with many variables); Railway "cannot confirm whether
+or not your secret environment variables were decrypted"; "As of October 22 at 03:32 UTC, we are
+no longer under direct attack". It is not a final report.
+
+**Owner's decision (2026-10-23):** wait for Railway's final report before §4 — there are no users
+yet. Proposed, not yet agreed: a limit of **one week, or before any launch, marketing or first
+user, whichever comes first**. With no users, rotating costs nothing (one sign-in, no one
+disrupted). The leaked values must be replaced before launch in any case: `JWT_SECRET` can mint an
+admin token; the database passwords can change or plant data.
+
 ## 2. Done (✅) and waiting
 
 | Secret | At the provider | In Railway |
@@ -37,7 +48,7 @@ provider (which needs no Railway) is done first; low-risk keys may go in before.
 | OpenRouter | ✅ new key `tec-railway-2026-10`, credit limit $1/month; old keys deleted; account showed $0 used and no activity | waiting |
 | Anthropic | was never in Railway — nothing leaked | — |
 | Mainnet A2U wallet (`PI_A2U_WALLET_SEED`) | the wallet `GBXU6DHS…MIQQ3R` is still **pending Pi's review** and holds nothing. Plan: replace the address while the application is pending (or ask Pi), and **never fund the old address** | to remove; `PI_HUB_APP_WALLET_ADDRESS` (public) lets the balance page work without it |
-| Railway account | password · 2FA · revoke account tokens · review members | — |
+| Railway account | ✅ password · 2FA · revoke account tokens · review members — done by the owner, 2026-10-23 | — |
 
 ## 3. Every secret and the services that read it (from code, 2026-10-23)
 
