@@ -30,8 +30,8 @@ or not your secret environment variables were decrypted"; "As of October 22 at 0
 no longer under direct attack". It is not a final report.
 
 **Owner's decision (2026-10-23):** wait for Railway's final report before §4 — there are no users
-yet. Proposed, not yet agreed: a limit of **one week, or before any launch, marketing or first
-user, whichever comes first**. With no users, rotating costs nothing (one sign-in, no one
+yet — with a limit the owner agreed the same day: **by 2026-10-30, or before any launch,
+marketing or first user, whichever comes first**. With no users, rotating costs nothing (one sign-in, no one
 disrupted). The leaked values must be replaced before launch in any case: `JWT_SECRET` can mint an
 admin token; the database passwords can change or plant data.
 
