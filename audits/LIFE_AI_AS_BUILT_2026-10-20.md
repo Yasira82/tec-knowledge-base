@@ -250,6 +250,8 @@ that reply. The eval cannot measure search yet (no key in the workflow).
 Two rules hold it: **one method per reply** (coaching skill OR research skill), and **one source of
 "what others did"** (findings OR the experiences card).
 
+**Opener (Tec-Life #100, owner's choice, 12 languages):** «أنا هنا لأسمعك. ما الذي يشغلك اليوم، أو ما الذي تتمنى أن يتغيّر في حياتك؟ ابدأ من أي مكان، وبكلماتك أنت.» — replaces three examples (smoking, a job, procrastination) that narrowed what Life is for. Watch: it joins two questions with «أو», which Life's replies must not; if replies start to copy it, keep only the first question.
+
 ### Decided and deferred (owner, 2026-10-23)
 
 - **Live web search in Life — built the free way (owner, same day): tec-core-backend #459 + Tec-Life #99, merged.** Tavily's free plan (1,000 searches a month, Pay as you go off, key `tec-railway-life` capped at 1,000) does the lookup; Groq stays the only model. Earlier note, kept for the record: Groq's search (`groq/compound`, `compound-mini`) is not on
@@ -297,7 +299,7 @@ bar.
 | tec-core-backend | #451 · #452 | before/after v1 (backend) · summaries address the person as «أنت» |
 | tec-core-backend | #453 · #454 | deletion ledger (on in production) · real-use counters + the bar |
 | tec-core-backend | **#455** | 27 cards in 12 languages · coach prompt · 4 coaching skills · proposals after a yes |
-| tec-core-backend | **#456** · **#457** · **#458** · **#459** | the quality eval · what its first run found (language, model name, honesty) · resolve + experiences cards, the guard · search: topic only, allow-listed sites |
+| tec-core-backend | **#456** · **#457** · **#458** · **#459** · **#460** | the quality eval · what its first run found (language, model name, honesty) · resolve + experiences cards, the guard · search: topic only, allow-listed sites · research rules + skills, one plan per reply (compose.ts) |
 | Tec-Life | #90 · #91 | delete stops re-saving · DELETE with an empty body |
 | Tec-Life | #92 – #97 | before/after UI · step→goal · no π field for it · prefill once · Goals i18n + retention text · the real-use reading |
 | Tec-Life | **#98** | 12 languages · no vendor name · "your personal life coach" · the proposal card · e2e on ubuntu-24.04 |
