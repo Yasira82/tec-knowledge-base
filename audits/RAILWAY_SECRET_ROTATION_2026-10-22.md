@@ -57,7 +57,7 @@ admin token; the database passwords can change or plant data.
 | `JWT_SECRET` | api-gateway, auth, ai, analytics, business, commerce, connection, identity, kyc, life, notification, payment, platform, realtime, search, storage, trust, wallet — **and every Vercel app** (tec-app, Tec-Life and the template's apps) |
 | `JWT_REFRESH_SECRET` | auth |
 | `INTERNAL_SECRET` | every service above plus asset and nexus — **and every Vercel app** |
-| `INTENT_PROOF_SECRET` | nexus |
+| `INTENT_PROOF_SECRET` | nexus — **not set in production** (owner, 2026-10-23), so nothing leaked and nothing to rotate. Without it nexus emits no intent proof and logs why (`intent.proof.ts`, fail closed); set a fresh value when proofs are wanted |
 | `PI_API_KEY`, `PI_API_KEY_<APP>`, `…_TESTNET` | payment (one key per Pi app, regenerated in the Pi Developer Portal) |
 | `PI_A2U_WALLET_SEED`, `…_TESTNET…` | payment |
 | `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | backup-job (`tec-backups-…`), storage (`tec-storage-…`). asset-service's code reads them too, but production never had them set (2026-10-23): its domain-SVG upload has always fallen back to a data URL, so nothing is put there |
@@ -124,7 +124,7 @@ Each step on its own, checked before the next:
    asset ← `tec-storage-…`. Check: the next backup run succeeds; an upload works.
 4. **Databases and Redis**: per database, new role password in Postgres → the matching
    `DATABASE_URL`; then Redis. One at a time; check each service is Online after.
-5. **`JWT_SECRET`, `JWT_REFRESH_SECRET`, `INTERNAL_SECRET`, `INTENT_PROOF_SECRET`**: the same new
+5. **`JWT_SECRET`, `JWT_REFRESH_SECRET`, `INTERNAL_SECRET`**: the same new
    values in **every Railway service and every Vercel app in the same hour**, then redeploy all
    (mind Vercel's daily build quota). Everyone signs in again once. Check: sign-in on the Hub and in
    two apps; a payment; Life.
