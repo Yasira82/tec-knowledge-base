@@ -28,7 +28,7 @@ provider (which needs no Railway) is done first; low-risk keys may go in before.
 
 | Secret | At the provider | In Railway |
 |---|---|---|
-| Cloudflare R2 — backups | ✅ new token `tec-backups-2026-10` (Object R/W, `tec-db-backups` only); old `railway-backup-write` deleted | waiting — the backup job fails until set ("Last run failed" = the revoke worked) |
+| Cloudflare R2 — backups | ✅ new token `tec-backups-2026-10` (Object R/W, `tec-db-backups` only); old `railway-backup-write` deleted | ✅ set and redeployed 2026-10-23; manual run: `backup: complete … databases: 26 … failures: []`. `BACKUP_PASSPHRASE` unchanged — waits for "contained" |
 | Cloudflare R2 — storage | ✅ new token `tec-storage-2026-10` (Object R/W, `tec-storage` only); old `tec-storage-token` deleted | ✅ storage-service set and Online; Tec-Commerce (Vercel) set and redeployed; asset-service never had them. Checked 2026-10-23: a new product photo in Commerce and an NFT image upload in Assets both worked |
 | R2 — `github-backup-read` | kept: read-only, stored in GitHub secrets, never in Railway | — |
 | R2 — was anything downloaded? | ✅ `tec-db-backups` metrics, 7 days: Class B (reads) ≈ 10 a day at backup time on 21 and 22 Oct as on every other day; one ≈ 37 days earlier (the restore check). A download of the backups would add ≥ 18 reads (one per database). **No sign of it.** ("Data Retrieved = 0" is not evidence: it counts Infrequent Access only.) | — |
@@ -86,6 +86,11 @@ there is less to rotate:**
 | `DATABASE_URL` | realtime (no database) |
 | `PI_VALIDATION_KEY`, `PI_WALLET_ADDRESS`, `API_WEBHOOK_SECRET` | payment |
 | `PI_API_KEY_CONNECTION_TESTNET` | identity (moved to payment) |
+
+**Done 2026-10-23 (owner):** all of the above removed. One slip: identity-service's own
+`DATABASE_URL` was removed too; its deploy failed (health check) while the previous version kept
+serving. Restored as a reference, `${{db-identity.DATABASE_URL}}`, which closes the "literal
+string" item in `DATABASE_PLACEMENT_AND_BACKUP_2026-10-12.md`; logs: `Connected to database`.
 
 Kept on purpose: `PI_API_KEY_BROOKFIELD…` (payment resolves `PI_API_KEY_<SOURCE>` by name, and
 `brookfield` is a source); `JWT_PUBLIC_KEY` is not a secret.
