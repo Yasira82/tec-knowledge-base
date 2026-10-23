@@ -186,6 +186,32 @@ variance; the next run says. A pre-#457 conversation from the owner (2026-10-23)
 scenarios do not yet cover: a plain "tell me yourself" answered with more questions, and after two
 rejections no stronger option (a doctor or pharmacist about quit aids) — candidates for the next PR.
 
+### #458 (merged 2026-10-23) — after rejected tips: encouragement, will, others' experiences
+
+From the owner's pre-#457 conversation. The owner's direction: after rejected tips a person needs
+encouragement and their own will turned toward the decision — not more techniques, not a referral.
+- `resolve` card (12 languages) — «كلام فاضي», «نفس الكلام», «قولي انت», «عاوز حل بجد»…: no question
+  first, no more tips; encouragement from what they already showed, their will and their own reason,
+  the urge that passes and leaves the will stronger, who they are becoming. Replaces `plan` and
+  `frustration`; no coaching skill on top.
+- `experiences` card (any topic): the documented patterns of people who made a change; never a
+  person, a name or a number beyond these, never "I searched". Joins `resolve` and `relapse` on its own.
+- Smoking card: a doctor or pharmacist is no longer a plan option — once, only if they ask for medical help.
+- Core prompt: "you tell me" is answered; one question, never two joined by «أو»; "be my friend" answered honestly.
+- `guard.ts`: a reply naming the model, claiming to search, or promising to contact them later is
+  rewritten once, told the rule; if it breaks it again those sentences are dropped. Logs name the rule only.
+- Eval: `expect:resolve` + 4 scenarios → 40.
+
+### Decided and deferred (owner, 2026-10-23)
+
+- **Live web search in Life — deferred.** Groq's search (`groq/compound`, `compound-mini`) is not on
+  the free plan (owner's Limits page, 2026-10-23), and is paid per search. When it comes: only on an
+  explicit request; the query built in code from the topic, never from the person's words; an
+  allow-list of public-health / institutional sites; results through the guard.
+- **Moving Life to Claude (Haiku 5.5 first) — deferred until the apps have real income.** At today's
+  volume it would cost cents a month, but it changes the "one provider, zero retention" promise on the
+  privacy page and the free-models rule; to be measured first with the same eval, never switched blind.
+
 ## 9. Where this stands against the "seven capabilities" review (owner, 2026-10-20)
 
 The owner shared a review proposing seven capabilities and the loop Intent → Context + Evidence →
@@ -223,7 +249,7 @@ bar.
 | tec-core-backend | #451 · #452 | before/after v1 (backend) · summaries address the person as «أنت» |
 | tec-core-backend | #453 · #454 | deletion ledger (on in production) · real-use counters + the bar |
 | tec-core-backend | **#455** | 27 cards in 12 languages · coach prompt · 4 coaching skills · proposals after a yes |
-| tec-core-backend | **#456** · **#457** | the quality eval · what its first run found (language, model name, honesty) |
+| tec-core-backend | **#456** · **#457** · **#458** | the quality eval · what its first run found (language, model name, honesty) · resolve + experiences cards, the guard |
 | Tec-Life | #90 · #91 | delete stops re-saving · DELETE with an empty body |
 | Tec-Life | #92 – #97 | before/after UI · step→goal · no π field for it · prefill once · Goals i18n + retention text · the real-use reading |
 | Tec-Life | **#98** | 12 languages · no vendor name · "your personal life coach" · the proposal card · e2e on ubuntu-24.04 |
