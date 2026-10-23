@@ -38,8 +38,10 @@ proposal: **the sensitivity of the conversation decides the provider, not the pe
 | Search | Tavily, only when the person asks; only a general topic is sent, never their words |
 | Consent shown | `session-copy.ts` `introAi` — the words go to "an AI model"; "the model's provider does not keep it for us". The provider is **not named** on screen; the privacy page names only "infrastructure providers" |
 
-The last row is a gap even without this proposal: the consent never names the provider. §5
-proposes the text that fixes it.
+The consent does not name the provider **on purpose**: the owner decided earlier that Life shows
+people no technical detail. It said nothing false even before decision 0. With ZDR confirmed,
+"the model's provider does not keep it for us" is now verified, not just promised. §5a is
+therefore not used (decision 3).
 
 ## 3. The proposal — two tiers
 
@@ -247,8 +249,11 @@ Not sending words to a second provider is worthless if TEC writes them somewhere
 2. **Tier B at all, now?** Or only more Groq models now, and Tier B when Life has a paid provider?
    *Recommended:* more Groq models now; Tier B with Mistral only after its opt-out is verified;
    Gemini's free tier not at all.
-3. **The corrected consent (§5a)** — ship it now, independent of Tier B? *Recommended:* yes. The
-   person should know the provider's name today.
+3. **The corrected consent (§5a)** — ship it now, independent of Tier B? **Decided 2026-10-23:
+   no.** Life shows people no technical detail, and the provider stays unnamed on screen. Today's
+   text stays as it is, and it is accurate: ZDR is confirmed. What still holds: the text never claims
+   more than the settings give. If Tier B is ever built, its consent must still say that **another**
+   company may receive general topics — the wording can be plain, with no provider name in it.
 4. **Voice on Groq whisper**, with the transcript shown before sending — approve to build after
    step 1 of quality is done?
 5. **Images** — defer until there is income for a paid provider? *Recommended:* yes.
