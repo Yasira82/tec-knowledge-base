@@ -44,8 +44,8 @@ admin token; the database passwords can change or plant data.
 | R2 — `github-backup-read` | kept: read-only, stored in GitHub secrets, never in Railway | — |
 | R2 — was anything downloaded? | ✅ `tec-db-backups` metrics, 7 days: Class B (reads) ≈ 10 a day at backup time on 21 and 22 Oct as on every other day; one ≈ 37 days earlier (the restore check). A download of the backups would add ≥ 18 reads (one per database). **No sign of it.** ("Data Retrieved = 0" is not evidence: it counts Infrequent Access only.) | — |
 | Groq | ✅ two new keys — `tec-railway-2026-10` (Railway) and `tec-github-eval-2026-10` (the quality eval); old deleted; GitHub secret `GROQ_API_KEY` updated | ✅ set in ai-service — Life answers on the new key, ai-service deploy Active with #462 (owner, 2026-10-23) |
-| Gemini | ✅ new key; old `…jqls` deleted (free tier — no spend possible) | waiting |
-| OpenRouter | ✅ new key `tec-railway-2026-10`, credit limit $1/month; old keys deleted; account showed $0 used and no activity | waiting |
+| Gemini | ✅ new key; old `…jqls` deleted (free tier — no spend possible) | ✅ set in ai-service; TEC AI answers (owner, 2026-10-23) |
+| OpenRouter | ✅ new key `tec-railway-2026-10`, credit limit $1/month; old keys deleted; account showed $0 used and no activity | ✅ set in ai-service; TEC AI answers (owner, 2026-10-23) |
 | Anthropic | was never in Railway — nothing leaked | — |
 | Mainnet A2U wallet (`PI_A2U_WALLET_SEED`) | the wallet `GBXU6DHS…MIQQ3R` is still **pending Pi's review** and holds nothing. Plan: replace the address while the application is pending (or ask Pi), and **never fund the old address** | to remove; `PI_HUB_APP_WALLET_ADDRESS` (public) lets the balance page work without it |
 | Railway account | ✅ password · 2FA · revoke account tokens · review members — done by the owner, 2026-10-23 | — |

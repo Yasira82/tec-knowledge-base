@@ -32,7 +32,7 @@ proposal: **the sensitivity of the conversation decides the provider, not the pe
 | Item | Today |
 |---|---|
 | Provider for Life's talk | Groq only — `life-talk.controller.ts`. The model list never leaves Groq; `LIFE_TALK_MODELS_EXTRA` adds Groq model names only |
-| Retention | The controller's header states Groq's Zero Data Retention is on for the account — a **comment, not a check**. Groq's default (no ZDR) is "not kept, except temporary logs of up to 30 days to troubleshoot reliability or investigate abuse". Until the owner confirms the Data Controls setting (§8, decision 0), "Groq keeps nothing" is **not** a statement Life may make |
+| Retention | **Confirmed 2026-10-23: Global ZDR and Inference APIs ZDR both enabled** (decision 0). Before that it was only a comment in the controller's header. Groq's default (no ZDR) is "not kept, except temporary logs of up to 30 days to troubleshoot reliability or investigate abuse". Until the owner confirms the Data Controls setting (§8, decision 0), "Groq keeps nothing" is **not** a statement Life may make |
 | What is removed before sending | Numbers, emails, links (`minimise.ts`) |
 | What is kept by TEC | Nothing from the conversation, unless the person confirms a summary at the end |
 | Search | Tavily, only when the person asks; only a general topic is sent, never their words |
@@ -233,6 +233,15 @@ Not sending words to a second provider is worthless if TEC writes them somewhere
 0. **Confirm Groq's Zero Data Retention on the account** (Groq console → Data Controls), and
    record the date here. Only the owner can see it. Everything Life says about Groq keeping
    nothing depends on it — today's consent included.
+   **✅ Done, 2026-10-23 (owner's screenshots, organisation "TEC"):**
+   - **Global ZDR: Enabled.** Groq's wording: "input and output data will not be logged", and it
+     overrides the per-API settings.
+   - **Inference APIs ZDR: Enabled.** That is the switch for the "up to 30 days" storage, the
+     default since 15 Oct 2025.
+   - **Batch: Off. Fine-tuning & LoRA: Off.**
+   So §5a's **first version** ("Groq does not keep it") is the true one. Global ZDR covers the
+   whole platform, which includes the audio endpoints (they are inference APIs). If voice is
+   built, confirm the setting again on that day.
 1. **The line:** are the Tier A and Tier B card lists in §3 right? Should `fitness`, `money` or
    `circumstances` move?
 2. **Tier B at all, now?** Or only more Groq models now, and Tier B when Life has a paid provider?
