@@ -163,21 +163,23 @@ The unit tests prove selection, logging and writes. The eval measures **what a p
 - **Rule from now on:** a change to the prompt, a card or a skill is run before and after, and the
   two reports are compared.
 
-### The two runs so far (GitHub workflow "Life quality eval", with the judge)
+### The runs so far (GitHub workflow "Life quality eval", with the judge)
 
-| | Run 1 — 2026-10-21, before #457 | Run 2 — 2026-10-23, after #457 (`56e8390`) |
-|---|---|---|
-| Scenarios answered | 32 / 32 (some by fallback models after 429s) | 36 / 36, all `openai/gpt-oss-120b` |
-| HARD failures | **1** — `en-vendor` named OpenAI / GPT | **0** |
-| the person's language | 28 / 32 | **36 / 36** |
-| no vendor or model name | 31 / 32 | 36 / 36 |
-| honest: no search claim, no promise to contact later (new in #457) | — | 3 / 3 |
-| never offers again what they said failed (new in #457) | — | 1 / 1 |
-| one question at most | 30 / 32 | 32 / 36 — **the weakest check** |
-| short (≤ 6 sentences) | 32 / 32 | 35 / 36 |
-| MSA — no dialect words | 14 / 14 | 17 / 17 |
-| Judge: understood | 91 % | 86 % |
-| Judge: invented a fact · guess as fact | 1 · 1 | 1 · 1 |
+| | Run 1 — 2026-10-21, before #457 | Run 2 — 2026-10-23, after #457 (`56e8390`) | Run 3 — 2026-10-23, after #458 (`1a4ed67`), 40 scenarios |
+|---|---|---|---|
+| Scenarios answered | 32 / 32 (some by fallback models after 429s) | 36 / 36, all `openai/gpt-oss-120b` | 40 / 40, all `openai/gpt-oss-120b` |
+| HARD failures | **1** — `en-vendor` named OpenAI / GPT | **0** | **0** · checks passed 99.2 % |
+| the person's language | 28 / 32 | **36 / 36** | 40 / 40 |
+| no vendor or model name | 31 / 32 | 36 / 36 | 40 / 40 |
+| honest: no search claim, no promise to contact later (new in #457) | — | 3 / 3 | 4 / 4 |
+| never offers again what they said failed (new in #457) | — | 1 / 1 | 2 / 2 |
+| one question at most | 30 / 32 | 32 / 36 — **the weakest check** | **38 / 40** |
+| short (≤ 6 sentences) | 32 / 32 | 35 / 36 | 40 / 40 |
+| MSA — no dialect words | 14 / 14 | 17 / 17 | 20 / 20 |
+| Judge: understood | 91 % | 86 % | 89 % |
+| Judge: invented a fact · guess as fact | 1 · 1 | 1 · 1 | 2 · 1 |
+
+Run 3 also: `expect:resolve` 3 / 3 (new), `expect:commit` 2 / 3 (was 3 / 3 — one reply after a "yes" did not match the when / if-then / 1–10 check; which one is in the run's artifact). Search (#459) is not in run 3: the workflow has no `TAVILY_API_KEY`, so a search request gets the honest "cannot look it up now" path.
 
 Read: #457 fixed what it set out to fix (language, the model's name, honesty) with no HARD failure.
 Still open: replies that join two questions with "or" (seen live too: «ما الذي يزعجك… أو ما الذي
@@ -204,7 +206,7 @@ encouragement and their own will turned toward the decision — not more techniq
 
 ### Decided and deferred (owner, 2026-10-23)
 
-- **Live web search in Life — deferred.** Groq's search (`groq/compound`, `compound-mini`) is not on
+- **Live web search in Life — built the free way (owner, same day): tec-core-backend #459 + Tec-Life #99, merged.** Tavily's free plan (1,000 searches a month, Pay as you go off, key `tec-railway-life` capped at 1,000) does the lookup; Groq stays the only model. Earlier note, kept for the record: Groq's search (`groq/compound`, `compound-mini`) is not on
   the free plan (owner's Limits page, 2026-10-23), and is paid per search. When it comes: only on an
   explicit request; the query built in code from the topic, never from the person's words; an
   allow-list of public-health / institutional sites; results through the guard.
@@ -249,7 +251,7 @@ bar.
 | tec-core-backend | #451 · #452 | before/after v1 (backend) · summaries address the person as «أنت» |
 | tec-core-backend | #453 · #454 | deletion ledger (on in production) · real-use counters + the bar |
 | tec-core-backend | **#455** | 27 cards in 12 languages · coach prompt · 4 coaching skills · proposals after a yes |
-| tec-core-backend | **#456** · **#457** · **#458** | the quality eval · what its first run found (language, model name, honesty) · resolve + experiences cards, the guard |
+| tec-core-backend | **#456** · **#457** · **#458** · **#459** | the quality eval · what its first run found (language, model name, honesty) · resolve + experiences cards, the guard · search: topic only, allow-listed sites |
 | Tec-Life | #90 · #91 | delete stops re-saving · DELETE with an empty body |
 | Tec-Life | #92 – #97 | before/after UI · step→goal · no π field for it · prefill once · Goals i18n + retention text · the real-use reading |
 | Tec-Life | **#98** | 12 languages · no vendor name · "your personal life coach" · the proposal card · e2e on ubuntu-24.04 |
