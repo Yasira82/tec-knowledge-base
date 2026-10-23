@@ -204,6 +204,35 @@ encouragement and their own will turned toward the decision — not more techniq
   rewritten once, told the rule; if it breaks it again those sentences are dropped. Logs name the rule only.
 - Eval: `expect:resolve` + 4 scenarios → 40.
 
+### Search — principles, rules, skills (tec-core-backend #459, #460; Tec-Life #99)
+
+Owner, 2026-10-23: «المفروض نعمل قواعد للبحث ومبادئ ومهارات». Groq stays the only model; Tavily's
+free plan (1,000 a month, Pay as you go off, key `tec-railway-life` capped at 1,000) does the lookup.
+
+**Principles — enforced in code (`life-talk/search.ts`):**
+- Only on an explicit request ("search", «ابحث», «تجارب الناس»… — 12 languages).
+- The query is written in code from the topic card and the moment — never a word of the person's.
+  No topic card → no search.
+- An allow-list of public-health / public-service sites, sent to the service AND checked on return.
+- A daily allowance (30 for the service, 3 per person). No key / no allowance / failure → Life says it
+  cannot look it up now and answers from what is known (the experiences card).
+- Logs: outcome, result count, time — never the topic, the site or the query. The consent note says
+  only a topic is sent (Tec-Life #99).
+
+**The moment (code):** a slip → `restart`; tips rejected → `belief`; a plan → `first_step`; else
+`learn`. The query asks the topic for that moment ("…quit smoking: after a relapse, starting again").
+
+**Rules — every reply with findings (`RESEARCH_RULES`):** one or two that fit, never everything; each
+names its site; only what it says (no added number, promise or detail; general said as general); skip
+what they said failed, medicines, products, anything against Life's rules — say so if nothing fits;
+disagreement said, not settled for them; prose, no list, never "I searched".
+
+**Skills — one per moment (`RESEARCH_SKILLS`):** restart · belief · first_step · learn.
+
+**Found in the first real search (owner, 2026-10-23):** results=4, but the reply recited the
+experiences card as a seven-point list with no site. Fixed in #460 — findings replace the card for
+that reply. The eval cannot measure search yet (no key in the workflow).
+
 ### Decided and deferred (owner, 2026-10-23)
 
 - **Live web search in Life — built the free way (owner, same day): tec-core-backend #459 + Tec-Life #99, merged.** Tavily's free plan (1,000 searches a month, Pay as you go off, key `tec-railway-life` capped at 1,000) does the lookup; Groq stays the only model. Earlier note, kept for the record: Groq's search (`groq/compound`, `compound-mini`) is not on
