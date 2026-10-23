@@ -73,6 +73,23 @@ the public bucket keeps only public media.
 
 Unused variables in asset-service (its code reads none of them): `PI_API_KEY`, `JWT_REFRESH_SECRET`, `SSO_SECRET` — remove them.
 
+**Secret copies no code reads (checked by `grep` over each service, 2026-10-23), to remove so
+there is less to rotate:**
+
+| Variable | Remove from |
+|---|---|
+| `PI_API_KEY` | every service except payment (commerce, gateway, auth, identity, realtime, analytics, kyc, notification, wallet) |
+| `JWT_REFRESH_SECRET` | every service except auth |
+| `SSO_SECRET` | api-gateway, auth (only the Vercel apps read it) |
+| `JWT_PRIVATE_KEY` | auth (no code reads it; tokens are HS256 with `JWT_SECRET`) |
+| `DIRECT_URL` | api-gateway (it has no database; the value is a database password) |
+| `DATABASE_URL` | realtime (no database) |
+| `PI_VALIDATION_KEY`, `PI_WALLET_ADDRESS`, `API_WEBHOOK_SECRET` | payment |
+| `PI_API_KEY_CONNECTION_TESTNET` | identity (moved to payment) |
+
+Kept on purpose: `PI_API_KEY_BROOKFIELD…` (payment resolves `PI_API_KEY_<SOURCE>` by name, and
+`brookfield` is a source); `JWT_PUBLIC_KEY` is not a secret.
+
 Unused variables found in payment-service (`PI_API_KEY_CN_TESTNET`, `PI_API_KEY_CON_TESTNET`,
 `PI_API_KEY_CONNEN_TESTNET`; the code reads `PI_API_KEY_CONNECTION_TESTNET`) — remove them.
 
