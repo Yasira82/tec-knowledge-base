@@ -12,6 +12,8 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 56z | [Session 56z — Nexus outside TEC: the Handshake, a deal between two Pioneers (25 Oct 2026)](session-56z.md) |
+| 56y | [Session 56y — Life remembers: a professional memory, «أنا بتغيّر», and an eval that measures it (23 Oct 2026)](session-56y.md) |
 | 56x | [Session 56x — Life becomes a personal life coach: from a questionnaire to a measured conversation (17–20 Oct 2026)](session-56x.md) |
 | 56w | [Session 56w — identity taken apart: eight services, nine private databases, and a session that lived ten minutes (11–17 Oct 2026)](session-56w.md) |
 | 56v | [Session 56v — signed in, and shown "Sign in with Pi": a cookie encoded twice (10–11 Oct 2026)](session-56v.md) |
