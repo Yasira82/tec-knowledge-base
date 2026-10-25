@@ -196,3 +196,39 @@ are another judge.
 - The ten non-Arabic, non-English translations of the new screens still need a native speaker's read.
 - `LIFE_VISION_HUMAN_DEVELOPMENT_2026-10-17.md` §G5 (the Qur'an and Sunnah as the model's foundation,
   through a scholarly reviewer) is untouched by this work and still the owner's decision.
+
+## 9. Paused (owner, 2026-10-25)
+
+**Decision:** Life work stops here. No money goes to models until there is income. The owner's
+reason: patching each misunderstanding by hand is not an engine of understanding.
+
+**What is live** (merged 23–25 Oct, tec-core-backend #462, #464–#468), each read in code for every model:
+- the memory lead, with the opener in the person's own words;
+- safety, which always points to help;
+- one question per reply;
+- an opening sentence of understanding;
+- honest durations;
+- «بشرب» with cigarettes read as smoking;
+- a restate step for Arabic;
+- a correction owned.
+
+**Where it stands:** run 10 (gpt-oss-120b, 52 scenarios) had 0 HARD failures. The owner's own phone
+test, served by the same model (`life.talk 200 model=openai/gpt-oss-120b` in the log), still read
+«عاوز ابطل سجاير بشرب كتير» as drinking and offered water — after the dialect note had been added.
+**Egyptian dialect is beyond the free models; code around a model cannot add the understanding it
+lacks.** The scripted eval passed what it was written to test and missed this. Real conversations
+are the measure.
+
+**What would reopen it:** a stronger model, when there is income. There are two routes:
+- Groq's Developer tier (pay per token), when Groq reopens upgrades — "temporarily unavailable due
+  to high demand" on 25 Oct;
+- a provider strong in dialects. That one is a privacy decision first: today Life's words go to Groq
+  only (`audits/LIFE_PRIVACY_TIERS_DECISION_2026-10-23.md`).
+
+The first step is a side-by-side run on the eval's scripted conversations. That run sends no
+person's words.
+
+**Left as they are:**
+- tec-core-backend #463 (eval phase 1, draft);
+- the calibration sheet (https://claude.ai/artifact/24dq7UWLHh7S5T1fQFPaww, 30 replies from run 10, unlabelled);
+- `LIFE_TALK_RESTATE` stays on. It costs one extra request for each Arabic message; set it to `off` on a short-budget day.

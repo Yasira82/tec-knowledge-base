@@ -30,3 +30,7 @@ before them.
   provider (Tier A on Groq always; Tier B only by the person's separate consent), voice on Groq
   whisper, images deferred, and a consent text that names the provider. Nothing built; six
   decisions for the owner (§8).
+- 24–25 Oct: runs 8–10. allam-2-7b failed safety; safety, then one question, were enforced in code. Run 10 had 0 HARD
+  failures. Then the owner's own phone test showed 120b reading «سجاير بشرب كتير» as drinking, even
+  after the fixes. **Life paused** (owner, 25 Oct): no paid model until there is income. Record:
+  `audits/LIFE_MEMORY_AND_HUMAN_BUILDING_2026-10-23.md` §9.
