@@ -84,3 +84,15 @@ Then a design page for the owner's review, before any code.
 2. If B: the demand test first (a post plus a mock), or straight to a design page?
 3. Is Nexus's current engine (checkout saga) still to be verified end to end on the phone? Recommended:
    yes. B reuses the intent proof, which has never run in production.
+
+## 7. What the owner decided (same day)
+
+- **Decision 1:** B. The owner asked for "professional and creative". A concept page, the Nexus
+  Handshake, was approved.
+- **Decision 2:** neither of the two options offered. The owner chose to **build first**
+  («ابدأ في ب»), so the demand test above is still owed.
+- **What was built:** tec-core-backend #469, Tec-Nexus #49 and #50. The deal is recorded, the
+  buyer pays the seller directly, and payment is confirmed only from public Horizon. Nexus holds
+  no Pi.
+- **Status:** live up to creating a deal. The payment step has not run on the live network; it
+  needs a second Pi account. Record: `memory/sessions/session-56z.md`.
