@@ -232,3 +232,15 @@ person's words.
 - tec-core-backend #463 (eval phase 1, draft);
 - the calibration sheet (https://claude.ai/artifact/24dq7UWLHh7S5T1fQFPaww, 30 replies from run 10, unlabelled);
 - `LIFE_TALK_RESTATE` stays on. It costs one extra request for each Arabic message; set it to `off` on a short-budget day.
+
+## 10. Resumed (owner, 2026-10-30)
+
+Life work restarted without a paid model — record: `memory/sessions/session-57.md`, C-02 row 28.
+- **The dialect, measured:** ten Egyptian first messages in the eval (tec-core-backend #473); runs #11
+  (qwen3.8-27b) and #12 (gpt-oss-120b) both read them; qwen kept Life's manner better. The scripted
+  eval did not reproduce the 24 Oct phone failure, so the phone stays the measure (§9 holds).
+- **§6 step 5 is built:** the step day by day — one tap a day on Home, seven dots, a weekly reminder
+  after three quiet days, written only by the person's tap and only while the journey is kept
+  (tec-core-backend #473, Tec-Life #104). Patterns (§6 step 6) are still not built.
+- **Awareness:** the coach is told the step's week, active goals, days since the last conversation
+  and the part of the day, while the journey is kept (tec-core-backend #474, Tec-Life #105).
