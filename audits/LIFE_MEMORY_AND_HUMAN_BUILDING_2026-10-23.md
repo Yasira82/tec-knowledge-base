@@ -244,3 +244,16 @@ Life work restarted without a paid model — record: `memory/sessions/session-57
   (tec-core-backend #473, Tec-Life #104). Patterns (§6 step 6) are still not built.
 - **Awareness:** the coach is told the step's week, active goals, days since the last conversation
   and the part of the day, while the journey is kept (tec-core-backend #474, Tec-Life #105).
+
+## 11. «مستقبلي» built; the coach's rules in code (owner, 2026-10-31 → 11-04)
+
+Record: `memory/sessions/session-58.md`, C-02 row 28.
+- **§6 step 4 is built:** the vision (one year, the person's words), the life areas they choose, and
+  goals linked to an area — on the «مستقبلي» tab, on Home, in the monthly review, and known to the
+  coach while the journey is kept (tec-core-backend #478 · #479, Tec-Life #106 · #107). Self-declared,
+  never served by the context door, erased with everything else.
+- **The engine's rules moved from the prompt into code** after eval runs #13–#16 and two phone
+  conversations (#475–#477 · #479 · #480): what a free model drops one time in three, the code now
+  checks every time. Each reply's cost is logged (~3,700 tokens, two requests).
+- **Still to build:** values from the person's reasons (the identity axis, with consent); patterns
+  (§6 step 6, after real use); voice.

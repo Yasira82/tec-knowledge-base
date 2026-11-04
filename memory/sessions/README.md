@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 58 | [Session 58 — Life: the eval's one-in-three misses enforced in code, «مستقبلي», a review, the real cost of a reply (31 Oct – 4 Nov 2026)](session-58.md) |
 | 57 | [Session 57 — Life restarts on what a free model can do: dialect measured, a correction in one tap, the step day by day, a coach that knows the week (26–30 Oct 2026)](session-57.md) |
 | 56z | [Session 56z — Nexus outside TEC: the Handshake, a deal between two Pioneers (25 Oct 2026)](session-56z.md) |
 | 56y | [Session 56y — Life remembers: a professional memory, «أنا بتغيّر», and an eval that measures it (23 Oct 2026)](session-56y.md) |
