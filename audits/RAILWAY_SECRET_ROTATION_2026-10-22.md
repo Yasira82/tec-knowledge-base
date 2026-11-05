@@ -117,6 +117,11 @@ Unused variables found in payment-service (`PI_API_KEY_CN_TESTNET`, `PI_API_KEY_
 
 ## 4. The rotation, once Railway says "contained"  *[Planned State]*
 
+**Status, 2026-11-05 (session 59):** step 1 is done (§2). Steps 2–7 are still to do, and the owner's
+limit of 2026-10-30 has passed. Development is frozen, but the rotation is not part of that freeze:
+it protects what stays live. A second Pi API key literal was found in a public app repository's
+history; the details are with the owner and are not written here. Step 2 comes first.
+
 Each step on its own, checked before the next:
 
 1. **AI keys** (low risk — free tiers, $1 cap) into `tec-ai-service`: `GROQ_API_KEY`,
