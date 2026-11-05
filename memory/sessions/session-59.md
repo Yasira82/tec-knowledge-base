@@ -87,8 +87,11 @@ resume, read C-02 §2 rows 29 and 31 first (the rotation, the bill), then **Left
   backend as the only private use.
 
 ## Left open (frozen — in this order when work resumes)
-1. **The bill:** pay the $141.08. Set budgets of $0 with "Stop usage" for Actions and Copilot. The next
-   invoice (28 Nov) should be about $5.52 ($4 Pro + $1.52).
+1. **The bill:** the owner cannot pay the $141.08 now. GitHub Support ticket **#4956739** (5 Nov) asks
+   for a one-time credit of the September usage; the owner's answer comes by email and on the ticket.
+   Set budgets of $0 with "Stop usage" for Actions and Copilot, and move GitHub Pro to Free. The next
+   invoice (28 Nov) should be about $5.52 ($4 Pro + $1.52), or $1.52 on Free. In September an unpaid
+   bill stopped Actions in the private repositories only; Railway and Vercel kept serving.
 2. **The rotation** (`audits/RAILWAY_SECRET_ROTATION_2026-10-22.md` §4), Pi API keys first, including the
    key found in public history.
 3. **This repository is public**, and it says which secrets are not yet rotated. Finish the rotation, or
