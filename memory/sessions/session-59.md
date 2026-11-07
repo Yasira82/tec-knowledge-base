@@ -79,6 +79,34 @@ resume, read C-02 §2 rows 29 and 31 first (the rotation, the bill), then **Left
   not been rotated. The owner has the details; they are not written here, because this repository is
   public.
 
+## 7 Nov — the Vercel variables cleaned (Runtime Verified through the Vercel API)
+
+- **What was there:** the Railway integration (now disabled, its Manage page a 404) had copied
+  backend variables into four Vercel projects — Hub (`tec-app-frontend`), Assets, Commerce,
+  Ecommerce: **1,163** variables from one integration configuration, among them every Pi API key,
+  the A2U seeds, database and Redis URLs and passwords, `BACKUP_PASSPHRASE`,
+  `LIFE_CONVERSATION_KEY` and `JWT_REFRESH_SECRET`. The other 20 projects held only what was added
+  by hand.
+- **The rule:** a variable stays if its name appears in the app's code on `main` (or in
+  `@yasser172/tec-sdk` / `tec-auth` / `tec-ui`), or if it affects the build (`NODE_ENV`,
+  `LOG_LEVEL`, `NPM_*`, …), or `NEXT_PUBLIC_FLAG_*` (read by name at run time), or `SENTRY_DSN`
+  (the Hub's Sentry SDK may read it by itself). Two hits were text only and went: `CAMPAIGN_APPS`
+  (a sentence on an admin page) and the Hub's `DATABASE_URL` (a Prisma schema the Hub never builds).
+- **Done, with the owner approving each name list:** 1,123 integration variables, then 94 added
+  by hand that no code reads, among them a `RAILWAY_TOKEN` on the Hub, a connected Supabase
+  store's keys (the store itself is untouched), a database URL on Analytics and an unused R2 key
+  on Ecommerce. **1,484 → 257** variables; every request 200. Only names were listed — no value
+  was read or stored.
+- **Safe for what is live:** Vercel reads variables at build time, and no deleted name is read by
+  code; the four projects' last production deployments (29–30 Oct) are READY.
+- **Afterwards:** the one-day Vercel token was revoked (the API answers 403) and the network
+  secret removed from the session's environment. Railway shows no account, workspace or project
+  token, so the deleted `RAILWAY_TOKEN` was already dead.
+- **Not done:** the values still live on Railway — this narrows where they are, it does not
+  rotate them. Remaining Vercel secrets are not marked Sensitive (the "Needs Attention" banner);
+  mark them when they are replaced. A second, empty Vercel project `tec-elite` sits beside
+  `tec-elite-bvzb` (same repository).
+
 ## Corrections
 - Session 56p says the 23 apps' history held no real key. It held this second literal; the 24 Sep scan
   missed it because the variable name was lower-case.

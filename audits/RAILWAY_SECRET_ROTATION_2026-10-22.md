@@ -73,6 +73,14 @@ admin token; the database passwords can change or plant data.
 `R2_BUCKET_NAME`, `R2_PUBLIC_URL`). Product image uploads there fail until the new
 `tec-storage-…` values are put in Vercel and the app is redeployed.
 
+**Vercel copies removed (2026-11-07, session 59).** The Railway↔Vercel integration had copied
+backend secrets (Pi API keys, A2U seeds, database URLs, `BACKUP_PASSPHRASE`, …) into the Hub,
+Assets, Commerce and Ecommerce Vercel projects. Every Vercel variable no code reads was deleted
+(1,484 → 257). This does not change the order below: the same values still live on Railway.
+What the Vercel apps still read from this list: `JWT_SECRET`, `INTERNAL_SECRET`, `SSO_SECRET`;
+on the Hub also `GROQ_API_KEY`, `GEMINI_API_KEY`, `OPENROUTER_API_KEY` and the Upstash pair (the
+TEC AI routes); on Commerce the `tec-storage-…` R2 values.
+
 **Found while rotating (2026-10-23): `tec-storage` has Public Access enabled (r2.dev).** The
 storage-service code assumes the bucket is private, but the bucket also holds `kyc/`, `chat/` and
 `stories/`. Keys contain a uuid, so they cannot be guessed. Still, a key that leaks anywhere (a log,
