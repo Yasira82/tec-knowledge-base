@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 60 | [Session 60 — the backend audit fixed in phases; migrations run on deploy; payment-service down most of 8 Nov (7–8 Nov 2026)](session-60.md) |
 | 59 | [Session 59 — Life's last fixes measured, the GitHub bill explained, CI cut, development frozen (4–5 Nov 2026)](session-59.md) |
 | 58 | [Session 58 — Life: the eval's one-in-three misses enforced in code, «مستقبلي», a review, the real cost of a reply (31 Oct – 4 Nov 2026)](session-58.md) |
 | 57 | [Session 57 — Life restarts on what a free model can do: dialect measured, a correction in one tap, the step day by day, a coach that knows the week (26–30 Oct 2026)](session-57.md) |
