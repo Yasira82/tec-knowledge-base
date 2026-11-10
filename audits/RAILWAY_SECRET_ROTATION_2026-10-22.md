@@ -130,6 +130,10 @@ limit of 2026-10-30 has passed. Development is frozen, but the rotation is not p
 it protects what stays live. A second Pi API key literal was found in a public app repository's
 history; the details are with the owner and are not written here. Step 2 comes first.
 
+**Status, 2026-11-09 (session 61):** the audit's code phases are done; step 2 was handed to the owner —
+only payment-service reads Pi API keys (checked in every repository). The Hub's `PI_API_KEY` first,
+one test payment, then every `PI_API_KEY_<APP>` in a single deploy.
+
 Each step on its own, checked before the next:
 
 1. **AI keys** (low risk — free tiers, $1 cap) into `tec-ai-service`: `GROQ_API_KEY`,
