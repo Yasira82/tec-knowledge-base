@@ -141,7 +141,19 @@ every row count equal (old passphrase kept outside Railway until 5 Jan 2027). St
 servers (17 roles), Supabase and Redis; Redis is now referenced everywhere as `${{Redis.REDIS_URL}}`, so
 its next rotation is one variable and one deploy. For a role password: **ALTER first and check it, then
 redeploy the consumers** — the reverse gave `P1000` on wallet and payment. Supabase's free plan keeps no
-backup. **Next: step 5.** Details: `memory/sessions/session-62.md`.
+backup. Details: `memory/sessions/session-62.md`.
+
+**Step 5 done, 2026-11-11:** new `JWT_SECRET`, `JWT_REFRESH_SECRET`, `INTERNAL_SECRET` **and
+`SSO_SECRET`** (it sat in api-gateway, auth and asset on Railway during the breach until 23 Oct, so
+"Vercel only — no change needed" in §3 was wrong). Railway now holds the first three once, as
+project **Shared Variables**; every service references `${{shared.JWT_SECRET}}` /
+`${{shared.INTERNAL_SECRET}}` (auth also `${{shared.JWT_REFRESH_SECRET}}`) — the next rotation is
+one edit and one deploy. A stale `JWT_REFRESH_SECRET` copy in payment-service (its code never read
+it) was deleted. Vercel: the three values in all 24 projects (Hub + 23 apps, NBF and Brookfield
+included), then a production redeploy of each — all READY. **Runtime Verified:** the Hub's
+`/api/health/services` answered `ok` for the gateway and all 19 services (the Hub reaches the
+gateway with the internal key, so both sides hold the same value); sign-in and a payment worked.
+Everyone signed in once more. **Next: step 6.**
 
 Each step on its own, checked before the next:
 

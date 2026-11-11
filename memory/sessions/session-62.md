@@ -35,8 +35,16 @@ What step 4 taught:
   Analytics' data has no copy until backup-job learns to dump it (open item).
 - Passwords that appeared in a screenshot were rotated again.
 
-Remaining: step 5 (`JWT_SECRET`, `JWT_REFRESH_SECRET`, `INTERNAL_SECRET` — every Railway service and
-every Vercel app in one hour), step 6, step 7 (needs re-encryption code first). Round 3 opens only
+**Step 5, 11 Nov — done.** `JWT_SECRET`, `JWT_REFRESH_SECRET`, `INTERNAL_SECRET` and `SSO_SECRET`
+(SSO_SECRET had been in three Railway services during the breach, so it was rotated too). The values
+were generated in a Railway console and never passed through the chat. Railway reads the first three
+from project **Shared Variables** (`${{shared.…}}` in each of the 20 services); all 24 Vercel projects
+got the three values, then a production redeploy (all READY). **Runtime Verified:** the Hub's
+`/api/health/services` — which calls the gateway with the internal key — answered `ok` for the gateway
+and all 19 services; sign-in and a payment worked. Railway's AI Agent had spent $5.03 of real money on
+its own; its limit is now $0.
+
+Remaining: step 6, step 7 (needs re-encryption code first). Round 3 opens only
 after the rotation (owner).
 
 ## Payments stopped reaching the wallet after browsing many apps — the cause
@@ -96,7 +104,7 @@ Each app's `src/__tests__/safe-bottom.test.ts` fails on any bare `env(safe-area-
 
 1. Merge the PRs above; then a phone check after Vercel deploys (merged ≠ deployed): fresh Pi
    Browser → Hub → the campaign → three apps → `/pi-test` shows sign-in ok and arrival recorded → a payment.
-2. Rotation step 5, then 6; step 7 after its re-encryption code. Then Round 3.
+2. Rotation step 6; step 7 after its re-encryption code. Then Round 3.
 3. A Supabase (analytics) dump in backup-job.
 4. From session 61: Healthcheck Path on the eight template services; the database decisions;
    lockfiles; NestJS 11. Then asymmetric JWT and a key per caller.
