@@ -153,7 +153,13 @@ it) was deleted. Vercel: the three values in all 24 projects (Hub + 23 apps, NBF
 included), then a production redeploy of each — all READY. **Runtime Verified:** the Hub's
 `/api/health/services` answered `ok` for the gateway and all 19 services (the Hub reaches the
 gateway with the internal key, so both sides hold the same value); sign-in and a payment worked.
-Everyone signed in once more. **Next: step 6.**
+Everyone signed in once more.
+
+**Step 6, 2026-11-11:** `ALERT_WEBHOOK_URL` is **not set** in backup-job (checked on its Variables
+page) — nothing to rotate; it also means a failed backup sends no alert (follow-up: a new alert
+channel). `UPSTASH_REDIS_REST_TOKEN` **deferred by the owner**: the database holds only TEC AI's
+per-user rate-limit counters and the limiter fails open, so a leaked token costs quota, not data.
+Step 7 after Round 3 (owner). **The rotation that gates Round 3 is done.**
 
 Each step on its own, checked before the next:
 

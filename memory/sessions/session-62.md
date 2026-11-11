@@ -44,7 +44,9 @@ got the three values, then a production redeploy (all READY). **Runtime Verified
 and all 19 services; sign-in and a payment worked. Railway's AI Agent had spent $5.03 of real money on
 its own; its limit is now $0.
 
-Remaining: step 6, step 7 (needs re-encryption code first). Round 3 opens only
+**Step 6:** `ALERT_WEBHOOK_URL` is not set in backup-job — nothing to rotate, and no alert reaches anyone
+when a backup fails. `UPSTASH_REDIS_REST_TOKEN` deferred by the owner (rate-limit counters only).
+Step 7 after Round 3 (owner). Round 3 opens only
 after the rotation (owner).
 
 ## Payments stopped reaching the wallet after browsing many apps — the cause
@@ -104,7 +106,8 @@ Each app's `src/__tests__/safe-bottom.test.ts` fails on any bare `env(safe-area-
 
 1. Merge the PRs above; then a phone check after Vercel deploys (merged ≠ deployed): fresh Pi
    Browser → Hub → the campaign → three apps → `/pi-test` shows sign-in ok and arrival recorded → a payment.
-2. Rotation step 6; step 7 after its re-encryption code. Then Round 3.
+2. Round 3 — the rotation that gated it is done. Later: the Upstash token; step 7 with its
+   re-encryption code; a backup alert channel (a new Telegram bot or Discord webhook).
 3. A Supabase (analytics) dump in backup-job.
 4. From session 61: Healthcheck Path on the eight template services; the database decisions;
    lockfiles; NestJS 11. Then asymmetric JWT and a key per caller.
