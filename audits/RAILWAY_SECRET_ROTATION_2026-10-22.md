@@ -134,6 +134,15 @@ history; the details are with the owner and are not written here. Step 2 comes f
 only payment-service reads Pi API keys (checked in every repository). The Hub's `PI_API_KEY` first,
 one test payment, then every `PI_API_KEY_<APP>` in a single deploy.
 
+**Status, 2026-11-11 (session 62):** steps 2, 3 and 4 are done. Step 2: Mainnet Pi keys regenerated
+(a payment in Ecommerce and one in Assets went through; Testnet keys deferred). Step 3: new
+`BACKUP_PASSPHRASE` in backup-job and GitHub; the restore check opened the new backup — 26 databases,
+every row count equal (old passphrase kept outside Railway until 5 Jan 2027). Step 4: all 9 Postgres
+servers (17 roles), Supabase and Redis; Redis is now referenced everywhere as `${{Redis.REDIS_URL}}`, so
+its next rotation is one variable and one deploy. For a role password: **ALTER first and check it, then
+redeploy the consumers** — the reverse gave `P1000` on wallet and payment. Supabase's free plan keeps no
+backup. **Next: step 5.** Details: `memory/sessions/session-62.md`.
+
 Each step on its own, checked before the next:
 
 1. **AI keys** (low risk — free tiers, $1 cap) into `tec-ai-service`: `GROQ_API_KEY`,
