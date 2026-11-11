@@ -64,10 +64,21 @@ that cannot install Chromium. It ran the other way too: Life and Zone carry Roun
   keeps one issue (label `fleet-drift`) and closes it when every app matches. Public repo: no cost.
 - safe-bottom moved into the template (19 apps had it byte-identical; the next app would have been born without it).
 
-First run on the real fleet: 20 apps checked, 13 match, 7 drifted. NBF #32 and Brookfield #28 now
-carry the door and everything else (`check`: matches). Left for one sync pass: Analytics (older
-`logout`/`refresh`/`sdk`), Life · Explorer · System · Connection (wording and formatting), and
-Round 3's ArrivalReport into the template and the 16 apps.
+First run on the real fleet: 20 apps checked, 13 match, 7 drifted. Then one sync pass, every app
+checked on its PR branch *[Planned State — open, not merged]*:
+
+- NBF #32 · Brookfield #28 — the door, once-a-day sign-in, bottom bar, Next 15.5.29.
+- **Analytics #69 — logout cleared the session cookies host-only**; with `COOKIE_DOMAIN` set they live on
+  `.tecosystem.app`, so the clear missed them and the session stayed (C-123 §2). The template's route
+  now; a new test fails on the old one.
+- Life #111 · Connection #98 · Explorer #65 · System #54 — wording and formatting.
+- **Round 3's ArrivalReport into the template and all 18 apps** (Nexus #53 · Estate #53 · Alert #57 ·
+  DX #55 · NX #51 · Titan #48 · VIP #48 · Elite #49 · Insure #51 · Epic #59 · Legend #52 · FundX #46,
+  and in the six PRs above): an arrival remembered 10 minutes per tab, not for the tab's life, so one
+  the server lost heals on the next visit; `/pi-test` shows the sign-in and arrival outcomes.
+
+After they merge, `check` reports all 20 tracked apps matching. The disk filled during the pass: the
+backend's `node_modules` (8 GB, no backend work before 1 Dec) were deleted — `npm ci` restores them.
 
 ## Money and accounts
 
@@ -88,8 +99,8 @@ Round 3's ArrivalReport into the template and the 16 apps.
 3. **After 1 Dec (backend):** the four Express services to Nest 11 / Express 5, as their own step;
    payment's `@stellar/stellar-sdk` major with money-flow tests; zod 4; Docker builds in CI only when a
    Dockerfile or `main` changes.
-4. Merge tec-template-base #56; then one sync pass from its issue (Analytics first — its logout is older);
-   Round 3's ArrivalReport into the template. From the review: the shared packages'
+4. Merge tec-template-base #56 and the sync PRs above, a few a day (each merge is one Vercel build).
+   From the review: the shared packages'
    versions aligned across apps; staging; a backup alert channel and uptime paging; `script-src`
    without `unsafe-inline`/`unsafe-eval`; input validation in seven services; coverage floors in
    notification and realtime; asymmetric JWT.
