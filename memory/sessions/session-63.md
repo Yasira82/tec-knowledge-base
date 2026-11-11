@@ -80,6 +80,30 @@ checked on its PR branch *[Planned State — open, not merged]*:
 After they merge, `check` reports all 20 tracked apps matching. The disk filled during the pass: the
 backend's `node_modules` (8 GB, no backend work before 1 Dec) were deleted — `npm ci` restores them.
 
+## The template's App Excellence features reach the apps; shared packages; the Hub's large files *[Planned State — open]*
+
+- **Scorecard 5/13 → 11/13 in all 18 template apps** (floor recorded, so it cannot slip): error,
+  not-found and loading screens (E1); `/help` with feedback → the fleet inbox (E12); installable
+  manifest + Open Graph (E11); a Pi Browser Playwright project (E14 — run in Chromium on Legend:
+  6/6); jsx-a11y in lint (E10); the reporter's own silent catches explained (E8). The template's
+  versions read its 12-language dictionary, which the apps do not have, so the apps get a
+  `fleet/` set from the template that carries its own en/ar words (an error screen must not
+  depend on a provider that may be what broke); `template-sync` checks each one at its path.
+  Left: **E3** (12 languages — each app's own text to translate) and **E4** (raw colours — a
+  re-skin per app).
+- Found on the way: Alert's watchlist showed a save the server refused (now rolls back, reports,
+  tested); Connection's sheets and DX's copy box were unreachable by keyboard; Epic's "Type" was a
+  label with no field; **Titan still carried the template's placeholder description**;
+  Connection and Explorer paint `#101014`, not `#050816`, and their manifest says so.
+- **Shared packages:** tec-auth 1.2.0 and tec-ui 3.0.0 everywhere (Commerce · Assets · Ecommerce
+  stay on 2.1.0 on purpose — row 8). tec-sdk resolves 1.3.0 against 1.4.0 published, but the apps
+  import it in one file; no 25-lockfile bump for an added analytics client. The three ranges are
+  now part of `template-sync`.
+- **Hub files over 600 lines:** 13 of 18 are dictionaries and the registry — data. The AI chat
+  route's providers moved to `lib/ai/providers.ts` (960 → 565 lines; tec-app #325, verified line
+  for line, 3263 tests as before). The campaign page (1229) is left: ~30 assertions pin its text
+  and Round 3 starts on it.
+
 ## Money and accounts
 
 - **GitHub Actions:** the free 2,000 minutes for the private backend were nearly spent (1,802 used,
