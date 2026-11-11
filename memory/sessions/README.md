@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 62 | [Session 62 — rotation steps 2–4 done; Pi Browser stops opening the wallet after many sign-ins; visits counted once a day; the bottom bar clears Android's buttons (10–11 Nov 2026)](session-62.md) |
 | 61 | [Session 61 — every service migrates at start; production's databases compared, not assumed; one guard everywhere; the rotation begins (8–10 Nov 2026)](session-61.md) |
 | 60 | [Session 60 — the backend audit fixed in phases; migrations run on deploy; payment-service down most of 8 Nov (7–8 Nov 2026)](session-60.md) |
 | 59 | [Session 59 — Life's last fixes measured, the GitHub bill explained, CI cut, development frozen (4–5 Nov 2026)](session-59.md) |
