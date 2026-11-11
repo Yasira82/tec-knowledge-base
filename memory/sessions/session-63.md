@@ -1,0 +1,131 @@
+# Session 63 — an engineering review of the whole platform, and its findings fixed the same day (11 Nov 2026)
+
+> Truth State: **[Current State]** for what is merged; **[Planned State]** for the open PRs, marked as such.
+> Verification: **[Code Verified]** — tests and tsc on every PR. **[Runtime Verified]** where it says
+> so: production queries, Railway deploy logs and the owner's phone, from the owner's screenshots.
+> Same branch as sessions 57–62 (`claude/tec-knowledge-base-review-6wzngc`). Follows
+> [session 62](session-62.md); the review itself is `audits/ENGINEERING_REVIEW_2026-11-11.md`.
+
+## The review
+
+The owner asked for a precise engineering review of the whole project, with real scores and the
+strengths and weaknesses. Result: **6.8 / 10** — a strong base, one critical financial hole, and a
+surface wider than its users. Scores, findings and strengths: the audit file above.
+
+**The report was kept out of this repository until its financial hole was closed and deployed.**
+This repository is public; a description of an open hole in it is an instruction manual.
+
+## Fixed
+
+| PR | What |
+|---|---|
+| tec-core-backend #503 | **An order is PAID only for a verified payment** — `createOrder` had accepted any `payment_id` (finding 1). The guard matches `/internal/` on the decoded path in all 16 copies (finding 3). backup-job can dump one schema of a database (`BACKUP_SCOPE_<SERVER>`) — for Supabase, which had no backup. A flaky test (two `new Date()` a millisecond apart on CI) froze its clock |
+| tec-core-backend #504 | **Nest 11 / Fastify 5** in the 15 Fastify services and the template: 0 critical advisories (a critical `@fastify/middie` and 5–8 high in each before). storage dropped `fastify-multipart` (never imported). The guard file also accepts a bodiless request labelled JSON (below). 3,434 tests across the 16 suites |
+| tec-app #324 | The Hub's CSP `connect-src` names its hosts (it allowed any host, under a comment saying it did not); Next 15.5.29 |
+| Commerce #94 · Ecommerce #86 | Next 15.5.29; Ecommerce's root `middleware.ts`, which Next never ran, removed |
+| 16 template apps · Assets #86 · Life #110 · Zone #72 · template #55 | Session 62's once-a-day Pi sign-in and the bottom-bar fix, plus Next 15.5.29 and two template fixes the apps never got (the Hub-URL guard; `product_id` on the Mode-1 redirect) |
+| NBF #32 · Brookfield #28 *[Planned State — open]* | The same, for the two apps that were outside the session until 11 Nov and missed all of it |
+
+All merged PRs were on `main` the same day; Vercel built the apps one at a time (production queue).
+
+### Finding 1 — checked for abuse before the fix went out **[Runtime Verified]**
+
+Read-only SQL in production: 71 orders carried a `payment_id`; each had a completed payment, and each
+amount equalled its order total — no sign the hole was used. Payer and buyer ids differ on the
+May–October orders (the services keyed users differently then); the November orders match, and both
+services key on the JWT `sub` now — so the new "the payer is the buyer" rule does not refuse a real
+purchase. A real 5π purchase after the deploy became `PAID`.
+
+### What the Fastify 5 upgrade would have broken
+
+Fastify 5 answers 400 to `Content-Type: application/json` with no body; Fastify 4 did not. Every app's
+BFF helper sends that header on every call, DELETE included — Explorer's "remove review" would have
+failed the moment #504 deployed. Found by running the search service's tests on the new version. The
+fix sits in the shared guard file every service registers (`acceptEmptyJsonBody`), so no service can
+miss it; a real body still goes through Fastify's parser.
+
+## Template fixes now reach every app — `template-sync` (tec-template-base #56) *[Planned State — open]*
+
+Finding 5 had happened again the same day: a fix went to 16 apps by hand and NBF and Brookfield
+were missed. A first measurement showed both were **weeks** behind, not one day — no Pi sign-in door
+on `/app` (every other template app has had it since 6 Oct), an old self-sign-in, an e2e workflow
+that cannot install Chromium. It ran the other way too: Life and Zone carry Round 3's arrival report
+(re-sent after ten minutes, traced for `/pi-test`) and the template and 16 apps do not.
+
+- `template-sync.json` in the template: 62 **shared** files (byte for byte), **markers** for fixes inside
+  files each app customises (`pi-payment`, `pi-session`, `layout`, the `/app` page, vitest's JSX
+  setting), pinned `next`/`react`, the four fleet apps **not made from the template** (Hub, Commerce,
+  Assets, Ecommerce) and per-app **exceptions** — each with a reason checked against the real diff.
+- `scripts/template-sync.mjs`: `check` · `apply` (copies the shared files, prints what a person must
+  do) · `fleet` (clones every app in `architecture/app-fleet.yaml` and checks it). **Any fleet app not
+  marked untracked is checked**, so a new app is covered the day it joins the fleet; an empty fleet
+  list or a failed clone is reported, never read as clean.
+- `.github/workflows/fleet-drift.yml`: after every merge to the template, every Monday, and by hand;
+  keeps one issue (label `fleet-drift`) and closes it when every app matches. Public repo: no cost.
+- safe-bottom moved into the template (19 apps had it byte-identical; the next app would have been born without it).
+
+First run on the real fleet: 20 apps checked, 13 match, 7 drifted. Then one sync pass, every app
+checked on its PR branch *[Planned State — open, not merged]*:
+
+- NBF #32 · Brookfield #28 — the door, once-a-day sign-in, bottom bar, Next 15.5.29.
+- **Analytics #69 — logout cleared the session cookies host-only**; with `COOKIE_DOMAIN` set they live on
+  `.tecosystem.app`, so the clear missed them and the session stayed (C-123 §2). The template's route
+  now; a new test fails on the old one.
+- Life #111 · Connection #98 · Explorer #65 · System #54 — wording and formatting.
+- **Round 3's ArrivalReport into the template and all 18 apps** (Nexus #53 · Estate #53 · Alert #57 ·
+  DX #55 · NX #51 · Titan #48 · VIP #48 · Elite #49 · Insure #51 · Epic #59 · Legend #52 · FundX #46,
+  and in the six PRs above): an arrival remembered 10 minutes per tab, not for the tab's life, so one
+  the server lost heals on the next visit; `/pi-test` shows the sign-in and arrival outcomes.
+
+After they merge, `check` reports all 20 tracked apps matching. The disk filled during the pass: the
+backend's `node_modules` (8 GB, no backend work before 1 Dec) were deleted — `npm ci` restores them.
+
+## The template's App Excellence features reach the apps; shared packages; the Hub's large files *[Planned State — open]*
+
+- **Scorecard 5/13 → 11/13 in all 18 template apps** (floor recorded, so it cannot slip): error,
+  not-found and loading screens (E1); `/help` with feedback → the fleet inbox (E12); installable
+  manifest + Open Graph (E11); a Pi Browser Playwright project (E14 — run in Chromium on Legend:
+  6/6); jsx-a11y in lint (E10); the reporter's own silent catches explained (E8). The template's
+  versions read its 12-language dictionary, which the apps do not have, so the apps get a
+  `fleet/` set from the template that carries its own en/ar words (an error screen must not
+  depend on a provider that may be what broke); `template-sync` checks each one at its path.
+  Left: **E3** (12 languages — each app's own text to translate) and **E4** (raw colours — a
+  re-skin per app).
+- Found on the way: Alert's watchlist showed a save the server refused (now rolls back, reports,
+  tested); Connection's sheets and DX's copy box were unreachable by keyboard; Epic's "Type" was a
+  label with no field; **Titan still carried the template's placeholder description**;
+  Connection and Explorer paint `#101014`, not `#050816`, and their manifest says so.
+- **Shared packages:** tec-auth 1.2.0 and tec-ui 3.0.0 everywhere (Commerce · Assets · Ecommerce
+  stay on 2.1.0 on purpose — row 8). tec-sdk resolves 1.3.0 against 1.4.0 published, but the apps
+  import it in one file; no 25-lockfile bump for an added analytics client. The three ranges are
+  now part of `template-sync`.
+- **Hub files over 600 lines:** 13 of 18 are dictionaries and the registry — data. The AI chat
+  route's providers moved to `lib/ai/providers.ts` (960 → 565 lines; tec-app #325, verified line
+  for line, 3263 tests as before). The campaign page (1229) is left: ~30 assertions pin its text
+  and Round 3 starts on it.
+
+## Money and accounts
+
+- **GitHub Actions:** the free 2,000 minutes for the private backend were nearly spent (1,802 used,
+  reset 1 Dec). Decision: **no backend push until 1 December**; public repos run CI free. A $0
+  Actions budget recommended to the owner.
+- **Railway's AI Agent** had spent $5.03 on its own; its hard limit and alert are now $0.
+- **Vercel:** Elite's duplicate project deleted by the owner (`tec-elite-bvzb` is the live one).
+  `nbf` and `tec-brookfield` are TEC's (repos Tec-Nbf · Tec-Brookfield); `atlas-research` is not TEC.
+
+## Left open (in this order)
+
+1. Merge NBF #32 and Brookfield #28; a phone check after Vercel deploys: three apps opened directly
+   sign in with Pi once that day; the bottom bar clears Android's buttons; remove an Explorer review;
+   one purchase. Then Round 3.
+2. The owner: `BACKUP_DB_SUPABASE` (session pooler, port 5432) and `BACKUP_SCOPE_SUPABASE=postgres:public`
+   in backup-job; a $0 GitHub Actions budget.
+3. **After 1 Dec (backend):** the four Express services to Nest 11 / Express 5, as their own step;
+   payment's `@stellar/stellar-sdk` major with money-flow tests; zod 4; Docker builds in CI only when a
+   Dockerfile or `main` changes.
+4. Merge tec-template-base #56 and the sync PRs above, a few a day (each merge is one Vercel build).
+   From the review: the shared packages'
+   versions aligned across apps; staging; a backup alert channel and uptime paging; `script-src`
+   without `unsafe-inline`/`unsafe-eval`; input validation in seven services; coverage floors in
+   notification and realtime; asymmetric JWT.
+5. **The owner's decision:** freeze or merge the marginal apps.
