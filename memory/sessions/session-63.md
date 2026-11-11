@@ -44,6 +44,31 @@ failed the moment #504 deployed. Found by running the search service's tests on 
 fix sits in the shared guard file every service registers (`acceptEmptyJsonBody`), so no service can
 miss it; a real body still goes through Fastify's parser.
 
+## Template fixes now reach every app — `template-sync` (tec-template-base #56) *[Planned State — open]*
+
+Finding 5 had happened again the same day: a fix went to 16 apps by hand and NBF and Brookfield
+were missed. A first measurement showed both were **weeks** behind, not one day — no Pi sign-in door
+on `/app` (every other template app has had it since 6 Oct), an old self-sign-in, an e2e workflow
+that cannot install Chromium. It ran the other way too: Life and Zone carry Round 3's arrival report
+(re-sent after ten minutes, traced for `/pi-test`) and the template and 16 apps do not.
+
+- `template-sync.json` in the template: 62 **shared** files (byte for byte), **markers** for fixes inside
+  files each app customises (`pi-payment`, `pi-session`, `layout`, the `/app` page, vitest's JSX
+  setting), pinned `next`/`react`, the four fleet apps **not made from the template** (Hub, Commerce,
+  Assets, Ecommerce) and per-app **exceptions** — each with a reason checked against the real diff.
+- `scripts/template-sync.mjs`: `check` · `apply` (copies the shared files, prints what a person must
+  do) · `fleet` (clones every app in `architecture/app-fleet.yaml` and checks it). **Any fleet app not
+  marked untracked is checked**, so a new app is covered the day it joins the fleet; an empty fleet
+  list or a failed clone is reported, never read as clean.
+- `.github/workflows/fleet-drift.yml`: after every merge to the template, every Monday, and by hand;
+  keeps one issue (label `fleet-drift`) and closes it when every app matches. Public repo: no cost.
+- safe-bottom moved into the template (19 apps had it byte-identical; the next app would have been born without it).
+
+First run on the real fleet: 20 apps checked, 13 match, 7 drifted. NBF #32 and Brookfield #28 now
+carry the door and everything else (`check`: matches). Left for one sync pass: Analytics (older
+`logout`/`refresh`/`sdk`), Life · Explorer · System · Connection (wording and formatting), and
+Round 3's ArrivalReport into the template and the 16 apps.
+
 ## Money and accounts
 
 - **GitHub Actions:** the free 2,000 minutes for the private backend were nearly spent (1,802 used,
@@ -63,7 +88,8 @@ miss it; a real body still goes through Fastify's parser.
 3. **After 1 Dec (backend):** the four Express services to Nest 11 / Express 5, as their own step;
    payment's `@stellar/stellar-sdk` major with money-flow tests; zod 4; Docker builds in CI only when a
    Dockerfile or `main` changes.
-4. From the review: a way to carry template fixes to the apps automatically; the shared packages'
+4. Merge tec-template-base #56; then one sync pass from its issue (Analytics first — its logout is older);
+   Round 3's ArrivalReport into the template. From the review: the shared packages'
    versions aligned across apps; staging; a backup alert channel and uptime paging; `script-src`
    without `unsafe-inline`/`unsafe-eval`; input validation in seven services; coverage floors in
    notification and realtime; asymmetric JWT.
