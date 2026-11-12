@@ -1,0 +1,100 @@
+{
+  "cycle": "2026-11-11",
+  "handoffs": [
+    {
+      "finding": "TEC-AUDIT-0001",
+      "to": [
+        "P6"
+      ],
+      "why": "Re-trace the order → payment flow end to end"
+    },
+    {
+      "finding": "TEC-AUDIT-0002",
+      "to": [
+        "P3",
+        "P10"
+      ],
+      "why": "npm audit per service/app; version conflicts across the fleet"
+    },
+    {
+      "finding": "TEC-AUDIT-0004",
+      "to": [
+        "P3"
+      ],
+      "why": "CSP review of every app, not only the Hub"
+    },
+    {
+      "finding": "TEC-AUDIT-0005",
+      "to": [
+        "P10"
+      ],
+      "why": "Fleet drift once template-sync is on main"
+    },
+    {
+      "finding": "TEC-AUDIT-0006",
+      "to": [
+        "P8"
+      ],
+      "why": "Runtime side of backups, paging, staging"
+    },
+    {
+      "finding": "TEC-AUDIT-0007",
+      "to": [
+        "P2",
+        "P7"
+      ],
+      "why": "Validation inventory; coverage measured"
+    },
+    {
+      "finding": "TEC-AUDIT-0008",
+      "to": [
+        "P3",
+        "P10"
+      ],
+      "why": "Token trust model across services and apps"
+    },
+    {
+      "finding": "TEC-AUDIT-0011",
+      "to": [
+        "P6",
+        "P10"
+      ],
+      "why": "Payment and sign-in traces; one fix point across the fleet"
+    },
+    {
+      "finding": "TEC-AUDIT-0012",
+      "to": [
+        "P4"
+      ],
+      "why": "Schema and migration path for the price column"
+    },
+    {
+      "finding": "TEC-AUDIT-0013",
+      "to": [
+        "P4"
+      ],
+      "why": "Same"
+    },
+    {
+      "finding": "TEC-AUDIT-0014",
+      "to": [
+        "P3"
+      ],
+      "why": "Guard review"
+    },
+    {
+      "finding": "TEC-AUDIT-0015",
+      "to": [
+        "P3"
+      ],
+      "why": "Withheld — see the owner brief"
+    },
+    {
+      "finding": "TEC-AUDIT-0016",
+      "to": [
+        "P5"
+      ],
+      "why": "Amount type in every payment/wallet contract"
+    }
+  ]
+}

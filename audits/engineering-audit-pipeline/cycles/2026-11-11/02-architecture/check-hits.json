@@ -1,0 +1,800 @@
+{
+  "ref": "origin/main",
+  "checks": [
+    {
+      "check": "P1-C01",
+      "rule": "C-47 \u00a712 \u2014 JWT verified, never decoded",
+      "scope": "all",
+      "pattern": "jwt\\.decode\\(|decodeJwt\\(",
+      "hits": [],
+      "status": "CLEAN"
+    },
+    {
+      "check": "P1-C02",
+      "rule": "C-47 \u00a712 \u00b7 ADR-001 \u2014 no token in web storage",
+      "scope": "all",
+      "pattern": "(localStorage|sessionStorage)\\.setItem\\([^)]*(token|jwt|access)",
+      "hits": [],
+      "status": "CLEAN"
+    },
+    {
+      "check": "P1-C03",
+      "rule": "C-47 \u00a712 \u2014 no CORS wildcard",
+      "scope": "all",
+      "pattern": "origin:\\s*['\\\"]\\*['\\\"]|Access-Control-Allow-Origin['\\\"],\\s*['\\\"]\\*|origin:\\s*true\\b",
+      "hits": [],
+      "status": "CLEAN"
+    },
+    {
+      "check": "P1-C04",
+      "rule": "C-47 \u00a712 \u2014 internal key compared in constant time",
+      "scope": "backend",
+      "pattern": "(x-internal-key|internalKey|INTERNAL_SECRET)[^;\\n]{0,80}(===|!==)",
+      "hits": [
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-analytics-service/src/modules/analytics/analytics.controller.ts",
+          "line": 71,
+          "text": "typeof internalKey === 'string' &&"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-api-gateway/src/main.ts",
+          "line": 730,
+          "text": "typeof internalKey === 'string' &&"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-payment-service/src/middlewares/jwt.middleware.ts",
+          "line": 46,
+          "text": "typeof internalKey === 'string' &&"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-wallet-service/src/guards/internal.guard.ts",
+          "line": 75,
+          "text": "typeof internalKey === 'string' &&"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-wallet-service/src/guards/internal.guard.ts",
+          "line": 80,
+          "text": "logRefusal(typeof internalKey === 'string' ? 'mismatch' : 'missing', req.method, req.path);"
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C06",
+      "rule": "C-47 \u00a712 \u00b7 C-71 \u2014 Pi amounts are DECIMAL(20,8), never Float",
+      "scope": "backend",
+      "pattern": "^\\s*\\w*(amount|balance|price|total)\\w*\\s+Float",
+      "hits": [
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-analytics-service/prisma/schema.prisma",
+          "line": 39,
+          "text": "total_volume   Float?    @default(0)"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-asset-service/prisma/schema.prisma",
+          "line": 70,
+          "text": "price       Float"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-life-service/prisma/schema.prisma",
+          "line": 40,
+          "text": "target_amount Float? // optional \u03c0 target (e.g. \"Save 100\u03c0\") \u2014 enables progress tracking"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-wallet-service/prisma/schema.prisma",
+          "line": 114,
+          "text": "balance       Float     @default(0)"
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C08",
+      "rule": "C-47 \u00a712 \u2014 identity from the session, never from the body",
+      "scope": "all",
+      "pattern": "body\\??\\.(userId|user_id|ownerId|owner_id|merchantId|merchant_id|buyerId|buyer_id|sellerId|seller_id|payerId|payer_id)\\b",
+      "hits": [
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/app/api/kyc/admin/reject/route.ts",
+          "line": 12,
+          "text": "const userId = String(body?.userId ?? '');"
+        },
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/app/api/kyc/admin/verify/route.ts",
+          "line": 12,
+          "text": "const userId = String(body?.userId ?? '');"
+        },
+        {
+          "repository": "Tec-Nexus",
+          "path": "src/lib/nexus/handshake.ts",
+          "line": 69,
+          "text": "if (action === 'agree') { body.wallet = b.wallet; if (userId) body.userId = userId; }"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-api-gateway/src/main.ts",
+          "line": 97,
+          "text": "// `body.userId`. The controller has always done this correctly; this"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-asset-service/src/modules/marketplace/marketplace.controller.ts",
+          "line": 127,
+          "text": "if (!body.assetId || !body.sellerId || !body.price) {"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-asset-service/src/modules/marketplace/marketplace.controller.ts",
+          "line": 130,
+          "text": "assertCaller(body.sellerId, verifiedUser, true);"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-business-service/src/middleware/owner-match.guard.ts",
+          "line": 62,
+          "text": "/** A user id the request names (Nexus starts a run for `body.userId`). */"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-business-service/src/middleware/owner-match.guard.ts",
+          "line": 65,
+          "text": "return typeof body.userId === 'string' && body.userId.trim() ? body.userId.trim() : null;"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-commerce-service/src/modules/order/order.controller.ts",
+          "line": 184,
+          "text": "const buyer_id = (body?.buyer_id ?? '').trim();"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-commerce-service/src/modules/order/order.controller.ts",
+          "line": 207,
+          "text": "const buyer_id = (body?.buyer_id ?? '').trim();"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-commerce-service/src/modules/subscription/subscription.controller.ts",
+          "line": 109,
+          "text": "userId: body?.userId ?? '',"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-identity-service/src/middleware/owner-match.guard.ts",
+          "line": 62,
+          "text": "/** A user id the request names (Nexus starts a run for `body.userId`). */"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-identity-service/src/middleware/owner-match.guard.ts",
+          "line": 65,
+          "text": "return typeof body.userId === 'string' && body.userId.trim() ? body.userId.trim() : null;"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-nexus-service/src/middleware/owner-match.guard.ts",
+          "line": 62,
+          "text": "/** A user id the request names (Nexus starts a run for `body.userId`). */"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-nexus-service/src/middleware/owner-match.guard.ts",
+          "line": 65,
+          "text": "return typeof body.userId === 'string' && body.userId.trim() ? body.userId.trim() : null;"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-nexus-service/src/modules/handshake/handshake.controller.ts",
+          "line": 22,
+          "text": "return { success: true, data: { handshake: await this.handshakes.create(this.owner(body), body.userId, body) } };"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-nexus-service/src/modules/handshake/handshake.controller.ts",
+          "line": 38,
+          "text": "return { success: true, data: { handshake: await this.handshakes.agree(this.owner(body), body.userId, code, body.wallet) } };"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-nexus-service/src/modules/nexus/nexus.controller.ts",
+          "line": 68,
+          "text": "const run = await this.nexus.startRun(owner, templateId, body?.userId, body?.input, body?.intentId);"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-payment-service/src/middlewares/rate-limit.middleware.ts",
+          "line": 232,
+          "text": "(req.body?.userId as string | undefined) ??"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-trust-service/src/middleware/owner-match.guard.ts",
+          "line": 62,
+          "text": "/** A user id the request names (Nexus starts a run for `body.userId`). */"
+        },
+        {
+          "repository": "Tec-core-backend",
+          "path": "tec-trust-service/src/middleware/owner-match.guard.ts",
+          "line": 65,
+          "text": "return typeof body.userId === 'string' && body.userId.trim() ? body.userId.trim() : null;"
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C12",
+      "rule": "ADR-005 \u00b7 NEW-A \u2014 no internal service URL in the browser",
+      "scope": "apps",
+      "pattern": "NEXT_PUBLIC_[A-Z_]*(GATEWAY|SERVICE|RAILWAY|BACKEND|INTERNAL)[A-Z_]*|\\.up\\.railway\\.app|railway\\.internal",
+      "hits": [
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/next.config.js",
+          "line": 117,
+          "text": "'https://*.up.railway.app wss://*.up.railway.app',                      // realtime (Railway domain; socket.io polls before it upgrades)"
+        },
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/vitest.setup.ts",
+          "line": 14,
+          "text": "// \u2705 SDK mock \u2014 \u064a\u0645\u0646\u0639 BaseClient \u0645\u0646 \u0627\u0644\u0640 initialize \u0628\u062f\u0648\u0646 NEXT_PUBLIC_API_GATEWAY_URL"
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C13",
+      "rule": "C-123 \u00a711 \u00b7 C-12 \u00a711 \u2014 CSRF validated in middleware only",
+      "scope": "apps",
+      "pattern": "csrfCookie\\s*!==\\s*csrfHeader|csrfCookie\\s*===\\s*csrfHeader|CSRF token mismatch|CSRF validation failed",
+      "hits": [],
+      "status": "CLEAN"
+    },
+    {
+      "check": "P1-C16",
+      "rule": "PAL (R1) \u2014 window.Pi only through PiRuntime",
+      "scope": "apps",
+      "pattern": "window\\.Pi\\.(authenticate|createPayment|init)\\(|\\(window as any\\)\\.Pi\\.(authenticate|createPayment|init)\\(",
+      "hits": [
+        {
+          "repository": "Tec-Alert",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Alert",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Alert",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Analytics-",
+          "path": "src/app/layout.tsx",
+          "line": 106,
+          "text": "window.Pi.init({ version: '2.0', sandbox: __sandbox, appId: '${process.env.NEXT_PUBLIC_PI_APP_ID ?? ''}' });"
+        },
+        {
+          "repository": "Tec-Analytics-",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Analytics-",
+          "path": "src/lib/pi-payment.ts",
+          "line": 149,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/components/PiSdkLoader.tsx",
+          "line": 83,
+          "text": "window.Pi.init({ version: '2.0', sandbox, ...(appId ? { appId } : {}) });"
+        },
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/lib-client/pi/PiRuntime.ts",
+          "line": 29,
+          "text": "window.Pi.createPayment(data, callbacks);"
+        },
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/lib-client/pi/pi-auth.ts",
+          "line": 346,
+          "text": "window.Pi.authenticate(piScopes(), handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/lib-client/pi/pi-session.ts",
+          "line": 146,
+          "text": "try { window.Pi.init({ version: '2.0', sandbox, ...(appId ? { appId } : {}) }); }"
+        },
+        {
+          "repository": "Tec-Assets",
+          "path": "src/app/layout.tsx",
+          "line": 48,
+          "text": "window.Pi.init({version:'2.0',sandbox:__sandbox,appId:'${piAppId}'});"
+        },
+        {
+          "repository": "Tec-Assets",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 274,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Assets",
+          "path": "src/lib/pi-payment.ts",
+          "line": 70,
+          "text": "await window.Pi.authenticate("
+        },
+        {
+          "repository": "Tec-Assets",
+          "path": "src/lib/pi-payment.ts",
+          "line": 93,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Commerce",
+          "path": "src/app/layout.tsx",
+          "line": 46,
+          "text": "window.Pi.init({version:'2.0',sandbox:__sandbox,appId:'${piAppId}'});"
+        },
+        {
+          "repository": "Tec-Commerce",
+          "path": "src/app/pi-test/PiTestClient.tsx",
+          "line": 132,
+          "text": "await window.Pi.authenticate(['username', 'payments'], async (payment: unknown) => {"
+        },
+        {
+          "repository": "Tec-Commerce",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 274,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Commerce",
+          "path": "src/lib-client/pi/pi-payment.ts",
+          "line": 99,
+          "text": "window.Pi.createPayment(paymentData, callbacks);"
+        },
+        {
+          "repository": "Tec-Commerce",
+          "path": "src/lib/pi-payment.ts",
+          "line": 160,
+          "text": "await window.Pi.authenticate("
+        },
+        {
+          "repository": "Tec-Commerce",
+          "path": "src/lib/pi-payment.ts",
+          "line": 184,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Connection",
+          "path": "src/app/layout.tsx",
+          "line": 141,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Connection",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Connection",
+          "path": "src/lib/pi-payment.ts",
+          "line": 182,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Dx",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Dx",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Dx",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Ecommerce",
+          "path": "src/components/PiSdkLoader.tsx",
+          "line": 51,
+          "text": "window.Pi.init({ version: '2.0', sandbox, ...(appId ? { appId } : {}) });"
+        },
+        {
+          "repository": "Tec-Ecommerce",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 291,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Ecommerce",
+          "path": "src/lib/pi-payment.ts",
+          "line": 181,
+          "text": "await window.Pi.authenticate("
+        },
+        {
+          "repository": "Tec-Ecommerce",
+          "path": "src/lib/pi-payment.ts",
+          "line": 204,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Elite",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Elite",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Elite",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Epic",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Epic",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Epic",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Estate",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Estate",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Estate",
+          "path": "src/lib/pi-payment.ts",
+          "line": 156,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Explorer",
+          "path": "src/app/layout.tsx",
+          "line": 111,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Explorer",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Explorer",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Fundx",
+          "path": "src/app/layout.tsx",
+          "line": 95,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Fundx",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Fundx",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Insure",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Insure",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Insure",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Legend",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Legend",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Legend",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Life",
+          "path": "src/app/layout.tsx",
+          "line": 130,
+          "text": "window.Pi.init({ version: '2.0', sandbox: __sandbox, appId: '${process.env.NEXT_PUBLIC_PI_APP_ID ?? ''}' });"
+        },
+        {
+          "repository": "Tec-Life",
+          "path": "src/lib/pi-payment.ts",
+          "line": 145,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Nexus",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Nexus",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Nexus",
+          "path": "src/lib/pi-payment.ts",
+          "line": 160,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Nx",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Nx",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Nx",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Titan",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Titan",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Titan",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Vip",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Vip",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Vip",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-Zone",
+          "path": "src/app/layout.tsx",
+          "line": 94,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-Zone",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-Zone",
+          "path": "src/lib/pi-payment.ts",
+          "line": 155,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "Tec-system",
+          "path": "src/app/layout.tsx",
+          "line": 110,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "Tec-system",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 304,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "Tec-system",
+          "path": "src/lib/pi-payment.ts",
+          "line": 156,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "tec-brookfield",
+          "path": "src/app/layout.tsx",
+          "line": 89,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "tec-brookfield",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "tec-brookfield",
+          "path": "src/lib/pi-payment.ts",
+          "line": 181,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "tec-nbf",
+          "path": "src/app/layout.tsx",
+          "line": 89,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "tec-nbf",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "tec-nbf",
+          "path": "src/lib/pi-payment.ts",
+          "line": 181,
+          "text": "window.Pi.createPayment("
+        },
+        {
+          "repository": "tec-template-base",
+          "path": "src/app/layout.tsx",
+          "line": 93,
+          "text": "window.Pi.init({"
+        },
+        {
+          "repository": "tec-template-base",
+          "path": "src/lib-client/pi/pi-auth.ts",
+          "line": 303,
+          "text": "window.Pi.authenticate(['username', 'payments'], handleIncompletePayment)"
+        },
+        {
+          "repository": "tec-template-base",
+          "path": "src/lib/pi-payment.ts",
+          "line": 158,
+          "text": "window.Pi.createPayment("
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C18",
+      "rule": "ADR-002 \u00b7 ADR-004 \u2014 the Pi Platform API is called only by tec-auth-service (identity) and tec-payment-service (payments)",
+      "scope": "backend+apps",
+      "pattern": "api\\.(sandbox\\.)?minepi\\.com",
+      "hits": [],
+      "status": "CLEAN"
+    },
+    {
+      "check": "P1-C20a",
+      "rule": "ADR-009 \u2014 the inter-service header is x-internal-key only",
+      "scope": "all",
+      "pattern": "x-service-secret|SERVICE_SECRET",
+      "hits": [
+        {
+          "repository": "TEC-SDK",
+          "path": "src/contracts/payment.ts",
+          "line": 69,
+          "text": "// `x-service-secret` is NOT recognised \u2014 never use it."
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C20b",
+      "rule": "ADR-009 \u2014 a payment amount is a number",
+      "scope": "all",
+      "pattern": "amount:\\s*z\\.string\\(",
+      "hits": [
+        {
+          "repository": "Tec-App",
+          "path": "tec-frontend/src/app/api/bff/wallet/withdraw/route.ts",
+          "line": 44,
+          "text": "amount:        z.string().regex(/^\\d{1,6}(\\.\\d{1,7})?$/),"
+        }
+      ],
+      "status": "HITS"
+    },
+    {
+      "check": "P1-C21",
+      "rule": "C-47 Forbidden #4 \u2014 no business logic in the gateway (direct DB access)",
+      "scope": "backend",
+      "pattern": "PrismaClient|@prisma/client",
+      "hits": [],
+      "status": "CLEAN"
+    }
+  ]
+}

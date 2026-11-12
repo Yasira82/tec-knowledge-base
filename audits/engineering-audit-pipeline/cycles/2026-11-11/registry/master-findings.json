@@ -1,0 +1,708 @@
+{
+  "cycle": "2026-11-11",
+  "updated_by": "run1",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0001",
+      "phase": "P0",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "CRITICAL",
+      "confidence": "HIGH",
+      "title": "An order could be marked PAID for any payment_id in the request body",
+      "description": "Carried from the baseline review, finding 1. createOrder trusted the body’s payment_id; fixed so payment-service must confirm the payment (completed, this buyer, full total, not used for another order).",
+      "evidence": [
+        {
+          "ref": "EV-0001",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:39",
+          "observation": "Baseline row 1: Closed — tec-core-backend #503, 10 tests"
+        }
+      ],
+      "affected_files": [
+        "tec-commerce-service/src/modules/order/"
+      ],
+      "root_cause": "The order path trusted a client-supplied payment reference.",
+      "technical_impact": "Order state could advance without a completed payment (C-47 Invariant #2).",
+      "business_impact": "Goods could be released unpaid; seller payouts recorded against nothing.",
+      "recommendation": "None — closed. P6 re-traces the order → payment flow end to end.",
+      "acceptance_criteria": [
+        "P6 traces a Mode-2 purchase and finds the order PAID only after payment-service confirms it"
+      ],
+      "complexity": "M",
+      "status": "CLOSED",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 Invariant #2",
+        "C-47 Forbidden #2",
+        "C-71"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0002",
+      "phase": "P0",
+      "repository": "Tec-core-backend · tec-nbf · tec-brookfield",
+      "category": "dependencies",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Dependencies with known advisories remain in four Express services, payment-service and two apps",
+      "description": "Carried from the baseline review, finding 2. Closed for 22 apps (Next 15.5.29) and 15 Fastify services (Nest 11 / Fastify 5). Still open on main: gateway · auth · wallet · realtime on Express 4 / Nest 10; payment-service’s @stellar/stellar-sdk major; zod 4. P0 confirms tec-nbf and tec-brookfield main still pin next 15.5.12 (their PRs #32 · #28 are open, not merged).",
+      "evidence": [
+        {
+          "ref": "EV-0002",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:40",
+          "observation": "Baseline row 2"
+        },
+        {
+          "ref": "EV-0003",
+          "location": "00-control/repository-inventory.json",
+          "observation": "tec-nbf and tec-brookfield: dependencies.next = 15.5.12 on origin/main"
+        }
+      ],
+      "affected_files": [
+        "tec-api-gateway/package.json",
+        "tec-auth-service/package.json",
+        "tec-wallet-service/package.json",
+        "tec-realtime-service/package.json",
+        "tec-payment-service/package.json",
+        "tec-nbf/package.json",
+        "tec-brookfield/package.json"
+      ],
+      "root_cause": "Upgrades were done in batches; the Express services and two late-joining apps were not in the batch.",
+      "technical_impact": "Known-vulnerable framework versions run in production.",
+      "business_impact": "Exposure to published exploits on public endpoints.",
+      "recommendation": "Merge NBF #32 and Brookfield #28; after 1 Dec, upgrade the four Express services and the stellar-sdk major.",
+      "acceptance_criteria": [
+        "npm audit --omit=dev reports 0 critical / 0 high in every service and app (P3 records the run)"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-75",
+        "C-47 §12"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0003",
+      "phase": "P0",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Fastify internal-key guards tested the raw URL for /internal/",
+      "description": "Carried from the baseline review, finding 3. Fixed in all 16 copies; CI checks the copies are identical.",
+      "evidence": [
+        {
+          "ref": "EV-0004",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:41",
+          "observation": "Baseline row 3: Closed — #503"
+        }
+      ],
+      "affected_files": [
+        "src/middleware/internal-auth.ts (16 services)"
+      ],
+      "root_cause": "Path check before decoding.",
+      "technical_impact": "An internal route reachable as a user call inside the network.",
+      "business_impact": "Not reachable from outside (the gateway decodes and refuses).",
+      "recommendation": "None — closed.",
+      "acceptance_criteria": [
+        "scripts/check-guard-copies.sh passes on main"
+      ],
+      "complexity": "S",
+      "status": "CLOSED",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 §12",
+        "ADR-005"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0004",
+      "phase": "P0",
+      "repository": "Tec-App",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The Hub's Content-Security-Policy still allows 'unsafe-inline' and 'unsafe-eval' scripts",
+      "description": "Carried from the baseline review, finding 4. connect-src was narrowed to named hosts (tec-app #324, closed). script-src still carries 'unsafe-inline' 'unsafe-eval'; the Pi SDK load path has to change first. The header is public, so this is not withheld.",
+      "evidence": [
+        {
+          "ref": "EV-0005",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:42",
+          "observation": "Baseline row 4: Open part = script-src"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/next.config.js"
+      ],
+      "root_cause": "The Pi SDK bootstrap relies on inline script.",
+      "technical_impact": "An injected script would not be blocked by CSP.",
+      "business_impact": "CSP gives no second line of defence against XSS on the payment hub.",
+      "recommendation": "Move the Pi SDK bootstrap to a nonce- or hash-allowed script, then drop 'unsafe-inline' and 'unsafe-eval'.",
+      "acceptance_criteria": [
+        "The Hub's production CSP header has no 'unsafe-inline' or 'unsafe-eval' in script-src",
+        "A Pi Browser sign-in and Mode-2 payment still work"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 P6"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0005",
+      "phase": "P0",
+      "repository": "tec-template-base",
+      "category": "process",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Template fixes do not reach the apps made from it — the mechanism is not on main yet",
+      "description": "Carried from the baseline review, finding 5. The template-sync mechanism (manifest, check/apply script, weekly fleet-drift job) is built in tec-template-base #56, but P0 finds no template-sync.json on origin/main: until it merges, nothing reports drift.",
+      "evidence": [
+        {
+          "ref": "EV-0006",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:43",
+          "observation": "Baseline row 5"
+        },
+        {
+          "ref": "EV-0007",
+          "location": "tec-template-base origin/main",
+          "observation": "git cat-file -e origin/main:template-sync.json → absent"
+        }
+      ],
+      "affected_files": [
+        "template-sync.json",
+        "scripts/template-sync.mjs",
+        ".github/workflows/fleet-drift.yml"
+      ],
+      "root_cause": "Apps are copies of the template with no link back.",
+      "technical_impact": "Fixes made once are missing from some apps for weeks.",
+      "business_impact": "Uneven security and sign-in behaviour across the 24 apps.",
+      "recommendation": "Merge tec-template-base #56 and the 20 app PRs that adopt it.",
+      "acceptance_criteria": [
+        "template-sync.json exists on tec-template-base main",
+        "The first fleet-drift run lists no app as drifted, or opens one issue that names each"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-75"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0006",
+      "phase": "P0",
+      "repository": "Tec-core-backend · platform",
+      "category": "operations",
+      "severity": "MEDIUM",
+      "confidence": "MEDIUM",
+      "title": "No staging environment, no alert on a failed backup, no uptime paging",
+      "description": "Carried from the baseline review, finding 6. Supabase can now be dumped by backup-job but waits on two variables. P8 verifies the runtime side.",
+      "evidence": [
+        {
+          "ref": "EV-0008",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:44",
+          "observation": "Baseline row 6"
+        }
+      ],
+      "affected_files": [
+        "backup-job/",
+        ".github/workflows/"
+      ],
+      "root_cause": "Operations grew around one production environment.",
+      "technical_impact": "Failures are found by users, not by the platform.",
+      "business_impact": "An outage or a lost backup is noticed late.",
+      "recommendation": "Add an uptime monitor that pages; send backup failures to an alert channel; set the two Supabase backup variables.",
+      "acceptance_criteria": [
+        "A deliberate backup failure produces an alert",
+        "Stopping a service pages within 5 minutes"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-78"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0007",
+      "phase": "P0",
+      "repository": "Tec-core-backend · Tec-App",
+      "category": "code-quality",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Hand-written input validation in seven services; low coverage floors; very long Hub files",
+      "description": "Carried from the baseline review, finding 7 (the Ecommerce dead middleware part is closed). P2 measures this.",
+      "evidence": [
+        {
+          "ref": "EV-0009",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:45",
+          "observation": "Baseline row 7"
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Services written before the shared validation pattern.",
+      "technical_impact": "Unvalidated edge cases reach the services.",
+      "business_impact": "Bugs cost more to find.",
+      "recommendation": "P2 lists the services and files; remediation adopts zod at each edge.",
+      "acceptance_criteria": [
+        "Every service validates request bodies with a schema library",
+        "No Hub source file over 600 lines without a recorded reason"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 §12"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0008",
+      "phase": "P0",
+      "repository": "platform-wide",
+      "category": "architecture",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "One HS256 JWT secret is shared by 20 services and 24 apps",
+      "description": "Carried from the baseline review, finding 8. A leak of the secret anywhere forges any identity everywhere. One Redis is the whole event bus (P9/P10 assess).",
+      "evidence": [
+        {
+          "ref": "EV-0010",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:46",
+          "observation": "Baseline row 8"
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Symmetric signing chosen early; every verifier holds the signing key.",
+      "technical_impact": "The blast radius of one leaked variable is the whole platform.",
+      "business_impact": "Account takeover of any user, admin included, from one leak.",
+      "recommendation": "Finish the rotation plan: asymmetric signing (the issuer alone holds the private key).",
+      "acceptance_criteria": [
+        "Only tec-auth-service holds a signing key",
+        "Every verifier holds only a public key"
+      ],
+      "complexity": "XL",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "ADR-002",
+        "C-13",
+        "C-123"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0009",
+      "phase": "P0",
+      "repository": "tec-knowledge-base",
+      "category": "documentation",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The generated C-11 (repository map) and C-44 (environment variables) are stale against the code",
+      "description": "scripts/check-drift.py against every origin/main: 34 pass, 2 fail. C-11 is missing the current app versions (Next 15.5.29, tec-ui ^3.0.0 ranges); C-44 is missing LIFE_* variables now read by life-service and ai-service. The weekly drift job would report the same.",
+      "evidence": [
+        {
+          "ref": "EV-0011",
+          "location": "python3 scripts/check-drift.py --repos-dir /home/user --ref origin/main",
+          "observation": "exit 1 — 34 pass · 2 fail · 0 skip (C-11, C-44)"
+        }
+      ],
+      "affected_files": [
+        "knowledge-base/C-11___REPOSITORY_MAP.md",
+        "knowledge-base/C-44_Environment_Variables.md"
+      ],
+      "root_cause": "Code merged today without the generated docs being regenerated.",
+      "technical_impact": "The repository map this audit uses as a baseline lags the code.",
+      "business_impact": "Decisions read from C-11/C-44 use yesterday’s facts.",
+      "recommendation": "Run scripts/generate-code-docs.py --repos-dir … --ref origin/main and commit the result, after the open app PRs merge.",
+      "acceptance_criteria": [
+        "check-drift.py reports 0 fail"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P0",
+      "references": [
+        "C-11",
+        "C-44",
+        "C-67"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0010",
+      "phase": "P0",
+      "repository": "Tec-core-backend",
+      "category": "structure",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A nested tec-core-backend/tec-core-backend/k6/ folder holds the load tests",
+      "description": "The only content of the nested folder is k6/; .github/workflows/load-test.yml runs it. The doubled name reads as an accidental copy and hides the load tests from anyone looking at the root.",
+      "evidence": [
+        {
+          "ref": "EV-0012",
+          "location": "tec-core-backend origin/main",
+          "observation": "git ls-tree -d: tec-core-backend/k6"
+        },
+        {
+          "ref": "EV-0013",
+          "location": ".github/workflows/load-test.yml:7-14",
+          "observation": "k6 Gateway Load Test job"
+        }
+      ],
+      "affected_files": [
+        "tec-core-backend/k6/",
+        ".github/workflows/load-test.yml"
+      ],
+      "root_cause": "A folder copied into itself at some point.",
+      "technical_impact": "Confusing layout; a cleanup could delete the load tests by mistake.",
+      "business_impact": "None directly.",
+      "recommendation": "Move k6/ to the root (or tools/k6) and update load-test.yml in the same change.",
+      "acceptance_criteria": [
+        "No path tec-core-backend/tec-core-backend exists",
+        "load-test.yml still finds its scripts"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P0",
+      "references": []
+    },
+    {
+      "id": "TEC-AUDIT-0011",
+      "phase": "P1",
+      "repository": "tec-template-base + 24 apps",
+      "category": "architecture",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "window.Pi.authenticate / createPayment are called directly, around the Pi Abstraction Layer",
+      "description": "PiRuntime (the PAL) exists in the template and the Hub and wraps authenticate/createPayment with the circuit breaker, but the sign-in (pi-auth.ts) and payment (pi-payment.ts) paths call window.Pi directly. 80 call sites across 25 repositories (3 per template app; Hub 4; Commerce 6). The inline Pi.init in layout.tsx is the accepted exception (it runs before any module loads).",
+      "evidence": [
+        {
+          "ref": "EV-0014",
+          "location": "02-architecture/check-hits.json P1-C16",
+          "observation": "80 hits, every app"
+        },
+        {
+          "ref": "EV-0015",
+          "location": "tec-template-base src/lib-client/pi/pi-auth.ts:303",
+          "observation": "window.Pi.authenticate([…], handleIncompletePayment)"
+        },
+        {
+          "ref": "EV-0016",
+          "location": "tec-template-base src/lib/pi-payment.ts:158",
+          "observation": "window.Pi.createPayment("
+        },
+        {
+          "ref": "EV-0017",
+          "location": "tec-template-base src/lib/pi/PiRuntime.ts:23-43",
+          "observation": "PiRuntime.authenticate checks piCircuitBreaker.canAttempt(); createPayment wraps pi.createPayment"
+        }
+      ],
+      "affected_files": [
+        "src/lib-client/pi/pi-auth.ts",
+        "src/lib/pi-payment.ts",
+        "src/lib-client/pi/pi-payment.ts",
+        "tec-frontend/src/lib-client/pi/*"
+      ],
+      "root_cause": "The PAL was added after the payment and sign-in code and only pi-session.ts was moved onto it.",
+      "technical_impact": "A Pi SDK change needs 80 edits, not one (risk R1); the circuit breaker does not protect sign-in or payment.",
+      "business_impact": "A Pi SDK update can break payments platform-wide with no single fix point (C-12 risk R1, P0).",
+      "recommendation": "Route pi-auth.ts and pi-payment.ts through PiRuntime in the template, then let template-sync carry it to the apps.",
+      "acceptance_criteria": [
+        "architecture_checks.py P1-C16 reports only layout.tsx init lines",
+        "Payment and sign-in tests mock PiRuntime, not window.Pi"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "CLAUDE.md (Hub) Risk R1",
+        "C-12"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0012",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "data-integrity",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Marketplace listing prices in Pi are stored as Float",
+      "description": "tec-asset-service AssetListing.price is Float, read and written by the marketplace (listings, minPrice/maxPrice filters). C-47 §12 and C-71 require DECIMAL(20,8) for Pi amounts; a binary float cannot hold 0.1 π exactly.",
+      "evidence": [
+        {
+          "ref": "EV-0018",
+          "location": "tec-asset-service/prisma/schema.prisma:70",
+          "observation": "price       Float"
+        },
+        {
+          "ref": "EV-0019",
+          "location": "tec-asset-service/src/modules/marketplace/marketplace.service.ts:34-35",
+          "observation": "where.price = { gte: … } / { lte: … }"
+        },
+        {
+          "ref": "EV-0020",
+          "location": "tec-asset-service/src/modules/marketplace/marketplace.controller.ts:121,141",
+          "observation": "price: number from the body"
+        }
+      ],
+      "affected_files": [
+        "tec-asset-service/prisma/schema.prisma",
+        "tec-asset-service/src/modules/marketplace/"
+      ],
+      "root_cause": "The model predates the DECIMAL rule.",
+      "technical_impact": "Rounding errors in prices; a price charged may differ from the one listed in the last digits.",
+      "business_impact": "A buyer can be charged an amount that is not the listed one.",
+      "recommendation": "Migrate price to Decimal(20,8) (expand–contract, after a data check) and carry it as a string at the API edge.",
+      "acceptance_criteria": [
+        "schema.prisma: price Decimal @db.Decimal(20, 8)",
+        "A migration ships it; a test lists 0.1 π and reads back exactly 0.10000000"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12",
+        "C-71 §3"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0013",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "data-integrity",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Three other money-like columns are Float",
+      "description": "wallet-service Account.balance (an unused model kept from the initial migration — the live Wallet.balance is Decimal(20,8)); analytics DailyMetric.total_volume (a projection, eventual by design); life-service LifeGoal.target_amount (a self-declared target). None moves money.",
+      "evidence": [
+        {
+          "ref": "EV-0021",
+          "location": "tec-wallet-service/prisma/schema.prisma:114",
+          "observation": "balance Float — model commented as unused"
+        },
+        {
+          "ref": "EV-0022",
+          "location": "tec-analytics-service/prisma/schema.prisma:39",
+          "observation": "total_volume Float?"
+        },
+        {
+          "ref": "EV-0023",
+          "location": "tec-life-service/prisma/schema.prisma:40",
+          "observation": "target_amount Float?"
+        }
+      ],
+      "affected_files": [
+        "tec-wallet-service/prisma/schema.prisma",
+        "tec-analytics-service/prisma/schema.prisma",
+        "tec-life-service/prisma/schema.prisma"
+      ],
+      "root_cause": "Rule applied to the financial core first.",
+      "technical_impact": "Small rounding in displayed totals and targets.",
+      "business_impact": "None material.",
+      "recommendation": "Drop the unused Account model (owner decision); move the other two to Decimal when their tables are next migrated.",
+      "acceptance_criteria": [
+        "architecture_checks.py P1-C06 reports no hit, or each remaining hit carries a recorded ACCEPTED_RISK"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12",
+        "C-71"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0014",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "robustness",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The internal-key check compares string length, not byte length, before timingSafeEqual",
+      "description": "In four places the guard checks internalKey.length === secret.length and then timingSafeEqual(Buffer.from(...)). A header of the same character count but a different byte count (any non-ASCII character) makes timingSafeEqual throw, so the request ends as a 500 instead of a 401/403. It is not a bypass: a throw never authorises.",
+      "evidence": [
+        {
+          "ref": "EV-0024",
+          "location": "tec-api-gateway/src/main.ts:729-735",
+          "observation": "length compared on strings, then timingSafeEqual on Buffers"
+        },
+        {
+          "ref": "EV-0025",
+          "location": "tec-analytics-service/src/modules/analytics/analytics.controller.ts:71",
+          "observation": "same pattern"
+        },
+        {
+          "ref": "EV-0026",
+          "location": "tec-payment-service/src/middlewares/jwt.middleware.ts:46",
+          "observation": "same pattern"
+        },
+        {
+          "ref": "EV-0027",
+          "location": "tec-wallet-service/src/guards/internal.guard.ts:75",
+          "observation": "same pattern"
+        }
+      ],
+      "affected_files": [
+        "tec-api-gateway/src/main.ts",
+        "tec-analytics-service/src/modules/analytics/analytics.controller.ts",
+        "tec-payment-service/src/middlewares/jwt.middleware.ts",
+        "tec-wallet-service/src/guards/internal.guard.ts"
+      ],
+      "root_cause": "Four hand-written copies instead of the shared guard.",
+      "technical_impact": "A malformed header produces a 500 and an error log.",
+      "business_impact": "Noise in error monitoring; a 5xx counted against the SLO.",
+      "recommendation": "Compare Buffer byte lengths (or use the shared validateInternalKey) in all four.",
+      "acceptance_criteria": [
+        "A test sends a same-length non-ASCII key and gets 401/403, not 500, in each of the four"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12",
+        "ADR-009"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0015",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "LOW",
+      "confidence": "MEDIUM",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0028",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0016",
+      "phase": "P1",
+      "repository": "Tec-core-backend · tec-knowledge-base",
+      "category": "baseline",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The baseline disagrees with itself on the type of a Pi amount in an API",
+      "description": "ADR-009 (C-64:238-256) makes a payment request's amount a number (z.coerce.number() at the BFF). C-71 §3 says a string in API responses. tec-core-backend CLAUDE.md:333 says 'string in all API contracts', which contradicts ADR-009 for requests. The one P1 hit (Hub POST /api/bff/wallet/withdraw, amount: z.string().regex(…)) is a wallet call, not a payment endpoint, and keeps precision — it is not counted as a violation, but the baseline cannot say whether it is right.",
+      "evidence": [
+        {
+          "ref": "EV-0029",
+          "location": "knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md:238,250,256",
+          "observation": "amount → number; string FORBIDDEN on payment endpoints"
+        },
+        {
+          "ref": "EV-0030",
+          "location": "knowledge-base/C-71___FINANCIAL_INTEGRITY_SPEC.md:58-59",
+          "observation": "DECIMAL(20,8) in DB · String in API responses"
+        },
+        {
+          "ref": "EV-0031",
+          "location": "Tec-core-backend CLAUDE.md:310,333",
+          "observation": "'string in API responses' and 'string in all API contracts'"
+        },
+        {
+          "ref": "EV-0032",
+          "location": "tec-frontend/src/app/api/bff/wallet/withdraw/route.ts:44",
+          "observation": "amount: z.string().regex(/^\\d{1,6}(\\.\\d{1,7})?$/)"
+        }
+      ],
+      "affected_files": [
+        "knowledge-base/C-71___FINANCIAL_INTEGRITY_SPEC.md",
+        "Tec-core-backend/CLAUDE.md"
+      ],
+      "root_cause": "Two rules written at different times for requests and responses, then generalised.",
+      "technical_impact": "Reviewers apply opposite rules to the same field.",
+      "business_impact": "Inconsistent contracts between apps and services (P5).",
+      "recommendation": "Owner decision: one sentence in C-71 covering requests and responses (e.g. number on payment requests per ADR-009, string elsewhere), then align the backend CLAUDE.md.",
+      "acceptance_criteria": [
+        "C-71 and ADR-009 state one rule for request amounts",
+        "CLAUDE.md files quote it without contradiction"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "ADR-009",
+        "C-71 §3",
+        "C-47 P1"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0017",
+      "phase": "P0",
+      "repository": "tec-knowledge-base",
+      "category": "baseline",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The port authority C-20 does not describe eight of the deployed services",
+      "description": "P0 counts 20 deployable services plus backup-job in tec-core-backend (and the shared library and service template). C-20, the backend-services and port authority, names 12. tec-business, tec-life, tec-nexus, tec-platform, tec-search and tec-trust-service and tec-backup-job do not appear in it at all; tec-ai and tec-connection-service appear once each. Those services start with PORT required (no default in main.ts). C-02 §1 names their ports (:5012–:5019) in one line; the port authority does not. Gate B is met for them through their code, C-02 and their app charters.",
+      "evidence": [
+        {
+          "ref": "EV-0033",
+          "location": "00-control/repository-inventory.json → Tec-core-backend.services",
+          "observation": "23 entries: 20 services · backup-job · shared · template; 8 with port_required = true"
+        },
+        {
+          "ref": "EV-0034",
+          "location": "grep -c tec-<name> knowledge-base/C-20_Backend_Services.md",
+          "observation": "business 0 · life 0 · nexus 0 · platform 0 · search 0 · trust 0 · backup 0 · ai 1 · connection 1"
+        }
+      ],
+      "affected_files": [
+        "knowledge-base/C-20_Backend_Services.md"
+      ],
+      "root_cause": "Services were added after C-20 was last rewritten; check-drift checks only the services C-20 lists.",
+      "technical_impact": "No canonical statement of what those services own, which port they use, or who calls them.",
+      "business_impact": "Ownership questions (C-68) for eight services are answered from memory.",
+      "recommendation": "Extend C-20 to every deployed service (role, owner, port source, network) and make check-drift compare the service list itself.",
+      "acceptance_criteria": [
+        "Every directory in tec-core-backend with a package.json and a Dockerfile appears in C-20",
+        "check-drift.py fails when one does not"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P0",
+      "references": [
+        "C-20",
+        "C-68",
+        "ADR-005"
+      ]
+    }
+  ]
+}
