@@ -280,6 +280,21 @@
       "ref": "EV-0056",
       "finding": "TEC-AUDIT-0007",
       "location": "03-code-quality/code-quality.json"
+    },
+    {
+      "ref": "EV-0057",
+      "finding": "TEC-AUDIT-0029",
+      "location": "tec-template-base src/app/api/auth/sso-callback/route.ts:201-203"
+    },
+    {
+      "ref": "EV-0058",
+      "finding": "TEC-AUDIT-0029",
+      "location": "tec-template-base src/app/api/auth/refresh/route.ts:9-20"
+    },
+    {
+      "ref": "EV-0059",
+      "finding": "TEC-AUDIT-0029",
+      "location": "tec-template-base src/lib-client/pi/pi-auth.ts:76-120"
     }
   ]
 }

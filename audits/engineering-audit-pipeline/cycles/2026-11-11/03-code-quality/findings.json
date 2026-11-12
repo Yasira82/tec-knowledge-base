@@ -42,7 +42,14 @@
       "references": [
         "C-96",
         "C-47 Forbidden #6"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App e7d00c30"
+        ],
+        "note": "useWallet sets txError and reports; the page shows \"Could not load your transactions\" with Retry. wallet-history-failure.test.tsx red before, green after; Hub 177 files green. useAppPayments was already right (null → nothing rendered) — the finding over-counted it. committed locally — pushed when GitHub Actions is back"
+      }
     }
   ]
 }

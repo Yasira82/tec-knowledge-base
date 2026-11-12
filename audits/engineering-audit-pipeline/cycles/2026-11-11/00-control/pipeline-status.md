@@ -35,7 +35,8 @@ Details: `remediation-run1.md`. The register is `registry/master-findings.json`.
 
 ## After Run 2 (12 Nov)
 
-28 findings: 1 CRITICAL (closed) · 3 HIGH · 9 MEDIUM · 12 LOW · 3 INFO. One withheld: 0018.
+29 findings: 1 CRITICAL (closed) · 3 HIGH · 10 MEDIUM · 12 LOW · 3 INFO. One withheld: 0018.
+Remediation (12 Nov, local commits): `remediation-run2.md`.
 Run 2 was done while GitHub Actions was refused for the whole account (billing hold, owner's
 ticket open); its outputs are committed locally and pushed when Actions is back.
 

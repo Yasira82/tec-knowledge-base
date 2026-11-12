@@ -68,11 +68,21 @@ cannot pay; nothing is pushed until it is resolved. Run 2 ran locally and is com
 
 **28 findings: 1 CRITICAL (closed) · 3 HIGH · 9 MEDIUM · 12 LOW · 3 INFO.**
 
+## Run 2 remediation (12 Nov) — local commits, not pushed
+
+`cycles/2026-11-11/00-control/remediation-run2.md`. connect-src named in all 24 apps (0018 part 1);
+the stale Hub lock, the unused backend root package and Assets' debug route removed; the gateway's
+catalogue public for reads only and Swagger off in production; the Hub's wallet says when its history
+failed. **Deliberately not done:** shortening the access token to 24 h — template apps hold no refresh
+token (new 0029), so it would sign everyone out daily and multiply Pi sign-ins.
+
 ## Lessons
 
 - **A search that finds nothing is not evidence of compliance until it is shown to be able to
   find something.** P1-C18 first searched for a payment path and returned nothing; the base
   URL is built from a constant. It now searches for the host, and passes.
+- **Check what a fix touches before making it.** The 24-hour token was on the plan; reading the
+  refresh path first showed it would have signed every Pioneer out daily.
 - **Search for the shape of a defect, not for the names in the first copy found.** P1-C04
   found 5 of 18 copies; the tool now searches the shape.
 

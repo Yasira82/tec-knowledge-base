@@ -849,7 +849,15 @@
         "C-123",
         "TEC-AUDIT-0004",
         "TEC-AUDIT-0008"
-      ]
+      ],
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "template 23f22ba",
+          "22 app commits (csp-connect-src.test.ts)"
+        ],
+        "note": "Part 1 of 3 done (committed locally — pushed when GitHub Actions is back). Parts 2 and 3 are not done; see the owner brief and TEC-AUDIT-0029, which blocks part 2."
+      }
     },
     {
       "id": "TEC-AUDIT-0019",
@@ -890,7 +898,12 @@
       "references": [
         "C-75",
         "TEC-AUDIT-0002"
-      ]
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Needs a TEC-SDK release with a fixed axios (npm publish), then a lock refresh per app — after Actions is back."
+      }
     },
     {
       "id": "TEC-AUDIT-0020",
@@ -923,7 +936,14 @@
       "first_seen": "2026-11-11/run2/P3",
       "references": [
         "TEC-AUDIT-0002"
-      ]
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [
+          "TEC-AUDIT-0002"
+        ],
+        "note": "zod 4 migration, with 0002."
+      }
     },
     {
       "id": "TEC-AUDIT-0021",
@@ -965,7 +985,14 @@
       "status": "OPEN",
       "disclosure": "public",
       "first_seen": "2026-11-11/run2/P3",
-      "references": []
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App e7d00c30"
+        ],
+        "note": "Stale lock deleted; CI cache keys hash the root lock. Proved in a clean worktree: install inside tec-frontend resolves Next 15.5.29 from the root lock and creates no new lock. committed locally — pushed when GitHub Actions is back"
+      }
     },
     {
       "id": "TEC-AUDIT-0022",
@@ -1003,7 +1030,14 @@
       "status": "OPEN",
       "disclosure": "public",
       "first_seen": "2026-11-11/run2/P3",
-      "references": []
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend branch (local) dca31828"
+        ],
+        "note": "Root package.json and lock removed; every workflow installs in a service folder, scripts/ import only built-ins. committed locally — pushed when GitHub Actions is back"
+      }
     },
     {
       "id": "TEC-AUDIT-0023",
@@ -1035,7 +1069,12 @@
       "status": "OPEN",
       "disclosure": "public",
       "first_seen": "2026-11-11/run2/P3",
-      "references": []
+      "references": [],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Test tooling; with the next test-dependency update."
+      }
     },
     {
       "id": "TEC-AUDIT-0024",
@@ -1082,7 +1121,14 @@
       "references": [
         "ADR-005",
         "C-47 P6"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend branch (local) 82d42aac"
+        ],
+        "note": "Catalogue public for GET/HEAD/OPTIONS only; Swagger mounted in production only with API_DOCS_PUBLIC=1; /metrics exemption removed. 5 new tests red before, green after; gateway 115/115. Every app write to products already sends the internal key and the token (Commerce BFF), so nothing that works today is refused. committed locally — pushed when GitHub Actions is back"
+      }
     },
     {
       "id": "TEC-AUDIT-0025",
@@ -1114,7 +1160,14 @@
       "status": "OPEN",
       "disclosure": "public",
       "first_seen": "2026-11-11/run2/P3",
-      "references": []
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-Assets 12e86c1"
+        ],
+        "note": "Route deleted; nothing called it. Assets 303/303. committed locally — pushed when GitHub Actions is back"
+      }
     },
     {
       "id": "TEC-AUDIT-0026",
@@ -1146,7 +1199,12 @@
       "status": "OPEN",
       "disclosure": "public",
       "first_seen": "2026-11-11/run2/P3",
-      "references": []
+      "references": [],
+      "remediation": {
+        "state": "OWNER_ACTION",
+        "refs": [],
+        "note": "Check the key restrictions in Google Cloud."
+      }
     },
     {
       "id": "TEC-AUDIT-0027",
@@ -1190,7 +1248,16 @@
       "first_seen": "2026-11-11/run2/P3",
       "references": [
         "ADR-001"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App 66fd11f9",
+          "Tec-Assets b696449",
+          "tec-auth 3bd99d4"
+        ],
+        "note": "Instruction files state ADR-001. committed locally — pushed when GitHub Actions is back"
+      }
     },
     {
       "id": "TEC-AUDIT-0028",
@@ -1231,6 +1298,62 @@
       "references": [
         "C-96",
         "C-47 Forbidden #6"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App e7d00c30"
+        ],
+        "note": "useWallet sets txError and reports; the page shows \"Could not load your transactions\" with Retry. wallet-history-failure.test.tsx red before, green after; Hub 177 files green. useAppPayments was already right (null → nothing rendered) — the finding over-counted it. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0029",
+      "phase": "P3",
+      "repository": "tec-template-base + 20 template apps",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Template apps keep no refresh token, so a session ends when the access token does",
+      "description": "sso-callback sets tec_access_token, tec_user and tec_csrf; it never sets tec_refresh_token. /api/auth/refresh sends the refresh cookie if present and otherwise the access token, and pi-auth.ts calls it only after a 401 — when the access token has already expired. So a refresh cannot succeed once it is needed, and the session lasts exactly the access token's lifetime (7 days on Railway). It also means the access token's lifetime cannot be shortened (ADR-001's 24 h) without signing everyone out daily, which would multiply Pi sign-ins — the very load that made Pi Browser stop opening the wallet (10 Nov).",
+      "evidence": [
+        {
+          "ref": "EV-0057",
+          "location": "tec-template-base src/app/api/auth/sso-callback/route.ts:201-203",
+          "observation": "three cookies set; no tec_refresh_token"
+        },
+        {
+          "ref": "EV-0058",
+          "location": "tec-template-base src/app/api/auth/refresh/route.ts:9-20",
+          "observation": "reads tec_refresh_token, absent"
+        },
+        {
+          "ref": "EV-0059",
+          "location": "tec-template-base src/lib-client/pi/pi-auth.ts:76-120",
+          "observation": "refreshAccessToken called on 401 only"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/auth/sso-callback/route.ts",
+        "src/app/api/auth/refresh/route.ts",
+        "src/lib-client/pi/pi-auth.ts"
+      ],
+      "root_cause": "The SSO hand-off carries the access token only.",
+      "technical_impact": "No working refresh path in template apps.",
+      "business_impact": "Blocks shortening the token lifetime (part of TEC-AUDIT-0018).",
+      "recommendation": "Hand the refresh token over in the signed SSO payload and set it HttpOnly (C-123 §2 attributes); refresh shortly before expiry, not after a 401. Phone-verify in Pi Browser before shortening JWT_EXPIRES_IN.",
+      "acceptance_criteria": [
+        "A template app holds tec_refresh_token (HttpOnly) after sign-in",
+        "With a 10-minute access token, a session survives an hour of use in Pi Browser"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/remediation",
+      "references": [
+        "C-123 §2",
+        "ADR-001",
+        "TEC-AUDIT-0018"
       ]
     }
   ]

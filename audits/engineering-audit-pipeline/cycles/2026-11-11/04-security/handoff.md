@@ -6,3 +6,6 @@
 - **P8:** the served headers (HSTS, CSP as delivered) were BLOCKED here — read them from Vercel.
 - **Remediation order the owner can take** (no CI needed to decide, CI needed to merge):
   0018 first; then the SDK release (0019); the deletions (0021 · 0022 · 0025) are one-line PRs.
+
+- **P7:** a flaky test in Tec-Analytics- (1 of 189 failed once, passed twice after).
+- **P6:** the session lifetime in template apps (0029) — trace sign-in → expiry → refresh.
