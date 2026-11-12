@@ -856,7 +856,7 @@
           "template 23f22ba",
           "22 app commits (csp-connect-src.test.ts)"
         ],
-        "note": "Part 1 of 3 done (committed locally — pushed when GitHub Actions is back). Parts 2 and 3 are not done; see the owner brief and TEC-AUDIT-0029, which blocks part 2."
+        "note": "Part 1 of 3 done (committed locally — pushed when GitHub Actions is back). Parts 2 and 3 are not done; see the owner brief and TEC-AUDIT-0029, which blocks part 2. Update: 0029 is fixed locally — part 2 now waits only on a phone check in Pi Browser."
       }
     },
     {
@@ -1310,11 +1310,11 @@
     {
       "id": "TEC-AUDIT-0029",
       "phase": "P3",
-      "repository": "tec-template-base + 20 template apps",
+      "repository": "tec-template-base + 23 apps (all but the Hub)",
       "category": "reliability",
       "severity": "MEDIUM",
       "confidence": "HIGH",
-      "title": "Template apps keep no refresh token, so a session ends when the access token does",
+      "title": "No app but the Hub could renew a session — the refresh token was not kept or not sent",
       "description": "sso-callback sets tec_access_token, tec_user and tec_csrf; it never sets tec_refresh_token. /api/auth/refresh sends the refresh cookie if present and otherwise the access token, and pi-auth.ts calls it only after a 401 — when the access token has already expired. So a refresh cannot succeed once it is needed, and the session lasts exactly the access token's lifetime (7 days on Railway). It also means the access token's lifetime cannot be shortened (ADR-001's 24 h) without signing everyone out daily, which would multiply Pi sign-ins — the very load that made Pi Browser stop opening the wallet (10 Nov).",
       "evidence": [
         {
@@ -1354,7 +1354,19 @@
         "C-123 §2",
         "ADR-001",
         "TEC-AUDIT-0018"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base afdd94d",
+          "20 template apps",
+          "Tec-Commerce e6a33e9",
+          "Tec-Assets 56c3fe0",
+          "Tec-Ecommerce 11a9ab0"
+        ],
+        "note": "Implemented C-123 §4 for every app but the Hub (which already had it): lib/session-refresh.ts + a middleware step renew an expired (or <2 min) access token at the gateway with the HttpOnly, host-only refresh token, once per token, before any BFF call or /api/auth/me; the route runs with the new token and the rotated cookies (with tec_user + tec_csrf) ride the same response; pages never refresh (LAW 2); a failure leaves the request as it came; a rejected token is dropped. sso-callback keeps the app's OWN refresh token (from its pi-login); a Hub hand-off carries none, so no two holders share a single-use token. The refresh route uses the same helper (it sent the access token before — Commerce/Assets sent none in the header, so refresh was broken in all 23 apps). pi-auth no longer logs out on a failed refresh (C-123 §4). Ecommerce's refresh token moved from the shared domain to host-only. Tests: 11 + 4 + 3 shared cases, 3 red on the old code; every app's full suite, tsc and lint green. Committed locally. Phone check in Pi Browser required before shortening JWT_EXPIRES_IN (TEC-AUDIT-0018 part 2). Residual: an Ecommerce refresh cookie set on the shared domain before this fix lives up to 7 days.",
+        "verification": "Pi Browser: sign in to an app, wait past a short access-token lifetime, use the app — still signed in"
+      }
     }
   ]
 }

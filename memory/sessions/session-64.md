@@ -76,6 +76,13 @@ catalogue public for reads only and Swagger off in production; the Hub's wallet 
 failed. **Deliberately not done:** shortening the access token to 24 h — template apps hold no refresh
 token (new 0029), so it would sign everyone out daily and multiply Pi sign-ins.
 
+## TEC-AUDIT-0029 fixed (12 Nov, local)
+
+No app but the Hub could renew a session: the template sent the access token where the refresh
+token belongs, Commerce and Assets sent none in the header. All 23 now refresh on the server in
+middleware, as C-123 §4 describes and the Hub already did; each keeps its own host-only refresh
+token. Shortening the token to 24 h now waits only on one phone check in Pi Browser.
+
 ## Lessons
 
 - **A search that finds nothing is not evidence of compliance until it is shown to be able to

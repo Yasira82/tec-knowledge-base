@@ -36,6 +36,30 @@ needs Pi Browser on a phone (the Pi SDK bootstrap is inline). Done together with
 **0019 · 0020 · 0023** need package releases or majors (a TEC-SDK publish, zod 4, happy-dom 21)
 — scheduled, with CI.
 
+## Then: TEC-AUDIT-0029 fixed (owner: "fix the refresh first")
+
+The refresh was broken in **all 23 apps but the Hub**, not only the template ones: the template's
+route sent the access token where auth-service expects the refresh token, and Commerce and Assets
+sent the refresh token in the body, which auth-service never reads. Now every app does what the
+Hub does (C-123 §4):
+
+- `lib/session-refresh.ts` (shared) + one step in `middleware.ts`: before a BFF call or
+  `/api/auth/me`, an access token that has expired, or will within 2 minutes, is renewed at the
+  gateway with the refresh token — on the server, once per token (single-flight); the route runs
+  with the new token; the rotated cookies, with `tec_user` and `tec_csrf`, ride the same
+  response. A page navigation never refreshes (a redirect would drop the cookies — LAW 2). A
+  failure leaves the request as it came; a refresh token the backend rejects is dropped.
+- `sso-callback` keeps the app's **own** refresh token (its pi-login already signed it in) —
+  HttpOnly, host-only. A Hub hand-off carries none: the Hub's single-use token stays the Hub's,
+  so no two holders ever share one. Ecommerce's refresh cookie moved off the shared domain for
+  the same reason.
+- `pi-auth.ts` no longer logs out when a refresh fails (C-123 §4 forbids it); logout clears the
+  refresh token with its creation attributes.
+
+Proof: 18 new shared test cases (3 red on the old code); every app's full suite, tsc and lint
+green. **Next, before shortening the token (0018 part 2):** sign in to one app in Pi Browser,
+let a short-lived access token expire, keep using the app — it must stay signed in.
+
 ## Noticed along the way
 
 - **A flaky test in Tec-Analytics-:** one run failed 1 of 189, the next two passed. Not
