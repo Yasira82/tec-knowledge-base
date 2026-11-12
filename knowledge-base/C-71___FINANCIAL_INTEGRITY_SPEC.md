@@ -55,15 +55,28 @@ AuditLog:
 
 ```
 ✅ ALWAYS:
-  DECIMAL(20,8) في DB
-  String في API responses
-  لا arithmetic في JS على financial values
+  DECIMAL(20,8) in the database
+  A decimal STRING wherever a Pi amount leaves a service (responses, feeds, events)
+  Amounts compared in integer 1e-8 units, never as floats
+
+✅ THE ONE EXCEPTION — ADR-009 (C-64):
+  A payment endpoint's REQUEST takes `amount` as a JSON number, converted once at
+  the BFF boundary (z.coerce.number()). It is what the Pi SDK takes, and a Pi amount
+  has at most 7 decimals, which a double holds exactly enough to round back.
 
 ❌ NEVER:
-  FLOAT / DOUBLE PRECISION في DB
-  number في API للـ Pi amounts
-  JS floating-point math على balances
+  FLOAT / DOUBLE PRECISION in the database
+  A number for a Pi amount in a response or anywhere outside a payment request
+  JS floating-point arithmetic on balances
 ```
+
+> **Why the exception is written here (12 Nov 2026).** This section used to say "never a
+> number in an API", while ADR-009 says a payment request's amount IS a number, and the
+> backend's CLAUDE.md said "string in all API contracts". Three rules for one field; the
+> engineering audit of 11 Nov registered it as TEC-AUDIT-0016. The authority order puts the
+> ADR first (C-00 → C-67 → ADRs → specs), so the ADR stands and this section names it.
+> A wallet request (e.g. the Hub's withdrawal) is not a payment endpoint: its amount is a
+> validated decimal string, which this rule already requires.
 
 ---
 

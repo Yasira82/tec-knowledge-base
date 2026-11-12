@@ -24,8 +24,11 @@ CHECKS = [
      r'(localStorage|sessionStorage)\.setItem\([^)]*(token|jwt|access)', None),
     ('P1-C03', 'C-47 §12 — no CORS wildcard', 'all',
      r"origin:\s*['\"]\*['\"]|Access-Control-Allow-Origin['\"],\s*['\"]\*|origin:\s*true\b", None),
-    ('P1-C04', 'C-47 §12 — internal key compared in constant time', 'backend',
-     r"(x-internal-key|internalKey|INTERNAL_SECRET)[^;\n]{0,80}(===|!==)", None),
+    # Two shapes: the key compared with === (not constant time), and a length check in
+    # characters before timingSafeEqual (a non-ASCII key throws). The second is searched by
+    # its SHAPE — cycle 2026-11-11 searched variable names and found 5 of 18 copies.
+    ('P1-C04', 'C-47 §12 — internal key compared in constant time, as bytes', 'backend',
+     r"(x-internal-key|internalKey|INTERNAL_SECRET)[^;\n]{0,80}(===|!==)|\b\w+\.length === \w+\.length &&\s*$", None),
     ('P1-C06', 'C-47 §12 · C-71 — Pi amounts are DECIMAL(20,8), never Float', 'backend',
      r'^\s*\w*(amount|balance|price|total)\w*\s+Float', r'schema\.prisma$'),
     ('P1-C08', 'C-47 §12 — identity from the session, never from the body', 'all',

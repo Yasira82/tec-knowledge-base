@@ -137,11 +137,6 @@
       "location": "tec-wallet-service/src/guards/internal.guard.ts:75"
     },
     {
-      "ref": "EV-0028",
-      "finding": "TEC-AUDIT-0015",
-      "location": "withheld"
-    },
-    {
       "ref": "EV-0029",
       "finding": "TEC-AUDIT-0016",
       "location": "knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md:238,250,256"
@@ -170,6 +165,16 @@
       "ref": "EV-0034",
       "finding": "TEC-AUDIT-0017",
       "location": "grep -c tec-<name> knowledge-base/C-20_Backend_Services.md"
+    },
+    {
+      "ref": "EV-0028",
+      "finding": "TEC-AUDIT-0015",
+      "location": "tec-payment-service/src/middlewares/rate-limit.middleware.ts:230-234"
+    },
+    {
+      "ref": "EV-0035",
+      "finding": "TEC-AUDIT-0015",
+      "location": "tec-payment-service/src/routes/payment.routes.ts:56-205"
     }
   ]
 }

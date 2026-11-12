@@ -30,21 +30,37 @@ Audit only: no fix, commit or deploy to the audited code during a run.
   wildcard CORS, CSRF only in middleware, the Pi Platform API only in auth and payment, no
   database in the gateway, no internal URL in the browser, one inter-service header.
 - New: the sign-in and payment code calls `window.Pi` around the PAL in every app (0011,
-  MEDIUM); marketplace prices in Pi are Float (0012, MEDIUM); C-11 and C-44 stale and C-20
-  missing eight services (0009 · 0017, MEDIUM); four LOW; one LOW withheld (0015, told to the
-  owner directly); the baseline disagrees with itself on the type of an amount (0016).
+  MEDIUM); marketplace prices in Pi are Float (0012, MEDIUM); C-11 and C-44 stale (0009,
+  MEDIUM); the baseline disagrees with itself on the type of an amount (0016); three LOW.
+  0015 was first withheld, then found unreachable and published; 0017 was the auditor's error.
 
-**17 findings: 1 CRITICAL (closed) · 2 HIGH · 8 MEDIUM (1 closed) · 6 LOW.**
+**17 findings: 1 CRITICAL · 2 HIGH · 7 MEDIUM · 5 LOW · 2 INFO.**
+
+## Remediation, 12 Nov (owner: "fix Run 1 and document it before Run 2; do it right")
+
+`cycles/2026-11-11/00-control/remediation-run1.md` is the record. In short:
+
+- **Fixed:** 0009 (C-11/C-44 regenerated), 0016 (one amount rule in C-71 §3; ADR-009 stands),
+  0011 (PiRuntime in the template and the 20 template apps, a boundary test, template-sync
+  markers), 0010 · 0014 · 0015 (backend branch, pushed with no PR — no CI minutes before 1 Dec).
+  Each fix was trusted only after its test failed on the old code.
+- **0014 was larger than the search said:** 5 hits, 18 copies. The fix searched for the
+  pattern, not the variable name.
+- **0017 closed as INVALID** — C-20 names services by short name. The real gap under it,
+  check-drift's hand-typed service list, is fixed; its first version passed by finding nothing.
+- **Deferred with reasons:** 0012 / 0013 to P4 (a two-repository migration; a row count first);
+  0011 in the four non-template apps to P10.
 
 ## Lessons
 
 - **A search that finds nothing is not evidence of compliance until it is shown to be able to
   find something.** P1-C18 first searched for a payment path and returned nothing; the base
   URL is built from a constant. It now searches for the host, and passes.
-- `check-drift.py` passes only what C-20 lists; a service missing from C-20 is invisible to it.
+- **Search for the shape of a defect, not for the names in the first copy found.** P1-C04
+  found 5 of 18 copies; the tool now searches the shape.
 
 ## Left open
 
-1. Run 2 — P2 + P3 (start from `02-architecture/handoff.md`).
-2. Owner decisions: one rule for a Pi amount's type (0016); drop the unused wallet `Account` model (0013).
-3. Regenerate C-11 / C-44 after the open app PRs merge (0009).
+1. Merge KB #228, template #56, the 20 app PRs; the backend PR on or after 1 Dec.
+2. After the merges, re-run `tools/architecture_checks.py` to close the fixed findings.
+3. Run 2 — P2 + P3 (start from `02-architecture/handoff.md`).

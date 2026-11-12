@@ -17,7 +17,7 @@ was read in place and classified: a finding, or a false positive with the reason
 | P1-C03 | C-47 §12 — no CORS wildcard | 0 | **Compliant** |
 | P1-C04 | C-47 §12 — internal key compared in constant time | 5 | Constant time everywhere; length check on characters, not bytes → **TEC-AUDIT-0014** (LOW) |
 | P1-C06 | C-47 §12 · C-71 — Pi amounts DECIMAL(20,8) | 4 | Marketplace `price` Float → **TEC-AUDIT-0012** (MEDIUM); three non-financial columns → **TEC-AUDIT-0013** (LOW). The real `Wallet.balance` is Decimal(20,8) |
-| P1-C08 | C-47 §12 — identity from the session, never the body | 21 | 20 false positives (service-only routes behind the internal key, owner-match guards, admin routes behind a verified admin token). One → **TEC-AUDIT-0015** (LOW, withheld) |
+| P1-C08 | C-47 §12 — identity from the session, never the body | 21 | 20 false positives (service-only routes behind the internal key, owner-match guards, admin routes behind a verified admin token). One → **TEC-AUDIT-0015** (INFO — unreachable; fixed) |
 | P1-C12 | ADR-005 · NEW-A — no internal URL in the browser | 2 | False positives (CSP host for the public realtime service; a test comment) — **Compliant** |
 | P1-C13 | C-12 §11 · C-123 — CSRF in middleware only | 0 | **Compliant** |
 | P1-C16 | PAL (R1) — `window.Pi` only through PiRuntime | 80 | Sign-in and payment bypass the PAL in every app → **TEC-AUDIT-0011** (MEDIUM) |
@@ -26,7 +26,7 @@ was read in place and classified: a finding, or a false positive with the reason
 | P1-C20b | ADR-009 — a payment amount is a number | 1 | A wallet withdrawal, not a payment endpoint; the baseline itself disagrees → **TEC-AUDIT-0016** (LOW) |
 | P1-C21 | C-47 Forbidden #4 — no DB access in the gateway | 0 | **Compliant** |
 
-**8 of 13 rules compliant. 5 produced findings: 0 critical, 0 high, 2 medium, 4 low.**
+**8 of 13 rules compliant. 5 produced findings: 0 critical, 0 high, 2 medium, 3 low, 1 info.**
 
 ## What this says about the architecture
 

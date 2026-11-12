@@ -11,7 +11,7 @@ current-state docs → runtime evidence → code. Each was confirmed to exist on
 | Repository map | C-11 (**generated**) — stale on 11 Nov, TEC-AUDIT-0009 | P0, P10 |
 | Payments | C-12 Dual-Mode Payment · C-76 ADR-007 · ADR-004 Outbox · ADR-009 unified contract | P1 C16/C18/C20 |
 | Auth & cookies | C-13 · C-123 Pi Browser session & cookie law · ADR-001 · ADR-002 | P1 C01/C02/C13 |
-| Backend services & ports | C-20 — **partial**: 8 services missing (C-02 §1 names their ports), TEC-AUDIT-0017 | P0, P5 |
+| Backend services & ports | C-20 — all 20 services (TEC-AUDIT-0017 was raised in error and closed) | P0, P5 |
 | Environment variables | C-44 (**generated**) — stale, TEC-AUDIT-0009 | P8 |
 | Decisions | C-64 ADR system (ADR-001 … ADR-011) | P1 |
 | Ownership | C-68 Domain Ownership Matrix | P1 C21, P10 |
@@ -22,5 +22,5 @@ current-state docs → runtime evidence → code. Each was confirmed to exist on
 | Design tokens | C-83 | P2 |
 | Previous review | `audits/ENGINEERING_REVIEW_2026-11-11.md` — its 8 findings carried as TEC-AUDIT-0001…0008 | registry |
 
-**Unavailable:** none. **Inconsistent:** the type of a Pi amount in an API (ADR-009 vs C-71
-vs the backend CLAUDE.md) — TEC-AUDIT-0016.
+**Unavailable:** none. **Inconsistent at Run 1, resolved after it:** the type of a Pi amount
+in an API (ADR-009 vs C-71 vs the backend CLAUDE.md) — TEC-AUDIT-0016, now one rule in C-71 §3.

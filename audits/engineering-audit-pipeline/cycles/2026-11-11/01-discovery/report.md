@@ -63,6 +63,6 @@ P8, not here.
 | TEC-AUDIT-0001…0008 | — | Carried from the 11 Nov baseline review (two closed, six open) |
 | TEC-AUDIT-0009 | MEDIUM | Generated C-11 and C-44 are stale against the code |
 | TEC-AUDIT-0010 | LOW | Load tests live in a nested `tec-core-backend/tec-core-backend/k6/` |
-| TEC-AUDIT-0017 | MEDIUM | C-20 does not describe eight deployed services |
+| TEC-AUDIT-0017 | INFO — **invalid**, closed | Raised as "C-20 misses eight services"; C-20 lists all 20 by short name. The real gap (a hand-typed service list in check-drift) is fixed |
 
 Full records: `findings.json`. Evidence: `evidence.md`.

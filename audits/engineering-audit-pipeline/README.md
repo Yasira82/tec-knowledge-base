@@ -123,7 +123,9 @@ A blocked gate is never bypassed silently.
   "status": "OPEN|CLOSED|ACCEPTED_RISK",
   "disclosure": "public|withheld",
   "first_seen": "cycle/run/phase",
-  "references": ["C-47 §…", "ADR-…"]
+  "references": ["C-47 §…", "ADR-…"],
+  "remediation": { "state": "", "refs": [], "note": "", "verification": "" },
+  "resolution": "INVALID (only when the finding itself was wrong)"
 }
 ```
 
@@ -135,6 +137,14 @@ A blocked gate is never bypassed silently.
 - `acceptance_criteria` say what must be true for the finding to close — a test, a query, a
   measured value — so a fix can be checked rather than asserted.
 - `ACCEPTED_RISK` is the owner's decision, recorded with its reason, never the auditor's.
+- `remediation` is added after a run and never replaces the finding: `FIXED_PENDING_MERGE`,
+  `FIXED_NO_PR_UNTIL_<date>`, `DEFERRED_TO_<phase>` (with the reason), `SCHEDULED`,
+  `OWNER_ACTION`, `INVALID`. A finding becomes `CLOSED` only when its acceptance criteria are
+  met on `main` — a merged fix is evidence, a pushed one is not.
+- A finding the auditor got wrong is closed with `"resolution": "INVALID"` and stays in the
+  register with its ID and the reason. IDs are never reused or deleted.
+- **A search that returns nothing proves nothing until it has been shown to find
+  something** (cycle 2026-11-11: P1-C18's first pattern, and check-drift's service scan).
 
 ## 7. Rules for this repository (it is public)
 

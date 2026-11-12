@@ -55,7 +55,16 @@
       "references": [
         "CLAUDE.md (Hub) Risk R1",
         "C-12"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-template-base #56 (9b27b25)",
+          "the 20 template-app PRs"
+        ],
+        "note": "Sign-in and payment call PiRuntime. pal-boundary.test.ts fails on any direct call (shown red on the old code). template-sync makes pi-auth.ts and the test shared and pi-payment.ts carry the marker, so an app that drifts back is reported weekly. Not yet done: the Hub, Commerce, Assets and Ecommerce (outside the template; their own PAL work, P10).",
+        "verification": "architecture_checks.py P1-C16 on main lists only layout.tsx init lines for the template apps"
+      }
     },
     {
       "id": "TEC-AUDIT-0012",
@@ -102,7 +111,12 @@
       "references": [
         "C-47 §12",
         "C-71 §3"
-      ]
+      ],
+      "remediation": {
+        "state": "DEFERRED_TO_P4",
+        "refs": [],
+        "note": "Measured before changing it: the price is stored, never computed, and every comparison already runs in integer 1e-8 units (purchase-product.ts covers()), so no listing is charged wrongly today. The type change is a migration that refuses without MIGRATE_ALLOW_DESTRUCTIVE and a contract change for the Assets app (price becomes a string in JSON). It is done as an expand–contract migration in P4 (Run 3), with the database phase, not rushed here."
+      }
     },
     {
       "id": "TEC-AUDIT-0013",
@@ -149,7 +163,12 @@
       "references": [
         "C-47 §12",
         "C-71"
-      ]
+      ],
+      "remediation": {
+        "state": "DEFERRED_TO_P4",
+        "refs": [],
+        "note": "Dropping the unused wallet Account table needs a row count in production first; P4 runs it. The other two columns are not money that moves."
+      }
     },
     {
       "id": "TEC-AUDIT-0014",
@@ -202,39 +221,60 @@
       "references": [
         "C-47 §12",
         "ADR-009"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_NO_PR_UNTIL_2026-12-01",
+        "refs": [
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc cf6074d3"
+        ],
+        "note": "All 18 copies (the search found 5; the fix looked for the pattern, not the name) compare Buffer.byteLength. tec-auth-service internal-key-bytes.spec.ts is red on the old code and green now. tsc + jest green in auth, payment, gateway, wallet, analytics, connection."
+      }
     },
     {
       "id": "TEC-AUDIT-0015",
       "phase": "P1",
       "repository": "Tec-core-backend",
       "category": "security",
-      "severity": "LOW",
+      "severity": "INFO",
       "confidence": "MEDIUM",
-      "title": "Withheld while open (README §7). Details were given to the owner directly.",
-      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "title": "payment-service's rate limiter could key on a userId from the body or the query",
+      "description": "createRateLimiter built its key as ip + (req.userId ?? req.body.userId ?? req.query.userId). A key must come only from the verified identity (C-47 P6). Every limiter on payment.routes.ts runs after authenticate(), which always sets req.userId, so the fallback was dead code — not reachable. Fixed anyway: a dead fallback is a live one the day a route is ordered differently.",
       "evidence": [
         {
           "ref": "EV-0028",
-          "location": "withheld",
-          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+          "location": "tec-payment-service/src/middlewares/rate-limit.middleware.ts:230-234",
+          "observation": "userId from req.userId, else body, else query"
+        },
+        {
+          "ref": "EV-0035",
+          "location": "tec-payment-service/src/routes/payment.routes.ts:56-205",
+          "observation": "authenticate precedes every limiter"
         }
       ],
-      "affected_files": [],
-      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
-      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
-      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
-      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "affected_files": [
+        "tec-payment-service/src/middlewares/rate-limit.middleware.ts"
+      ],
+      "root_cause": "A fallback written for routes without authentication.",
+      "technical_impact": "None reachable today.",
+      "business_impact": "None.",
+      "recommendation": "Key on req.userId only (done).",
       "acceptance_criteria": [
-        "Withheld while open (README §7). Details were given to the owner directly."
+        "A request with a different body userId lands in the same bucket (test in security.test.ts)"
       ],
       "complexity": "S",
       "status": "OPEN",
-      "disclosure": "withheld",
+      "disclosure": "public",
       "first_seen": "2026-11-11/run1/P1",
       "references": [
         "C-47 §12"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_NO_PR_UNTIL_2026-12-01",
+        "refs": [
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc cf6074d3"
+        ],
+        "note": "Reassessed: every payment rate limiter runs after authenticate(), so the fallback was not reachable. The key is now the verified identity only; a test pins that a body userId opens no fresh bucket (red on the old code). Published, since it was never exploitable."
+      }
     },
     {
       "id": "TEC-AUDIT-0016",
@@ -287,7 +327,15 @@
         "ADR-009",
         "C-71 §3",
         "C-47 P1"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-knowledge-base #228 (C-71 §3)",
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc d05426fb (CLAUDE.md)"
+        ],
+        "note": "One rule: DECIMAL(20,8) in the database; a decimal string wherever an amount leaves a service; a number only in a payment request (ADR-009). The ADR stands because it ranks above the spec."
+      }
     }
   ]
 }

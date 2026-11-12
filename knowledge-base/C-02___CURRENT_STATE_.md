@@ -85,7 +85,7 @@ Replace rows as they close — do not strike them through and keep them.
 
 - **[64](../memory/sessions/session-64.md) — 11 Nov.** The Engineering Audit Pipeline (P0–P11, six runs a cycle)
   is the official review process; Run 1 of cycle 2026-11-11: 30 repositories, 8 of 13 architecture rules compliant,
-  17 findings registered (`audits/engineering-audit-pipeline/cycles/2026-11-11/`).
+  17 findings; fixed the next day except two database changes left for P4 (`…/cycles/2026-11-11/00-control/remediation-run1.md`).
 - **[63](../memory/sessions/session-63.md) — 11 Nov.** An engineering review of the whole platform (6.8/10):
   an order could be marked PAID for any payment id — fixed, no sign of abuse; Next 15.5.29 in the apps; Nest 11 /
   Fastify 5 in 15 services; the Hub's CSP narrowed; the internal guard on the decoded path.

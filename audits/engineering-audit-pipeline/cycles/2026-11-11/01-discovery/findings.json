@@ -83,7 +83,15 @@
       "references": [
         "C-75",
         "C-47 §12"
-      ]
+      ],
+      "remediation": {
+        "state": "PENDING_MERGE",
+        "refs": [
+          "tec-nbf #32",
+          "tec-brookfield #28"
+        ],
+        "note": "The two apps close with these merges; the four Express services and the stellar-sdk major are scheduled after 1 Dec (Actions minutes)."
+      }
     },
     {
       "id": "TEC-AUDIT-0003",
@@ -153,7 +161,12 @@
       "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
       "references": [
         "C-47 P6"
-      ]
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Needs the Pi SDK bootstrap moved to a nonce'd script first; taken up in P3 (Run 2)."
+      }
     },
     {
       "id": "TEC-AUDIT-0005",
@@ -195,7 +208,15 @@
       "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
       "references": [
         "C-75"
-      ]
+      ],
+      "remediation": {
+        "state": "PENDING_MERGE",
+        "refs": [
+          "tec-template-base #56",
+          "20 app PRs"
+        ],
+        "note": "The mechanism exists; it is not on main yet."
+      }
     },
     {
       "id": "TEC-AUDIT-0006",
@@ -231,7 +252,12 @@
       "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
       "references": [
         "C-78"
-      ]
+      ],
+      "remediation": {
+        "state": "OWNER_ACTION",
+        "refs": [],
+        "note": "Uptime paging, a backup alert channel and two Supabase variables are account-level settings; P8 verifies."
+      }
     },
     {
       "id": "TEC-AUDIT-0007",
@@ -264,7 +290,12 @@
       "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
       "references": [
         "C-47 §12"
-      ]
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Measured in P2 (Run 2), fixed against its list."
+      }
     },
     {
       "id": "TEC-AUDIT-0008",
@@ -299,7 +330,12 @@
         "ADR-002",
         "C-13",
         "C-123"
-      ]
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Last step of the rotation plan (asymmetric signing); backend, after 1 Dec."
+      }
     },
     {
       "id": "TEC-AUDIT-0009",
@@ -336,7 +372,15 @@
         "C-11",
         "C-44",
         "C-67"
-      ]
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-knowledge-base #228"
+        ],
+        "note": "C-11 and C-44 regenerated from origin/main; check-drift.py 36 pass · 0 fail.",
+        "verification": "python3 scripts/check-drift.py --repos-dir <clones> --ref origin/main → 0 fail"
+      }
     },
     {
       "id": "TEC-AUDIT-0010",
@@ -375,14 +419,21 @@
       "status": "OPEN",
       "disclosure": "public",
       "first_seen": "2026-11-11/run1/P0",
-      "references": []
+      "references": [],
+      "remediation": {
+        "state": "FIXED_NO_PR_UNTIL_2026-12-01",
+        "refs": [
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc cf6074d3"
+        ],
+        "note": "k6/ moved to the root; load-test.yml updated. The branch is pushed without a PR, so no CI minutes are spent before 1 Dec."
+      }
     },
     {
       "id": "TEC-AUDIT-0017",
       "phase": "P0",
       "repository": "tec-knowledge-base",
       "category": "baseline",
-      "severity": "MEDIUM",
+      "severity": "INFO",
       "confidence": "HIGH",
       "title": "The port authority C-20 does not describe eight of the deployed services",
       "description": "P0 counts 20 deployable services plus backup-job in tec-core-backend (and the shared library and service template). C-20, the backend-services and port authority, names 12. tec-business, tec-life, tec-nexus, tec-platform, tec-search and tec-trust-service and tec-backup-job do not appear in it at all; tec-ai and tec-connection-service appear once each. Those services start with PORT required (no default in main.ts). C-02 §1 names their ports (:5012–:5019) in one line; the port authority does not. Gate B is met for them through their code, C-02 and their app charters.",
@@ -410,14 +461,22 @@
         "check-drift.py fails when one does not"
       ],
       "complexity": "S",
-      "status": "OPEN",
+      "status": "CLOSED",
       "disclosure": "public",
       "first_seen": "2026-11-11/run1/P0",
       "references": [
         "C-20",
         "C-68",
         "ADR-005"
-      ]
+      ],
+      "resolution": "INVALID",
+      "remediation": {
+        "state": "INVALID",
+        "refs": [
+          "tec-knowledge-base #228 (check-drift.py)"
+        ],
+        "note": "The auditor's error: the search looked for 'tec-<name>', and C-20's table names services by their short name ('life', 'ai' …). C-20 lists all 20 services with their ports. What was real: check-drift.py's service list is typed by hand, so a new service would be invisible to it — it now fails on any service in code it does not list (shown firing by removing 'trust' from the list)."
+      }
     }
   ]
 }

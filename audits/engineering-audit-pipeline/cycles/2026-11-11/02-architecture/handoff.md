@@ -18,11 +18,12 @@
 - TEC-AUDIT-0002: run `npm audit --omit=dev` on every lock file; record counts per severity.
 - TEC-AUDIT-0004: review CSP in every app, not only the Hub.
 - TEC-AUDIT-0008: map who verifies tokens and with which key.
-- TEC-AUDIT-0014 and TEC-AUDIT-0015 (withheld): guard and rate-limit review.
+- TEC-AUDIT-0014 and TEC-AUDIT-0015 are fixed on the backend branch; P3 reviews the other
+  limiters and guards the same way (key only from a verified identity; compare bytes).
 - Not covered by P1's searches: ActorContext on sensitive operations; authorization on every
   gateway route the apps do not call (direct gateway access); secrets in repository history.
 
-## Open questions for the owner
+## Decided after Run 1 (see `00-control/remediation-run1.md`)
 
-- TEC-AUDIT-0016: one rule for the type of a Pi amount in requests and responses.
-- TEC-AUDIT-0013: drop the unused wallet `Account` model, or accept it.
+- TEC-AUDIT-0016: one rule, in C-71 §3 (ADR-009 stands).
+- TEC-AUDIT-0012 / 0013: database changes, done in P4 with a production row count first.

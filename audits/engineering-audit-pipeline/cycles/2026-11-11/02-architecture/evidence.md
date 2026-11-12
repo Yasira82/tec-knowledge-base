@@ -38,7 +38,7 @@ the public ledger, not the Platform API. The result is verified CLEAN, not just 
 | `owner-match.guard.ts:62,65` in business · identity · nexus · trust | False positive | This **is** the enforcement (C17): a user caller's `body.userId` must equal its token |
 | tec-commerce-service `order.controller.ts:184,207` (reserve/release) · `subscription.controller.ts:109` (grant) | False positive | Service-only routes: `assertInternalKey(internalKey, caller)` before the body is read |
 | tec-nexus-service `handshake.controller.ts:22,38` · `nexus.controller.ts:68` | False positive | Controllers under `@UseGuards(OwnerMatchGuard)` (`handshake.controller.ts:9`, `nexus.controller.ts:12`) |
-| One remaining hit | **Finding TEC-AUDIT-0015** | Withheld while open (README §7): its classification and reasoning went to the owner, not here |
+| tec-payment-service `rate-limit.middleware.ts:232` | **Finding TEC-AUDIT-0015** (INFO, published 12 Nov) | The limiter's key fell back to a body/query `userId`; every limiter runs after `authenticate()` (`payment.routes.ts:56-205`), so it was unreachable. Fixed on the backend branch |
 
 ### P1-C12 (2) — false positives
 `Tec-App tec-frontend/next.config.js:117` is the CSP `connect-src` entry for the realtime
