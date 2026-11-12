@@ -95,6 +95,43 @@
         "P5"
       ],
       "why": "Amount type in every payment/wallet contract"
+    },
+    {
+      "finding": "TEC-AUDIT-0018",
+      "to": [
+        "P6",
+        "P10"
+      ],
+      "why": "Withheld — see the owner brief"
+    },
+    {
+      "finding": "TEC-AUDIT-0019",
+      "to": [
+        "P10"
+      ],
+      "why": "Shared SDK release before the apps"
+    },
+    {
+      "finding": "TEC-AUDIT-0020",
+      "to": [
+        "P5",
+        "P9"
+      ],
+      "why": "Body limits per validated route"
+    },
+    {
+      "finding": "TEC-AUDIT-0024",
+      "to": [
+        "P5"
+      ],
+      "why": "Gateway route table"
+    },
+    {
+      "finding": "TEC-AUDIT-0028",
+      "to": [
+        "P6"
+      ],
+      "why": "Wallet screen trace"
     }
   ]
 }

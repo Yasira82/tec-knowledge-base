@@ -1,6 +1,6 @@
 {
   "cycle": "2026-11-11",
-  "updated_by": "run1",
+  "updated_by": "run2",
   "findings": [
     {
       "id": "TEC-AUDIT-0001",
@@ -272,6 +272,11 @@
           "ref": "EV-0009",
           "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:45",
           "observation": "Baseline row 7"
+        },
+        {
+          "ref": "EV-0056",
+          "location": "03-code-quality/code-quality.json",
+          "observation": "P2 measured: no schema validation library in analytics · commerce · identity · kyc · notification · realtime · storage"
         }
       ],
       "affected_files": [],
@@ -810,6 +815,423 @@
         ],
         "note": "The auditor's error: the search looked for 'tec-<name>', and C-20's table names services by their short name ('life', 'ai' …). C-20 lists all 20 services with their ports. What was real: check-drift.py's service list is typed by hand, so a new service would be invisible to it — it now fails on any service in code it does not list (shown firing by removing 'trust' from the list)."
       }
+    },
+    {
+      "id": "TEC-AUDIT-0018",
+      "phase": "P3",
+      "repository": "tec-template-base + 24 apps",
+      "category": "security",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0036",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "ADR-001 (C-64)",
+        "C-123",
+        "TEC-AUDIT-0004",
+        "TEC-AUDIT-0008"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0019",
+      "phase": "P3",
+      "repository": "tec-template-base + 24 apps · TEC-SDK",
+      "category": "dependencies",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Production dependencies carry high advisories that a non-breaking update removes",
+      "description": "npm audit --omit=dev on every app lock file on main: 14–15 high per template app. The fixable-in-range ones are axios and follow-redirects (outbound requests: prototype-pollution gadget, credential headers across redirects), brace-expansion, nanoid, sharp, browserslist, fast-uri, socket.io-parser and source-map-js. @yasser172/tec-sdk is itself flagged because it pins a vulnerable axios, and it has not been published since 13 Sep, so every app inherits it. postcss and rollup need a major (next 16, @sentry/nextjs 11) and are build-time only.",
+      "evidence": [
+        {
+          "ref": "EV-0037",
+          "location": "04-security/dependency-audit.json",
+          "observation": "per-lock counts and the critical/high package list with fix availability"
+        },
+        {
+          "ref": "EV-0038",
+          "location": "TEC-SDK package-lock.json",
+          "observation": "axios · follow-redirects · zod flagged high"
+        }
+      ],
+      "affected_files": [
+        "package-lock.json (every app)",
+        "TEC-SDK/package.json"
+      ],
+      "root_cause": "Lock files not refreshed since the advisories were published; the SDK pins its own axios.",
+      "technical_impact": "Server-side BFF calls go through a vulnerable HTTP client.",
+      "business_impact": "A crafted upstream response or redirect could leak a header or skew a request.",
+      "recommendation": "Publish TEC-SDK with a fixed axios; then npm audit fix (no --force) in the template and let template-sync carry the lock refresh; leave the majors for a planned upgrade.",
+      "acceptance_criteria": [
+        "npm audit --omit=dev reports no high fixable without a major in any app lock on main"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "C-75",
+        "TEC-AUDIT-0002"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0020",
+      "phase": "P3",
+      "repository": "all apps · 13 backend services · TEC-SDK",
+      "category": "dependencies",
+      "severity": "MEDIUM",
+      "confidence": "MEDIUM",
+      "title": "zod 3 has a high memory-exhaustion advisory with no fix short of zod 4",
+      "description": "Present in 38 lock files: every app, TEC-SDK, and 13 backend services (ai, business, connection, gateway, identity, life, nexus, payment, platform, search, template, trust, wallet). An oversized collection sent to a constrained schema can exhaust memory. Body-size limits bound it (Fastify 1 MB default; Vercel 4.5 MB); not measured per route here.",
+      "evidence": [
+        {
+          "ref": "EV-0039",
+          "location": "04-security/dependency-audit.json",
+          "observation": "zod high, fixAvailable: false, in 38 locks"
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "zod 3 is past its fix line; zod 4 is a major.",
+      "technical_impact": "A request can cost a process more memory than it should.",
+      "business_impact": "Availability, not data.",
+      "recommendation": "Plan the zod 4 migration (already open under TEC-AUDIT-0002); until then keep explicit body-size limits on every route that validates arrays.",
+      "acceptance_criteria": [
+        "No lock file on main resolves zod < 4",
+        "or every validated route has a stated body limit"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "TEC-AUDIT-0002"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0021",
+      "phase": "P3",
+      "repository": "Tec-App",
+      "category": "dependencies",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The Hub keeps a stale second lock file that pins Next 15.5.12",
+      "description": "tec-frontend/package-lock.json (last changed in #120) locks next 15.5.12 with a critical advisory, while the workspace root lock — the one Vercel installs from — locks 15.5.29. Production runs 15.5.29: the build log of the live deployment says \"Detected Next.js version: 15.5.29\" [Runtime Verified]. The stale file misleads scanners and people.",
+      "evidence": [
+        {
+          "ref": "EV-0040",
+          "location": "Tec-App origin/main package-lock.json",
+          "observation": "node_modules/next 15.5.29"
+        },
+        {
+          "ref": "EV-0041",
+          "location": "Tec-App origin/main tec-frontend/package-lock.json",
+          "observation": "node_modules/next 15.5.12"
+        },
+        {
+          "ref": "EV-0042",
+          "location": "Vercel deployment dpl_Hu21VDiAkb4XeB9BYwuuMGu8Z22R build log",
+          "observation": "Detected Next.js version: 15.5.29"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/package-lock.json"
+      ],
+      "root_cause": "A lock file left from before the workspace.",
+      "technical_impact": "A false critical in every scan.",
+      "business_impact": "Noise hides the real ones.",
+      "recommendation": "Delete tec-frontend/package-lock.json.",
+      "acceptance_criteria": [
+        "Only the root lock file exists on main"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": []
+    },
+    {
+      "id": "TEC-AUDIT-0022",
+      "phase": "P3",
+      "repository": "Tec-core-backend",
+      "category": "dependencies",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "An unused root package.json (a Nest 10 monolith with no source) carries two critical advisories",
+      "description": "The repository root declares Nest 10, bcrypt 5, axios and others, with build/start scripts for a dist/main that does not exist. Nothing installs it: no Dockerfile or workflow runs npm at the root, and scripts/ imports only Node built-ins. Its lock has critical proxy-addr and tar advisories. Not deployed, but a scanner and a reader both take it for the backend.",
+      "evidence": [
+        {
+          "ref": "EV-0043",
+          "location": "Tec-core-backend origin/main package.json",
+          "observation": "Nest 10 deps, start: node dist/main; no src/ at the root"
+        },
+        {
+          "ref": "EV-0044",
+          "location": "04-security/dependency-audit.json",
+          "observation": "root lock: critical proxy-addr, tar"
+        }
+      ],
+      "affected_files": [
+        "package.json",
+        "package-lock.json"
+      ],
+      "root_cause": "Left from before the services were split.",
+      "technical_impact": "False criticals; a misleading entry point.",
+      "business_impact": "None in production.",
+      "recommendation": "Delete the root package.json and lock (keep a minimal one only if a workspace tool needs it).",
+      "acceptance_criteria": [
+        "No dependency at the backend root"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": []
+    },
+    {
+      "id": "TEC-AUDIT-0023",
+      "phase": "P3",
+      "repository": "Tec-Commerce · Tec-Assets · Tec-Ecommerce",
+      "category": "dependencies",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The test environment uses happy-dom 18, which has a critical sandbox-escape advisory",
+      "description": "Test-only (devDependency); npm reports it under --omit=dev because the lock marks it devOptional. It runs only the tests own fixtures, so the escape has no attacker input today.",
+      "evidence": [
+        {
+          "ref": "EV-0045",
+          "location": "04-security/dependency-audit.json",
+          "observation": "happy-dom <=21.0.3 critical in three locks"
+        }
+      ],
+      "affected_files": [
+        "package.json (devDependencies)"
+      ],
+      "root_cause": "Test dependency not updated.",
+      "technical_impact": "None at runtime.",
+      "business_impact": "None.",
+      "recommendation": "Move to happy-dom 21.0.4 (major) with the next test-tooling update.",
+      "acceptance_criteria": [
+        "happy-dom >= 21.0.4 in the three repos"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": []
+    },
+    {
+      "id": "TEC-AUDIT-0024",
+      "phase": "P3",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The gateway's public-route list is wider than it needs to be",
+      "description": "Swagger UI (/api/docs) is served in production without a token and outside rate limiting. '/api/commerce/products' is a prefix exemption for every method, writes included; commerce-service verifies the token on its writes itself (product.controller.ts getUserId, HS256), so nothing is open today, but the gateway gives no second check. '/metrics' is listed public with no handler behind it.",
+      "evidence": [
+        {
+          "ref": "EV-0046",
+          "location": "tec-api-gateway/src/middleware/jwt-auth.ts:6-48",
+          "observation": "PUBLIC_ROUTES, prefix match"
+        },
+        {
+          "ref": "EV-0047",
+          "location": "tec-api-gateway/src/main.ts:705-720,758",
+          "observation": "swagger-ui mounted; /api/docs excluded from the rate limiter"
+        },
+        {
+          "ref": "EV-0048",
+          "location": "tec-commerce-service/src/modules/product/product.controller.ts:35-46,79-81",
+          "observation": "writes call getUserId (verified token)"
+        }
+      ],
+      "affected_files": [
+        "tec-api-gateway/src/middleware/jwt-auth.ts",
+        "tec-api-gateway/src/main.ts"
+      ],
+      "root_cause": "Exemptions written as prefixes for reads and never narrowed.",
+      "technical_impact": "Defence in depth is one layer thinner for product writes; the API surface is published.",
+      "business_impact": "Low.",
+      "recommendation": "Exempt products for GET only; serve /api/docs only outside production (or behind the internal key); drop '/metrics'.",
+      "acceptance_criteria": [
+        "A POST to /api/commerce/products without a token is refused at the gateway",
+        "GET /api/docs returns 404 in production"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "ADR-005",
+        "C-47 P6"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0025",
+      "phase": "P3",
+      "repository": "Tec-Assets",
+      "category": "security",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A debug route ships to production",
+      "description": "src/app/api/debug/route.ts answers GET with whether the caller holds a token, the caller's own tec_user cookie and its verified user id. It reveals nothing about anyone else, but a debug endpoint has no place in production and grows.",
+      "evidence": [
+        {
+          "ref": "EV-0049",
+          "location": "Tec-Assets src/app/api/debug/route.ts",
+          "observation": "GET returns tokenExists, userCookie, userId"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/debug/route.ts"
+      ],
+      "root_cause": "Left from a debugging session.",
+      "technical_impact": "Small information surface.",
+      "business_impact": "None today.",
+      "recommendation": "Delete the route (or gate it to non-production).",
+      "acceptance_criteria": [
+        "No /api/debug route on main"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": []
+    },
+    {
+      "id": "TEC-AUDIT-0026",
+      "phase": "P3",
+      "repository": "Tec-App",
+      "category": "security",
+      "severity": "INFO",
+      "confidence": "HIGH",
+      "title": "A Firebase web API key is in the Hub's service worker",
+      "description": "tec-frontend/public/firebase-messaging-sw.js holds the Firebase web config key. Firebase web keys are public by design (they identify the project; Firebase rules authorise). It is the only credential-shaped string in the full history of all 30 repositories.",
+      "evidence": [
+        {
+          "ref": "EV-0050",
+          "location": "04-security/secret-scan.json",
+          "observation": "google-api-key in firebase-messaging-sw.js, on main"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/public/firebase-messaging-sw.js"
+      ],
+      "root_cause": "By design.",
+      "technical_impact": "None if the key is restricted.",
+      "business_impact": "None.",
+      "recommendation": "Owner: confirm in Google Cloud that the key is restricted to the Hub's HTTP referrers and to the Firebase APIs it uses.",
+      "acceptance_criteria": [
+        "The key shows HTTP-referrer and API restrictions in Google Cloud"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": []
+    },
+    {
+      "id": "TEC-AUDIT-0027",
+      "phase": "P3",
+      "repository": "Tec-App · tec-auth · all apps (CLAUDE.md)",
+      "category": "documentation",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The instruction files say the session cookies are HttpOnly; ADR-001 says tec_access_token is not",
+      "description": "Hub and tec-auth CLAUDE.md: 'Hub sets HttpOnly cookies'; ADR-001 (accepted) sets tec_access_token httpOnly:false so Pi Browser can read it, and the code follows the ADR. A reviewer who trusts the instruction file misjudges the risk.",
+      "evidence": [
+        {
+          "ref": "EV-0051",
+          "location": "knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md:43-56",
+          "observation": "ADR-001 httpOnly:false"
+        },
+        {
+          "ref": "EV-0052",
+          "location": "Tec-App CLAUDE.md (Auth Pattern)",
+          "observation": "'Hub sets HttpOnly cookies'"
+        },
+        {
+          "ref": "EV-0053",
+          "location": "tec-template-base src/app/api/auth/sso-callback/route.ts:94",
+          "observation": "httpOnly: false"
+        }
+      ],
+      "affected_files": [
+        "CLAUDE.md (Hub, tec-auth, apps)"
+      ],
+      "root_cause": "Instruction files written before ADR-001.",
+      "technical_impact": "A wrong mental model of what a script can read.",
+      "business_impact": "Risk misjudged.",
+      "recommendation": "State ADR-001 in the instruction files: tec_access_token is readable by script by decision; tec_refresh_token is HttpOnly.",
+      "acceptance_criteria": [
+        "No instruction file says the access token is HttpOnly"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "ADR-001"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0028",
+      "phase": "P2",
+      "repository": "Tec-App",
+      "category": "reliability",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A failed load of the wallet history or payment list shows an empty list",
+      "description": "useWallet.ts:197 and useAppPayments.ts:25 swallow a failed fetch ('transactions are optional'; 'absent beats wrong'). The screen then reads 'no transactions' — a statement about money that is not true — with nothing reported.",
+      "evidence": [
+        {
+          "ref": "EV-0054",
+          "location": "Tec-App tec-frontend/src/lib-client/hooks/useWallet.ts:197",
+          "observation": "catch { /* transactions are optional */ }"
+        },
+        {
+          "ref": "EV-0055",
+          "location": "Tec-App tec-frontend/src/lib-client/hooks/useAppPayments.ts:25",
+          "observation": "catch { /* the list is optional; absent beats wrong */ }"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/src/lib-client/hooks/useWallet.ts",
+        "tec-frontend/src/lib-client/hooks/useAppPayments.ts"
+      ],
+      "root_cause": "Optional data treated as absent data.",
+      "technical_impact": "An outage looks like an empty history.",
+      "business_impact": "A Pioneer may think a payment is missing.",
+      "recommendation": "Keep the list optional but distinguish 'could not load' from 'none', and reportError the failure.",
+      "acceptance_criteria": [
+        "A failed history request renders an error state and reports it (test)"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P2",
+      "references": [
+        "C-96",
+        "C-47 Forbidden #6"
+      ]
     }
   ]
 }

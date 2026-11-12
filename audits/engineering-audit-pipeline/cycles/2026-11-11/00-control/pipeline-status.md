@@ -7,8 +7,8 @@
 |---|---|---|---|---|
 | P0 | Discovery & Repository Mapping | 1 | **PASSED_WITH_FINDINGS** | 3 new (one later found invalid) · 8 carried from the baseline review |
 | P1 | Architecture & Baseline Compliance | 1 | **PASSED_WITH_FINDINGS** | 6 new |
-| P2 | Code Quality & Static Analysis | 2 | NOT_STARTED | — |
-| P3 | Security & Privacy | 2 | NOT_STARTED | — |
+| P2 | Code Quality & Static Analysis | 2 | **PASSED_WITH_FINDINGS** (type-check/lint on main BLOCKED) | 1 new · 0007 measured |
+| P3 | Security & Privacy | 2 | **PASSED_WITH_FINDINGS** (live headers BLOCKED) | 10 new (1 withheld) |
 | P4 | Database & Data Integrity | 3 | NOT_STARTED | — |
 | P5 | API & Integration Contracts | 3 | NOT_STARTED | — |
 | P6 | Functional & Business Logic | 4 | NOT_STARTED | — |
@@ -33,6 +33,12 @@
 0015 · 0016. Deferred with a reason: 0012 · 0013 (P4). Nothing is withheld.
 Details: `remediation-run1.md`. The register is `registry/master-findings.json`.
 
+## After Run 2 (12 Nov)
+
+28 findings: 1 CRITICAL (closed) · 3 HIGH · 9 MEDIUM · 12 LOW · 3 INFO. One withheld: 0018.
+Run 2 was done while GitHub Actions was refused for the whole account (billing hold, owner's
+ticket open); its outputs are committed locally and pushed when Actions is back.
+
 ## Next
 
-**Run 2 — P2 + P3** (code quality, security). Read `02-architecture/handoff.md` first.
+**Run 3 — P4 + P5** (databases, contracts). Read `04-security/handoff.md` first.

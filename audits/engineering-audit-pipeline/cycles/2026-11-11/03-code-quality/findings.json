@@ -1,0 +1,48 @@
+{
+  "cycle": "2026-11-11",
+  "run": 2,
+  "phase": "P2",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0028",
+      "phase": "P2",
+      "repository": "Tec-App",
+      "category": "reliability",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A failed load of the wallet history or payment list shows an empty list",
+      "description": "useWallet.ts:197 and useAppPayments.ts:25 swallow a failed fetch ('transactions are optional'; 'absent beats wrong'). The screen then reads 'no transactions' — a statement about money that is not true — with nothing reported.",
+      "evidence": [
+        {
+          "ref": "EV-0054",
+          "location": "Tec-App tec-frontend/src/lib-client/hooks/useWallet.ts:197",
+          "observation": "catch { /* transactions are optional */ }"
+        },
+        {
+          "ref": "EV-0055",
+          "location": "Tec-App tec-frontend/src/lib-client/hooks/useAppPayments.ts:25",
+          "observation": "catch { /* the list is optional; absent beats wrong */ }"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/src/lib-client/hooks/useWallet.ts",
+        "tec-frontend/src/lib-client/hooks/useAppPayments.ts"
+      ],
+      "root_cause": "Optional data treated as absent data.",
+      "technical_impact": "An outage looks like an empty history.",
+      "business_impact": "A Pioneer may think a payment is missing.",
+      "recommendation": "Keep the list optional but distinguish 'could not load' from 'none', and reportError the failure.",
+      "acceptance_criteria": [
+        "A failed history request renders an error state and reports it (test)"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P2",
+      "references": [
+        "C-96",
+        "C-47 Forbidden #6"
+      ]
+    }
+  ]
+}

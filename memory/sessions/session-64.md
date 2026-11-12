@@ -51,6 +51,23 @@ Audit only: no fix, commit or deploy to the audited code during a run.
 - **Deferred with reasons:** 0012 / 0013 to P4 (a two-repository migration; a row count first);
   0011 in the four non-template apps to P10.
 
+## Run 2 — P2 + P3 (12 Nov), done while GitHub Actions was refused
+
+GitHub stopped running Actions for the whole account on 12 Nov: an unpaid September invoice
+(Actions and Copilot overage), the card declined three times. The owner has a ticket open and
+cannot pay; nothing is pushed until it is resolved. Run 2 ran locally and is committed locally.
+
+- **P3:** no credential in ~7,000 commits of all 30 repositories (the clones were shallow; full
+  history fetched first, and every rule proved on a fake credential). JWT verification pinned to
+  HS256 everywhere (135 calls). Dependencies: fixable highs in every app, the SDK pinning a
+  flagged axios (0019); zod 3 (0020); a stale Hub lock (0021 — production runs 15.5.29, read from
+  the Vercel build log); an unused backend root package (0022). One HIGH withheld (0018).
+- **P2:** no `@ts-ignore` anywhere; the silent-catch count is mostly by design, classified; the
+  Hub shows "no transactions" when the history fails to load (0028); seven services named for 0007.
+  Type-check and lint on `main` BLOCKED with Actions.
+
+**28 findings: 1 CRITICAL (closed) · 3 HIGH · 9 MEDIUM · 12 LOW · 3 INFO.**
+
 ## Lessons
 
 - **A search that finds nothing is not evidence of compliance until it is shown to be able to
@@ -61,6 +78,7 @@ Audit only: no fix, commit or deploy to the audited code during a run.
 
 ## Left open
 
+0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.
 1. Merge KB #228, template #56, the 20 app PRs; the backend PR on or after 1 Dec.
 2. After the merges, re-run `tools/architecture_checks.py` to close the fixed findings.
-3. Run 2 — P2 + P3 (start from `02-architecture/handoff.md`).
+3. Run 3 — P4 + P5 (start from `04-security/handoff.md`).

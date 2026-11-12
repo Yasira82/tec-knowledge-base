@@ -175,6 +175,111 @@
       "ref": "EV-0035",
       "finding": "TEC-AUDIT-0015",
       "location": "tec-payment-service/src/routes/payment.routes.ts:56-205"
+    },
+    {
+      "ref": "EV-0036",
+      "finding": "TEC-AUDIT-0018",
+      "location": "withheld"
+    },
+    {
+      "ref": "EV-0037",
+      "finding": "TEC-AUDIT-0019",
+      "location": "04-security/dependency-audit.json"
+    },
+    {
+      "ref": "EV-0038",
+      "finding": "TEC-AUDIT-0019",
+      "location": "TEC-SDK package-lock.json"
+    },
+    {
+      "ref": "EV-0039",
+      "finding": "TEC-AUDIT-0020",
+      "location": "04-security/dependency-audit.json"
+    },
+    {
+      "ref": "EV-0040",
+      "finding": "TEC-AUDIT-0021",
+      "location": "Tec-App origin/main package-lock.json"
+    },
+    {
+      "ref": "EV-0041",
+      "finding": "TEC-AUDIT-0021",
+      "location": "Tec-App origin/main tec-frontend/package-lock.json"
+    },
+    {
+      "ref": "EV-0042",
+      "finding": "TEC-AUDIT-0021",
+      "location": "Vercel deployment dpl_Hu21VDiAkb4XeB9BYwuuMGu8Z22R build log"
+    },
+    {
+      "ref": "EV-0043",
+      "finding": "TEC-AUDIT-0022",
+      "location": "Tec-core-backend origin/main package.json"
+    },
+    {
+      "ref": "EV-0044",
+      "finding": "TEC-AUDIT-0022",
+      "location": "04-security/dependency-audit.json"
+    },
+    {
+      "ref": "EV-0045",
+      "finding": "TEC-AUDIT-0023",
+      "location": "04-security/dependency-audit.json"
+    },
+    {
+      "ref": "EV-0046",
+      "finding": "TEC-AUDIT-0024",
+      "location": "tec-api-gateway/src/middleware/jwt-auth.ts:6-48"
+    },
+    {
+      "ref": "EV-0047",
+      "finding": "TEC-AUDIT-0024",
+      "location": "tec-api-gateway/src/main.ts:705-720,758"
+    },
+    {
+      "ref": "EV-0048",
+      "finding": "TEC-AUDIT-0024",
+      "location": "tec-commerce-service/src/modules/product/product.controller.ts:35-46,79-81"
+    },
+    {
+      "ref": "EV-0049",
+      "finding": "TEC-AUDIT-0025",
+      "location": "Tec-Assets src/app/api/debug/route.ts"
+    },
+    {
+      "ref": "EV-0050",
+      "finding": "TEC-AUDIT-0026",
+      "location": "04-security/secret-scan.json"
+    },
+    {
+      "ref": "EV-0051",
+      "finding": "TEC-AUDIT-0027",
+      "location": "knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md:43-56"
+    },
+    {
+      "ref": "EV-0052",
+      "finding": "TEC-AUDIT-0027",
+      "location": "Tec-App CLAUDE.md (Auth Pattern)"
+    },
+    {
+      "ref": "EV-0053",
+      "finding": "TEC-AUDIT-0027",
+      "location": "tec-template-base src/app/api/auth/sso-callback/route.ts:94"
+    },
+    {
+      "ref": "EV-0054",
+      "finding": "TEC-AUDIT-0028",
+      "location": "Tec-App tec-frontend/src/lib-client/hooks/useWallet.ts:197"
+    },
+    {
+      "ref": "EV-0055",
+      "finding": "TEC-AUDIT-0028",
+      "location": "Tec-App tec-frontend/src/lib-client/hooks/useAppPayments.ts:25"
+    },
+    {
+      "ref": "EV-0056",
+      "finding": "TEC-AUDIT-0007",
+      "location": "03-code-quality/code-quality.json"
     }
   ]
 }

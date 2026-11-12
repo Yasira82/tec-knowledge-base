@@ -1,0 +1,1475 @@
+{
+  "ref": "origin/main",
+  "repositories": [
+    {
+      "repository": "TEC-SDK",
+      "silent_catch": 0,
+      "any": 0,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 13,
+      "todo": 0,
+      "files": 18,
+      "lines": 1515,
+      "files_over_600": [],
+      "silent_catch_files": []
+    },
+    {
+      "repository": "Tec-Alert",
+      "silent_catch": 35,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 71,
+      "lines": 5803,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/components/Watchlist.tsx (2)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/alert/server.ts (2)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Analytics-",
+      "silent_catch": 27,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 1,
+      "files": 79,
+      "lines": 6392,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/page.tsx (2)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-App",
+      "silent_catch": 86,
+      "any": 7,
+      "ts_ignore": 0,
+      "eslint_off": 13,
+      "console_log": 12,
+      "todo": 2,
+      "files": 351,
+      "lines": 47457,
+      "files_over_600": [
+        {
+          "path": "tec-frontend/src/app/hub/campaign/page.tsx",
+          "lines": 1229
+        },
+        {
+          "path": "tec-frontend/src/app/api/ai/chat/route.ts",
+          "lines": 960
+        },
+        {
+          "path": "tec-frontend/src/app/pioneers/PioneersClient.tsx",
+          "lines": 881
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/en.ts",
+          "lines": 767
+        },
+        {
+          "path": "tec-frontend/src/domains/_registry.ts",
+          "lines": 747
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/ar.ts",
+          "lines": 703
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/es.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/fr.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/hi.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/id.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/ko.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/pt.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/ru.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/tr.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/vi.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/lib/i18n/zh.ts",
+          "lines": 691
+        },
+        {
+          "path": "tec-frontend/src/app/hub/admin/campaign/page.tsx",
+          "lines": 671
+        },
+        {
+          "path": "tec-frontend/src/app/dashboard/page.tsx",
+          "lines": 624
+        }
+      ],
+      "silent_catch_files": [
+        "tec-frontend/src/app/ai/AiClient.tsx (2)",
+        "tec-frontend/src/app/api/ai/chat/route.ts (2)",
+        "tec-frontend/src/app/api/ai/health/route.ts (1)",
+        "tec-frontend/src/app/api/auth/sso-callback/route.ts (1)",
+        "tec-frontend/src/app/api/auth/sso-links/route.ts (1)",
+        "tec-frontend/src/app/api/bff/ai/context/route.ts (1)",
+        "tec-frontend/src/app/api/warmup/route.ts (1)",
+        "tec-frontend/src/app/dashboard/subscription/page.tsx (1)",
+        "tec-frontend/src/app/hub/admin/campaign/page.tsx (1)",
+        "tec-frontend/src/app/hub/campaign/page.tsx (4)",
+        "tec-frontend/src/app/hub/components/PaymentModal.tsx (1)",
+        "tec-frontend/src/app/hub/page.tsx (1)",
+        "tec-frontend/src/app/hub/referral/page.tsx (2)",
+        "tec-frontend/src/app/mint/page.tsx (2)",
+        "tec-frontend/src/app/pioneers/PioneersClient.tsx (8)",
+        "tec-frontend/src/components/InstallPrompt.tsx (1)",
+        "tec-frontend/src/components/PiIntegration.tsx (1)",
+        "tec-frontend/src/components/ai/ChatTranscript.tsx (1)",
+        "tec-frontend/src/components/hub/HubAppsGrid.tsx (4)",
+        "tec-frontend/src/components/kyc/CameraCapture.tsx (1)",
+        "tec-frontend/src/components/payment/PiPaymentButton.tsx (1)",
+        "tec-frontend/src/hooks/useHubData.ts (3)",
+        "tec-frontend/src/lib-client/campaign.ts (3)",
+        "tec-frontend/src/lib-client/hooks/useAppPayments.ts (1)",
+        "tec-frontend/src/lib-client/hooks/useEntitlements.ts (1)",
+        "tec-frontend/src/lib-client/hooks/useInstallApp.ts (1)",
+        "tec-frontend/src/lib-client/hooks/useSubscriptionPlan.ts (1)",
+        "tec-frontend/src/lib-client/hooks/useWallet.ts (1)",
+        "tec-frontend/src/lib-client/hooks/useWalletRealtime.ts (1)",
+        "tec-frontend/src/lib-client/pi/PiCircuitBreaker.ts (1)",
+        "tec-frontend/src/lib-client/pi/pi-auth.ts (3)",
+        "tec-frontend/src/lib-client/pi/pi-session.ts (3)",
+        "tec-frontend/src/lib-client/referral.ts (5)",
+        "tec-frontend/src/lib-client/return-to.ts (1)",
+        "tec-frontend/src/lib-client/safe-bottom.ts (1)",
+        "tec-frontend/src/lib-client/theme.ts (2)",
+        "tec-frontend/src/lib/ai-session.ts (8)",
+        "tec-frontend/src/lib/ai/openrouter-free.ts (1)",
+        "tec-frontend/src/lib/ai/rate-limit.ts (1)",
+        "tec-frontend/src/lib/apps.ts (1)",
+        "tec-frontend/src/lib/bff/createHandler.ts (1)",
+        "tec-frontend/src/lib/i18n/index.tsx (3)",
+        "tec-frontend/src/lib/observability.ts (2)",
+        "tec-frontend/src/lib/request-id.ts (1)",
+        "tec-frontend/src/middleware.ts (1)",
+        "tec-frontend/src/test-utils/render-with-locale.tsx (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Assets",
+      "silent_catch": 37,
+      "any": 5,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 11,
+      "todo": 0,
+      "files": 103,
+      "lines": 8384,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (2)",
+        "src/app/api/debug/route.ts (1)",
+        "src/app/api/warmup/route.ts (1)",
+        "src/app/app/components/NFTUploadModal.tsx (1)",
+        "src/app/app/hooks/useAssetsPage.ts (5)",
+        "src/app/layout.tsx (3)",
+        "src/app/pi-test/ArrivalTracePanel.tsx (2)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/pi/hub-entry.ts (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/hooks/useSettings.ts (3)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/visit-sign-in.ts (1)",
+        "src/lib/pioneer/arrival-trace.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Commerce",
+      "silent_catch": 37,
+      "any": 5,
+      "ts_ignore": 0,
+      "eslint_off": 8,
+      "console_log": 5,
+      "todo": 0,
+      "files": 94,
+      "lines": 9240,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (2)",
+        "src/app/api/warmup/route.ts (1)",
+        "src/app/app/components/CommerceDrawer.tsx (1)",
+        "src/app/app/page.tsx (4)",
+        "src/app/layout.tsx (3)",
+        "src/app/pi-test/ArrivalTracePanel.tsx (2)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/orders/hub-hold.ts (2)",
+        "src/lib-client/pi/hub-entry.ts (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/hooks/useSettings.ts (3)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (2)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/visit-sign-in.ts (1)",
+        "src/lib/pioneer/arrival-trace.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Connection",
+      "silent_catch": 56,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 4,
+      "console_log": 6,
+      "todo": 1,
+      "files": 201,
+      "lines": 22585,
+      "files_over_600": [
+        {
+          "path": "src/app/app/components/Messages.tsx",
+          "lines": 1281
+        },
+        {
+          "path": "src/app/app/components/ChatInfoSheet.tsx",
+          "lines": 888
+        },
+        {
+          "path": "src/lib-client/connection/useMessages.ts",
+          "lines": 667
+        }
+      ],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/components/ChatInfoSheet.tsx (4)",
+        "src/app/app/components/Messages.tsx (2)",
+        "src/app/app/page.tsx (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/public/ShareProfile.tsx (2)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/connection/downscaleImage.ts (1)",
+        "src/lib-client/connection/useInvite.ts (1)",
+        "src/lib-client/connection/useMessages.ts (1)",
+        "src/lib-client/connection/useNotifications.ts (1)",
+        "src/lib-client/connection/usePresence.ts (1)",
+        "src/lib-client/connection/useStories.ts (1)",
+        "src/lib-client/connection/useTyping.ts (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib-client/theme.ts (2)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (4)",
+        "src/lib/i18n/server.ts (2)",
+        "src/lib/pi-payment.ts (2)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Dx",
+      "silent_catch": 34,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 67,
+      "lines": 5502,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/page.tsx (1)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/dx/server.ts (2)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Ecommerce",
+      "silent_catch": 29,
+      "any": 17,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 0,
+      "files": 83,
+      "lines": 7485,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (2)",
+        "src/app/api/warmup/route.ts (1)",
+        "src/app/pi-test/ArrivalTracePanel.tsx (2)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/shop/EcommerceDrawer.tsx (1)",
+        "src/lib-client/cart/useCart.ts (1)",
+        "src/lib-client/orders/hub-hold.ts (2)",
+        "src/lib-client/pi/hub-entry.ts (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (3)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/visit-sign-in.ts (1)",
+        "src/lib/pioneer/arrival-trace.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Elite",
+      "silent_catch": 33,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 66,
+      "lines": 5405,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/elite/server.ts (2)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Epic",
+      "silent_catch": 33,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 77,
+      "lines": 6624,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/epic/server.ts (2)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Estate",
+      "silent_catch": 32,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 1,
+      "console_log": 5,
+      "todo": 1,
+      "files": 72,
+      "lines": 6198,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/estate/fetch-property.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Explorer",
+      "silent_catch": 30,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 2,
+      "console_log": 5,
+      "todo": 5,
+      "files": 97,
+      "lines": 11539,
+      "files_over_600": [
+        {
+          "path": "src/app/app/components/ListingPanel.tsx",
+          "lines": 795
+        }
+      ],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/app/testnet-payout/page.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/theme.ts (2)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Fundx",
+      "silent_catch": 31,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 1,
+      "files": 65,
+      "lines": 5290,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Insure",
+      "silent_catch": 33,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 66,
+      "lines": 5391,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/insure/server.ts (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Legend",
+      "silent_catch": 37,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 72,
+      "lines": 6076,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/components/ShowcaseCard.tsx (1)",
+        "src/app/badge/[handle]/route.ts (1)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/legend/server.ts (4)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Life",
+      "silent_catch": 39,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 1,
+      "console_log": 5,
+      "todo": 1,
+      "files": 164,
+      "lines": 16017,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/components/ProblemSession.tsx (1)",
+        "src/app/layout.tsx (3)",
+        "src/app/pi-test/ArrivalTracePanel.tsx (2)",
+        "src/app/testnet-payout/page.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/life/sessionCounter.ts (1)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib-client/theme.ts (2)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (3)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/pioneer/arrival-trace.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Nexus",
+      "silent_catch": 34,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 1,
+      "files": 83,
+      "lines": 6892,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/api/bff/nexus/recommend/route.ts (1)",
+        "src/app/layout.tsx (3)",
+        "src/app/workflow/[id]/WorkflowRunner.tsx (2)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Nx",
+      "silent_catch": 33,
+      "any": 3,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 68,
+      "lines": 5764,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/api/bff/nx/opportunities/route.ts (1)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/nx/server.ts (1)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Titan",
+      "silent_catch": 34,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 66,
+      "lines": 5470,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/page.tsx (1)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/lib/titan/server.ts (2)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Vip",
+      "silent_catch": 33,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 66,
+      "lines": 5384,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/lib/vip/server.ts (2)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-Zone",
+      "silent_catch": 39,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 1,
+      "files": 83,
+      "lines": 6949,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/api/bff/zone/registry/route.ts (1)",
+        "src/app/api/bff/zone/verify/[id]/route.ts (1)",
+        "src/app/badge/[handle]/route.ts (1)",
+        "src/app/layout.tsx (3)",
+        "src/app/pi-test/ArrivalTracePanel.tsx (2)",
+        "src/app/verify/[id]/ShareBadge.tsx (1)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/pioneer/arrival-trace.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/lib/zone/server.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "silent_catch": 18,
+      "any": 68,
+      "ts_ignore": 0,
+      "eslint_off": 13,
+      "console_log": 158,
+      "todo": 0,
+      "files": 562,
+      "lines": 73086,
+      "files_over_600": [
+        {
+          "path": "tec-connection-service/src/modules/connection/messaging.service.ts",
+          "lines": 2200
+        },
+        {
+          "path": "tec-platform-service/src/modules/campaign/campaign.service.ts",
+          "lines": 2126
+        },
+        {
+          "path": "tec-payment-service/src/controllers/payment.controller.ts",
+          "lines": 1487
+        },
+        {
+          "path": "tec-life-service/src/modules/life/life.service.ts",
+          "lines": 1404
+        },
+        {
+          "path": "tec-platform-service/src/modules/pioneer/pioneer.service.ts",
+          "lines": 1007
+        },
+        {
+          "path": "tec-ai-service/src/modules/chat/chat.handler.ts",
+          "lines": 903
+        },
+        {
+          "path": "tec-api-gateway/src/main.ts",
+          "lines": 850
+        },
+        {
+          "path": "tec-search-service/src/modules/explorer/explorer.service.ts",
+          "lines": 803
+        },
+        {
+          "path": "tec-commerce-service/src/modules/order/order.service.ts",
+          "lines": 791
+        },
+        {
+          "path": "tec-connection-service/src/modules/connection/connection.service.ts",
+          "lines": 782
+        },
+        {
+          "path": "tec-payment-service/src/services/pi-a2u.ts",
+          "lines": 723
+        },
+        {
+          "path": "tec-auth-service/src/modules/auth/auth.service.ts",
+          "lines": 626
+        }
+      ],
+      "silent_catch_files": [
+        "tec-ai-service/src/modules/chat/chat.handler.ts (2)",
+        "tec-ai-service/src/modules/chat/lib/openrouter-free.ts (1)",
+        "tec-ai-service/src/modules/chat/lib/rate-limit.ts (1)",
+        "tec-analytics-service/src/modules/analytics/analytics.controller.ts (1)",
+        "tec-api-gateway/src/middleware/jwt-auth.ts (1)",
+        "tec-backup-job/src/backup.ts (1)",
+        "tec-connection-service/src/modules/connection/connection.service.ts (3)",
+        "tec-connection-service/src/modules/connection/messaging.service.ts (1)",
+        "tec-life-service/src/deletions/deletion.guard.ts (1)",
+        "tec-life-service/src/modules/life/life.controller.ts (1)",
+        "tec-payment-service/scripts/send-testnet-payouts.mjs (1)",
+        "tec-payment-service/src/controllers/network-report.controller.ts (1)",
+        "tec-payment-service/src/services/network-report.ts (1)",
+        "tec-search-service/src/modules/explorer/explorer.service.ts (2)"
+      ],
+      "services": [
+        {
+          "service": "tec-ai-service",
+          "silent_catch": 4,
+          "any": 10,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 1,
+          "todo": 0,
+          "files": 48,
+          "lines": 7480,
+          "files_over_600": [
+            {
+              "path": "tec-ai-service/src/modules/chat/chat.handler.ts",
+              "lines": 903
+            }
+          ],
+          "silent_catch_files": [
+            "tec-ai-service/src/modules/chat/chat.handler.ts (2)",
+            "tec-ai-service/src/modules/chat/lib/openrouter-free.ts (1)",
+            "tec-ai-service/src/modules/chat/lib/rate-limit.ts (1)"
+          ],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-analytics-service",
+          "silent_catch": 1,
+          "any": 2,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 23,
+          "lines": 2730,
+          "files_over_600": [],
+          "silent_catch_files": [
+            "tec-analytics-service/src/modules/analytics/analytics.controller.ts (1)"
+          ],
+          "validation": []
+        },
+        {
+          "service": "tec-api-gateway",
+          "silent_catch": 1,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 21,
+          "lines": 2589,
+          "files_over_600": [
+            {
+              "path": "tec-api-gateway/src/main.ts",
+              "lines": 850
+            }
+          ],
+          "silent_catch_files": [
+            "tec-api-gateway/src/middleware/jwt-auth.ts (1)"
+          ],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-asset-service",
+          "silent_catch": 0,
+          "any": 9,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 1,
+          "todo": 0,
+          "files": 26,
+          "lines": 2479,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": [
+            "ValidationPipe",
+            "from 'class-validator'"
+          ]
+        },
+        {
+          "service": "tec-auth-service",
+          "silent_catch": 0,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 1,
+          "console_log": 0,
+          "todo": 0,
+          "files": 16,
+          "lines": 1258,
+          "files_over_600": [
+            {
+              "path": "tec-auth-service/src/modules/auth/auth.service.ts",
+              "lines": 626
+            }
+          ],
+          "silent_catch_files": [],
+          "validation": [
+            "ValidationPipe",
+            "from 'class-validator'"
+          ]
+        },
+        {
+          "service": "tec-backup-job",
+          "silent_catch": 1,
+          "any": 0,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 2,
+          "todo": 0,
+          "files": 10,
+          "lines": 740,
+          "files_over_600": [],
+          "silent_catch_files": [
+            "tec-backup-job/src/backup.ts (1)"
+          ],
+          "validation": []
+        },
+        {
+          "service": "tec-business-service",
+          "silent_catch": 0,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 1,
+          "todo": 0,
+          "files": 29,
+          "lines": 2222,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-commerce-service",
+          "silent_catch": 0,
+          "any": 7,
+          "ts_ignore": 0,
+          "eslint_off": 7,
+          "console_log": 0,
+          "todo": 0,
+          "files": 34,
+          "lines": 4879,
+          "files_over_600": [
+            {
+              "path": "tec-commerce-service/src/modules/order/order.service.ts",
+              "lines": 791
+            }
+          ],
+          "silent_catch_files": [],
+          "validation": []
+        },
+        {
+          "service": "tec-connection-service",
+          "silent_catch": 4,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 1,
+          "console_log": 0,
+          "todo": 0,
+          "files": 29,
+          "lines": 5891,
+          "files_over_600": [
+            {
+              "path": "tec-connection-service/src/modules/connection/messaging.service.ts",
+              "lines": 2200
+            },
+            {
+              "path": "tec-connection-service/src/modules/connection/connection.service.ts",
+              "lines": 782
+            }
+          ],
+          "silent_catch_files": [
+            "tec-connection-service/src/modules/connection/connection.service.ts (3)",
+            "tec-connection-service/src/modules/connection/messaging.service.ts (1)"
+          ],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-identity-service",
+          "silent_catch": 0,
+          "any": 2,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 2,
+          "todo": 0,
+          "files": 34,
+          "lines": 2830,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": []
+        },
+        {
+          "service": "tec-kyc-service",
+          "silent_catch": 0,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 1,
+          "console_log": 0,
+          "todo": 0,
+          "files": 14,
+          "lines": 940,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": []
+        },
+        {
+          "service": "tec-life-service",
+          "silent_catch": 2,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 25,
+          "lines": 4055,
+          "files_over_600": [
+            {
+              "path": "tec-life-service/src/modules/life/life.service.ts",
+              "lines": 1404
+            }
+          ],
+          "silent_catch_files": [
+            "tec-life-service/src/deletions/deletion.guard.ts (1)",
+            "tec-life-service/src/modules/life/life.controller.ts (1)"
+          ],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-nexus-service",
+          "silent_catch": 0,
+          "any": 0,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 28,
+          "lines": 3746,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-notification-service",
+          "silent_catch": 0,
+          "any": 4,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 17,
+          "lines": 1141,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": []
+        },
+        {
+          "service": "tec-payment-service",
+          "silent_catch": 2,
+          "any": 6,
+          "ts_ignore": 0,
+          "eslint_off": 2,
+          "console_log": 0,
+          "todo": 0,
+          "files": 35,
+          "lines": 6400,
+          "files_over_600": [
+            {
+              "path": "tec-payment-service/src/controllers/payment.controller.ts",
+              "lines": 1487
+            },
+            {
+              "path": "tec-payment-service/src/services/pi-a2u.ts",
+              "lines": 723
+            }
+          ],
+          "silent_catch_files": [
+            "tec-payment-service/src/controllers/network-report.controller.ts (1)",
+            "tec-payment-service/src/services/network-report.ts (1)"
+          ],
+          "validation": [
+            "express-validator",
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-platform-service",
+          "silent_catch": 0,
+          "any": 0,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 29,
+          "lines": 5530,
+          "files_over_600": [
+            {
+              "path": "tec-platform-service/src/modules/campaign/campaign.service.ts",
+              "lines": 2126
+            },
+            {
+              "path": "tec-platform-service/src/modules/pioneer/pioneer.service.ts",
+              "lines": 1007
+            }
+          ],
+          "silent_catch_files": [],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-realtime-service",
+          "silent_catch": 0,
+          "any": 3,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 11,
+          "lines": 775,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": []
+        },
+        {
+          "service": "tec-search-service",
+          "silent_catch": 2,
+          "any": 0,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 16,
+          "lines": 2201,
+          "files_over_600": [
+            {
+              "path": "tec-search-service/src/modules/explorer/explorer.service.ts",
+              "lines": 803
+            }
+          ],
+          "silent_catch_files": [
+            "tec-search-service/src/modules/explorer/explorer.service.ts (2)"
+          ],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-service-template",
+          "silent_catch": 0,
+          "any": 0,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 13,
+          "lines": 604,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-storage-service",
+          "silent_catch": 0,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 0,
+          "todo": 0,
+          "files": 11,
+          "lines": 1056,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": []
+        },
+        {
+          "service": "tec-trust-service",
+          "silent_catch": 0,
+          "any": 0,
+          "ts_ignore": 0,
+          "eslint_off": 0,
+          "console_log": 1,
+          "todo": 0,
+          "files": 30,
+          "lines": 2744,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": [
+            "from 'zod'",
+            "z.object("
+          ]
+        },
+        {
+          "service": "tec-wallet-service",
+          "silent_catch": 0,
+          "any": 1,
+          "ts_ignore": 0,
+          "eslint_off": 1,
+          "console_log": 0,
+          "todo": 0,
+          "files": 24,
+          "lines": 1985,
+          "files_over_600": [],
+          "silent_catch_files": [],
+          "validation": [
+            "ValidationPipe",
+            "from 'class-validator'",
+            "from 'zod'",
+            "z.object("
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "Tec-system",
+      "silent_catch": 34,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 5,
+      "files": 64,
+      "lines": 5300,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/app/page.tsx (1)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/components/referral/InviteCard.tsx (1)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib-client/referral.ts (5)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/lib/system/server.ts (2)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "Tec-ui",
+      "silent_catch": 0,
+      "any": 0,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 0,
+      "todo": 0,
+      "files": 21,
+      "lines": 1289,
+      "files_over_600": [],
+      "silent_catch_files": []
+    },
+    {
+      "repository": "tec-auth",
+      "silent_catch": 1,
+      "any": 0,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 0,
+      "todo": 0,
+      "files": 9,
+      "lines": 531,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/middleware/index.ts (1)"
+      ]
+    },
+    {
+      "repository": "tec-brookfield",
+      "silent_catch": 22,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 3,
+      "files": 57,
+      "lines": 4793,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/pi-session.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "tec-nbf",
+      "silent_catch": 23,
+      "any": 4,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 5,
+      "todo": 3,
+      "files": 59,
+      "lines": 5084,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/nbf/server.ts (1)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/pi-session.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    },
+    {
+      "repository": "tec-template-base",
+      "silent_catch": 28,
+      "any": 2,
+      "ts_ignore": 0,
+      "eslint_off": 0,
+      "console_log": 16,
+      "todo": 4,
+      "files": 88,
+      "lines": 6517,
+      "files_over_600": [],
+      "silent_catch_files": [
+        "src/app/api/auth/sso-callback/route.ts (3)",
+        "src/app/layout.tsx (3)",
+        "src/app/pi-test/ArrivalTracePanel.tsx (2)",
+        "src/components/pioneer/ArrivalReport.tsx (1)",
+        "src/components/pioneer/QuestReturn.tsx (4)",
+        "src/lib-client/pi/pi-auth.ts (3)",
+        "src/lib/bff/createHandler.ts (1)",
+        "src/lib/i18n/index.tsx (2)",
+        "src/lib/pi-payment.ts (1)",
+        "src/lib/pi/PiCircuitBreaker.ts (1)",
+        "src/lib/pi/counted-once.ts (1)",
+        "src/lib/pi/pi-session.ts (2)",
+        "src/lib/pioneer/arrival-trace.ts (1)",
+        "src/lib/request-id.ts (1)",
+        "src/lib/safe-bottom.ts (1)",
+        "src/middleware.ts (1)"
+      ]
+    }
+  ]
+}
