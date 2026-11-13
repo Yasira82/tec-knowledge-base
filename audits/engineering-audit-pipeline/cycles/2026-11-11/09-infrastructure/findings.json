@@ -109,7 +109,7 @@
       "remediation": {
         "state": "SCHEDULED",
         "refs": [],
-        "note": "Run 5 remediation."
+        "note": "Owner, 13 Nov: setting ALERT_WEBHOOK_URL is deferred — risk accepted for now (a failed backup alerts nobody). The code half (restore check fails when unconfigured; a Railway-cron twin of the restore check) is Run 5 remediation."
       }
     },
     {
