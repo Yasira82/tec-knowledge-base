@@ -49,9 +49,12 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run5",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 5 remediation."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 4dda30dd"
+        ],
+        "note": "railway.toml with healthcheckPath \"/health\" in all 19 services; CI policy check. Owner: confirm Railway reads it from the service root.",
+        "verification": "A deploy whose migrate step refuses keeps the old deployment live"
       }
     },
     {
@@ -107,9 +110,12 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run5",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Owner, 13 Nov: setting ALERT_WEBHOOK_URL is deferred — risk accepted for now (a failed backup alerts nobody). The code half (restore check fails when unconfigured; a Railway-cron twin of the restore check) is Run 5 remediation."
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 719dbbb7"
+        ],
+        "note": "Restore check fails when unconfigured; RESTORE_LOCAL_POSTGRES=1 lets it run as a Railway cron (end-to-end tested). Owner: create the cron service (README step 5); ALERT_WEBHOOK_URL deferred (risk accepted).",
+        "verification": "The Railway cron restore check runs green on 3 Dec"
       }
     },
     {
@@ -144,9 +150,13 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run5",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 5 remediation."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base fc5a570",
+          "24 app commits"
+        ],
+        "note": "engines.node 22.x everywhere; template-sync marker.",
+        "verification": "Vercel build logs show Node 22"
       }
     }
   ]

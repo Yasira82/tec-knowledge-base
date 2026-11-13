@@ -67,5 +67,5 @@ directory searches return every match through a full scan), 0042 (no app pins No
 
 ## Next
 
-**Run 5 remediation**, then **Run 6 — P10 + P11** (cross-repository audit, final assessment);
+Run 5 remediation done 13 Nov, locally (`remediation-run5.md`). Then **Run 6 — P10 + P11** (cross-repository audit, final assessment);
 read `09-infrastructure/handoff.md` and `10-performance/handoff.md` first.

@@ -49,9 +49,12 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run5",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 5 remediation."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 61b9d346"
+        ],
+        "note": "Both searches paged (≤100, hasMore); pg_trgm GIN index on search_text (migration).",
+        "verification": "EXPLAIN on production uses the trigram index"
       }
     },
     {
@@ -96,9 +99,12 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run5",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 5 remediation."
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "KB"
+        ],
+        "note": "Latency SLOs defined (C-78 §2, slo-definitions.yaml). A recorded k6 run waits on staging (0006).",
+        "verification": "A recorded k6 run in runtime-evidence/"
       }
     }
   ]

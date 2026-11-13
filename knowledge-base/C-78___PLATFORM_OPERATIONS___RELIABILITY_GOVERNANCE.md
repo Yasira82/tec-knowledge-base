@@ -39,6 +39,17 @@ Governance > Heroics
 | PAL      | 99.95% | < 15 min    |
 | Hub      | 99.5%  | < 60 min    |
 
+**Latency targets** `[Planned State]` — added 13 Nov 2026 (engineering audit TEC-AUDIT-0043):
+until then only availability had a target, so "is it fast enough?" had no answer. **Not yet
+measured**: no load test has been recorded and there is no staging to run one against
+(TEC-AUDIT-0006). The first recorded run either confirms these or replaces them.
+
+| Runtime  | p95 latency | Scope |
+|----------|-------------|-------|
+| Gateway  | < 800 ms    | every route except those waiting on Pi Network or TEC AI |
+| Auth     | < 500 ms    | token refresh (`/api/v1/auth/refresh`) — sign-in waits on Pi and is excluded |
+| Payments | < 1000 ms   | payment create — approve/complete wait on Pi and are excluded |
+
 **Error Budget Rule:** Budget exhausted → feature freeze → reliability-only work.
 
 > **Machine-readable contract:** these targets are formalized in
