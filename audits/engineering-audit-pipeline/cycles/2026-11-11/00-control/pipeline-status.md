@@ -9,8 +9,8 @@
 | P1 | Architecture & Baseline Compliance | 1 | **PASSED_WITH_FINDINGS** | 6 new |
 | P2 | Code Quality & Static Analysis | 2 | **PASSED_WITH_FINDINGS** (type-check/lint on main BLOCKED) | 1 new · 0007 measured |
 | P3 | Security & Privacy | 2 | **PASSED_WITH_FINDINGS** (live headers BLOCKED) | 10 new (1 withheld) |
-| P4 | Database & Data Integrity | 3 | NOT_STARTED | — |
-| P5 | API & Integration Contracts | 3 | NOT_STARTED | — |
+| P4 | Database & Data Integrity | 3 | **PASSED_WITH_FINDINGS** (production row counts BLOCKED) | 3 new · 0012/0013 referenced |
+| P5 | API & Integration Contracts | 3 | **PASSED_WITH_FINDINGS** | 3 new |
 | P6 | Functional & Business Logic | 4 | NOT_STARTED | — |
 | P7 | Testing & QA | 4 | NOT_STARTED | — |
 | P8 | Infrastructure & DevOps | 5 | NOT_STARTED | — |
@@ -40,6 +40,15 @@ Remediation (12 Nov, local commits): `remediation-run2.md`.
 Run 2 was done while GitHub Actions was refused for the whole account (billing hold, owner's
 ticket open); its outputs are committed locally and pushed when Actions is back.
 
+## After Run 3 (13 Nov)
+
+35 findings: 1 CRITICAL (closed) · 4 HIGH · 13 MEDIUM · 14 LOW · 3 INFO. New: **0030 (HIGH)** —
+the hourly reconciliation completes a paid payment with no `payment.completed.v1` event, so
+nothing is delivered; 0031 · 0032 (payment status written outside the state machine);
+0033 · 0034 (no shared, bounded, checked way for a BFF to call the gateway); 0035 (a dead
+example route). Still no push: GitHub Actions is refused for the account.
+
 ## Next
 
-**Run 3 — P4 + P5** (databases, contracts). Read `04-security/handoff.md` first.
+**Run 3 remediation** — 0030 and 0031 first (local backend commit). Then **Run 4 — P6 + P7**;
+read `05-database/handoff.md` and `06-api-integration/handoff.md` first.

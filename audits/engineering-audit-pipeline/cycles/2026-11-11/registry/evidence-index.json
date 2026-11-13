@@ -295,6 +295,81 @@
       "ref": "EV-0059",
       "finding": "TEC-AUDIT-0029",
       "location": "tec-template-base src/lib-client/pi/pi-auth.ts:76-120"
+    },
+    {
+      "ref": "EV-0060",
+      "finding": "TEC-AUDIT-0030",
+      "location": "tec-payment-service/src/services/reconciliation.service.ts:80-95"
+    },
+    {
+      "ref": "EV-0061",
+      "finding": "TEC-AUDIT-0030",
+      "location": "tec-payment-service/src/services/reconciliation.service.ts:194-210"
+    },
+    {
+      "ref": "EV-0062",
+      "finding": "TEC-AUDIT-0030",
+      "location": "tec-payment-service/src/server.ts:85-96"
+    },
+    {
+      "ref": "EV-0063",
+      "finding": "TEC-AUDIT-0030",
+      "location": "tec-payment-service/src/controllers/payment.controller.ts:1280-1300"
+    },
+    {
+      "ref": "EV-0064",
+      "finding": "TEC-AUDIT-0031",
+      "location": "tec-payment-service/src/controllers/payment.controller.ts:1442-1456"
+    },
+    {
+      "ref": "EV-0065",
+      "finding": "TEC-AUDIT-0031",
+      "location": "tec-payment-service/src/controllers/payment.controller.ts:1371-1376"
+    },
+    {
+      "ref": "EV-0066",
+      "finding": "TEC-AUDIT-0032",
+      "location": "tec-payment-service/src/controllers/payment.controller.ts:377"
+    },
+    {
+      "ref": "EV-0067",
+      "finding": "TEC-AUDIT-0032",
+      "location": "tec-payment-service/src/controllers/payment.controller.ts:555"
+    },
+    {
+      "ref": "EV-0068",
+      "finding": "TEC-AUDIT-0033",
+      "location": "06-api-integration/evidence.md (per-app counts)"
+    },
+    {
+      "ref": "EV-0069",
+      "finding": "TEC-AUDIT-0033",
+      "location": "Tec-core-backend NEW-W"
+    },
+    {
+      "ref": "EV-0070",
+      "finding": "TEC-AUDIT-0034",
+      "location": "tec-template-base src/lib/sdk.ts:1"
+    },
+    {
+      "ref": "EV-0071",
+      "finding": "TEC-AUDIT-0034",
+      "location": "06-api-integration/evidence.md"
+    },
+    {
+      "ref": "EV-0072",
+      "finding": "TEC-AUDIT-0034",
+      "location": "TEC-SDK origin/main"
+    },
+    {
+      "ref": "EV-0073",
+      "finding": "TEC-AUDIT-0035",
+      "location": "tec-api-gateway/src/config/service-registry.ts"
+    },
+    {
+      "ref": "EV-0074",
+      "finding": "TEC-AUDIT-0035",
+      "location": "tec-template-base src/app/api/bff/items/route.ts:30,55"
     }
   ]
 }

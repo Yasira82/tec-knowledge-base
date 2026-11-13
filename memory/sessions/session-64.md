@@ -98,4 +98,8 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
 0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.
 1. Merge KB #228, template #56, the 20 app PRs; the backend PR on or after 1 Dec.
 2. After the merges, re-run `tools/architecture_checks.py` to close the fixed findings.
-3. Run 3 — P4 + P5 (start from `04-security/handoff.md`).
+3. ~~Run 3 — P4 + P5~~ done 13 Nov: 6 new findings (0030–0035), 35 in all. **0030 (HIGH):** the
+   hourly reconciliation (`reconciliation.service.ts` `markCompleted`) sets a paid payment
+   `completed` with no `payment.completed.v1` — nothing is delivered. Next: fix 0030 · 0031
+   (local backend commit), then Run 4 — P6 + P7 (start from `05-database/handoff.md` and
+   `06-api-integration/handoff.md`).

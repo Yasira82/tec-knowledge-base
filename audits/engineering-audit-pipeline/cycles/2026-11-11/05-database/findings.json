@@ -1,0 +1,155 @@
+{
+  "cycle": "2026-11-11",
+  "run": 3,
+  "phase": "P4",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0030",
+      "phase": "P4",
+      "repository": "tec-core-backend (tec-payment-service)",
+      "category": "data-integrity",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "The hourly reconciliation completes a paid payment without the payment.completed.v1 event",
+      "description": "reconcileStalePayments runs every hour (server.ts cron). For a payment Pi shows as paid (developer_completed, or approved + verified) it calls markCompleted, which sets status 'completed' with a bare prisma.payment.update and writes an audit row — but no outbox event. Every consumer that delivers what was bought (commerce subscriptions, asset purchases, identity legend/nexus) listens to payment.completed.v1 only. So a payment the reconciliation rescues is marked paid and delivers nothing. The same gap was closed for the recovery endpoint by completeFromRecovery (conditional updateMany + saveOutboxEvent in one transaction); the cron path was not moved onto it. The update is also not conditional: a live /complete racing the cron can both write 'completed'.",
+      "evidence": [
+        {
+          "ref": "EV-0060",
+          "location": "tec-payment-service/src/services/reconciliation.service.ts:80-95",
+          "observation": "markCompleted: payment.update to completed + audit log; no saveOutboxEvent"
+        },
+        {
+          "ref": "EV-0061",
+          "location": "tec-payment-service/src/services/reconciliation.service.ts:194-210",
+          "observation": "called when Pi shows developer_completed or approved+verified"
+        },
+        {
+          "ref": "EV-0062",
+          "location": "tec-payment-service/src/server.ts:85-96",
+          "observation": "scheduled hourly (RECONCILE_SCHEDULE)"
+        },
+        {
+          "ref": "EV-0063",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:1280-1300",
+          "observation": "completeFromRecovery: the conditional, event-emitting path the cron should use"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/services/reconciliation.service.ts"
+      ],
+      "root_cause": "Two completion paths: the recovery endpoint was fixed to emit the event; the cron kept its own update.",
+      "technical_impact": "Invariant #2/#4 hold (Pi verified it, an audit row exists) but the event — the fact consumers act on — is never written (C-47 P4, Forbidden #6 silent failure).",
+      "business_impact": "A user who paid, whose payment the hourly job finished, gets no Pro / no asset / no order effect. Support sees \"completed\" and no delivery.",
+      "recommendation": "markCompleted calls completeFromRecovery (or the same conditional updateMany + saveOutboxEvent in one transaction) and emits only when the row actually transitioned.",
+      "acceptance_criteria": [
+        "A reconciled payment writes exactly one payment.completed.v1 outbox row",
+        "A second run, or a racing /complete, writes none",
+        "A test fails on the old markCompleted and passes on the new"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 Invariants #2 #4 · Forbidden #6",
+        "ADR-004",
+        "C-71"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 3 remediation (local backend commit, no PR before 1 Dec)."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0031",
+      "phase": "P4",
+      "repository": "tec-core-backend (tec-payment-service)",
+      "category": "data-integrity",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The recovery endpoint's 'stuck or cancelled' branch can cancel a completed or failed payment",
+      "description": "In resolve-incomplete, CASE C (Pi: not verified, or cancelled) does `if (localPayment && localPayment.status !== 'cancelled') payment.update({ status: 'cancelled' })`. A local 'completed' or 'failed' payment passes that test and is rewritten to 'cancelled'. The branch just above (unreachable on Pi) guards all three terminal states but reads then writes, so it is not atomic either.",
+      "evidence": [
+        {
+          "ref": "EV-0064",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:1442-1456",
+          "observation": "guard is status !== cancelled only"
+        },
+        {
+          "ref": "EV-0065",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:1371-1376",
+          "observation": "terminal states checked, then an unconditional update"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/controllers/payment.controller.ts"
+      ],
+      "root_cause": "The guard names one terminal state instead of the state machine (ALLOWED_TRANSITIONS).",
+      "technical_impact": "Terminal → terminal transition: breaks Invariant #7 and Forbidden #9.",
+      "business_impact": "A paid payment can be shown as cancelled; reports and support disagree with Pi.",
+      "recommendation": "Both branches use a conditional updateMany with status in ('created','approved') — the transitions ALLOWED_TRANSITIONS permits — and act on the count.",
+      "acceptance_criteria": [
+        "A completed or failed payment is never changed by resolve-incomplete",
+        "Test red on the old guard, green on the new"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 Invariant #7 · Forbidden #9"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 3 remediation (local backend commit, no PR before 1 Dec)."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0032",
+      "phase": "P4",
+      "repository": "tec-core-backend (tec-payment-service)",
+      "category": "data-integrity",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "approve and complete read the payment, then update it by id — a check-then-act",
+      "description": "Both run inside a transaction but update with where: { id } after a separate read of the status, so two concurrent calls can both pass the check. The effect is limited: complete may write two outbox events, and every consumer is idempotent by paymentId (asset upsert by paymentId; subscription returns early on the same payment_id).",
+      "evidence": [
+        {
+          "ref": "EV-0066",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:377",
+          "observation": "approve: tx.payment.update where id"
+        },
+        {
+          "ref": "EV-0067",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:555",
+          "observation": "complete: tx.payment.update where id"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/controllers/payment.controller.ts"
+      ],
+      "root_cause": "Read and write are separate statements without a status condition.",
+      "technical_impact": "Possible duplicate payment.completed.v1; absorbed by idempotent consumers.",
+      "business_impact": "None observed.",
+      "recommendation": "Conditional updateMany on the expected from-state, as completeFromRecovery does; emit only on count 1.",
+      "acceptance_criteria": [
+        "Two concurrent completes produce one event"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 Invariant #7",
+        "C-70"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 3 remediation (local backend commit, no PR before 1 Dec)."
+      }
+    }
+  ]
+}

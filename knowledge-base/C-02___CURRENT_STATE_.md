@@ -86,7 +86,8 @@ Replace rows as they close — do not strike them through and keep them.
 - **[64](../memory/sessions/session-64.md) — 11 Nov.** The Engineering Audit Pipeline (P0–P11, six runs a cycle)
   is the official review process; Run 1 of cycle 2026-11-11: 30 repositories, 8 of 13 architecture rules compliant,
   17 findings, fixed the next day except two database changes left for P4; Run 2 (code, security) 12 Nov: 28 in all,
-  no credential in any repository's history. GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
+  no credential in any repository's history; Run 3 (database, contracts) 13 Nov: 35 in all — the hourly payment
+  reconciliation completes a paid payment with no event, so nothing is delivered (0030, HIGH). GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
 - **[63](../memory/sessions/session-63.md) — 11 Nov.** An engineering review of the whole platform (6.8/10):
   an order could be marked PAID for any payment id — fixed, no sign of abuse; Next 15.5.29 in the apps; Nest 11 /
   Fastify 5 in 15 services; the Hub's CSP narrowed; the internal guard on the decoded path.

@@ -132,6 +132,34 @@
         "P6"
       ],
       "why": "Wallet screen trace"
+    },
+    {
+      "finding": "TEC-AUDIT-0030",
+      "to": [
+        "P6"
+      ],
+      "why": "Trace a reconciled payment to delivery (subscription/asset) end to end"
+    },
+    {
+      "finding": "TEC-AUDIT-0031",
+      "to": [
+        "P6"
+      ],
+      "why": "Every write to payment.status goes through the state machine"
+    },
+    {
+      "finding": "TEC-AUDIT-0033",
+      "to": [
+        "P8"
+      ],
+      "why": "BFF behaviour when the gateway is slow (runtime)"
+    },
+    {
+      "finding": "TEC-AUDIT-0034",
+      "to": [
+        "P10"
+      ],
+      "why": "SDK release cadence and consumers"
     }
   ]
 }

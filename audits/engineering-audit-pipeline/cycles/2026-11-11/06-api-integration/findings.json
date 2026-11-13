@@ -1,0 +1,150 @@
+{
+  "cycle": "2026-11-11",
+  "run": 3,
+  "phase": "P5",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0033",
+      "phase": "P5",
+      "repository": "25 app repositories (all BFFs)",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "439 of 467 gateway calls from the apps' BFF routes have no timeout",
+      "description": "BFF routes call `${GATEWAY}/api/...` with fetch and no AbortSignal. The gateway itself now bounds slow upstreams (NEW-W), but when the gateway is the slow part — the 'Backend Offline' freeze — every pending BFF call waits until Vercel kills the function, and the screen shows a spinner instead of the state screen. The template's own session-refresh (8 s) is one of the 28 that do set one.",
+      "evidence": [
+        {
+          "ref": "EV-0068",
+          "location": "06-api-integration/evidence.md (per-app counts)",
+          "observation": "439/467 calls, every app 1–4 with a signal"
+        },
+        {
+          "ref": "EV-0069",
+          "location": "Tec-core-backend NEW-W",
+          "observation": "gateway-side timeouts exist; app-side do not"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/bff/**/route.ts (each app)"
+      ],
+      "root_cause": "No shared gateway-fetch helper; each route calls fetch directly.",
+      "technical_impact": "A slow gateway ties up a function per pending call; failures surface late and as timeouts, not as the 502/504 the screens handle.",
+      "business_impact": "During an incident users see endless loading instead of \"try again\".",
+      "recommendation": "One shared gatewayFetch(path, init) in the template (AbortSignal.timeout, default 10 s) used by every BFF route; template-sync carries it.",
+      "acceptance_criteria": [
+        "No BFF fetch to the gateway without a timeout (a check in CI)",
+        "A test: a hung gateway → the route answers 504 within the limit"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-96",
+        "NEW-W",
+        "C-78"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Scheduled after Run 3."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0034",
+      "phase": "P5",
+      "repository": "25 app repositories · TEC-SDK",
+      "category": "architecture",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The BFFs bypass the server SDK: one file per app imports it, and gateway responses are not schema-validated",
+      "description": "C-47 §14 says public integration goes through @yasser172/tec-sdk and every response is Zod-validated. In practice each app imports the SDK in a single file (src/lib/sdk.ts; none at all in Assets, Commerce, Life) and makes its 400+ gateway calls with raw fetch, reading the JSON as-is. The SDK itself was last changed on 13 Sep (1.4.0). So the contract the SDK is meant to pin is not the contract the apps use, and a backend shape change reaches the screens unchecked — the class of the nested-envelope Pro-status bug the template already documents.",
+      "evidence": [
+        {
+          "ref": "EV-0070",
+          "location": "tec-template-base src/lib/sdk.ts:1",
+          "observation": "the only SDK import"
+        },
+        {
+          "ref": "EV-0071",
+          "location": "06-api-integration/evidence.md",
+          "observation": "SDK-importing files per app: 0–1"
+        },
+        {
+          "ref": "EV-0072",
+          "location": "TEC-SDK origin/main",
+          "observation": "last commit 2026-09-13, version 1.4.0"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/bff/**",
+        "TEC-SDK src/"
+      ],
+      "root_cause": "The SDK covers payment/auth; domain routes were written straight against the gateway.",
+      "technical_impact": "Forbidden #5 (divergent SDK contract vs backend) cannot be detected; responses are trusted unvalidated.",
+      "business_impact": "A backend change can silently blank a screen or mis-gate a paid feature in many apps at once.",
+      "recommendation": "Do not wrap 400 calls at once. Decide in an ADR whether domain calls belong in the SDK; meanwhile validate at the edge with the shared gatewayFetch (0033) taking a zod schema for the money and entitlement routes first.",
+      "acceptance_criteria": [
+        "An ADR records where domain contracts live",
+        "Payment, wallet and subscription BFF responses are schema-checked"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 §14 · Forbidden #5",
+        "ADR-009"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Scheduled after Run 3."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0035",
+      "phase": "P5",
+      "repository": "tec-template-base + 20 apps",
+      "category": "dead-code",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The template's example route /api/bff/items calls a gateway path that does not exist",
+      "description": "Of 712 gateway paths the apps call, 709 match a route in the gateway registry. The other three: two are tests that call the app's own origin, and the third is /api/items, called by the example route src/app/api/bff/items that the template ships and 20 apps still carry. No gateway prefix serves it, so the live route can only fail.",
+      "evidence": [
+        {
+          "ref": "EV-0073",
+          "location": "tec-api-gateway/src/config/service-registry.ts",
+          "observation": "no ^/api/items prefix among 60"
+        },
+        {
+          "ref": "EV-0074",
+          "location": "tec-template-base src/app/api/bff/items/route.ts:30,55",
+          "observation": "fetch `${GW}/api/items`"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/bff/items/route.ts"
+      ],
+      "root_cause": "A copy-me example kept in production builds.",
+      "technical_impact": "A public route that always errors; noise in logs and error reports.",
+      "business_impact": "None to users unless something links to it.",
+      "recommendation": "Move the example out of src/app (e.g. docs/examples) in the template; remove it from the apps that do not use it.",
+      "acceptance_criteria": [
+        "No app ships /api/bff/items unless the gateway serves /api/items"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-96"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Scheduled after Run 3."
+      }
+    }
+  ]
+}
