@@ -1,6 +1,6 @@
 {
   "cycle": "2026-11-11",
-  "updated_by": "run3",
+  "updated_by": "run4",
   "findings": [
     {
       "id": "TEC-AUDIT-0001",
@@ -1675,6 +1675,158 @@
         ],
         "note": "The example moved to docs/examples/bff-route.example.ts (still type-checked); removed from the 20 apps where it was the unchanged copy and nothing called it; template-sync carries the example and the helper instead.",
         "verification": "No app builds a /api/bff/items route"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0036",
+      "phase": "P6",
+      "repository": "tec-core-backend (payment · notification · realtime · analytics) · KB",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Notifications, live updates and analytics miss every payment completed off the normal path",
+      "description": "A completed payment is announced on two streams. payment.completed.v1 is durable (outbox, same transaction). The unversioned payment.completed is a direct publish after the response: skipped when the Redis publisher is not ready (the log says the outbox will retry — not for this stream), and never sent by the recovery endpoint or the hourly reconciliation. Wallet and commerce moved to .v1; notification, realtime and analytics still read only the unversioned stream. The catalog still lists wallet and commerce as its consumers; the drift check compares names, not consumers.",
+      "evidence": [
+        {
+          "ref": "EV-0075",
+          "location": "payment.controller.ts:600-630",
+          "observation": "best-effort publish after the response"
+        },
+        {
+          "ref": "EV-0076",
+          "location": "notification/realtime/analytics consumers",
+          "observation": "unversioned stream only"
+        },
+        {
+          "ref": "EV-0077",
+          "location": "events-catalog.yaml:60-72 · check-drift.py:167-193",
+          "observation": "stale consumer list; names only"
+        }
+      ],
+      "affected_files": [
+        "tec-notification-service/src/modules/notification/notification.consumer.ts",
+        "tec-realtime-service/src/redis/redis.consumer.ts",
+        "tec-analytics-service/src/modules/analytics/analytics.consumer.ts",
+        "tec-payment-service/src/controllers/payment.controller.ts",
+        "tec-payment-service/src/services/pi-api.ts",
+        "manifests/events-catalog.yaml"
+      ],
+      "root_cause": "A migration to the versioned stream (audit F-2, Aug) moved the money consumers and stopped there.",
+      "technical_impact": "Three consumers see a subset of completions; the subset depends on Redis readiness and on which path completed the payment.",
+      "business_impact": "A paying user may get no \"payment received\" notification and no live update; analytics under-counts revenue.",
+      "recommendation": "Move the three consumers to payment.completed.v1 (each idempotent by paymentId), then remove both direct publishes; fix the catalog; make check-drift compare consumer groups.",
+      "acceptance_criteria": [
+        "A completion through recovery produces a notification",
+        "No code publishes the unversioned payment.completed",
+        "check-drift fails on a stale consumer list"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-70",
+        "ADR-004",
+        "events-catalog F-2"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 4 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0037",
+      "phase": "P7",
+      "repository": "tec-template-base + 19 apps (all but Life of those that declare it)",
+      "category": "testing",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The 60 % coverage floor is declared in 21 app repositories and enforced in one",
+      "description": "Each vitest.config declares thresholds (60/60/60/50); CI runs npm test without coverage and @vitest/coverage-v8 is not installed, so the floor never runs. Only Tec-Life runs test:coverage. The Hub, Assets, Commerce and Ecommerce declare no floor at all. Measured here, the template is at 69.5/61.2/63.9/74.9.",
+      "evidence": [
+        {
+          "ref": "EV-0078",
+          "location": "vitest.config.ts · ci.yml (each app)",
+          "observation": "floor declared; CI runs npm test"
+        },
+        {
+          "ref": "EV-0079",
+          "location": "tec-template-base package.json",
+          "observation": "no coverage provider"
+        }
+      ],
+      "affected_files": [
+        "vitest.config.ts",
+        ".github/workflows/ci.yml",
+        "package.json"
+      ],
+      "root_cause": "The floor was added to the config; the CI step and dependency were not.",
+      "technical_impact": "Coverage can fall to zero without CI noticing.",
+      "business_impact": "A gate everyone believes in that never runs.",
+      "recommendation": "Template: add @vitest/coverage-v8 and run test:coverage in CI; carry it by template-sync; measure each app first and set its floor no higher than it passes.",
+      "acceptance_criteria": [
+        "CI fails when coverage falls below the floor in every app"
+      ],
+      "complexity": "S",
+      "references": [
+        "tec-template-base CLAUDE.md v2"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 4 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0038",
+      "phase": "P7",
+      "repository": "tec-core-backend",
+      "category": "testing",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "No test crosses a service boundary — event contracts are checked by neither side",
+      "description": "Each event's producer and consumers test against their own hand-written payloads; nothing checks that the stream name and shape one side writes is what the other reads. This cycle's costliest defects lived exactly there: commerce's order consumer was never registered and listened on the wrong stream (its own comment), the reconciliation wrote no event (0030), three consumers read a best-effort stream (0036). The two tests that use a real database skip in CI although the job already runs a Postgres.",
+      "evidence": [
+        {
+          "ref": "EV-0080",
+          "location": "commerce order.consumer.ts:5-11",
+          "observation": "never registered; wrong stream"
+        },
+        {
+          "ref": "EV-0081",
+          "location": "connection erasure-db.spec.ts:12 · identity deletion-ledger-db.spec.ts:15",
+          "observation": "skip without TEST_DATABASE_URL; CI has Postgres"
+        }
+      ],
+      "affected_files": [
+        "*/src/**/*.consumer.ts",
+        "tec-payment-service/src/services/outbox.service.ts",
+        ".github/workflows/ci.yml"
+      ],
+      "root_cause": "Tests are per service; the stream is nobody's test.",
+      "technical_impact": "A renamed stream or field passes every suite and fails silently in production.",
+      "business_impact": "Purchases not delivered, with green CI.",
+      "recommendation": "A contract fixture per event under shared/: the producer test asserts its real payload equals the fixture; each consumer test feeds the fixture through its handler. Set TEST_DATABASE_URL to the CI Postgres for the two real-database tests.",
+      "acceptance_criteria": [
+        "Changing a field in the outbox payload fails a consumer test",
+        "The two real-database tests run in CI"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-70",
+        "ADR-004"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 4 remediation."
       }
     }
   ]

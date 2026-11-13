@@ -11,8 +11,8 @@
 | P3 | Security & Privacy | 2 | **PASSED_WITH_FINDINGS** (live headers BLOCKED) | 10 new (1 withheld) |
 | P4 | Database & Data Integrity | 3 | **PASSED_WITH_FINDINGS** (production row counts BLOCKED) | 3 new · 0012/0013 referenced |
 | P5 | API & Integration Contracts | 3 | **PASSED_WITH_FINDINGS** | 3 new |
-| P6 | Functional & Business Logic | 4 | NOT_STARTED | — |
-| P7 | Testing & QA | 4 | NOT_STARTED | — |
+| P6 | Functional & Business Logic | 4 | **PASSED_WITH_FINDINGS** (2 capabilities need a phone) | 1 new · 13 capabilities classified |
+| P7 | Testing & QA | 4 | **PASSED_WITH_FINDINGS** (run on main BLOCKED — no CI) | 2 new · 13,823 tests run, all passing |
 | P8 | Infrastructure & DevOps | 5 | NOT_STARTED | — |
 | P9 | Performance & Scalability | 5 | NOT_STARTED | — |
 | P10 | Cross-Repository Audit | 6 | NOT_STARTED | — |
@@ -48,7 +48,16 @@ nothing is delivered; 0031 · 0032 (payment status written outside the state mac
 0033 · 0034 (no shared, bounded, checked way for a BFF to call the gateway); 0035 (a dead
 example route). Still no push: GitHub Actions is refused for the account.
 
+## After Run 4 (13 Nov)
+
+38 findings: 1 CRITICAL (closed) · 4 HIGH · 16 MEDIUM · 14 LOW · 3 INFO. **13 critical capabilities
+traced**: 8 VERIFIED, 1 BROKEN on main (session refresh — fixed locally), 2 PARTIALLY_IMPLEMENTED
+(recovery — fixed locally; completion notifications → 0036), 1 NOT_VERIFIABLE (Nexus Handshake
+payment), and the gated FundX/Insure money flows not implemented by decision. **13,823 tests run**
+(backend 4,264 · apps 9,559), all passing. New: 0036 (notifications/live/analytics read a
+best-effort stream), 0037 (coverage floor never runs), 0038 (no test crosses a service boundary).
+
 ## Next
 
-**Run 3 remediation** — 0030 · 0031 · 0032 · 0033 · 0035 fixed locally 13 Nov (`remediation-run3.md`); 0034 waits on an ADR (owner). Then **Run 4 — P6 + P7**;
-read `05-database/handoff.md` and `06-api-integration/handoff.md` first.
+**Run 4 remediation** (0036 · 0037 · 0038), then **Run 5 — P8 + P9**; read `07-functional/handoff.md`
+and `08-testing/handoff.md` first.

@@ -370,6 +370,41 @@
       "ref": "EV-0074",
       "finding": "TEC-AUDIT-0035",
       "location": "tec-template-base src/app/api/bff/items/route.ts:30,55"
+    },
+    {
+      "ref": "EV-0075",
+      "finding": "TEC-AUDIT-0036",
+      "location": "payment.controller.ts:600-630"
+    },
+    {
+      "ref": "EV-0076",
+      "finding": "TEC-AUDIT-0036",
+      "location": "notification/realtime/analytics consumers"
+    },
+    {
+      "ref": "EV-0077",
+      "finding": "TEC-AUDIT-0036",
+      "location": "events-catalog.yaml:60-72 · check-drift.py:167-193"
+    },
+    {
+      "ref": "EV-0078",
+      "finding": "TEC-AUDIT-0037",
+      "location": "vitest.config.ts · ci.yml (each app)"
+    },
+    {
+      "ref": "EV-0079",
+      "finding": "TEC-AUDIT-0037",
+      "location": "tec-template-base package.json"
+    },
+    {
+      "ref": "EV-0080",
+      "finding": "TEC-AUDIT-0038",
+      "location": "commerce order.consumer.ts:5-11"
+    },
+    {
+      "ref": "EV-0081",
+      "finding": "TEC-AUDIT-0038",
+      "location": "connection erasure-db.spec.ts:12 · identity deletion-ledger-db.spec.ts:15"
     }
   ]
 }

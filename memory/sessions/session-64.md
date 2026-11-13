@@ -97,6 +97,13 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
   calling itself; the Hub's existing timeout guard caught it. Run the full suite of every
   repository a codemod touches, not only the new test.
 
+- **Run 4 (13 Nov):** P6 — 13 capabilities traced screen → database: 8 VERIFIED; session refresh
+  BROKEN on main (0029, fixed locally); recovery and completion notifications PARTIAL (0030–0032
+  fixed locally; **0036**: notification/realtime/analytics read the best-effort stream);
+  Nexus Handshake's payment NOT_VERIFIABLE without a phone. P7 — 13,823 tests run, all green;
+  **0037** the 60 % floor runs in Life only; **0038** no test crosses a service boundary. The
+  Analytics flaky test did not recur in 7 runs.
+
 ## Left open
 
 0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.

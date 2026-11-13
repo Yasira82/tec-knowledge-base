@@ -160,6 +160,21 @@
         "P10"
       ],
       "why": "SDK release cadence and consumers"
+    },
+    {
+      "finding": "TEC-AUDIT-0036",
+      "to": [
+        "P10"
+      ],
+      "why": "Converge the dual completion stream in one coordinated change"
+    },
+    {
+      "finding": "TEC-AUDIT-0038",
+      "to": [
+        "P8",
+        "P10"
+      ],
+      "why": "Contract fixtures; e2e against a deployed preview"
     }
   ]
 }
