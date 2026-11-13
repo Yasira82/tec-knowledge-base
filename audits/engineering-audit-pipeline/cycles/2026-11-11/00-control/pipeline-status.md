@@ -50,5 +50,5 @@ example route). Still no push: GitHub Actions is refused for the account.
 
 ## Next
 
-**Run 3 remediation** — 0030 · 0031 · 0033 · 0035 fixed locally 13 Nov (`remediation-run3.md`); 0034 waits on an ADR (owner). Then **Run 4 — P6 + P7**;
+**Run 3 remediation** — 0030 · 0031 · 0032 · 0033 · 0035 fixed locally 13 Nov (`remediation-run3.md`); 0034 waits on an ADR (owner). Then **Run 4 — P6 + P7**;
 read `05-database/handoff.md` and `06-api-integration/handoff.md` first.

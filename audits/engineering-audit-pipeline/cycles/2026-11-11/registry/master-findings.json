@@ -1517,9 +1517,12 @@
         "C-70"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 3 remediation (local backend commit, no PR before 1 Dec)."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 5863f4b9"
+        ],
+        "note": "approve and complete use the controller's transitionPayment: the from-state is in the WHERE; count 0 → the loser writes nothing, queues nothing, answers 409 INVALID_STATUS (what a sequential duplicate already got). Three cases in terminal-state-race.test.ts, red on the old code. 472/472, tsc, build.",
+        "verification": "Covered by the unit tests"
       }
     },
     {

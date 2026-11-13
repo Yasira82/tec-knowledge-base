@@ -30,14 +30,21 @@ them; the Hub's SSO-timeout guard failed, and that is how it was seen. They are 
 count was 437 of 465. A deadline shorter than the gateway's was considered and rejected: it would
 cut a payment approve the backend was still completing.
 
+## Then: 0032
+
+approve and complete now write through the controller's `transitionPayment` (the same helper
+the fail / cancel race fix used): the from-state is in the WHERE; the loser of a race writes
+nothing, queues no event and gets 409 — the answer a sequential duplicate already got. Three
+cases red on the old code; 472/472 (`Tec-core-backend 5863f4b9`). No unconditional status write is
+left in payment-service: a search for `payment.update(` / `payment.upsert(` in its source finds
+only comments (the search finds the old calls on `origin/main`, so its silence counts).
+
 ## Not done — and why
 
 - **Re-emitting events for payments the cron already completed.** Those users paid and may not
   have received what they bought. Finding them (the `PAYMENT_RECONCILED` / `completed` audit rows)
   and re-queuing their event is a write to production — a one-off, audited step the owner
   approves (Forbidden #10). The consumers ignore a duplicate, so it is safe to re-emit.
-- **0032** (approve / complete check-then-act) — LOW; the consumers already absorb a duplicate.
-  Next time payment-service is opened.
 - **`completeFromRecovery`** (the recovery endpoint's own completion) is conditional on
   `status <> 'completed'` rather than on the open states. Left as it is: it runs only when Pi
   says the money moved, after a 409 on a final state, and Pi is the truth for money. Noted for P6.
