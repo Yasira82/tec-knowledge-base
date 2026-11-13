@@ -175,6 +175,21 @@
         "P10"
       ],
       "why": "Contract fixtures; e2e against a deployed preview"
+    },
+    {
+      "finding": "TEC-AUDIT-0040",
+      "to": [
+        "P10",
+        "P11"
+      ],
+      "why": "One provider for every guard — a cross-repo single point of failure"
+    },
+    {
+      "finding": "TEC-AUDIT-0039",
+      "to": [
+        "P11"
+      ],
+      "why": "Deploy safety as code before launch"
     }
   ]
 }

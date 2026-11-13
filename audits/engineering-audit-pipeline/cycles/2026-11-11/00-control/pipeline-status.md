@@ -13,8 +13,8 @@
 | P5 | API & Integration Contracts | 3 | **PASSED_WITH_FINDINGS** | 3 new |
 | P6 | Functional & Business Logic | 4 | **PASSED_WITH_FINDINGS** (2 capabilities need a phone) | 1 new · 13 capabilities classified |
 | P7 | Testing & QA | 4 | **PASSED_WITH_FINDINGS** (run on main BLOCKED — no CI) | 2 new · 13,823 tests run, all passing |
-| P8 | Infrastructure & DevOps | 5 | NOT_STARTED | — |
-| P9 | Performance & Scalability | 5 | NOT_STARTED | — |
+| P8 | Infrastructure & DevOps | 5 | **PASSED_WITH_FINDINGS** (live Vercel/Railway reads BLOCKED) | 3 new |
+| P9 | Performance & Scalability | 5 | **PASSED_WITH_FINDINGS** (no benchmark — no staging) | 2 new |
 | P10 | Cross-Repository Audit | 6 | NOT_STARTED | — |
 | P11 | Final Engineering Assessment | 6 | NOT_STARTED | — |
 
@@ -57,7 +57,15 @@ payment), and the gated FundX/Insure money flows not implemented by decision. **
 (backend 4,264 · apps 9,559), all passing. New: 0036 (notifications/live/analytics read a
 best-effort stream), 0037 (coverage floor never runs), 0038 (no test crosses a service boundary).
 
+## After Run 5 (13 Nov)
+
+43 findings: 1 CRITICAL (closed) · 4 HIGH · 19 MEDIUM · 16 LOW · 3 INFO. New: 0039 (deploy safety
+lives in Railway's dashboard for 19 of 20 services), 0040 (every scheduled guard is on GitHub
+Actions — all stopped since 12 Nov; the restore check passes when unconfigured), 0041 (public
+directory searches return every match through a full scan), 0042 (no app pins Node), 0043
+(capacity never measured; no latency SLO).
+
 ## Next
 
-Run 4 remediation done 13 Nov, locally (`remediation-run4.md`): 0036 · 0038 fixed, 0037 partly (the honest measure for template apps is open). Then **Run 5 — P8 + P9**; read `07-functional/handoff.md`
-and `08-testing/handoff.md` first.
+**Run 5 remediation**, then **Run 6 — P10 + P11** (cross-repository audit, final assessment);
+read `09-infrastructure/handoff.md` and `10-performance/handoff.md` first.

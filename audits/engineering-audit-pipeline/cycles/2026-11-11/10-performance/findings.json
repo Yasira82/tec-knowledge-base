@@ -1,0 +1,105 @@
+{
+  "cycle": "2026-11-11",
+  "run": 5,
+  "phase": "P9",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0041",
+      "phase": "P9",
+      "repository": "tec-core-backend (search · business)",
+      "category": "performance",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Public directory searches return every match, uncapped, through a full-table substring scan",
+      "description": "Explorer search (explorer.service.ts:235) and NX search (nx.service.ts:112) are public routes that return every matching row with no take and no page. Explorer matches each word with `contains` on search_text, whose btree index cannot serve LIKE '%…%'. An empty query returns the whole directory.",
+      "evidence": [
+        {
+          "ref": "EV-0089",
+          "location": "tec-search-service explorer.service.ts:235 · explorer.controller.ts:105",
+          "observation": "findMany(where) — no take"
+        },
+        {
+          "ref": "EV-0090",
+          "location": "tec-business-service nx.service.ts:112 · nx.controller.ts:27",
+          "observation": "findMany(where) — no take"
+        },
+        {
+          "ref": "EV-0091",
+          "location": "tec-search-service schema.prisma:168",
+          "observation": "@@index([search_text]) — btree"
+        }
+      ],
+      "affected_files": [
+        "tec-search-service/src/modules/explorer/explorer.service.ts",
+        "tec-business-service/src/modules/nx/nx.service.ts"
+      ],
+      "root_cause": "Written for a small directory.",
+      "technical_impact": "Response size and database time grow linearly with the directory; one request can read the whole table.",
+      "business_impact": "Slow discovery as merchants join; an easy load amplifier.",
+      "recommendation": "A take (e.g. 50) with a cursor on both; for Explorer a pg_trgm GIN index on search_text (a migration) or Postgres full-text search.",
+      "acceptance_criteria": [
+        "Both searches answer at most one page",
+        "EXPLAIN shows an index scan for a word query"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-108"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0043",
+      "phase": "P9",
+      "repository": "tec-core-backend · KB",
+      "category": "performance",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Capacity has never been measured, and no latency objective exists",
+      "description": "k6 scripts exist (gateway, payment; workflow_dispatch only) but no run is recorded anywhere in the KB; slo-definitions.yaml sets availability targets only. How many users the platform carries is unknown.",
+      "evidence": [
+        {
+          "ref": "EV-0092",
+          "location": "Tec-core-backend/k6/",
+          "observation": "two scripts; no recorded run"
+        },
+        {
+          "ref": "EV-0093",
+          "location": "manifests/slo-definitions.yaml",
+          "observation": "availability only"
+        }
+      ],
+      "affected_files": [
+        "k6/",
+        "manifests/slo-definitions.yaml"
+      ],
+      "root_cause": "No staging to run them against (0006).",
+      "technical_impact": "Limits are discovered in production, as in June.",
+      "business_impact": "Launch capacity is a guess.",
+      "recommendation": "p95 latency objectives for gateway, auth and payment in slo-definitions.yaml; one recorded k6 run against a preview/staging once 0006 gives one.",
+      "acceptance_criteria": [
+        "A recorded k6 run in runtime-evidence/",
+        "Latency SLOs defined"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-78",
+        "TEC-AUDIT-0006"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
+      }
+    }
+  ]
+}

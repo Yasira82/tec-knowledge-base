@@ -1,0 +1,29 @@
+# P8 — Infrastructure & DevOps · cycle 2026-11-11 · Run 5
+
+**Status: PASSED_WITH_FINDINGS** · [Code Verified] at `origin/main`, 13 Nov 2026. **BLOCKED here:**
+the Vercel connector did not connect this session and this environment's proxy refuses outside
+hosts, so nothing was read live — the served headers, each project's Node version and region,
+Railway's per-service settings. Those are marked below; the owner reads them.
+
+## What was checked, and what it found
+
+| Check | Result |
+|---|---|
+| Every backend service has `/health` and `/ready` | **Yes, all 20** — the migrate-on-start script can be made safe everywhere |
+| Containers run as a non-root user | **Yes, all 20** (`USER` in every Dockerfile); Node 22 everywhere |
+| The settings that keep a deploy safe are reviewable | **No → 0039.** Only the gateway keeps them in the repo (`railway.toml`: health path, stop timeout). For the other 19 the Healthcheck Path — which the migrate script **depends on** to avoid a DOWN service (payment-service, most of 8 Nov) — the start command and "Wait for CI" exist only in the dashboard |
+| Scheduled safety checks keep running | **No → 0040.** 31 scheduled jobs, every one on GitHub Actions — weekly CodeQL in 28 repos, the KB's weekly drift check, the template's weekly fleet-drift, the monthly backup **restore check**. None has run since Actions was refused (12 Nov); the next restore check is due 3 Dec. The nightly backup itself runs on Railway and is unaffected |
+| A check fails when it cannot check | **Not the restore check → 0040.** With its secrets missing it prints a notice and **passes**. It *was* configured and proven (12 Oct; again after the passphrase rotation, 10 Nov), so this is latent — a renamed secret would turn it green and silent |
+| Backups | Nightly, encrypted, to R2, on Railway; restore proven twice (above). Alert on failure: exit 1 + `ALERT_WEBHOOK_URL` **if set** — whether it is set is BLOCKED (dashboard) and stays under TEC-AUDIT-0006 |
+| Apps pin the Node they build on | **No, none of 25 → 0042** (no `engines`, no `.nvmrc`); Vercel builds on each project's dashboard setting, CI on 22 |
+| "Wait for CI" and the Actions hold | The gateway has it **off** on purpose (`railway.toml`: CI on `main` failed for days in September and Railway silently skipped every deploy). Any service with it **on** will not deploy what is merged while Actions is refused — **merged ≠ deployed**, again. Which services have it on: BLOCKED (dashboard) |
+| Staging, uptime paging | Still none → TEC-AUDIT-0006 (unchanged) |
+| Served headers (HSTS, CSP), e2e against a preview | **BLOCKED** (no Vercel access this session; no outside network) |
+
+## Summary
+
+**4 findings here and in P9: 3 MEDIUM · 2 LOW** (0039 · 0040 · 0042 here). The infrastructure is
+sound where it is written down — non-root containers, health endpoints everywhere, backups that
+were restored, a migrate script that refuses on doubt. What hurts is what is **not** written
+down or **not** independent: deploy safety lives in a dashboard, and every scheduled guard stops
+together when one bill is unpaid.

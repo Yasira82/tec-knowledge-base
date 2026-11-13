@@ -88,7 +88,8 @@ Replace rows as they close — do not strike them through and keep them.
   17 findings, fixed the next day except two database changes left for P4; Run 2 (code, security) 12 Nov: 28 in all,
   no credential in any repository's history; Run 3 (database, contracts) 13 Nov: 35 in all — the hourly payment
   reconciliation completes a paid payment with no event, so nothing is delivered (0030, HIGH). Run 4 (functions, tests) 13 Nov: 13 critical capabilities traced (8
-  verified), 13,823 tests run, all green; notifications miss payments finished by recovery (0036). GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
+  verified), 13,823 tests run, all green; notifications miss payments finished by recovery (0036). Run 5 (infrastructure, performance)
+  13 Nov: every scheduled guard (CodeQL, drift, the backup restore check) runs on GitHub Actions and stopped with it (0040). GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
 - **[63](../memory/sessions/session-63.md) — 11 Nov.** An engineering review of the whole platform (6.8/10):
   an order could be marked PAID for any payment id — fixed, no sign of abuse; Next 15.5.29 in the apps; Nest 11 /
   Fastify 5 in 15 services; the Hub's CSP narrowed; the internal guard on the decoded path.

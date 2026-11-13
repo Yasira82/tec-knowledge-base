@@ -405,6 +405,66 @@
       "ref": "EV-0081",
       "finding": "TEC-AUDIT-0038",
       "location": "connection erasure-db.spec.ts:12 · identity deletion-ledger-db.spec.ts:15"
+    },
+    {
+      "ref": "EV-0082",
+      "finding": "TEC-AUDIT-0039",
+      "location": "tec-api-gateway/railway.toml"
+    },
+    {
+      "ref": "EV-0083",
+      "finding": "TEC-AUDIT-0039",
+      "location": "CLAUDE.md (backend) schema section"
+    },
+    {
+      "ref": "EV-0084",
+      "finding": "TEC-AUDIT-0039",
+      "location": "every service src"
+    },
+    {
+      "ref": "EV-0085",
+      "finding": "TEC-AUDIT-0040",
+      "location": ".github/workflows/*.yml (schedule)"
+    },
+    {
+      "ref": "EV-0086",
+      "finding": "TEC-AUDIT-0040",
+      "location": "Tec-core-backend/.github/workflows/restore-check.yml (Configured? step)"
+    },
+    {
+      "ref": "EV-0087",
+      "finding": "TEC-AUDIT-0040",
+      "location": "runtime-evidence/ev-2026-10-12-025.yaml"
+    },
+    {
+      "ref": "EV-0089",
+      "finding": "TEC-AUDIT-0041",
+      "location": "tec-search-service explorer.service.ts:235 · explorer.controller.ts:105"
+    },
+    {
+      "ref": "EV-0090",
+      "finding": "TEC-AUDIT-0041",
+      "location": "tec-business-service nx.service.ts:112 · nx.controller.ts:27"
+    },
+    {
+      "ref": "EV-0091",
+      "finding": "TEC-AUDIT-0041",
+      "location": "tec-search-service schema.prisma:168"
+    },
+    {
+      "ref": "EV-0088",
+      "finding": "TEC-AUDIT-0042",
+      "location": "package.json (25 repos)"
+    },
+    {
+      "ref": "EV-0092",
+      "finding": "TEC-AUDIT-0043",
+      "location": "Tec-core-backend/k6/"
+    },
+    {
+      "ref": "EV-0093",
+      "finding": "TEC-AUDIT-0043",
+      "location": "manifests/slo-definitions.yaml"
     }
   ]
 }

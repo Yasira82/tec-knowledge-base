@@ -1,6 +1,6 @@
 {
   "cycle": "2026-11-11",
-  "updated_by": "run4",
+  "updated_by": "run5",
   "findings": [
     {
       "id": "TEC-AUDIT-0001",
@@ -1840,6 +1840,245 @@
         ],
         "note": "shared/contracts/payment.completed.v1.json; one payload builder in payment-service, checked against it; commerce (subscription + order) and asset feed its examples through their real handlers; CI re-runs them on a contract change; the two real-database tests run on the job's Postgres. Not yet under contract: trust (legend), nexus, wallet.",
         "verification": "Changing a field in the contract fails CI in the producer and the consumers"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0039",
+      "phase": "P8",
+      "repository": "tec-core-backend (19 services)",
+      "category": "operations",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Deploy-safety settings for 19 of 20 services exist only in Railway's dashboard",
+      "description": "Only tec-api-gateway keeps its Railway settings in the repo (railway.toml: healthcheckPath, healthcheckTimeout, stopTimeoutSeconds). For the other 19 the Healthcheck Path, the start command and 'Wait for CI' live in the dashboard only. The migrate-on-start script refuses to start on any doubt and depends on a healthcheck to keep the old deployment live; without one the service goes DOWN (payment-service, most of 8 Nov). Nothing in code says which services have it.",
+      "evidence": [
+        {
+          "ref": "EV-0082",
+          "location": "tec-api-gateway/railway.toml",
+          "observation": "the only Railway config in the repo"
+        },
+        {
+          "ref": "EV-0083",
+          "location": "CLAUDE.md (backend) schema section",
+          "observation": "\"The service MUST have a Healthcheck Path\" — set by hand"
+        },
+        {
+          "ref": "EV-0084",
+          "location": "every service src",
+          "observation": "/health and /ready exist in all 20"
+        }
+      ],
+      "affected_files": [
+        "tec-*-service/railway.toml (absent)"
+      ],
+      "root_cause": "Railway was configured service by service in the UI.",
+      "technical_impact": "A service created or edited without the healthcheck turns a refused migration into an outage; nobody can review it.",
+      "business_impact": "Repeat of 8 Nov: payments down for hours.",
+      "recommendation": "A railway.toml per service (config-as-code): healthcheckPath '/health', healthcheckTimeout, startCommand 'npm start', stopTimeoutSeconds; a CI check that every service has one with a health path.",
+      "acceptance_criteria": [
+        "Every service directory has railway.toml with healthcheckPath",
+        "CI fails on a service without it"
+      ],
+      "complexity": "S",
+      "references": [
+        "C-78",
+        "8 Nov payment outage"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0040",
+      "phase": "P8",
+      "repository": "all 30 repositories",
+      "category": "operations",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Every scheduled safety check runs on GitHub Actions — all stopped since 12 Nov; the restore check passes when unconfigured",
+      "description": "31 scheduled jobs — weekly CodeQL in 28 repositories, the KB's weekly drift check, the template's weekly fleet-drift, the monthly backup restore check — all on GitHub Actions, refused for the account since 12 Nov. None has run since; the next restore check is due 3 Dec. Separately, restore-check.yml passes with a notice when its secrets are missing, so a renamed secret would make it green and silent (it was configured and proven 12 Oct and 10 Nov).",
+      "evidence": [
+        {
+          "ref": "EV-0085",
+          "location": ".github/workflows/*.yml (schedule)",
+          "observation": "31 cron jobs, all Actions"
+        },
+        {
+          "ref": "EV-0086",
+          "location": "Tec-core-backend/.github/workflows/restore-check.yml (Configured? step)",
+          "observation": "::notice:: and success when unconfigured"
+        },
+        {
+          "ref": "EV-0087",
+          "location": "runtime-evidence/ev-2026-10-12-025.yaml",
+          "observation": "the check was real when configured"
+        }
+      ],
+      "affected_files": [
+        ".github/workflows/restore-check.yml",
+        "tec-backup-job"
+      ],
+      "root_cause": "One provider for every guard; a check written to skip rather than fail.",
+      "technical_impact": "Security scans, drift and restore verification stop together with one billing problem.",
+      "business_impact": "A broken backup could go unnoticed until it is needed.",
+      "recommendation": "Fail the restore check when unconfigured (exit 1). Run the restore check also as a Railway cron next to the backup (the code is already in tec-backup-job), so it does not depend on GitHub billing; record which guards run where in C-78.",
+      "acceptance_criteria": [
+        "The restore check fails red when its secrets are missing",
+        "A restore check runs monthly without GitHub Actions"
+      ],
+      "complexity": "S",
+      "references": [
+        "C-96",
+        "C-78",
+        "TEC-AUDIT-0006"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0041",
+      "phase": "P9",
+      "repository": "tec-core-backend (search · business)",
+      "category": "performance",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Public directory searches return every match, uncapped, through a full-table substring scan",
+      "description": "Explorer search (explorer.service.ts:235) and NX search (nx.service.ts:112) are public routes that return every matching row with no take and no page. Explorer matches each word with `contains` on search_text, whose btree index cannot serve LIKE '%…%'. An empty query returns the whole directory.",
+      "evidence": [
+        {
+          "ref": "EV-0089",
+          "location": "tec-search-service explorer.service.ts:235 · explorer.controller.ts:105",
+          "observation": "findMany(where) — no take"
+        },
+        {
+          "ref": "EV-0090",
+          "location": "tec-business-service nx.service.ts:112 · nx.controller.ts:27",
+          "observation": "findMany(where) — no take"
+        },
+        {
+          "ref": "EV-0091",
+          "location": "tec-search-service schema.prisma:168",
+          "observation": "@@index([search_text]) — btree"
+        }
+      ],
+      "affected_files": [
+        "tec-search-service/src/modules/explorer/explorer.service.ts",
+        "tec-business-service/src/modules/nx/nx.service.ts"
+      ],
+      "root_cause": "Written for a small directory.",
+      "technical_impact": "Response size and database time grow linearly with the directory; one request can read the whole table.",
+      "business_impact": "Slow discovery as merchants join; an easy load amplifier.",
+      "recommendation": "A take (e.g. 50) with a cursor on both; for Explorer a pg_trgm GIN index on search_text (a migration) or Postgres full-text search.",
+      "acceptance_criteria": [
+        "Both searches answer at most one page",
+        "EXPLAIN shows an index scan for a word query"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-108"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0042",
+      "phase": "P8",
+      "repository": "25 app repositories",
+      "category": "operations",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "No app pins the Node version it builds on",
+      "description": "No engines.node and no .nvmrc in any of 25 app repositories; CI uses Node 22, Vercel uses each project's dashboard setting. A change on Vercel's side builds production on a version CI never ran.",
+      "evidence": [
+        {
+          "ref": "EV-0088",
+          "location": "package.json (25 repos)",
+          "observation": "no engines; no .nvmrc"
+        }
+      ],
+      "affected_files": [
+        "package.json"
+      ],
+      "root_cause": "Never declared.",
+      "technical_impact": "Build/runtime drift between CI and production.",
+      "business_impact": "A surprise build break or behaviour change on deploy.",
+      "recommendation": "\"engines\": { \"node\": \"22.x\" } in the template (template-sync dependency pin) and every app.",
+      "acceptance_criteria": [
+        "Every app declares engines.node"
+      ],
+      "complexity": "S",
+      "references": [],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0043",
+      "phase": "P9",
+      "repository": "tec-core-backend · KB",
+      "category": "performance",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Capacity has never been measured, and no latency objective exists",
+      "description": "k6 scripts exist (gateway, payment; workflow_dispatch only) but no run is recorded anywhere in the KB; slo-definitions.yaml sets availability targets only. How many users the platform carries is unknown.",
+      "evidence": [
+        {
+          "ref": "EV-0092",
+          "location": "Tec-core-backend/k6/",
+          "observation": "two scripts; no recorded run"
+        },
+        {
+          "ref": "EV-0093",
+          "location": "manifests/slo-definitions.yaml",
+          "observation": "availability only"
+        }
+      ],
+      "affected_files": [
+        "k6/",
+        "manifests/slo-definitions.yaml"
+      ],
+      "root_cause": "No staging to run them against (0006).",
+      "technical_impact": "Limits are discovered in production, as in June.",
+      "business_impact": "Launch capacity is a guess.",
+      "recommendation": "p95 latency objectives for gateway, auth and payment in slo-definitions.yaml; one recorded k6 run against a preview/staging once 0006 gives one.",
+      "acceptance_criteria": [
+        "A recorded k6 run in runtime-evidence/",
+        "Latency SLOs defined"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-78",
+        "TEC-AUDIT-0006"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 5 remediation."
       }
     }
   ]

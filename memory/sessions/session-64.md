@@ -111,6 +111,12 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
   could not measure at all (duplicate provider). Lesson: **a coverage number is only as honest as
   what it counts** — the template counts only files the tests load.
 
+- **Run 5 (13 Nov):** P8 — health endpoints and non-root images everywhere; deploy safety in the
+  Railway dashboard for 19 of 20 services (0039); all 31 scheduled guards on GitHub Actions,
+  stopped since 12 Nov, the restore check green when unconfigured (0040); no app pins Node (0042).
+  P9 — public Explorer/NX searches uncapped with a full scan (0041); capacity never measured, no
+  latency SLO (0043). Live Vercel/Railway reads BLOCKED (connector down, no outside network).
+
 ## Left open
 
 0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.
