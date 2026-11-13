@@ -44,9 +44,14 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run4",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 4 remediation."
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 7718d93",
+          "Tec-App 0288c0e7",
+          "24 app commits"
+        ],
+        "note": "CI runs test:coverage in every app (Life already did); the Hub could not measure at all (duplicate provider) — fixed; four apps below the fleet floor hold a ratchet at their measured level. Open: the template apps measure only the files their tests load — moving to every file in src/ needs the same ratchet, app by app.",
+        "verification": "CI fails when coverage falls below the floor in every app"
       }
     },
     {
@@ -92,9 +97,12 @@
       "disclosure": "public",
       "first_seen": "2026-11-11/run4",
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 4 remediation."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 7dc328c6"
+        ],
+        "note": "shared/contracts/payment.completed.v1.json; one payload builder in payment-service, checked against it; commerce (subscription + order) and asset feed its examples through their real handlers; CI re-runs them on a contract change; the two real-database tests run on the job's Postgres. Not yet under contract: trust (legend), nexus, wallet.",
+        "verification": "Changing a field in the contract fails CI in the producer and the consumers"
       }
     }
   ]

@@ -33,4 +33,26 @@ Not yet covered by a contract: trust (legend), nexus, wallet — next time each 
 
 Template (`tec-template-base 7718d93`): CI runs `test:coverage`; `@vitest/coverage-v8` pinned;
 template-sync carries a marker on `ci.yml` and the dependency pin, so fleet-drift names any app
-that does not run it. Measured: 69.5 / 61.3 / 63.9 / 74.9 — above its floor. The apps: below.
+that does not run it. Measured: 69.5 / 61.3 / 63.9 / 74.9 — above its floor.
+
+**Every app, measured first, then switched on** (statements · branches · functions · lines):
+
+| App | Measured | Floor in CI | Commit |
+|---|---|---|---|
+| 18 template apps (Alert · Analytics · Dx · Elite · Epic · Estate · Explorer · FundX · Insure · Legend · Nexus · NX · Titan · VIP · System · NBF · Brookfield · Zone) | 67.6–75.2 · 58.8–65.9 · 61.2–68.8 · 73.3–80.8 | the fleet's 60/60/60/50 | one each |
+| Life | 83.4 · 76.8 · 81.3 · 87.2 | already ran it | — |
+| **Hub** | 75.9 · 66.8 · 71.3 · 79.4 | 60/60/60/50 — **and it could not measure at all before**: the provider was declared twice (root `^4.0.18`, frontend `^4.1.8`) and the newer one crashed against vitest 4.0.18; now declared once, at the root | `Tec-App 0288c0e7` |
+| Connection | 45.6 · 36.4 · 36.5 · 51.3 | **ratchet** at that | `7796c59` |
+| Commerce | 54.0 · 48.0 · 46.3 · 56.8 | **ratchet** | `2c78a80` |
+| Assets | 39.8 · 32.8 · 32.5 · 41.3 | **ratchet** | `849bd2e` |
+| Ecommerce | 34.8 · 29.3 · 27.1 · 38.5 | **ratchet** | `9302dfb` |
+
+A **ratchet** is a floor set at what the app passes today: it can only go up, and each number is
+raised as tests are added, until it reaches the fleet's. It is the honest alternative to lowering
+the fleet's floor or leaving the app without one.
+
+**Still open — how the template apps count.** Commerce, Assets and Ecommerce are measured over
+**every** file in `src/` (an untested file counts as 0). The template's config measures only the
+files the tests load, so an untested file does not lower its number — the same three apps read
+~77 % that way and 35–54 % honestly. Moving the template to `include: ['src/**']` is the right
+measure and will put most apps under 60; it needs the same ratchet, app by app. Scheduled, not done.

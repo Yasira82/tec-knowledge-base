@@ -59,5 +59,5 @@ best-effort stream), 0037 (coverage floor never runs), 0038 (no test crosses a s
 
 ## Next
 
-**Run 4 remediation** (0036 · 0037 · 0038), then **Run 5 — P8 + P9**; read `07-functional/handoff.md`
+Run 4 remediation done 13 Nov, locally (`remediation-run4.md`): 0036 · 0038 fixed, 0037 partly (the honest measure for template apps is open). Then **Run 5 — P8 + P9**; read `07-functional/handoff.md`
 and `08-testing/handoff.md` first.

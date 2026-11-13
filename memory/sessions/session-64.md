@@ -104,6 +104,13 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
   **0037** the 60 % floor runs in Life only; **0038** no test crosses a service boundary. The
   Analytics flaky test did not recur in 7 runs.
 
+- **Run 4 remediation (13 Nov, local):** 0036 — three consumers read the durable stream too,
+  once per paymentId; the drift check compares consumers. 0038 — one contract for
+  `payment.completed.v1`, checked by the producer and three consumers; the real-database tests run
+  in CI. 0037 — every app's CI runs its coverage floor; four below it hold a ratchet; the Hub
+  could not measure at all (duplicate provider). Lesson: **a coverage number is only as honest as
+  what it counts** — the template counts only files the tests load.
+
 ## Left open
 
 0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.
