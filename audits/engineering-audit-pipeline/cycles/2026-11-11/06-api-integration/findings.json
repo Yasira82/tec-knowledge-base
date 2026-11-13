@@ -10,7 +10,7 @@
       "category": "reliability",
       "severity": "MEDIUM",
       "confidence": "HIGH",
-      "title": "439 of 467 gateway calls from the apps' BFF routes have no timeout",
+      "title": "437 of 465 gateway calls from the apps' BFF routes have no timeout",
       "description": "BFF routes call `${GATEWAY}/api/...` with fetch and no AbortSignal. The gateway itself now bounds slow upstreams (NEW-W), but when the gateway is the slow part — the 'Backend Offline' freeze — every pending BFF call waits until Vercel kills the function, and the screen shows a spinner instead of the state screen. The template's own session-refresh (8 s) is one of the 28 that do set one.",
       "evidence": [
         {
@@ -45,9 +45,14 @@
         "C-78"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Scheduled after Run 3."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 0844012",
+          "23 apps (one commit each)",
+          "Tec-App 7bf879b4"
+        ],
+        "note": "src/lib/gateway-fetch.ts (shared via template-sync): fetch with a deadline just past the gateway's own 504 (25 s) — 30 s, 90 s for an /ai/ path (the gateway waits 75 s for TEC AI) — so a live gateway always answers first and nothing it would complete is cut (a payment approve included); a caller's own signal still works. 435 gateway calls in 25 repositories (437 matched, the Hub's 2 own-origin calls then restored) moved onto it by a codemod; gateway-fetch.test.ts (shared) checks the deadlines and fails on any bare gateway fetch left in src/, with a self-check that the search finds one. Each repository: tsc, lint and its full suite green. Correction: two of the 467 calls counted in Run 3 were the Hub calling its OWN origin (${req.nextUrl.origin}/api/auth/refresh) — not gateway calls; they are left as they were and the search now exempts own-origin calls. True count: 465 gateway calls, 437 without a deadline.",
+        "verification": "After deploy, with the gateway stopped: a BFF route answers with its error within ~30 s instead of hanging"
       }
     },
     {
@@ -141,9 +146,13 @@
         "C-96"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Scheduled after Run 3."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 0844012",
+          "20 apps"
+        ],
+        "note": "The example moved to docs/examples/bff-route.example.ts (still type-checked); removed from the 20 apps where it was the unchanged copy and nothing called it; template-sync carries the example and the helper instead.",
+        "verification": "No app builds a /api/bff/items route"
       }
     }
   ]

@@ -16,6 +16,20 @@
 it first reads it (409). The real gap is the window of one or two Pi round trips between that read
 and the write. The finding's text is corrected in the register.
 
+## Then: 0033 · 0035 (template + every app)
+
+| Finding | Fix | Proof |
+|---|---|---|
+| 0033 | `src/lib/gateway-fetch.ts`, shared through template-sync: `fetch` with a deadline **just past the gateway's own** — the gateway answers 504 at 25 s, so the BFF waits 30 s (90 s for an `/ai/` path; the gateway waits 75 s for TEC AI). While the gateway is alive its answer always comes first, so nothing it would still complete is cut — a payment approve included; the deadline only fires when the gateway cannot answer at all. A codemod moved **435 calls in 25 repositories (437 matched, the Hub's 2 own-origin calls then restored)** onto it | `gateway-fetch.test.ts` (shared): the two deadlines, a caller's own signal, pass-through — and a scan that fails on any bare gateway fetch in `src/`, shown first to find one. Every repository: tsc, lint, full suite green (the Hub: 3,271 tests) |
+| 0035 | The example route moves to `docs/examples/bff-route.example.ts` (still type-checked) and out of the 20 apps that carried it unchanged and never called it | each app's suite green after removal |
+
+**A correction found by the Hub's own tests:** two of Run 3's 467 "gateway calls" were the Hub
+calling its **own** origin (`${req.nextUrl.origin}/api/auth/refresh`). The codemod had wrapped
+them; the Hub's SSO-timeout guard failed, and that is how it was seen. They are back to plain
+`fetch` (each already had its own bound), and the scan now exempts own-origin calls. The real
+count was 437 of 465. A deadline shorter than the gateway's was considered and rejected: it would
+cut a payment approve the backend was still completing.
+
 ## Not done — and why
 
 - **Re-emitting events for payments the cron already completed.** Those users paid and may not
@@ -27,4 +41,4 @@ and the write. The finding's text is corrected in the register.
 - **`completeFromRecovery`** (the recovery endpoint's own completion) is conditional on
   `status <> 'completed'` rather than on the open states. Left as it is: it runs only when Pi
   says the money moved, after a 409 on a final state, and Pi is the truth for money. Noted for P6.
-- **0033 · 0035** (template + apps) and **0034** (needs an ADR) — next.
+- **0034** (needs an ADR — where domain contracts live) — the owner's decision.

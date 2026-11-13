@@ -93,6 +93,10 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
 - **Search for the shape of a defect, not for the names in the first copy found.** P1-C04
   found 5 of 18 copies; the tool now searches the shape.
 
+- **A codemod's own classification is a claim to check.** Two "gateway calls" were the Hub
+  calling itself; the Hub's existing timeout guard caught it. Run the full suite of every
+  repository a codemod touches, not only the new test.
+
 ## Left open
 
 0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.
@@ -102,5 +106,6 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
    hourly reconciliation (`reconciliation.service.ts` `markCompleted`) sets a paid payment
    `completed` with no `payment.completed.v1` — nothing is delivered. 0030 · 0031 fixed the same day
    (Tec-core-backend 12cede00, local; `remediation-run3.md`). Owner: approve re-emitting the
-   event for payments the cron completed before the fix. Then 0033 · 0035, Run 4 — P6 + P7 (start from `05-database/handoff.md` and
+   event for payments the cron completed before the fix. 0033 · 0035 fixed the same day (gateway calls have a deadline
+   past the gateway's own; the dead example route is gone — template + 24 apps). Then Run 4 — P6 + P7 (start from `05-database/handoff.md` and
    `06-api-integration/handoff.md`).
