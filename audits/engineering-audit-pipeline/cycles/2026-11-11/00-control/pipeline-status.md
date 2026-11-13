@@ -50,5 +50,5 @@ example route). Still no push: GitHub Actions is refused for the account.
 
 ## Next
 
-**Run 3 remediation** — 0030 and 0031 first (local backend commit). Then **Run 4 — P6 + P7**;
+**Run 3 remediation** — 0030 and 0031 fixed locally 13 Nov (`remediation-run3.md`); 0033 · 0035 next. Then **Run 4 — P6 + P7**;
 read `05-database/handoff.md` and `06-api-integration/handoff.md` first.

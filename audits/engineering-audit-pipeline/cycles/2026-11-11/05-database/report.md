@@ -11,7 +11,7 @@
 | Wallet never negative (Invariant #1) | migrations | `CHECK (balance >= 0)` in `20260419000000_financial_integrity` — **holds** |
 | One Pi payment, one row | unique constraints | `payments.pi_payment_id` is `@unique`; commerce `orders.payment_id` / `pi_payment_id` unique since `20261109120000_align_with_schema` — **holds** |
 | Order state changes | commerce writes to `orders.status` | conditional `updateMany` on the from-state — **holds** |
-| Payment state changes | every write to `payment.status` in payment-service | Recovery endpoint fixed (`completeFromRecovery`); **the hourly reconciliation completes with no event → 0030 (HIGH)**; a recovery branch can cancel a terminal payment → **0031**; approve/complete are check-then-act → **0032** |
+| Payment state changes | every write to `payment.status` in payment-service | Recovery endpoint fixed (`completeFromRecovery`); **the hourly reconciliation completes with no event → 0030 (HIGH)**; a recovery branch can cancel a payment that completed while Pi was asked → **0031**; approve/complete are check-then-act → **0032** |
 | Event on every completion (ADR-004) | `saveOutboxEvent` against each path that sets `completed` | 2 of 3 paths emit; the cron does not (0030) |
 | Consumers idempotent | each `payment.completed.v1` consumer | asset (upsert by paymentId), commerce subscription (same payment_id → return), identity legend/nexus (by paymentId) — **all idempotent**, which is why 0032 is LOW |
 | Migrations apply to an empty database | CI job (backend) | Exists; not run here (no CI — billing hold) |

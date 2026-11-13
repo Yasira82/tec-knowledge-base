@@ -100,6 +100,7 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
 2. After the merges, re-run `tools/architecture_checks.py` to close the fixed findings.
 3. ~~Run 3 — P4 + P5~~ done 13 Nov: 6 new findings (0030–0035), 35 in all. **0030 (HIGH):** the
    hourly reconciliation (`reconciliation.service.ts` `markCompleted`) sets a paid payment
-   `completed` with no `payment.completed.v1` — nothing is delivered. Next: fix 0030 · 0031
-   (local backend commit), then Run 4 — P6 + P7 (start from `05-database/handoff.md` and
+   `completed` with no `payment.completed.v1` — nothing is delivered. 0030 · 0031 fixed the same day
+   (Tec-core-backend 12cede00, local; `remediation-run3.md`). Owner: approve re-emitting the
+   event for payments the cron completed before the fix. Then 0033 · 0035, Run 4 — P6 + P7 (start from `05-database/handoff.md` and
    `06-api-integration/handoff.md`).

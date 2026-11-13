@@ -1421,9 +1421,12 @@
         "C-71"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 3 remediation (local backend commit, no PR before 1 Dec)."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 12cede00"
+        ],
+        "note": "services/payment-transitions.ts: completeOpenPayment = conditional updateMany (created/approved) + payment.completed.v1 in the same transaction, same envelope as the normal path. The reconciliation uses it; a lost race counts as skipped with no audit row. payment-transitions.test.ts: 4 cases red on the old reconciliation. 469/469, tsc, build. No PR before 1 Dec. Payments the cron completed before the fix still have no event — re-emitting them is a separate, audited, owner-approved step.",
+        "verification": "After deploy: a stale approved payment Pi shows as paid → one payment.completed.v1 in outbox_events and the consumer delivers"
       }
     },
     {
@@ -1433,13 +1436,13 @@
       "category": "data-integrity",
       "severity": "MEDIUM",
       "confidence": "HIGH",
-      "title": "The recovery endpoint's 'stuck or cancelled' branch can cancel a completed or failed payment",
-      "description": "In resolve-incomplete, CASE C (Pi: not verified, or cancelled) does `if (localPayment && localPayment.status !== 'cancelled') payment.update({ status: 'cancelled' })`. A local 'completed' or 'failed' payment passes that test and is rewritten to 'cancelled'. The branch just above (unreachable on Pi) guards all three terminal states but reads then writes, so it is not atomic either.",
+      "title": "The recovery endpoint can cancel a payment that completed while it was asking Pi",
+      "description": "resolve-incomplete rejects a payment that is final when it reads it (409), then asks Pi — one or two network round trips — and only then cancels, with an unconditional update. In CASE C the guard at the write is `status !== 'cancelled'` on the status read BEFORE those round trips; the unreachable-on-Pi branch checks all three final states, but also on the old read. A payment completed by a concurrent /complete in that window is rewritten to 'cancelled'. (Corrected on 13 Nov while fixing it: the first text said a locally completed payment passes the guard; the 409 at the top stops that — the gap is the race window.)",
       "evidence": [
         {
           "ref": "EV-0064",
           "location": "tec-payment-service/src/controllers/payment.controller.ts:1442-1456",
-          "observation": "guard is status !== cancelled only"
+          "observation": "guard at the write is status !== 'cancelled', on a status read before the Pi calls"
         },
         {
           "ref": "EV-0065",
@@ -1466,9 +1469,12 @@
         "C-47 Invariant #7 · Forbidden #9"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Run 3 remediation (local backend commit, no PR before 1 Dec)."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 12cede00"
+        ],
+        "note": "Both cancel branches of resolve-incomplete use cancelOpenPayment (conditional on created/approved in the WHERE); the audit is written only when the row changed. Controller test for the race: red on the old code.",
+        "verification": "Covered by the unit test; no runtime step needed"
       }
     },
     {
