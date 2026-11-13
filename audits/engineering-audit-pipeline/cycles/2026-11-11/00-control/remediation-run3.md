@@ -39,6 +39,39 @@ cases red on the old code; 472/472 (`Tec-core-backend 5863f4b9`). No uncondition
 left in payment-service: a search for `payment.update(` / `payment.upsert(` in its source finds
 only comments (the search finds the old calls on `origin/main`, so its silence counts).
 
+## Production read (owner, 13 Nov — read-only, Railway console on payment-service)
+
+`diagnose-recovery-completions.mjs` as deployed (the `--counts-only` / per-path version is in the
+local commit, not yet deployed — so the deployed one ignored the flag and listed the one row it
+flags; that row is not reproduced here):
+
+| | |
+|---|---|
+| Completed payments | 1,000 |
+| with `payment.completed.v1` | 471 — from 2026-06-20 to 2026-11-11 |
+| **without** it | 529 — from 2026-03-14 to **2026-08-06** |
+| without an event *and* without `PAYMENT_CONFIRMED` | 19 of 529 |
+| look like a Pro / Enterprise purchase | 1 — 10 π, 6 Aug, `user=gateway` (a service identity, not a Pioneer) |
+
+What it says:
+
+1. **Nothing completed after 6 Aug is missing its event.** Whatever dropped events stopped then;
+   the hourly reconciliation (0030) left **no** payment without its event in the three months since.
+   0030 was a real defect with no production victims in that window — the fix stays, it prevents
+   the next one.
+2. **Most of the 529 are history, not victims.** The event stream starts on 20 Jun (the outbox's
+   first row); payments completed before it never had one, by construction. 510 of the 529 carry
+   the normal path's `PAYMENT_CONFIRMED`, so they completed normally, in the days of direct
+   publishing.
+3. **The only subscription-shaped one is not a person** (`user=gateway`).
+
+**Decision for the owner: do not re-emit in bulk.** Re-sending 529 events would replay
+deliveries for months-old payments that were delivered through the older path; the consumers are
+idempotent by payment id, but a consumer that did not record the old delivery would deliver
+again. If anything is to be re-sent, it is the narrow set *completed between 20 Jun and 6 Aug,
+with no event and no `PAYMENT_CONFIRMED`* — checked one by one against the consuming app first.
+`1,000` exactly is worth one `count(*)` to rule out a cap before relying on the total.
+
 ## Not done — and why
 
 - **Re-emitting events for payments the cron already completed.** Those users paid and may not
