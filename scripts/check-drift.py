@@ -183,6 +183,18 @@ def check_events(get):
             record(PASS, 'events', f"{e['name']} — shared constant (shared/src), owner {owner_dir}")
         else:
             record(FAIL, 'events', f"{e['name']} is `live` in the catalog but neither its owner {owner_dir} nor shared/ names it")
+        # Each listed consumer must name the stream in its own source. Before this check, the
+        # catalog kept wallet and commerce as consumers of `payment.completed` months after both
+        # moved to `.v1`, and nobody noticed which services still read the best-effort stream
+        # (TEC-AUDIT-0036). A comment that names it in backticks does not count — only a quoted
+        # literal, which is what a stream read is written with.
+        quoted = r"['\"]" + re.escape(e['name']) + r"['\"]"
+        for consumer in e.get('consumers') or []:
+            svc = consumer.split('/')[0]
+            if not backend.grep(r'.', f'{svc}/src'):
+                record(FAIL, 'events', f"{e['name']}: consumer {svc} has no src/ in tec-core-backend")
+            elif not backend.grep(quoted, f'{svc}/src'):
+                record(FAIL, 'events', f"{e['name']}: {svc} is listed as a consumer but its source never names the stream")
 
     in_code = {}
     for f, text in backend.grep(VERSIONED_EVENT, '*.ts'):
