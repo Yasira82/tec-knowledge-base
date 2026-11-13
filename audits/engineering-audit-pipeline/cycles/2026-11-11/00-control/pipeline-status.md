@@ -59,9 +59,9 @@ best-effort stream), 0037 (coverage floor never runs), 0038 (no test crosses a s
 
 ## After Run 5 (13 Nov)
 
-43 findings: 1 CRITICAL (closed) · 4 HIGH · 19 MEDIUM · 16 LOW · 3 INFO. New: 0039 (deploy safety
+43 findings: 1 CRITICAL (closed) · 5 HIGH · 18 MEDIUM · 16 LOW · 3 INFO. New: 0039 (deploy safety
 lives in Railway's dashboard for 19 of 20 services), 0040 (every scheduled guard is on GitHub
-Actions — all stopped since 12 Nov; the restore check passes when unconfigured), 0041 (public
+Actions — all stopped since 12 Nov; the restore check passes when unconfigured; raised to HIGH when the owner confirmed no backup alert is set), 0041 (public
 directory searches return every match through a full scan), 0042 (no app pins Node), 0043
 (capacity never measured; no latency SLO).
 

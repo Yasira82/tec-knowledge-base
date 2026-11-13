@@ -465,6 +465,11 @@
       "ref": "EV-0093",
       "finding": "TEC-AUDIT-0043",
       "location": "manifests/slo-definitions.yaml"
+    },
+    {
+      "ref": "EV-0094",
+      "finding": "TEC-AUDIT-0040",
+      "location": "owner, Railway backup-job variables, 13 Nov"
     }
   ]
 }
