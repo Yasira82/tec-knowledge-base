@@ -2,7 +2,7 @@
 # =============================================================================
 # TEC SLO Definitions Engine v1.0
 # =============================================================================
-# Validates manifests/slo-definitions.yaml and closes the SLO-defs ↔ evidence loop.
+# Validates manifests/slo-definitions.md and closes the SLO-defs ↔ evidence loop.
 #
 # This is engineering's half of the Observability handoff (EXECUTION_PLAN): the
 # SLO targets in C-78 §2, made machine-readable so ops can wire alerts and every
@@ -14,7 +14,7 @@
 #   SLO-3  SLO ids are unique
 #   SLO-4  every slo_breach runtime-evidence record's `slo` references a defined SLO id
 #
-# Authority: C-78 · C-96 · manifests/slo-definitions.yaml
+# Authority: C-78 · C-96 · manifests/slo-definitions.md
 # Usage: bash evals/check-slo-definitions.sh   (exit 0 = pass, 1 = violations)
 # =============================================================================
 
@@ -24,14 +24,14 @@ echo "🎯 TEC — SLO Definitions Engine"
 echo "==============================="
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping SLO definitions check."
-  exit 0
+  echo "❌ python3 not available — cannot run the SLO definitions check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - <<'PY'
 import os, re, sys, glob
 
-SLO_FILE = "manifests/slo-definitions.yaml"
+SLO_FILE = "manifests/slo-definitions.md"
 KB_DIR = "knowledge-base"
 EV_DIR = "runtime-evidence"
 

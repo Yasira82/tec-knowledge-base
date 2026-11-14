@@ -3,7 +3,7 @@
 # TEC Runtime Evidence Engine v1.0
 # =============================================================================
 # Validates every runtime evidence record in runtime-evidence/**/*.yaml against
-# manifests/runtime-evidence-schema.yaml.
+# manifests/runtime-evidence-schema.md.
 #
 # This is the Reality→Evidence→Governance half of the Runtime Governance Layer:
 # Drift Detection asserts code matches the documented claims; Runtime Evidence
@@ -17,11 +17,12 @@
 #   RE-5  every binds_to id resolves to an existing C-doc
 #   RE-6  evidence_id unique across runtime-evidence/
 #   RE-7  coverage requirements bind broad current-state claims to evidence
+#   RE-8  a documentation attestation is not telemetry; a requirement may set max_age_days
 #
 # If there are no records yet (Portal stage), the gate passes — the schema is the
 # ready contract; records begin when the Observability stack emits them.
 #
-# Authority: C-96 · manifests/runtime-evidence-schema.yaml
+# Authority: C-96 · manifests/runtime-evidence-schema.md
 # Usage: bash evals/check-runtime-evidence.sh   (exit 0 = pass, 1 = violations)
 # =============================================================================
 
@@ -31,8 +32,8 @@ echo "🧾 TEC — Runtime Evidence Engine"
 echo "================================"
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping runtime evidence check."
-  exit 0
+  echo "❌ python3 not available — cannot run the runtime evidence check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - <<'PY'
@@ -199,6 +200,39 @@ if os.path.exists(COVERAGE):
                             else rec.get("binds_to", []))
             and rec.get("kind") in allowed_kinds
         ]
+        # RE-8 — what a record IS, and how old it is (KB review, 14 Nov 2026). A record whose
+        # dimensions say `evidence_type: documentation-attestation` is someone writing down
+        # what the docs said — not a probe of production. It satisfies a requirement only
+        # when the requirement says `allow_attestation: true` (with its reason). A requirement
+        # with `max_age_days` refuses records older than that: an old snapshot is not proof
+        # of today. Every satisfying record's type and age is printed either way.
+        import datetime as _dt
+        def _ev_type(r):
+            d = r.get("dimensions") or {}
+            return d.get("evidence_type", "telemetry") if isinstance(d, dict) else "telemetry"
+        def _age_days(r):
+            try:
+                t = _dt.datetime.strptime(str(r.get("timestamp")), "%Y-%m-%dT%H:%M:%SZ")
+                return (_dt.datetime.utcnow() - t).days
+            except Exception:
+                return None
+        if not requirement.get("allow_attestation", False):
+            dropped = [p for p, r in candidates if _ev_type(r) == "documentation-attestation"]
+            for p in dropped:
+                errors.append(f"{req_id}: {p} is a documentation attestation, not telemetry — "
+                              f"this requirement does not accept one (RE-8)")
+            candidates = [(p, r) for p, r in candidates if _ev_type(r) != "documentation-attestation"]
+        max_age = requirement.get("max_age_days")
+        for p, r in candidates:
+            age = _age_days(r)
+            print(f"  {req_id}: {p} — {_ev_type(r)}, {age if age is not None else '?'} days old"
+                  + (f" (limit {max_age})" if max_age else " (no age limit set — the owner sets max_age_days)"))
+        if max_age:
+            stale = [(p, r) for p, r in candidates if (_age_days(r) is None or _age_days(r) > int(max_age))]
+            for p, r in stale:
+                errors.append(f"{req_id}: {p} is older than {max_age} days — not evidence of today (RE-8)")
+            candidates = [(p, r) for p, r in candidates if (p, r) not in stale]
+
         required_count = int(requirement.get("min_non_example_records", 1))
         if len(candidates) < required_count:
             errors.append(f"{req_id}: requires {required_count} non-example {allowed_kinds} "
@@ -241,7 +275,7 @@ if errors:
     print(f"\n  ❌ Runtime evidence violations: {len(errors)}")
     for e in errors:
         print(f"     {e}")
-    print("\n  → Fix every record against manifests/runtime-evidence-schema.yaml.")
+    print("\n  → Fix every record against manifests/runtime-evidence-schema.md.")
     sys.exit(1)
 
 print("\n  ✅ All runtime evidence records valid (attributable + bound to real C-docs).")

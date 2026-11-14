@@ -2,7 +2,8 @@
 ## Quick guide to the content (C-00 → C-135)
 
 > **Truth State:** `[Current State]`
-> **Last Updated:** July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
+> **Last Updated:** 14 Nov 2026 — ADR range (ADR-001 → ADR-014, C-64) and the NX row (ADR-010). The order of authority is one: C-00 → C-47 → ADRs (C-64) → C-67 (here, in C-67, CLAUDE.md, CONTRIBUTING.md and PLATFORM_ARCHITECTURE.md; `check-authority-consistency.sh` keeps them equal).
+> Before that: July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
 
@@ -199,7 +200,7 @@
 | **C-109** | Nexus | System of Coordination | Nexus Institutional Charter |
 | **C-110** | SYSTEM | System of Governance | System Institutional Charter |
 | **C-111** | ALERT | System of Risk | Alert Institutional Charter |
-| **C-112** | NX | System of Security | NX Institutional Charter |
+| **C-112** | NX | Opportunity Exchange (ADR-010; rewritten 14 Nov 2026 — the old security charter is kept as an appendix) | NX Opportunity Exchange Institutional Charter |
 | **C-113** | FundX | Capital Coordination Infrastructure | FundX Institutional Charter |
 | **C-114** | Estate | Real Estate Coordination | Estate Institutional Charter |
 | **C-115** | DX | System of Construction | DX Developer Institutional Charter |
@@ -255,7 +256,7 @@
 
 | Content | Title | One sentence |
 |---------|---------|----------|
-| **C-132** | Service Extraction & Modular Architecture Policy | ADR-011 detail — Modules-First (App→Module→Service); new service only on a T1–T4 production trigger; Design-for-Extraction (Explorer→search-service); payment-service is the only Pi custodian; target now = 11 services |
+| **C-132** | Service Extraction & Modular Architecture Policy | ADR-011 detail — Modules-First (App→Module→Service); new service only on a T1–T4 production trigger; Design-for-Extraction (Explorer→search-service); payment-service is the only Pi custodian; 20 deployed services today (§7.1; the ADR amending it for the October move is still to be recorded) |
 
 ---
 
@@ -340,9 +341,9 @@ C-00  Platform Constitution
   ↓
 C-47  Kernel Spec (Architecture Binding)
   ↓
-C-67  Source of Truth Matrix
+ADRs  (C-64: ADR-001 → ADR-014)
   ↓
-ADRs  (C-64: ADR-001 → ADR-007)
+C-67  Source of Truth Matrix
   ↓
 C-93  Institutional Verification Constitution  [Tier-1 — Verification → State → Authority]
   ↓

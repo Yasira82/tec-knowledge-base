@@ -1,13 +1,18 @@
-# C-112 — NX Security INSTITUTIONAL CHARTER
-## TEC Economic Infrastructure Design Partnership — v1.0
+# C-112 — NX OPPORTUNITY EXCHANGE INSTITUTIONAL CHARTER
+## Opportunity Exchange — "What is the right opportunity for me now?" (ADR-010)
 
-**Truth State:** [Future Vision]
-**Governance State:** [Draft]
-**Verification State:** [Assumed]
+**Truth State:** `[Current State]` for what is built (below) · `[Planned State]` for matching
+**Governance State:** `[ADR Approved]` — ADR-010 (C-64), July 2026
+**Verification:** `[Code Verified]` — Tec-Nx + `tec-business-service` `src/modules/nx`. Last verified: 2026-11-14.
 **Authority Scope:** [Platform]
-**Decision Status:** [Exploratory]
+
+> Rewritten 14 Nov 2026. Until then this charter's title and body described NX as **Cyber
+> Security** — the role ADR-010 took away from it in July 2026 — under a banner saying so. The
+> security material is kept, unchanged, in the **Appendix**: it is the source for System's
+> Security Center (C-110), not NX's job.
 
 ---
+
 ## Deployment Status (2026-07-31)
 
 > **Truth State:** `[Current State]` for the deployed app + live payment · `[Future Vision]` for the full runtime below
@@ -23,30 +28,77 @@
 
 ---
 
-> ⚠️ **SUPERSEDED ON DOMAIN (ADR-010, July 2026).** NX is **repurposed** from
-> *Cyber Security* to **Network / Opportunity Exchange** — connecting people to
-> opportunities (jobs, partnerships, grants, hackathons, investments, co-founders,
-> mentorship). *"What is the right opportunity for me now?"*
->
-> The **security** functions below are **not deleted** — they move to **System
-> (C-110) as a "Security Center" / Security Governance** (System = operations +
-> governance runtime). Security *alerts* live in **Alert (C-111)**; *verification/
-> trust* lives in **Zone (C-120)**. If security ever becomes a standalone product
-> for the wider Pi community it gets its **own new domain** (e.g. `sentinel.pi`) —
-> **never** the `NX` slug. The sections below are retained as the source material
-> for that Security-Center scope; read them as *System security-governance*, not NX.
->
-> See **ADR-010** (C-64) for the decision + the no-overlap role map.
+## 1. MISSION
+
+Connect people in the Pi economy to opportunities — jobs, partnerships, grants, hackathons,
+investments, co-founders and mentorship — on one board, ranked so that what has been verified
+comes first. ADR-010: no unified opportunity marketplace existed for the Pi community; NX is it.
+
+## 2. INSTITUTIONAL ROLE
+
+`NX = opportunity` in ADR-010's no-overlap map: Hub = identity · Life = personal · Connection =
+relationships · Zone = verification · Analytics = insight · TEC AI = reasoning · Nexus =
+orchestration · System = operations + security governance · Alert = notifications.
+
+## 3. AUTHORITY BOUNDARY
+
+### Owns
+- The opportunity index (`NxOpportunity`) and the board: search, kinds, the detail page.
+- Its own ranking: **verified first, then featured, then title** — trust is ranked above paid reach.
+- Posting by a signed-in member (owner = the session, never the body — P6).
+
+### Does NOT Own
+- **Verification** — Zone (C-120) / KYC. NX presents `verified`; it never mints it.
+- **Capital** — payment-service and FundX (C-113). An "investment" on the board is indicative; NX moves no Pi.
+- **The relationship graph** — Connection (C-107). **Security** — System's Security Center (ADR-010).
+
+## 4. TECHNICAL ARCHITECTURE
+
+| Part | Where | What |
+|---|---|---|
+| App | `Tec-Nx` (Next.js, from the template) · `nx.tecosystem.app` | board · `/opportunity/[id]` · NX Pro · BFF routes |
+| Backend | `tec-business-service` (`:5018`, C-20) · `src/modules/nx` | mounted at `identity/nx` so the gateway's `/api/identity/*` route reaches it |
+| API | `GET search?q=&kind=` · `GET opportunity/:handle` · `GET mine/:owner` · `POST opportunity` · `PATCH featured` | reads public; writes owner-scoped (`OwnerMatchGuard`) |
+| Data | `nx_opportunities` — handle · owner · kind (JOB · PARTNERSHIP · GRANT · HACKATHON · INVESTMENT · COFOUNDER · MENTORSHIP) · title · org · summary · location · reward · verified · featured · tags | |
+
+## 5. SECURITY MODEL
+
+Hub SSO (C-123) · CSRF in middleware only · ADR-007 guard before every Pi call · NX Pro paid
+through payment-service under `PI_API_KEY_NX` (ADR-009). Reads are public board information;
+every write takes its owner from the session.
+
+## 6. REVENUE MODEL
+
+**NX Pro** — featured placement: more reach, never trust. A featured posting still ranks below
+any verified one, and buying Pro never sets `verified`.
+
+## 7. ENGINEERING UPDATES REQUIRED
+
+| Item | State |
+|---|---|
+| Board, detail, posting, NX Pro | ✅ live |
+| Trust-weighted **matching** (Life intent + Connection graph) | `[Planned State]` — ADR-010 "Phase 1+" |
+| A Zone verification flowing into `verified` | not wired — today every posting starts unverified |
+| The entitlement behind `featured` | TEC-AUDIT-0048 (withheld while open) — fixed on the backend work branch, not deployed |
+
+## 8. RELATED
+
+C-64 ADR-010 · C-110 System (Security Center) · C-111 Alert · C-120 Zone · C-107 Connection ·
+C-113 FundX · C-123 session law · C-12 payment
 
 ---
 
-## 1. MISSION
+## Appendix — the original charter (Cyber Security), superseded by ADR-010
+
+> Kept verbatim. Read it as **System's security-governance scope** (C-110), not as NX.
+
+### 1. MISSION
 
 Secure the cryptographic trust foundation of the TEC ecosystem — monitoring threats, enforcing identity protection, and ensuring that economic trust is never compromised by technical vulnerabilities.
 
 ---
 
-## 2. INSTITUTIONAL ROLE
+### 2. INSTITUTIONAL ROLE
 
 ```
 System of Security — Cybersecurity Infrastructure
@@ -56,7 +108,7 @@ NX is the **security operations layer** of the TEC economic runtime. While every
 
 ---
 
-## 3. ECONOMIC PURPOSE
+### 3. ECONOMIC PURPOSE
 
 Protect economic trust.
 
@@ -66,7 +118,7 @@ Protect economic trust.
 
 ---
 
-## 4. AUTHORITY BOUNDARY
+### 4. AUTHORITY BOUNDARY
 
 ### Owns
 - Platform-level security monitoring
@@ -100,7 +152,7 @@ INBOUND:
 
 ---
 
-## 5. TECHNICAL ARCHITECTURE
+### 5. TECHNICAL ARCHITECTURE
 
 ```
 Planned Stack:
@@ -130,7 +182,7 @@ NX Adds:
 
 ---
 
-## 6. SECURITY MODEL
+### 6. SECURITY MODEL
 
 ```
 Security of the Security System:
@@ -154,7 +206,7 @@ Response Protocols:
 
 ---
 
-## 7. REVENUE MODEL
+### 7. REVENUE MODEL
 
 **Indirect (Trust Asset)**
 
@@ -166,7 +218,7 @@ Response Protocols:
 
 ---
 
-## 8. KEY METRICS
+### 8. KEY METRICS
 
 ```
 Mean Time to Detect (MTTD):  < 5min for P0 threats
@@ -180,7 +232,7 @@ CORS Policy Compliance:      100% (no wildcard domains)
 
 ---
 
-## 9. ECOSYSTEM CONTRIBUTION
+### 9. ECOSYSTEM CONTRIBUTION
 
 - **Pi Network Audit Enabler** — security posture is a submission gate
 - **Trust Preservation** — prevents security incidents that would destroy user trust
@@ -189,7 +241,7 @@ CORS Policy Compliance:      100% (no wildcard domains)
 
 ---
 
-## 10. FUTURE EVOLUTION
+### 10. FUTURE EVOLUTION
 
 ```
 Phase 1 (Foundation):
@@ -210,7 +262,7 @@ Phase 3:
 
 ---
 
-## 11. ENGINEERING UPDATES REQUIRED
+### 11. ENGINEERING UPDATES REQUIRED
 
 **P0 (Pre-Mainnet):**
 ```
@@ -237,7 +289,7 @@ Phase 3:
 
 ---
 
-## 12. INTEGRATION MAP
+### 12. INTEGRATION MAP
 
 ```
 This charter (C-112) depends on:

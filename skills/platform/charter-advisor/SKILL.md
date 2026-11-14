@@ -139,7 +139,7 @@ Never implement a feature in a charter-covered app without first reading its **E
 
 ### Hub (C-100) — System of Access
 ```
-P0: INTERNAL_SECRET must be set on Railway (NEW-B — ops task)
+✅ NEW-B closed — INTERNAL_SECRET set on Railway (C-40)
 P1: BFF-first rule — all wallet/payment fetches via /api/bff/*
 P1: PAL (Pi Abstraction Layer) — PiRuntime.* replaces window.Pi.*
 P2: Hub analytics dashboard

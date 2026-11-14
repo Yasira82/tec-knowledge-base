@@ -3,10 +3,10 @@
 # TEC VAM Compliance Engine v1.0
 # =============================================================================
 # Validates that every current-state asset in asset-registry.yaml has a
-# corresponding verification policy declared in verification-authority-matrix.yaml
+# corresponding verification policy declared in verification-authority-matrix.md
 #
 # Authority: C-117 § 5 (Verification Authority Matrix)
-# Source:    manifests/verification-authority-matrix.yaml
+# Source:    manifests/verification-authority-matrix.md
 #
 # BLOCKING check. Exit 0 = pass, 1 = violations found.
 # =============================================================================
@@ -16,7 +16,7 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 REGISTRY="${REPO_ROOT}/architecture/asset-registry.yaml"
-VAM="${REPO_ROOT}/manifests/verification-authority-matrix.yaml"
+VAM="${REPO_ROOT}/manifests/verification-authority-matrix.md"
 
 echo "⚖️  TEC Knowledge Base — VAM Compliance Check"
 echo "=============================================="

@@ -19,11 +19,11 @@ machine-readable contract, so that:
 
 - **ops** can wire Prometheus alerts / dashboards directly from these definitions;
 - a violation emits a `slo_breach` **runtime evidence** record
-  (`manifests/runtime-evidence-schema.yaml`) that `binds_to` the relevant C-doc;
+  (`manifests/runtime-evidence-schema.md`) that `binds_to` the relevant C-doc;
 - the Verification Engine (C-93) can consume the breach at VAM tier **V-5**.
 
 ```
-C-78 (prose SLOs)  →  slo-definitions.yaml (contract)  →  ops: Prometheus/alerts
+C-78 (prose SLOs)  →  slo-definitions.md (contract)  →  ops: Prometheus/alerts
                                    │
                           breach → runtime-evidence/ (slo_breach)  →  C-93 verify (V-5)
 ```
@@ -120,7 +120,7 @@ error_budget:
 # How a breach becomes evidence.
 on_breach:
   emit: slo_breach
-  schema: manifests/runtime-evidence-schema.yaml
+  schema: manifests/runtime-evidence-schema.md
   required_fields: [slo, observed, threshold]
   note: >
     the slo_breach record's `slo` field MUST equal one of the ids above

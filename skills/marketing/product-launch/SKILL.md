@@ -10,7 +10,7 @@ metadata:
     - content-strategy
     - community-marketing
   related_documents:
-    - knowledge-base/C-41___ENGINEERING_ROADMAP.md
+    - knowledge-base/C-41_Engineering_Roadmap.md
 ---
 
 # TEC Product Launch Framework

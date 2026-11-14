@@ -31,7 +31,9 @@
 set -uo pipefail
 
 KB_DIR="knowledge-base"
-SCAN_DIRS=("memory" "audits")
+# skills · agents · commands are scanned too (KB review, 14 Nov 2026): an agent loads them as
+# instructions, so a C-number there that does not exist is an instruction to read nothing.
+SCAN_DIRS=("memory" "audits" "skills" "agents" "commands")
 ERRORS=0
 SCANNED=0
 
@@ -78,7 +80,7 @@ for dir in "${SCAN_DIRS[@]}"; do
 done
 
 echo ""
-echo "📊 Files scanned (memory/ + audits/): $SCANNED"
+echo "📊 Files scanned (memory/ audits/ skills/ agents/ commands/): $SCANNED"
 echo "📊 Dangling references:               $ERRORS"
 
 if [ "$ERRORS" -gt 0 ]; then
@@ -89,5 +91,5 @@ if [ "$ERRORS" -gt 0 ]; then
   exit 1
 fi
 
-echo "✅ Every C-reference in memory/ and audits/ resolves to a canonical C-doc."
+echo "✅ Every C-reference in memory/ audits/ skills/ agents/ commands/ resolves to a canonical C-doc."
 exit 0
