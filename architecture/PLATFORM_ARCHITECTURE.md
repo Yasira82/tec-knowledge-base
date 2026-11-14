@@ -514,4 +514,4 @@ Settlement (Hub/Wallet)
 
 *Architecture Reference — TEC Platform v3.2.0 — June 2026*
 *Owner: Yasser | Yasira82 | @yasser172*
-*Authority: C-00 → C-67 → ADRs → App Charters (C-100→C-115) → This Document*
+*Authority: C-00 → C-47 → ADRs (C-64) → C-67 → App Charters (C-100+) → This Document*

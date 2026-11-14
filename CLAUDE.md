@@ -78,7 +78,10 @@ graph and diffs them against what you committed. It has shipped red twice: once 
 
 ## Authority hierarchy
 
-C-00 → C-67 → ADRs (C-64) → Current State docs → Runtime Evidence → Code
+C-00 → C-47 → ADRs (C-64) → C-67 → Current State docs → Runtime Evidence → Code
+
+(C-47 is the Kernel; C-67 maps where each fact lives — it is not above the decisions. The
+same order is in C-57, C-67, CONTRIBUTING.md and PLATFORM_ARCHITECTURE.md; a gate keeps them equal.)
 
 ## Truth Framework
 

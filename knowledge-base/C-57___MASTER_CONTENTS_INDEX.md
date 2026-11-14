@@ -2,7 +2,7 @@
 ## Quick guide to the content (C-00 → C-135)
 
 > **Truth State:** `[Current State]`
-> **Last Updated:** 14 Nov 2026 — ADR range (ADR-001 → ADR-014, C-64) and the NX row (ADR-010). Not yet settled: the order of authority — this file gives two (the hierarchy below and the conflict rule under it) and CLAUDE.md a third; the owner decides.
+> **Last Updated:** 14 Nov 2026 — ADR range (ADR-001 → ADR-014, C-64) and the NX row (ADR-010). The order of authority is one: C-00 → C-47 → ADRs (C-64) → C-67 (here, in C-67, CLAUDE.md, CONTRIBUTING.md and PLATFORM_ARCHITECTURE.md; `check-authority-consistency.sh` keeps them equal).
 > Before that: July 2026 (Session 16) — C-123 Pi Browser Session & Cookie Spec (Runtime Verified law from the July 2026 Hub login incident)
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
@@ -341,9 +341,9 @@ C-00  Platform Constitution
   ↓
 C-47  Kernel Spec (Architecture Binding)
   ↓
-C-67  Source of Truth Matrix
-  ↓
 ADRs  (C-64: ADR-001 → ADR-014)
+  ↓
+C-67  Source of Truth Matrix
   ↓
 C-93  Institutional Verification Constitution  [Tier-1 — Verification → State → Authority]
   ↓
