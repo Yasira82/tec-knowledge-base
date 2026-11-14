@@ -903,9 +903,13 @@
         "TEC-AUDIT-0002"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Needs a TEC-SDK release with a fixed axios (npm publish), then a lock refresh per app — after Actions is back."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 4f94bf1",
+          "24 apps + the Hub (one commit each, 14 Nov)"
+        ],
+        "note": "npm update within the declared ranges (npm audit fix crashes on these trees: 'edgesOut'). No SDK release was needed: tec-sdk declares axios ^1.6.7, so the lock moves it. Apps: 14 high → 5 (Life 5 → 3). Hub: 17 high + 2 CRITICAL (protobufjs, websocket-driver) → 10 high, 0 critical. Every remaining high needs a major — @sentry/nextjs 11, next 16 (postcss, rollup), firebase 13 for the Hub (firestore → grpc-js, undici) — or is zod (0020). Only lockfiles changed; every suite green; production builds of the template, Commerce, Zone and the Hub pass.",
+        "verification": "npm audit --omit=dev on main: no high or critical with a non-major fix, in any repo"
       }
     },
     {
@@ -1074,9 +1078,13 @@
       "first_seen": "2026-11-11/run2/P3",
       "references": [],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Test tooling; with the next test-dependency update."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 8bf4e78",
+          "24 apps + the Hub (one commit each, 14 Nov)"
+        ],
+        "note": "happy-dom ^21.0.4 everywhere. Correction to the finding's scope: it named Commerce, Assets and Ecommerce, but every repo (template, 20 template apps, the Hub) ran 18.0.1 — all moved. happy-dom is now pinned by template-sync. Every suite green on 21; npm audit no longer lists it.",
+        "verification": "npm ls happy-dom resolves 21.x in every repo on main"
       }
     },
     {
