@@ -7,7 +7,7 @@
 # v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
 # This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
 #
-# Generated: 2026-10-04T13:55:00.523947
+# Generated: 2026-11-12T17:48:59.124152
 
 documents:
 
@@ -680,7 +680,7 @@ documents:
     governance_state: "governance-approved"
     verification_state: "documentation-verified"
     authority_scope: "platform"
-    depends_on: []
+    depends_on: ["C-00", "C-64", "C-67"]
     informs: []
 
   - id: "C-72"
@@ -1441,7 +1441,7 @@ adrs:
 # STATISTICS
 # =============================================================================
 # Total documents: 116
-# Total cross-references (depends_on): 123
+# Total cross-references (depends_on): 126
 #
 # Tier distribution:
 #   tier-1-constitutional-runtime: 62

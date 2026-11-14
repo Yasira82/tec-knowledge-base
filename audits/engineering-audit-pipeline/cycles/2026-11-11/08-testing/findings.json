@@ -1,0 +1,109 @@
+{
+  "cycle": "2026-11-11",
+  "run": 4,
+  "phase": "P7",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0037",
+      "phase": "P7",
+      "repository": "tec-template-base + 19 apps (all but Life of those that declare it)",
+      "category": "testing",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The 60 % coverage floor is declared in 21 app repositories and enforced in one",
+      "description": "Each vitest.config declares thresholds (60/60/60/50); CI runs npm test without coverage and @vitest/coverage-v8 is not installed, so the floor never runs. Only Tec-Life runs test:coverage. The Hub, Assets, Commerce and Ecommerce declare no floor at all. Measured here, the template is at 69.5/61.2/63.9/74.9.",
+      "evidence": [
+        {
+          "ref": "EV-0078",
+          "location": "vitest.config.ts · ci.yml (each app)",
+          "observation": "floor declared; CI runs npm test"
+        },
+        {
+          "ref": "EV-0079",
+          "location": "tec-template-base package.json",
+          "observation": "no coverage provider"
+        }
+      ],
+      "affected_files": [
+        "vitest.config.ts",
+        ".github/workflows/ci.yml",
+        "package.json"
+      ],
+      "root_cause": "The floor was added to the config; the CI step and dependency were not.",
+      "technical_impact": "Coverage can fall to zero without CI noticing.",
+      "business_impact": "A gate everyone believes in that never runs.",
+      "recommendation": "Template: add @vitest/coverage-v8 and run test:coverage in CI; carry it by template-sync; measure each app first and set its floor no higher than it passes.",
+      "acceptance_criteria": [
+        "CI fails when coverage falls below the floor in every app"
+      ],
+      "complexity": "S",
+      "references": [
+        "tec-template-base CLAUDE.md v2"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 7718d93",
+          "Tec-App 0288c0e7",
+          "24 app commits"
+        ],
+        "note": "CI runs test:coverage in every app (Life already did); the Hub could not measure at all (duplicate provider) — fixed; four apps below the fleet floor hold a ratchet at their measured level. Open: the template apps measure only the files their tests load — moving to every file in src/ needs the same ratchet, app by app.",
+        "verification": "CI fails when coverage falls below the floor in every app"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0038",
+      "phase": "P7",
+      "repository": "tec-core-backend",
+      "category": "testing",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "No test crosses a service boundary — event contracts are checked by neither side",
+      "description": "Each event's producer and consumers test against their own hand-written payloads; nothing checks that the stream name and shape one side writes is what the other reads. This cycle's costliest defects lived exactly there: commerce's order consumer was never registered and listened on the wrong stream (its own comment), the reconciliation wrote no event (0030), three consumers read a best-effort stream (0036). The two tests that use a real database skip in CI although the job already runs a Postgres.",
+      "evidence": [
+        {
+          "ref": "EV-0080",
+          "location": "commerce order.consumer.ts:5-11",
+          "observation": "never registered; wrong stream"
+        },
+        {
+          "ref": "EV-0081",
+          "location": "connection erasure-db.spec.ts:12 · identity deletion-ledger-db.spec.ts:15",
+          "observation": "skip without TEST_DATABASE_URL; CI has Postgres"
+        }
+      ],
+      "affected_files": [
+        "*/src/**/*.consumer.ts",
+        "tec-payment-service/src/services/outbox.service.ts",
+        ".github/workflows/ci.yml"
+      ],
+      "root_cause": "Tests are per service; the stream is nobody's test.",
+      "technical_impact": "A renamed stream or field passes every suite and fails silently in production.",
+      "business_impact": "Purchases not delivered, with green CI.",
+      "recommendation": "A contract fixture per event under shared/: the producer test asserts its real payload equals the fixture; each consumer test feeds the fixture through its handler. Set TEST_DATABASE_URL to the CI Postgres for the two real-database tests.",
+      "acceptance_criteria": [
+        "Changing a field in the outbox payload fails a consumer test",
+        "The two real-database tests run in CI"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-70",
+        "ADR-004"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 7dc328c6"
+        ],
+        "note": "shared/contracts/payment.completed.v1.json; one payload builder in payment-service, checked against it; commerce (subscription + order) and asset feed its examples through their real handlers; CI re-runs them on a contract change; the two real-database tests run on the job's Postgres. Not yet under contract: trust (legend), nexus, wallet.",
+        "verification": "Changing a field in the contract fails CI in the producer and the consumers"
+      }
+    }
+  ]
+}

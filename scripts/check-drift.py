@@ -115,6 +115,17 @@ def check_ports(get):
         record(SKIP, 'ports', 'repo Tec-core-backend not available')
         return
     actual = code_ports(backend)
+    # A service the list above does not know is a service no other check here sees: its
+    # port, its C-20 row, its CLAUDE.md row all go unchecked. Found by the audit of
+    # 11 Nov 2026 (cycle 2026-11-11, TEC-AUDIT-0017's correction): SERVICES was typed by hand.
+    # every path, filtered here: a git pathspec glob ('*/src/main.ts') matched nothing and
+    # this check passed without looking — a search must be shown to find before it is trusted
+    on_disk = {f.split('/')[0] for f in backend.files()
+               if re.fullmatch(r'(tec-[\w-]+-service|tec-api-gateway)/src/main\.ts', f)}
+    if len(on_disk) < len(SERVICES) - 1:  # payment starts from server.ts
+        record(FAIL, 'ports', f'found only {len(on_disk)} services with src/main.ts — the scan is broken')
+    for d in sorted(on_disk - {service_dir(s) for s in SERVICES} - {'tec-service-template'}):
+        record(FAIL, 'ports', f'{d}: a service in code that SERVICES (scripts/code_facts.py) does not list')
     for svc in SERVICES:
         if svc not in actual:
             record(FAIL, 'ports', f'{svc}: no port found in {service_dir(svc)}/src/main.ts or .env.example')
@@ -172,6 +183,18 @@ def check_events(get):
             record(PASS, 'events', f"{e['name']} — shared constant (shared/src), owner {owner_dir}")
         else:
             record(FAIL, 'events', f"{e['name']} is `live` in the catalog but neither its owner {owner_dir} nor shared/ names it")
+        # Each listed consumer must name the stream in its own source. Before this check, the
+        # catalog kept wallet and commerce as consumers of `payment.completed` months after both
+        # moved to `.v1`, and nobody noticed which services still read the best-effort stream
+        # (TEC-AUDIT-0036). A comment that names it in backticks does not count — only a quoted
+        # literal, which is what a stream read is written with.
+        quoted = r"['\"]" + re.escape(e['name']) + r"['\"]"
+        for consumer in e.get('consumers') or []:
+            svc = consumer.split('/')[0]
+            if not backend.grep(r'.', f'{svc}/src'):
+                record(FAIL, 'events', f"{e['name']}: consumer {svc} has no src/ in tec-core-backend")
+            elif not backend.grep(quoted, f'{svc}/src'):
+                record(FAIL, 'events', f"{e['name']}: {svc} is listed as a consumer but its source never names the stream")
 
     in_code = {}
     for f, text in backend.grep(VERSIONED_EVENT, '*.ts'):

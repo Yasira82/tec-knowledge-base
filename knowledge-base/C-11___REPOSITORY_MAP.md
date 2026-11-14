@@ -35,29 +35,29 @@ From `architecture/app-fleet.yaml` (domain, status) and each repo's `package.jso
 
 | App | Repo | Domain | next | tec-ui | tec-auth | tec-sdk | Status |
 |---|---|---|---|---|---|---|---|
-| Hub | `Tec-App` (`tec-frontend/`) | `hub.tecosystem.app` | ^15.5.19 | — | — | ^1.2.2 | live-verified |
-| Commerce | `Tec-Commerce` | `commerce.tecosystem.app` | ^15.5.19 | 2.1.0 | — | ^1.2.2 | live-verified |
-| Assets | `Tec-Assets` | `assets.tecosystem.app` | ^15.5.19 | 2.1.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Ecommerce | `Tec-Ecommerce` | `ecommerce.tecosystem.app` | ^15.5.19 | 2.1.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Analytics | `Tec-Analytics-` | `analytics.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Life | `Tec-Life` | `life.tecosystem.app` | 15.5.27 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Connection | `Tec-Connection` | `connection.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Zone | `Tec-Zone` | `zone.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Nexus | `Tec-Nexus` | `nexus.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Explorer | `Tec-Explorer` | `explorer.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| System | `Tec-system` | `system.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Alert | `Tec-Alert` | `alert.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| NX | `Tec-Nx` | `nx.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| DX | `Tec-Dx` | `dx.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Titan | `Tec-Titan` | `titan.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Epic | `Tec-Epic` | `epic.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Legend | `Tec-Legend` | `legend.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Elite | `Tec-Elite` | `elite.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| VIP | `Tec-Vip` | `vip.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Hub | `Tec-App` (`tec-frontend/`) | `hub.tecosystem.app` | 15.5.29 | — | — | ^1.2.2 | live-verified |
+| Commerce | `Tec-Commerce` | `commerce.tecosystem.app` | 15.5.29 | 2.1.0 | — | ^1.2.2 | live-verified |
+| Assets | `Tec-Assets` | `assets.tecosystem.app` | 15.5.29 | 2.1.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Ecommerce | `Tec-Ecommerce` | `ecommerce.tecosystem.app` | 15.5.29 | 2.1.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Analytics | `Tec-Analytics-` | `analytics.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Life | `Tec-Life` | `life.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Connection | `Tec-Connection` | `connection.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Zone | `Tec-Zone` | `zone.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Nexus | `Tec-Nexus` | `nexus.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Explorer | `Tec-Explorer` | `explorer.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| System | `Tec-system` | `system.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Alert | `Tec-Alert` | `alert.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| NX | `Tec-Nx` | `nx.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| DX | `Tec-Dx` | `dx.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Titan | `Tec-Titan` | `titan.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Epic | `Tec-Epic` | `epic.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Legend | `Tec-Legend` | `legend.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Elite | `Tec-Elite` | `elite.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| VIP | `Tec-Vip` | `vip.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
 | NBF | `Tec-Nbf` | `nbf.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| FundX | `Tec-Fundx` | `fundx.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-readonly-gated |
-| Estate | `Tec-Estate` | `estate.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
-| Insure | `Tec-Insure` | `insure.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-readonly-gated |
+| FundX | `Tec-Fundx` | `fundx.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-readonly-gated |
+| Estate | `Tec-Estate` | `estate.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-verified |
+| Insure | `Tec-Insure` | `insure.tecosystem.app` | 15.5.29 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-readonly-gated |
 | Brookfield | `Tec-Brookfield` | `brookfield.tecosystem.app` | 15.5.12 | ^3.0.0 | ^1.2.0 | ^1.2.2 | live-readonly-gated |
 
 ### Packages and shared repos

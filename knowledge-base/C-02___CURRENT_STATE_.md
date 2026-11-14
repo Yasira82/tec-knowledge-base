@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 11 November 2026 (Session 63 — an engineering review of the whole platform, 6.8/10; its financial hole and dependency advisories fixed the same day)
+**Last Updated:** 13 November 2026 (Session 64 — cycle 2026-11-11 of the Engineering Audit Pipeline closed: 45 findings, verdict in `12-final-assessment/`)
 
 > 🔧 **Resumed for the backend only (owner, 2026-11-07):** the audit's code phases are done (9 Nov); the
 > secrets rotation is done except Upstash (deferred) and step 7 (after Round 3). Read §2 rows 29 and 34 first, then `memory/sessions/session-63.md` → "Left open". **No backend push until 1 Dec** (the private repo's Actions minutes).
@@ -83,15 +83,19 @@ Replace rows as they close — do not strike them through and keep them.
 
 ## 3. The last three sessions
 
+- **[64](../memory/sessions/session-64.md) — 11 Nov.** The Engineering Audit Pipeline (P0–P11, six runs a cycle)
+  is the official review process; Run 1 of cycle 2026-11-11: 30 repositories, 8 of 13 architecture rules compliant,
+  17 findings, fixed the next day except two database changes left for P4; Run 2 (code, security) 12 Nov: 28 in all,
+  no credential in any repository's history; Run 3 (database, contracts) 13 Nov: 35 in all — the hourly payment
+  reconciliation completes a paid payment with no event, so nothing is delivered (0030, HIGH). Run 4 (functions, tests) 13 Nov: 13 critical capabilities traced (8
+  verified), 13,823 tests run, all green; notifications miss payments finished by recovery (0036). Run 5 (infrastructure, performance)
+  13 Nov: every scheduled guard (CodeQL, drift, the backup restore check) runs on GitHub Actions and stopped with it (0040). Run 6 (ecosystem, verdict) 13 Nov: 45 findings, 6.3/10 on main, 7.1 after merge — **not ready for outside customers' money today, conditionally ready** (`audits/engineering-audit-pipeline/cycles/2026-11-11/12-final-assessment/`). Run 6 remediation 14 Nov: every fleet app matches the template; browser code no longer reaches the server SDK (it did in 21 of 25 repos). GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
 - **[63](../memory/sessions/session-63.md) — 11 Nov.** An engineering review of the whole platform (6.8/10):
   an order could be marked PAID for any payment id — fixed, no sign of abuse; Next 15.5.29 in the apps; Nest 11 /
   Fastify 5 in 15 services; the Hub's CSP narrowed; the internal guard on the decoded path.
 - **[62](../memory/sessions/session-62.md) — 10–11 Nov.** Rotation steps 2–4 done (Pi keys, backup
   passphrase, every database password, Redis single-sourced); Pi Browser stopped opening the wallet after
   many sign-ins — visitors now signed in once a day per app; the bottom bar clears Android's buttons.
-- **[61](../memory/sessions/session-61.md) — 8–10 Nov.** Every service migrates at start: each
-  production database compared by a hash query first (commerce's first migration had never run; wallet's
-  schema described auth's tables); one-payment-one-order index; one guard file in every service; the rotation begins.
 Older: [`memory/sessions/README.md`](../memory/sessions/README.md).
 
 ---

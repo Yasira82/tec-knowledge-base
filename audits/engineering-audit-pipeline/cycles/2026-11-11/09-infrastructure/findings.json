@@ -1,0 +1,163 @@
+{
+  "cycle": "2026-11-11",
+  "run": 5,
+  "phase": "P8",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0039",
+      "phase": "P8",
+      "repository": "tec-core-backend (19 services)",
+      "category": "operations",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Deploy-safety settings for 19 of 20 services exist only in Railway's dashboard",
+      "description": "Only tec-api-gateway keeps its Railway settings in the repo (railway.toml: healthcheckPath, healthcheckTimeout, stopTimeoutSeconds). For the other 19 the Healthcheck Path, the start command and 'Wait for CI' live in the dashboard only. The migrate-on-start script refuses to start on any doubt and depends on a healthcheck to keep the old deployment live; without one the service goes DOWN (payment-service, most of 8 Nov). Nothing in code says which services have it. Owner, 13 Nov: 'Wait for CI' is off on every service — a merge deploys immediately, with no CI behind it while Actions is refused.",
+      "evidence": [
+        {
+          "ref": "EV-0082",
+          "location": "tec-api-gateway/railway.toml",
+          "observation": "the only Railway config in the repo"
+        },
+        {
+          "ref": "EV-0083",
+          "location": "CLAUDE.md (backend) schema section",
+          "observation": "\"The service MUST have a Healthcheck Path\" — set by hand"
+        },
+        {
+          "ref": "EV-0084",
+          "location": "every service src",
+          "observation": "/health and /ready exist in all 20"
+        }
+      ],
+      "affected_files": [
+        "tec-*-service/railway.toml (absent)"
+      ],
+      "root_cause": "Railway was configured service by service in the UI.",
+      "technical_impact": "A service created or edited without the healthcheck turns a refused migration into an outage; nobody can review it.",
+      "business_impact": "Repeat of 8 Nov: payments down for hours.",
+      "recommendation": "A railway.toml per service (config-as-code): healthcheckPath '/health', healthcheckTimeout, startCommand 'npm start', stopTimeoutSeconds; a CI check that every service has one with a health path.",
+      "acceptance_criteria": [
+        "Every service directory has railway.toml with healthcheckPath",
+        "CI fails on a service without it"
+      ],
+      "complexity": "S",
+      "references": [
+        "C-78",
+        "8 Nov payment outage"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 4dda30dd"
+        ],
+        "note": "railway.toml with healthcheckPath \"/health\" in all 19 services; CI policy check. Owner: confirm Railway reads it from the service root.",
+        "verification": "A deploy whose migrate step refuses keeps the old deployment live"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0040",
+      "phase": "P8",
+      "repository": "all 30 repositories",
+      "category": "operations",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Every scheduled safety check runs on GitHub Actions — all stopped since 12 Nov; the restore check passes when unconfigured",
+      "description": "31 scheduled jobs — weekly CodeQL in 28 repositories, the KB's weekly drift check, the template's weekly fleet-drift, the monthly backup restore check — all on GitHub Actions, refused for the account since 12 Nov. None has run since; the next restore check is due 3 Dec. Separately, restore-check.yml passes with a notice when its secrets are missing, so a renamed secret would make it green and silent (it was configured and proven 12 Oct and 10 Nov). Owner, 13 Nov: ALERT_WEBHOOK_URL is not set on backup-job, so a failed nightly backup only marks the Railway cron run failed and alerts nobody — with the restore check stopped as well, a broken backup goes unseen.",
+      "evidence": [
+        {
+          "ref": "EV-0085",
+          "location": ".github/workflows/*.yml (schedule)",
+          "observation": "31 cron jobs, all Actions"
+        },
+        {
+          "ref": "EV-0086",
+          "location": "Tec-core-backend/.github/workflows/restore-check.yml (Configured? step)",
+          "observation": "::notice:: and success when unconfigured"
+        },
+        {
+          "ref": "EV-0087",
+          "location": "runtime-evidence/ev-2026-10-12-025.yaml",
+          "observation": "the check was real when configured"
+        },
+        {
+          "ref": "EV-0094",
+          "location": "owner, Railway backup-job variables, 13 Nov",
+          "observation": "ALERT_WEBHOOK_URL absent"
+        }
+      ],
+      "affected_files": [
+        ".github/workflows/restore-check.yml",
+        "tec-backup-job"
+      ],
+      "root_cause": "One provider for every guard; a check written to skip rather than fail.",
+      "technical_impact": "Security scans, drift and restore verification stop together with one billing problem.",
+      "business_impact": "A broken backup could go unnoticed until it is needed.",
+      "recommendation": "Set ALERT_WEBHOOK_URL on backup-job (owner; e.g. a free Discord channel webhook). Fail the restore check when unconfigured (exit 1). Run the restore check also as a Railway cron next to the backup (the code is already in tec-backup-job), so it does not depend on GitHub billing; record which guards run where in C-78.",
+      "acceptance_criteria": [
+        "The restore check fails red when its secrets are missing",
+        "A restore check runs monthly without GitHub Actions"
+      ],
+      "complexity": "S",
+      "references": [
+        "C-96",
+        "C-78",
+        "TEC-AUDIT-0006"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 719dbbb7"
+        ],
+        "note": "Restore check fails when unconfigured; RESTORE_LOCAL_POSTGRES=1 lets it run as a Railway cron (end-to-end tested). Owner: create the cron service (README step 5); ALERT_WEBHOOK_URL deferred (risk accepted).",
+        "verification": "The Railway cron restore check runs green on 3 Dec"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0042",
+      "phase": "P8",
+      "repository": "25 app repositories",
+      "category": "operations",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "No app pins the Node version it builds on",
+      "description": "No engines.node and no .nvmrc in any of 25 app repositories; CI uses Node 22, Vercel uses each project's dashboard setting. A change on Vercel's side builds production on a version CI never ran.",
+      "evidence": [
+        {
+          "ref": "EV-0088",
+          "location": "package.json (25 repos)",
+          "observation": "no engines; no .nvmrc"
+        }
+      ],
+      "affected_files": [
+        "package.json"
+      ],
+      "root_cause": "Never declared.",
+      "technical_impact": "Build/runtime drift between CI and production.",
+      "business_impact": "A surprise build break or behaviour change on deploy.",
+      "recommendation": "\"engines\": { \"node\": \"22.x\" } in the template (template-sync dependency pin) and every app.",
+      "acceptance_criteria": [
+        "Every app declares engines.node"
+      ],
+      "complexity": "S",
+      "references": [],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base fc5a570",
+          "24 app commits"
+        ],
+        "note": "engines.node 22.x everywhere; template-sync marker.",
+        "verification": "Vercel build logs show Node 22"
+      }
+    }
+  ]
+}

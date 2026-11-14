@@ -1,0 +1,195 @@
+{
+  "cycle": "2026-11-11",
+  "handoffs": [
+    {
+      "finding": "TEC-AUDIT-0001",
+      "to": [
+        "P6"
+      ],
+      "why": "Re-trace the order → payment flow end to end"
+    },
+    {
+      "finding": "TEC-AUDIT-0002",
+      "to": [
+        "P3",
+        "P10"
+      ],
+      "why": "npm audit per service/app; version conflicts across the fleet"
+    },
+    {
+      "finding": "TEC-AUDIT-0004",
+      "to": [
+        "P3"
+      ],
+      "why": "CSP review of every app, not only the Hub"
+    },
+    {
+      "finding": "TEC-AUDIT-0005",
+      "to": [
+        "P10"
+      ],
+      "why": "Fleet drift once template-sync is on main"
+    },
+    {
+      "finding": "TEC-AUDIT-0006",
+      "to": [
+        "P8"
+      ],
+      "why": "Runtime side of backups, paging, staging"
+    },
+    {
+      "finding": "TEC-AUDIT-0007",
+      "to": [
+        "P2",
+        "P7"
+      ],
+      "why": "Validation inventory; coverage measured"
+    },
+    {
+      "finding": "TEC-AUDIT-0008",
+      "to": [
+        "P3",
+        "P10"
+      ],
+      "why": "Token trust model across services and apps"
+    },
+    {
+      "finding": "TEC-AUDIT-0011",
+      "to": [
+        "P6",
+        "P10"
+      ],
+      "why": "Payment and sign-in traces; one fix point across the fleet"
+    },
+    {
+      "finding": "TEC-AUDIT-0012",
+      "to": [
+        "P4"
+      ],
+      "why": "Schema and migration path for the price column"
+    },
+    {
+      "finding": "TEC-AUDIT-0013",
+      "to": [
+        "P4"
+      ],
+      "why": "Same"
+    },
+    {
+      "finding": "TEC-AUDIT-0014",
+      "to": [
+        "P3"
+      ],
+      "why": "Guard review"
+    },
+    {
+      "finding": "TEC-AUDIT-0015",
+      "to": [
+        "P3"
+      ],
+      "why": "Withheld — see the owner brief"
+    },
+    {
+      "finding": "TEC-AUDIT-0016",
+      "to": [
+        "P5"
+      ],
+      "why": "Amount type in every payment/wallet contract"
+    },
+    {
+      "finding": "TEC-AUDIT-0018",
+      "to": [
+        "P6",
+        "P10"
+      ],
+      "why": "Withheld — see the owner brief"
+    },
+    {
+      "finding": "TEC-AUDIT-0019",
+      "to": [
+        "P10"
+      ],
+      "why": "Shared SDK release before the apps"
+    },
+    {
+      "finding": "TEC-AUDIT-0020",
+      "to": [
+        "P5",
+        "P9"
+      ],
+      "why": "Body limits per validated route"
+    },
+    {
+      "finding": "TEC-AUDIT-0024",
+      "to": [
+        "P5"
+      ],
+      "why": "Gateway route table"
+    },
+    {
+      "finding": "TEC-AUDIT-0028",
+      "to": [
+        "P6"
+      ],
+      "why": "Wallet screen trace"
+    },
+    {
+      "finding": "TEC-AUDIT-0030",
+      "to": [
+        "P6"
+      ],
+      "why": "Trace a reconciled payment to delivery (subscription/asset) end to end"
+    },
+    {
+      "finding": "TEC-AUDIT-0031",
+      "to": [
+        "P6"
+      ],
+      "why": "Every write to payment.status goes through the state machine"
+    },
+    {
+      "finding": "TEC-AUDIT-0033",
+      "to": [
+        "P8"
+      ],
+      "why": "BFF behaviour when the gateway is slow (runtime)"
+    },
+    {
+      "finding": "TEC-AUDIT-0034",
+      "to": [
+        "P10"
+      ],
+      "why": "SDK release cadence and consumers"
+    },
+    {
+      "finding": "TEC-AUDIT-0036",
+      "to": [
+        "P10"
+      ],
+      "why": "Converge the dual completion stream in one coordinated change"
+    },
+    {
+      "finding": "TEC-AUDIT-0038",
+      "to": [
+        "P8",
+        "P10"
+      ],
+      "why": "Contract fixtures; e2e against a deployed preview"
+    },
+    {
+      "finding": "TEC-AUDIT-0040",
+      "to": [
+        "P10",
+        "P11"
+      ],
+      "why": "One provider for every guard — a cross-repo single point of failure"
+    },
+    {
+      "finding": "TEC-AUDIT-0039",
+      "to": [
+        "P11"
+      ],
+      "why": "Deploy safety as code before launch"
+    }
+  ]
+}

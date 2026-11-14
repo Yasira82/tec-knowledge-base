@@ -1,0 +1,2496 @@
+{
+  "cycle": "2026-11-11",
+  "updated_by": "run6",
+  "findings": [
+    {
+      "id": "TEC-AUDIT-0001",
+      "phase": "P0",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "CRITICAL",
+      "confidence": "HIGH",
+      "title": "An order could be marked PAID for any payment_id in the request body",
+      "description": "Carried from the baseline review, finding 1. createOrder trusted the body’s payment_id; fixed so payment-service must confirm the payment (completed, this buyer, full total, not used for another order).",
+      "evidence": [
+        {
+          "ref": "EV-0001",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:39",
+          "observation": "Baseline row 1: Closed — tec-core-backend #503, 10 tests"
+        }
+      ],
+      "affected_files": [
+        "tec-commerce-service/src/modules/order/"
+      ],
+      "root_cause": "The order path trusted a client-supplied payment reference.",
+      "technical_impact": "Order state could advance without a completed payment (C-47 Invariant #2).",
+      "business_impact": "Goods could be released unpaid; seller payouts recorded against nothing.",
+      "recommendation": "None — closed. P6 re-traces the order → payment flow end to end.",
+      "acceptance_criteria": [
+        "P6 traces a Mode-2 purchase and finds the order PAID only after payment-service confirms it"
+      ],
+      "complexity": "M",
+      "status": "CLOSED",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 Invariant #2",
+        "C-47 Forbidden #2",
+        "C-71"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0002",
+      "phase": "P0",
+      "repository": "Tec-core-backend · tec-nbf · tec-brookfield",
+      "category": "dependencies",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Dependencies with known advisories remain in four Express services, payment-service and two apps",
+      "description": "Carried from the baseline review, finding 2. Closed for 22 apps (Next 15.5.29) and 15 Fastify services (Nest 11 / Fastify 5). Still open on main: gateway · auth · wallet · realtime on Express 4 / Nest 10; payment-service’s @stellar/stellar-sdk major; zod 4. P0 confirms tec-nbf and tec-brookfield main still pin next 15.5.12 (their PRs #32 · #28 are open, not merged).",
+      "evidence": [
+        {
+          "ref": "EV-0002",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:40",
+          "observation": "Baseline row 2"
+        },
+        {
+          "ref": "EV-0003",
+          "location": "00-control/repository-inventory.json",
+          "observation": "tec-nbf and tec-brookfield: dependencies.next = 15.5.12 on origin/main"
+        }
+      ],
+      "affected_files": [
+        "tec-api-gateway/package.json",
+        "tec-auth-service/package.json",
+        "tec-wallet-service/package.json",
+        "tec-realtime-service/package.json",
+        "tec-payment-service/package.json",
+        "tec-nbf/package.json",
+        "tec-brookfield/package.json"
+      ],
+      "root_cause": "Upgrades were done in batches; the Express services and two late-joining apps were not in the batch.",
+      "technical_impact": "Known-vulnerable framework versions run in production.",
+      "business_impact": "Exposure to published exploits on public endpoints.",
+      "recommendation": "Merge NBF #32 and Brookfield #28; after 1 Dec, upgrade the four Express services and the stellar-sdk major.",
+      "acceptance_criteria": [
+        "npm audit --omit=dev reports 0 critical / 0 high in every service and app (P3 records the run)"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-75",
+        "C-47 §12"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-nbf #32",
+          "tec-brookfield #28",
+          "Tec-core-backend c6950705 (realtime) · fb57efec (wallet) · afc1a1b0 (auth) · 7d48c933 (gateway) · 60ab52d1 (payment)"
+        ],
+        "note": "The two apps close with these merges; the four Express services and the stellar-sdk major are scheduled after 1 Dec (Actions minutes). | 14 Nov — all of it, locally. The four Express services move to Nest 11 (the versions the other 16 services run — one Nest major across the backend), throttler 6 for auth, and each service's OWN express dependency (types only) to ^5: the old express 4 copy was where body-parser's advisory lived. npm audit --omit=dev high: realtime 5→0, wallet 5→0, auth 5→0, gateway 3→0. Code changes: the gateway's 404 used expressApp.use('*'), which express 5 refuses at start — the gateway would not have booted; now use() with no path, pinned by a test (CI never boots the gateway). auth: parseExpiry typed for @nestjs/jwt 11 (value unchanged — the 16 Oct ten-minute-session fix intact; boot logs 86400 s / 604800 s). Each service was BUILT AND BOOTED, not only tested: realtime (health, socket.io handshake), wallet against a throwaway DB (every money route refuses without credentials), auth (guards, CORS, lifetimes), the gateway against an echo upstream — a payment body arrives byte-identical, paths rewrite, the query passes raw, 200 KB intact, forged alg:none token 401. payment-service: its two highs came from toml 3 under @stellar/stellar-sdk 13, used only by stellartoml/federation, which the service never imports; an npm override pins toml 5.0.1 — signing untouched, and checked with the REAL library (a payment transaction signs, verifies and round-trips). NBF and Brookfield are on next 15.5.29. LEFT, recorded for the next cycle (not caused by this change; the code is the same): (1) stellar-sdk 17 for the A2U path, only with a real Testnet A2U payment — its unit tests mock the library; (2) auth's ThrottlerModule is configured but no ThrottlerGuard is registered — 25 logins in a row, no 429; the gateway's in-memory limiter is what limits auth today (auth is private); (3) auth answers a refused CORS origin with 500, not 403 — refused, but with the wrong status.",
+        "verification": "npm audit --omit=dev on main: 0 high / 0 critical in gateway, auth, wallet, realtime, payment; each boots on Railway after deploy"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0003",
+      "phase": "P0",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Fastify internal-key guards tested the raw URL for /internal/",
+      "description": "Carried from the baseline review, finding 3. Fixed in all 16 copies; CI checks the copies are identical.",
+      "evidence": [
+        {
+          "ref": "EV-0004",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:41",
+          "observation": "Baseline row 3: Closed — #503"
+        }
+      ],
+      "affected_files": [
+        "src/middleware/internal-auth.ts (16 services)"
+      ],
+      "root_cause": "Path check before decoding.",
+      "technical_impact": "An internal route reachable as a user call inside the network.",
+      "business_impact": "Not reachable from outside (the gateway decodes and refuses).",
+      "recommendation": "None — closed.",
+      "acceptance_criteria": [
+        "scripts/check-guard-copies.sh passes on main"
+      ],
+      "complexity": "S",
+      "status": "CLOSED",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 §12",
+        "ADR-005"
+      ]
+    },
+    {
+      "id": "TEC-AUDIT-0004",
+      "phase": "P0",
+      "repository": "Tec-App",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The Hub's Content-Security-Policy still allows 'unsafe-inline' and 'unsafe-eval' scripts",
+      "description": "Carried from the baseline review, finding 4. connect-src was narrowed to named hosts (tec-app #324, closed). script-src still carries 'unsafe-inline' 'unsafe-eval'; the Pi SDK load path has to change first. The header is public, so this is not withheld.",
+      "evidence": [
+        {
+          "ref": "EV-0005",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:42",
+          "observation": "Baseline row 4: Open part = script-src"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/next.config.js"
+      ],
+      "root_cause": "The Pi SDK bootstrap relies on inline script.",
+      "technical_impact": "An injected script would not be blocked by CSP.",
+      "business_impact": "CSP gives no second line of defence against XSS on the payment hub.",
+      "recommendation": "Move the Pi SDK bootstrap to a nonce- or hash-allowed script, then drop 'unsafe-inline' and 'unsafe-eval'.",
+      "acceptance_criteria": [
+        "The Hub's production CSP header has no 'unsafe-inline' or 'unsafe-eval' in script-src",
+        "A Pi Browser sign-in and Mode-2 payment still work"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 P6"
+      ],
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-app 2916874d"
+        ],
+        "note": "'unsafe-inline' is gone from the Hub's script-src: the middleware sends a fresh nonce per request with 'strict-dynamic' (src/lib/csp.ts, the one place the policy is written; next.config.js no longer carries it). The boot scripts, the Pi SDK <Script> and the sign-in landing page carry the nonce; object-src 'none' and base-uri 'self' added; violations go to /api/csp-report (logged without query strings or script samples — the landing page's address holds a one-time token). On a production build every page is dynamic and every executable script on seven pages carries the header's nonce; in Chromium the pages hydrate, the boot scripts run, and an injected onerror handler is refused (the old policy ran it). 'unsafe-eval' is still in the ENFORCED policy: the Pi SDK (sdk.minepi.com) could not be read from here, and if it calls eval, removing it breaks sign-in for everyone. A report-only twin refuses eval; the Hub's own build has no eval / new Function in any chunk. Left: a Pi Browser sign-in + Mode-2 payment on the deployed Hub; if they leave no 'eval' line in the csp.violation log, set CSP_ENFORCE_NO_EVAL=1 on Vercel and redeploy.",
+        "verification": "Production Hub response: Content-Security-Policy script-src has a nonce and no 'unsafe-inline' (and, after the switch, no 'unsafe-eval'); a Pi Browser sign-in and Mode-2 payment work"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0005",
+      "phase": "P0",
+      "repository": "tec-template-base",
+      "category": "process",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Template fixes do not reach the apps made from it — the mechanism is not on main yet",
+      "description": "Carried from the baseline review, finding 5. The template-sync mechanism (manifest, check/apply script, weekly fleet-drift job) is built in tec-template-base #56, but P0 finds no template-sync.json on origin/main: until it merges, nothing reports drift.",
+      "evidence": [
+        {
+          "ref": "EV-0006",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:43",
+          "observation": "Baseline row 5"
+        },
+        {
+          "ref": "EV-0007",
+          "location": "tec-template-base origin/main",
+          "observation": "git cat-file -e origin/main:template-sync.json → absent"
+        }
+      ],
+      "affected_files": [
+        "template-sync.json",
+        "scripts/template-sync.mjs",
+        ".github/workflows/fleet-drift.yml"
+      ],
+      "root_cause": "Apps are copies of the template with no link back.",
+      "technical_impact": "Fixes made once are missing from some apps for weeks.",
+      "business_impact": "Uneven security and sign-in behaviour across the 24 apps.",
+      "recommendation": "Merge tec-template-base #56 and the 20 app PRs that adopt it.",
+      "acceptance_criteria": [
+        "template-sync.json exists on tec-template-base main",
+        "The first fleet-drift run lists no app as drifted, or opens one issue that names each"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-75"
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-template-base #56",
+          "20 app PRs",
+          "Tec-Life 3dcb5eb",
+          "Tec-Zone 5f1069d"
+        ],
+        "note": "The mechanism exists; it is not on main yet. Run 6: template-sync is on the template branch; Life and Zone still miss 15–16 shared files (fleet screens, help, feedback, manifest, Pi Browser e2e). | 14 Nov: Life and Zone brought onto the template (apply + the three markers by hand: state screens, /help, the feedback card and its shared route, the manifest from lib/app-meta.ts, Open Graph, the Pi Browser e2e project, jsx-a11y, the example route). Two of Life's own rules met template files: its feedback test pinned the old variable name (the invariant — server label wins — still holds, now as APP_SOURCE, and the test also pins APP_SOURCE = 'life'); its no-raw-colour rule now exempts lib/app-meta.ts (a manifest cannot read a CSS variable) with a new test that pins that colour to the dark --tec-bg token. template-sync check: all 20 template apps match. What is left is the merge.",
+        "verification": "fleet-drift's first run on main lists no app as drifted"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0006",
+      "phase": "P0",
+      "repository": "Tec-core-backend · platform",
+      "category": "operations",
+      "severity": "MEDIUM",
+      "confidence": "MEDIUM",
+      "title": "No staging environment, no alert on a failed backup, no uptime paging",
+      "description": "Carried from the baseline review, finding 6. Supabase can now be dumped by backup-job but waits on two variables. P8 verifies the runtime side.",
+      "evidence": [
+        {
+          "ref": "EV-0008",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:44",
+          "observation": "Baseline row 6"
+        }
+      ],
+      "affected_files": [
+        "backup-job/",
+        ".github/workflows/"
+      ],
+      "root_cause": "Operations grew around one production environment.",
+      "technical_impact": "Failures are found by users, not by the platform.",
+      "business_impact": "An outage or a lost backup is noticed late.",
+      "recommendation": "Add an uptime monitor that pages; send backup failures to an alert channel; set the two Supabase backup variables.",
+      "acceptance_criteria": [
+        "A deliberate backup failure produces an alert",
+        "Stopping a service pages within 5 minutes"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-78"
+      ],
+      "remediation": {
+        "state": "OWNER_ACTION",
+        "refs": [],
+        "note": "Uptime paging, a backup alert channel and two Supabase variables are account-level settings; P8 verifies."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0007",
+      "phase": "P0",
+      "repository": "Tec-core-backend · Tec-App",
+      "category": "code-quality",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Hand-written input validation in seven services; low coverage floors; very long Hub files",
+      "description": "Carried from the baseline review, finding 7 (the Ecommerce dead middleware part is closed). P2 measures this.",
+      "evidence": [
+        {
+          "ref": "EV-0009",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:45",
+          "observation": "Baseline row 7"
+        },
+        {
+          "ref": "EV-0056",
+          "location": "03-code-quality/code-quality.json",
+          "observation": "P2 measured: no schema validation library in analytics · commerce · identity · kyc · notification · realtime · storage"
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Services written before the shared validation pattern.",
+      "technical_impact": "Unvalidated edge cases reach the services.",
+      "business_impact": "Bugs cost more to find.",
+      "recommendation": "P2 lists the services and files; remediation adopts zod at each edge.",
+      "acceptance_criteria": [
+        "Every service validates request bodies with a schema library",
+        "No Hub source file over 600 lines without a recorded reason"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "C-47 §12"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend fa236bb8 (kyc · the shared parseBody)",
+          "0b6ee8f7 (storage)",
+          "7cdd62b2 (notification)",
+          "0bf619e9 (realtime)",
+          "6c4eb361 (identity)",
+          "7ab8885f (commerce)",
+          "tec-app 48f783f3 (file size)"
+        ],
+        "note": "One way to read a request body: parseBody (tec-service-template/src/middleware/parse-body.ts) — the schema's output or a 400 naming each field, never its value; byte-identical in every service that carries it (scripts/check-guard-copies.sh). Applied at every body edge with a gap in kyc, storage, notification, realtime, identity and commerce, each with a test red on the old code. What it caught besides types: DELETE /notifications/device-tokens with no token unregistered EVERY device of the caller's (Prisma reads `token: undefined` as no condition); a storage purge given `keys` that was not a list answered 'deleted 0'; a watchlist `done: \"true\"` un-ticked the reminder; a review rating of 1000 was averaged into a product's stars; a gift's `days` could be NaN. Two security holes surfaced and are recorded separately (0046, 0047). Left as they were, on purpose, because they already check every field by hand with a named reason: analytics' intent observation (a pure, tested validator), identity's internal alert / deletion-ledger / erasure / users controllers, commerce's payout. Hub: no source file over 600 lines without a recorded reason — src/__tests__/file-size.test.ts lists the four that are, each with its reason and a ceiling it may not grow past (dictionaries and the domain registry are data, exempt).",
+        "verification": "Each service's suite on main green, including its *-input.spec.ts; check-guard-copies.sh green in CI"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0008",
+      "phase": "P0",
+      "repository": "platform-wide",
+      "category": "architecture",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "One HS256 JWT secret is shared by 20 services and 24 apps",
+      "description": "Carried from the baseline review, finding 8. A leak of the secret anywhere forges any identity everywhere. One Redis is the whole event bus (P9/P10 assess).",
+      "evidence": [
+        {
+          "ref": "EV-0010",
+          "location": "audits/ENGINEERING_REVIEW_2026-11-11.md:46",
+          "observation": "Baseline row 8"
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Symmetric signing chosen early; every verifier holds the signing key.",
+      "technical_impact": "The blast radius of one leaked variable is the whole platform.",
+      "business_impact": "Account takeover of any user, admin included, from one leak.",
+      "recommendation": "Finish the rotation plan: asymmetric signing (the issuer alone holds the private key).",
+      "acceptance_criteria": [
+        "Only tec-auth-service holds a signing key",
+        "Every verifier holds only a public key"
+      ],
+      "complexity": "XL",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "baseline/ENGINEERING_REVIEW_2026-11-11",
+      "references": [
+        "ADR-002",
+        "C-13",
+        "C-123"
+      ],
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [
+          "12-final-assessment/adr-proposal-asymmetric-session-tokens.md"
+        ],
+        "note": "Decision drafted for the owner (14 Nov, unnumbered): auth-service alone signs session tokens with ES256; every verifier holds public keys only (JWT_PUBLIC_KEYS, a variable — not a JWKS fetch); a dual-accept rollout so no one is signed out. Found while drafting: auth-service is not the only signer — the Hub signs the AI context token with JWT_SECRET (lib/ai/context-token.ts, verified by tec-ai-service). Code waits on the owner's decision; backend, after 1 Dec."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0009",
+      "phase": "P0",
+      "repository": "tec-knowledge-base",
+      "category": "documentation",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The generated C-11 (repository map) and C-44 (environment variables) are stale against the code",
+      "description": "scripts/check-drift.py against every origin/main: 34 pass, 2 fail. C-11 is missing the current app versions (Next 15.5.29, tec-ui ^3.0.0 ranges); C-44 is missing LIFE_* variables now read by life-service and ai-service. The weekly drift job would report the same.",
+      "evidence": [
+        {
+          "ref": "EV-0011",
+          "location": "python3 scripts/check-drift.py --repos-dir /home/user --ref origin/main",
+          "observation": "exit 1 — 34 pass · 2 fail · 0 skip (C-11, C-44)"
+        }
+      ],
+      "affected_files": [
+        "knowledge-base/C-11___REPOSITORY_MAP.md",
+        "knowledge-base/C-44_Environment_Variables.md"
+      ],
+      "root_cause": "Code merged today without the generated docs being regenerated.",
+      "technical_impact": "The repository map this audit uses as a baseline lags the code.",
+      "business_impact": "Decisions read from C-11/C-44 use yesterday’s facts.",
+      "recommendation": "Run scripts/generate-code-docs.py --repos-dir … --ref origin/main and commit the result, after the open app PRs merge.",
+      "acceptance_criteria": [
+        "check-drift.py reports 0 fail"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P0",
+      "references": [
+        "C-11",
+        "C-44",
+        "C-67"
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-knowledge-base #228"
+        ],
+        "note": "C-11 and C-44 regenerated from origin/main; check-drift.py 36 pass · 0 fail.",
+        "verification": "python3 scripts/check-drift.py --repos-dir <clones> --ref origin/main → 0 fail"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0010",
+      "phase": "P0",
+      "repository": "Tec-core-backend",
+      "category": "structure",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A nested tec-core-backend/tec-core-backend/k6/ folder holds the load tests",
+      "description": "The only content of the nested folder is k6/; .github/workflows/load-test.yml runs it. The doubled name reads as an accidental copy and hides the load tests from anyone looking at the root.",
+      "evidence": [
+        {
+          "ref": "EV-0012",
+          "location": "tec-core-backend origin/main",
+          "observation": "git ls-tree -d: tec-core-backend/k6"
+        },
+        {
+          "ref": "EV-0013",
+          "location": ".github/workflows/load-test.yml:7-14",
+          "observation": "k6 Gateway Load Test job"
+        }
+      ],
+      "affected_files": [
+        "tec-core-backend/k6/",
+        ".github/workflows/load-test.yml"
+      ],
+      "root_cause": "A folder copied into itself at some point.",
+      "technical_impact": "Confusing layout; a cleanup could delete the load tests by mistake.",
+      "business_impact": "None directly.",
+      "recommendation": "Move k6/ to the root (or tools/k6) and update load-test.yml in the same change.",
+      "acceptance_criteria": [
+        "No path tec-core-backend/tec-core-backend exists",
+        "load-test.yml still finds its scripts"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P0",
+      "references": [],
+      "remediation": {
+        "state": "FIXED_NO_PR_UNTIL_2026-12-01",
+        "refs": [
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc cf6074d3"
+        ],
+        "note": "k6/ moved to the root; load-test.yml updated. The branch is pushed without a PR, so no CI minutes are spent before 1 Dec."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0011",
+      "phase": "P1",
+      "repository": "tec-template-base + 24 apps",
+      "category": "architecture",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "window.Pi.authenticate / createPayment are called directly, around the Pi Abstraction Layer",
+      "description": "PiRuntime (the PAL) exists in the template and the Hub and wraps authenticate/createPayment with the circuit breaker, but the sign-in (pi-auth.ts) and payment (pi-payment.ts) paths call window.Pi directly. 80 call sites across 25 repositories (3 per template app; Hub 4; Commerce 6). The inline Pi.init in layout.tsx is the accepted exception (it runs before any module loads).",
+      "evidence": [
+        {
+          "ref": "EV-0014",
+          "location": "02-architecture/check-hits.json P1-C16",
+          "observation": "80 hits, every app"
+        },
+        {
+          "ref": "EV-0015",
+          "location": "tec-template-base src/lib-client/pi/pi-auth.ts:303",
+          "observation": "window.Pi.authenticate([…], handleIncompletePayment)"
+        },
+        {
+          "ref": "EV-0016",
+          "location": "tec-template-base src/lib/pi-payment.ts:158",
+          "observation": "window.Pi.createPayment("
+        },
+        {
+          "ref": "EV-0017",
+          "location": "tec-template-base src/lib/pi/PiRuntime.ts:23-43",
+          "observation": "PiRuntime.authenticate checks piCircuitBreaker.canAttempt(); createPayment wraps pi.createPayment"
+        }
+      ],
+      "affected_files": [
+        "src/lib-client/pi/pi-auth.ts",
+        "src/lib/pi-payment.ts",
+        "src/lib-client/pi/pi-payment.ts",
+        "tec-frontend/src/lib-client/pi/*"
+      ],
+      "root_cause": "The PAL was added after the payment and sign-in code and only pi-session.ts was moved onto it.",
+      "technical_impact": "A Pi SDK change needs 80 edits, not one (risk R1); the circuit breaker does not protect sign-in or payment.",
+      "business_impact": "A Pi SDK update can break payments platform-wide with no single fix point (C-12 risk R1, P0).",
+      "recommendation": "Route pi-auth.ts and pi-payment.ts through PiRuntime in the template, then let template-sync carry it to the apps.",
+      "acceptance_criteria": [
+        "architecture_checks.py P1-C16 reports only layout.tsx init lines",
+        "Payment and sign-in tests mock PiRuntime, not window.Pi"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "CLAUDE.md (Hub) Risk R1",
+        "C-12"
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-template-base #56 (9b27b25)",
+          "the 20 template-app PRs"
+        ],
+        "note": "Sign-in and payment call PiRuntime. pal-boundary.test.ts fails on any direct call (shown red on the old code). template-sync makes pi-auth.ts and the test shared and pi-payment.ts carry the marker, so an app that drifts back is reported weekly. Not yet done: the Hub, Commerce, Assets and Ecommerce (outside the template; their own PAL work, P10).",
+        "verification": "architecture_checks.py P1-C16 on main lists only layout.tsx init lines for the template apps"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0012",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "data-integrity",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Marketplace listing prices in Pi are stored as Float",
+      "description": "tec-asset-service AssetListing.price is Float, read and written by the marketplace (listings, minPrice/maxPrice filters). C-47 §12 and C-71 require DECIMAL(20,8) for Pi amounts; a binary float cannot hold 0.1 π exactly.",
+      "evidence": [
+        {
+          "ref": "EV-0018",
+          "location": "tec-asset-service/prisma/schema.prisma:70",
+          "observation": "price       Float"
+        },
+        {
+          "ref": "EV-0019",
+          "location": "tec-asset-service/src/modules/marketplace/marketplace.service.ts:34-35",
+          "observation": "where.price = { gte: … } / { lte: … }"
+        },
+        {
+          "ref": "EV-0020",
+          "location": "tec-asset-service/src/modules/marketplace/marketplace.controller.ts:121,141",
+          "observation": "price: number from the body"
+        }
+      ],
+      "affected_files": [
+        "tec-asset-service/prisma/schema.prisma",
+        "tec-asset-service/src/modules/marketplace/"
+      ],
+      "root_cause": "The model predates the DECIMAL rule.",
+      "technical_impact": "Rounding errors in prices; a price charged may differ from the one listed in the last digits.",
+      "business_impact": "A buyer can be charged an amount that is not the listed one.",
+      "recommendation": "Migrate price to Decimal(20,8) (expand–contract, after a data check) and carry it as a string at the API edge.",
+      "acceptance_criteria": [
+        "schema.prisma: price Decimal @db.Decimal(20, 8)",
+        "A migration ships it; a test lists 0.1 π and reads back exactly 0.10000000"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12",
+        "C-71 §3"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 2ef4c835",
+          "Tec-Assets dad06c7",
+          "Tec-core-backend PR #505 (draft)"
+        ],
+        "note": "Production read 2026-11-14 (owner): 35 listings, 3–999, none over 8 decimals. price → DECIMAL(20,8) in place (a DO block refuses the cast if any row would change), compared as a decimal, refused at the door past 8 decimals or 10^12, a string at the API edge. Tec-Assets reads either shape and deploys first. The migration needs MIGRATE_ALLOW_DESTRUCTIVE=20261114120000_listing_price_decimal on that deploy (owner).",
+        "verification": "Deployed in order (Tec-Assets, then asset-service with the flag); a marketplace purchase in production; tests green on main"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0013",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "data-integrity",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Three other money-like columns are Float",
+      "description": "wallet-service Account.balance (an unused model kept from the initial migration — the live Wallet.balance is Decimal(20,8)); analytics DailyMetric.total_volume (a projection, eventual by design); life-service LifeGoal.target_amount (a self-declared target). None moves money.",
+      "evidence": [
+        {
+          "ref": "EV-0021",
+          "location": "tec-wallet-service/prisma/schema.prisma:114",
+          "observation": "balance Float — model commented as unused"
+        },
+        {
+          "ref": "EV-0022",
+          "location": "tec-analytics-service/prisma/schema.prisma:39",
+          "observation": "total_volume Float?"
+        },
+        {
+          "ref": "EV-0023",
+          "location": "tec-life-service/prisma/schema.prisma:40",
+          "observation": "target_amount Float?"
+        }
+      ],
+      "affected_files": [
+        "tec-wallet-service/prisma/schema.prisma",
+        "tec-analytics-service/prisma/schema.prisma",
+        "tec-life-service/prisma/schema.prisma"
+      ],
+      "root_cause": "Rule applied to the financial core first.",
+      "technical_impact": "Small rounding in displayed totals and targets.",
+      "business_impact": "None material.",
+      "recommendation": "Drop the unused Account model (owner decision); move the other two to Decimal when their tables are next migrated.",
+      "acceptance_criteria": [
+        "architecture_checks.py P1-C06 reports no hit, or each remaining hit carries a recorded ACCEPTED_RISK"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12",
+        "C-71"
+      ],
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 3667ace6"
+        ],
+        "note": "wallet accounts: 0 rows in production (owner, 2026-11-14); dropped by a migration that refuses if a row exists and needs MIGRATE_ALLOW_DESTRUCTIVE=20261114130000_drop_unused_accounts (owner). Analytics DailyMetric.total_volume and Life target_amount stay Float until their tables are next migrated, as recommended — neither moves money.",
+        "verification": "The wallet migration applied in production; the other two columns moved when their tables are next migrated"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0014",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "robustness",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The internal-key check compares string length, not byte length, before timingSafeEqual",
+      "description": "In four places the guard checks internalKey.length === secret.length and then timingSafeEqual(Buffer.from(...)). A header of the same character count but a different byte count (any non-ASCII character) makes timingSafeEqual throw, so the request ends as a 500 instead of a 401/403. It is not a bypass: a throw never authorises.",
+      "evidence": [
+        {
+          "ref": "EV-0024",
+          "location": "tec-api-gateway/src/main.ts:729-735",
+          "observation": "length compared on strings, then timingSafeEqual on Buffers"
+        },
+        {
+          "ref": "EV-0025",
+          "location": "tec-analytics-service/src/modules/analytics/analytics.controller.ts:71",
+          "observation": "same pattern"
+        },
+        {
+          "ref": "EV-0026",
+          "location": "tec-payment-service/src/middlewares/jwt.middleware.ts:46",
+          "observation": "same pattern"
+        },
+        {
+          "ref": "EV-0027",
+          "location": "tec-wallet-service/src/guards/internal.guard.ts:75",
+          "observation": "same pattern"
+        }
+      ],
+      "affected_files": [
+        "tec-api-gateway/src/main.ts",
+        "tec-analytics-service/src/modules/analytics/analytics.controller.ts",
+        "tec-payment-service/src/middlewares/jwt.middleware.ts",
+        "tec-wallet-service/src/guards/internal.guard.ts"
+      ],
+      "root_cause": "Four hand-written copies instead of the shared guard.",
+      "technical_impact": "A malformed header produces a 500 and an error log.",
+      "business_impact": "Noise in error monitoring; a 5xx counted against the SLO.",
+      "recommendation": "Compare Buffer byte lengths (or use the shared validateInternalKey) in all four.",
+      "acceptance_criteria": [
+        "A test sends a same-length non-ASCII key and gets 401/403, not 500, in each of the four"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12",
+        "ADR-009"
+      ],
+      "remediation": {
+        "state": "FIXED_NO_PR_UNTIL_2026-12-01",
+        "refs": [
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc cf6074d3"
+        ],
+        "note": "All 18 copies (the search found 5; the fix looked for the pattern, not the name) compare Buffer.byteLength. tec-auth-service internal-key-bytes.spec.ts is red on the old code and green now. tsc + jest green in auth, payment, gateway, wallet, analytics, connection."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0015",
+      "phase": "P1",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "INFO",
+      "confidence": "MEDIUM",
+      "title": "payment-service's rate limiter could key on a userId from the body or the query",
+      "description": "createRateLimiter built its key as ip + (req.userId ?? req.body.userId ?? req.query.userId). A key must come only from the verified identity (C-47 P6). Every limiter on payment.routes.ts runs after authenticate(), which always sets req.userId, so the fallback was dead code — not reachable. Fixed anyway: a dead fallback is a live one the day a route is ordered differently.",
+      "evidence": [
+        {
+          "ref": "EV-0028",
+          "location": "tec-payment-service/src/middlewares/rate-limit.middleware.ts:230-234",
+          "observation": "userId from req.userId, else body, else query"
+        },
+        {
+          "ref": "EV-0035",
+          "location": "tec-payment-service/src/routes/payment.routes.ts:56-205",
+          "observation": "authenticate precedes every limiter"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/middlewares/rate-limit.middleware.ts"
+      ],
+      "root_cause": "A fallback written for routes without authentication.",
+      "technical_impact": "None reachable today.",
+      "business_impact": "None.",
+      "recommendation": "Key on req.userId only (done).",
+      "acceptance_criteria": [
+        "A request with a different body userId lands in the same bucket (test in security.test.ts)"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "C-47 §12"
+      ],
+      "remediation": {
+        "state": "FIXED_NO_PR_UNTIL_2026-12-01",
+        "refs": [
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc cf6074d3"
+        ],
+        "note": "Reassessed: every payment rate limiter runs after authenticate(), so the fallback was not reachable. The key is now the verified identity only; a test pins that a body userId opens no fresh bucket (red on the old code). Published, since it was never exploitable."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0016",
+      "phase": "P1",
+      "repository": "Tec-core-backend · tec-knowledge-base",
+      "category": "baseline",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The baseline disagrees with itself on the type of a Pi amount in an API",
+      "description": "ADR-009 (C-64:238-256) makes a payment request's amount a number (z.coerce.number() at the BFF). C-71 §3 says a string in API responses. tec-core-backend CLAUDE.md:333 says 'string in all API contracts', which contradicts ADR-009 for requests. The one P1 hit (Hub POST /api/bff/wallet/withdraw, amount: z.string().regex(…)) is a wallet call, not a payment endpoint, and keeps precision — it is not counted as a violation, but the baseline cannot say whether it is right.",
+      "evidence": [
+        {
+          "ref": "EV-0029",
+          "location": "knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md:238,250,256",
+          "observation": "amount → number; string FORBIDDEN on payment endpoints"
+        },
+        {
+          "ref": "EV-0030",
+          "location": "knowledge-base/C-71___FINANCIAL_INTEGRITY_SPEC.md:58-59",
+          "observation": "DECIMAL(20,8) in DB · String in API responses"
+        },
+        {
+          "ref": "EV-0031",
+          "location": "Tec-core-backend CLAUDE.md:310,333",
+          "observation": "'string in API responses' and 'string in all API contracts'"
+        },
+        {
+          "ref": "EV-0032",
+          "location": "tec-frontend/src/app/api/bff/wallet/withdraw/route.ts:44",
+          "observation": "amount: z.string().regex(/^\\d{1,6}(\\.\\d{1,7})?$/)"
+        }
+      ],
+      "affected_files": [
+        "knowledge-base/C-71___FINANCIAL_INTEGRITY_SPEC.md",
+        "Tec-core-backend/CLAUDE.md"
+      ],
+      "root_cause": "Two rules written at different times for requests and responses, then generalised.",
+      "technical_impact": "Reviewers apply opposite rules to the same field.",
+      "business_impact": "Inconsistent contracts between apps and services (P5).",
+      "recommendation": "Owner decision: one sentence in C-71 covering requests and responses (e.g. number on payment requests per ADR-009, string elsewhere), then align the backend CLAUDE.md.",
+      "acceptance_criteria": [
+        "C-71 and ADR-009 state one rule for request amounts",
+        "CLAUDE.md files quote it without contradiction"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P1",
+      "references": [
+        "ADR-009",
+        "C-71 §3",
+        "C-47 P1"
+      ],
+      "remediation": {
+        "state": "FIXED_PENDING_MERGE",
+        "refs": [
+          "tec-knowledge-base #228 (C-71 §3)",
+          "Tec-core-backend branch claude/tec-knowledge-base-review-6wzngc d05426fb (CLAUDE.md)"
+        ],
+        "note": "One rule: DECIMAL(20,8) in the database; a decimal string wherever an amount leaves a service; a number only in a payment request (ADR-009). The ADR stands because it ranks above the spec."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0017",
+      "phase": "P0",
+      "repository": "tec-knowledge-base",
+      "category": "baseline",
+      "severity": "INFO",
+      "confidence": "HIGH",
+      "title": "The port authority C-20 does not describe eight of the deployed services",
+      "description": "P0 counts 20 deployable services plus backup-job in tec-core-backend (and the shared library and service template). C-20, the backend-services and port authority, names 12. tec-business, tec-life, tec-nexus, tec-platform, tec-search and tec-trust-service and tec-backup-job do not appear in it at all; tec-ai and tec-connection-service appear once each. Those services start with PORT required (no default in main.ts). C-02 §1 names their ports (:5012–:5019) in one line; the port authority does not. Gate B is met for them through their code, C-02 and their app charters.",
+      "evidence": [
+        {
+          "ref": "EV-0033",
+          "location": "00-control/repository-inventory.json → Tec-core-backend.services",
+          "observation": "23 entries: 20 services · backup-job · shared · template; 8 with port_required = true"
+        },
+        {
+          "ref": "EV-0034",
+          "location": "grep -c tec-<name> knowledge-base/C-20_Backend_Services.md",
+          "observation": "business 0 · life 0 · nexus 0 · platform 0 · search 0 · trust 0 · backup 0 · ai 1 · connection 1"
+        }
+      ],
+      "affected_files": [
+        "knowledge-base/C-20_Backend_Services.md"
+      ],
+      "root_cause": "Services were added after C-20 was last rewritten; check-drift checks only the services C-20 lists.",
+      "technical_impact": "No canonical statement of what those services own, which port they use, or who calls them.",
+      "business_impact": "Ownership questions (C-68) for eight services are answered from memory.",
+      "recommendation": "Extend C-20 to every deployed service (role, owner, port source, network) and make check-drift compare the service list itself.",
+      "acceptance_criteria": [
+        "Every directory in tec-core-backend with a package.json and a Dockerfile appears in C-20",
+        "check-drift.py fails when one does not"
+      ],
+      "complexity": "S",
+      "status": "CLOSED",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run1/P0",
+      "references": [
+        "C-20",
+        "C-68",
+        "ADR-005"
+      ],
+      "resolution": "INVALID",
+      "remediation": {
+        "state": "INVALID",
+        "refs": [
+          "tec-knowledge-base #228 (check-drift.py)"
+        ],
+        "note": "The auditor's error: the search looked for 'tec-<name>', and C-20's table names services by their short name ('life', 'ai' …). C-20 lists all 20 services with their ports. What was real: check-drift.py's service list is typed by hand, so a new service would be invisible to it — it now fails on any service in code it does not list (shown firing by removing 'trust' from the list)."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0018",
+      "phase": "P3",
+      "repository": "tec-template-base + 24 apps",
+      "category": "security",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0036",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "ADR-001 (C-64)",
+        "C-123",
+        "TEC-AUDIT-0004",
+        "TEC-AUDIT-0008"
+      ],
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "template 23f22ba",
+          "22 app commits (csp-connect-src.test.ts)"
+        ],
+        "note": "Part 1 of 3 done (committed locally — pushed when GitHub Actions is back). Parts 2 and 3 are not done; see the owner brief and TEC-AUDIT-0029, which blocks part 2. Update: 0029 is fixed locally — part 2 now waits only on a phone check in Pi Browser."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0019",
+      "phase": "P3",
+      "repository": "tec-template-base + 24 apps · TEC-SDK",
+      "category": "dependencies",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Production dependencies carry high advisories that a non-breaking update removes",
+      "description": "npm audit --omit=dev on every app lock file on main: 14–15 high per template app. The fixable-in-range ones are axios and follow-redirects (outbound requests: prototype-pollution gadget, credential headers across redirects), brace-expansion, nanoid, sharp, browserslist, fast-uri, socket.io-parser and source-map-js. @yasser172/tec-sdk is itself flagged because it pins a vulnerable axios, and it has not been published since 13 Sep, so every app inherits it. postcss and rollup need a major (next 16, @sentry/nextjs 11) and are build-time only.",
+      "evidence": [
+        {
+          "ref": "EV-0037",
+          "location": "04-security/dependency-audit.json",
+          "observation": "per-lock counts and the critical/high package list with fix availability"
+        },
+        {
+          "ref": "EV-0038",
+          "location": "TEC-SDK package-lock.json",
+          "observation": "axios · follow-redirects · zod flagged high"
+        }
+      ],
+      "affected_files": [
+        "package-lock.json (every app)",
+        "TEC-SDK/package.json"
+      ],
+      "root_cause": "Lock files not refreshed since the advisories were published; the SDK pins its own axios.",
+      "technical_impact": "Server-side BFF calls go through a vulnerable HTTP client.",
+      "business_impact": "A crafted upstream response or redirect could leak a header or skew a request.",
+      "recommendation": "Publish TEC-SDK with a fixed axios; then npm audit fix (no --force) in the template and let template-sync carry the lock refresh; leave the majors for a planned upgrade.",
+      "acceptance_criteria": [
+        "npm audit --omit=dev reports no high fixable without a major in any app lock on main"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "C-75",
+        "TEC-AUDIT-0002"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 4f94bf1",
+          "24 apps + the Hub (one commit each, 14 Nov)"
+        ],
+        "note": "npm update within the declared ranges (npm audit fix crashes on these trees: 'edgesOut'). No SDK release was needed: tec-sdk declares axios ^1.6.7, so the lock moves it. Apps: 14 high → 5 (Life 5 → 3). Hub: 17 high + 2 CRITICAL (protobufjs, websocket-driver) → 10 high, 0 critical. Every remaining high needs a major — @sentry/nextjs 11, next 16 (postcss, rollup), firebase 13 for the Hub (firestore → grpc-js, undici) — or is zod (0020). Only lockfiles changed; every suite green; production builds of the template, Commerce, Zone and the Hub pass.",
+        "verification": "npm audit --omit=dev on main: no high or critical with a non-major fix, in any repo"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0020",
+      "phase": "P3",
+      "repository": "all apps · 13 backend services · TEC-SDK",
+      "category": "dependencies",
+      "severity": "MEDIUM",
+      "confidence": "MEDIUM",
+      "title": "zod 3 has a high memory-exhaustion advisory with no fix short of zod 4",
+      "description": "Present in 38 lock files: every app, TEC-SDK, and 13 backend services (ai, business, connection, gateway, identity, life, nexus, payment, platform, search, template, trust, wallet). An oversized collection sent to a constrained schema can exhaust memory. Body-size limits bound it (Fastify 1 MB default; Vercel 4.5 MB); not measured per route here.",
+      "evidence": [
+        {
+          "ref": "EV-0039",
+          "location": "04-security/dependency-audit.json",
+          "observation": "zod high, fixAvailable: false, in 38 locks"
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "zod 3 is past its fix line; zod 4 is a major.",
+      "technical_impact": "A request can cost a process more memory than it should.",
+      "business_impact": "Availability, not data.",
+      "recommendation": "Plan the zod 4 migration (already open under TEC-AUDIT-0002); until then keep explicit body-size limits on every route that validates arrays.",
+      "acceptance_criteria": [
+        "No lock file on main resolves zod < 4",
+        "or every validated route has a stated body limit"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "TEC-AUDIT-0002"
+      ],
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-template-base ed24ecc",
+          "23 apps + the Hub (one commit each, 14 Nov)",
+          "TEC-SDK 656fc2b (2.0.0, not published)",
+          "Tec-core-backend b2db0736"
+        ],
+        "note": "14 Nov. zod 4 everywhere it is a direct dependency: the template and 23 apps (one change: z.record() takes its key schema, in payment/create), the Hub, 13 backend services (one change: payment-service's PI_SANDBOX messages move to zod 4's error hook, word for word), and TEC-SDK — prepared as 2.0.0, because it exports zod schemas. The packed 2.0.0 was installed temporarily in the template, Ecommerce and the Hub: type-check, every test and a production build pass, and zod 4 is the only zod in their tree; restored after. Found on the way: payment-service's env test built its own copy of the schema and never read env.ts; it now loads the real module (red on the old env.ts under zod 4). LEFT: until TEC-SDK 2.0.0 is published (its release workflow, after GitHub Actions is back) and every consumer moves to ^2.0.0, each app still resolves zod 3 INSIDE @yasser172/tec-sdk — isolated (apps import only TecSdk, never its schemas), but present in the lock, so the acceptance criterion is not yet met. Process notes, recorded so they are not repeated: (1) a loop ran template-sync apply over Commerce, Assets, Ecommerce and the Hub — apps not made from the template — copying ~45–100 template files into each; caught by their tests and the Hub's 109-file commit, undone file by file (every new file checked to be a template copy) before any push; apply now refuses an untracked repo (tec-template-base c851c65, with a test). (2) The disk filled mid-run; results printed then (\"0 errors\") were false — a corrupted node_modules was reinstalled and every number above was re-measured after space was freed.",
+        "verification": "After the SDK release: npm ls zod on main shows only 4.x in every app; npm audit --omit=dev lists no zod"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0021",
+      "phase": "P3",
+      "repository": "Tec-App",
+      "category": "dependencies",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The Hub keeps a stale second lock file that pins Next 15.5.12",
+      "description": "tec-frontend/package-lock.json (last changed in #120) locks next 15.5.12 with a critical advisory, while the workspace root lock — the one Vercel installs from — locks 15.5.29. Production runs 15.5.29: the build log of the live deployment says \"Detected Next.js version: 15.5.29\" [Runtime Verified]. The stale file misleads scanners and people.",
+      "evidence": [
+        {
+          "ref": "EV-0040",
+          "location": "Tec-App origin/main package-lock.json",
+          "observation": "node_modules/next 15.5.29"
+        },
+        {
+          "ref": "EV-0041",
+          "location": "Tec-App origin/main tec-frontend/package-lock.json",
+          "observation": "node_modules/next 15.5.12"
+        },
+        {
+          "ref": "EV-0042",
+          "location": "Vercel deployment dpl_Hu21VDiAkb4XeB9BYwuuMGu8Z22R build log",
+          "observation": "Detected Next.js version: 15.5.29"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/package-lock.json"
+      ],
+      "root_cause": "A lock file left from before the workspace.",
+      "technical_impact": "A false critical in every scan.",
+      "business_impact": "Noise hides the real ones.",
+      "recommendation": "Delete tec-frontend/package-lock.json.",
+      "acceptance_criteria": [
+        "Only the root lock file exists on main"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App e7d00c30"
+        ],
+        "note": "Stale lock deleted; CI cache keys hash the root lock. Proved in a clean worktree: install inside tec-frontend resolves Next 15.5.29 from the root lock and creates no new lock. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0022",
+      "phase": "P3",
+      "repository": "Tec-core-backend",
+      "category": "dependencies",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "An unused root package.json (a Nest 10 monolith with no source) carries two critical advisories",
+      "description": "The repository root declares Nest 10, bcrypt 5, axios and others, with build/start scripts for a dist/main that does not exist. Nothing installs it: no Dockerfile or workflow runs npm at the root, and scripts/ imports only Node built-ins. Its lock has critical proxy-addr and tar advisories. Not deployed, but a scanner and a reader both take it for the backend.",
+      "evidence": [
+        {
+          "ref": "EV-0043",
+          "location": "Tec-core-backend origin/main package.json",
+          "observation": "Nest 10 deps, start: node dist/main; no src/ at the root"
+        },
+        {
+          "ref": "EV-0044",
+          "location": "04-security/dependency-audit.json",
+          "observation": "root lock: critical proxy-addr, tar"
+        }
+      ],
+      "affected_files": [
+        "package.json",
+        "package-lock.json"
+      ],
+      "root_cause": "Left from before the services were split.",
+      "technical_impact": "False criticals; a misleading entry point.",
+      "business_impact": "None in production.",
+      "recommendation": "Delete the root package.json and lock (keep a minimal one only if a workspace tool needs it).",
+      "acceptance_criteria": [
+        "No dependency at the backend root"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend branch (local) dca31828"
+        ],
+        "note": "Root package.json and lock removed; every workflow installs in a service folder, scripts/ import only built-ins. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0023",
+      "phase": "P3",
+      "repository": "Tec-Commerce · Tec-Assets · Tec-Ecommerce",
+      "category": "dependencies",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The test environment uses happy-dom 18, which has a critical sandbox-escape advisory",
+      "description": "Test-only (devDependency); npm reports it under --omit=dev because the lock marks it devOptional. It runs only the tests own fixtures, so the escape has no attacker input today.",
+      "evidence": [
+        {
+          "ref": "EV-0045",
+          "location": "04-security/dependency-audit.json",
+          "observation": "happy-dom <=21.0.3 critical in three locks"
+        }
+      ],
+      "affected_files": [
+        "package.json (devDependencies)"
+      ],
+      "root_cause": "Test dependency not updated.",
+      "technical_impact": "None at runtime.",
+      "business_impact": "None.",
+      "recommendation": "Move to happy-dom 21.0.4 (major) with the next test-tooling update.",
+      "acceptance_criteria": [
+        "happy-dom >= 21.0.4 in the three repos"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 8bf4e78",
+          "24 apps + the Hub (one commit each, 14 Nov)"
+        ],
+        "note": "happy-dom ^21.0.4 everywhere. Correction to the finding's scope: it named Commerce, Assets and Ecommerce, but every repo (template, 20 template apps, the Hub) ran 18.0.1 — all moved. happy-dom is now pinned by template-sync. Every suite green on 21; npm audit no longer lists it.",
+        "verification": "npm ls happy-dom resolves 21.x in every repo on main"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0024",
+      "phase": "P3",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The gateway's public-route list is wider than it needs to be",
+      "description": "Swagger UI (/api/docs) is served in production without a token and outside rate limiting. '/api/commerce/products' is a prefix exemption for every method, writes included; commerce-service verifies the token on its writes itself (product.controller.ts getUserId, HS256), so nothing is open today, but the gateway gives no second check. '/metrics' is listed public with no handler behind it.",
+      "evidence": [
+        {
+          "ref": "EV-0046",
+          "location": "tec-api-gateway/src/middleware/jwt-auth.ts:6-48",
+          "observation": "PUBLIC_ROUTES, prefix match"
+        },
+        {
+          "ref": "EV-0047",
+          "location": "tec-api-gateway/src/main.ts:705-720,758",
+          "observation": "swagger-ui mounted; /api/docs excluded from the rate limiter"
+        },
+        {
+          "ref": "EV-0048",
+          "location": "tec-commerce-service/src/modules/product/product.controller.ts:35-46,79-81",
+          "observation": "writes call getUserId (verified token)"
+        }
+      ],
+      "affected_files": [
+        "tec-api-gateway/src/middleware/jwt-auth.ts",
+        "tec-api-gateway/src/main.ts"
+      ],
+      "root_cause": "Exemptions written as prefixes for reads and never narrowed.",
+      "technical_impact": "Defence in depth is one layer thinner for product writes; the API surface is published.",
+      "business_impact": "Low.",
+      "recommendation": "Exempt products for GET only; serve /api/docs only outside production (or behind the internal key); drop '/metrics'.",
+      "acceptance_criteria": [
+        "A POST to /api/commerce/products without a token is refused at the gateway",
+        "GET /api/docs returns 404 in production"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "ADR-005",
+        "C-47 P6"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend branch (local) 82d42aac"
+        ],
+        "note": "Catalogue public for GET/HEAD/OPTIONS only; Swagger mounted in production only with API_DOCS_PUBLIC=1; /metrics exemption removed. 5 new tests red before, green after; gateway 115/115. Every app write to products already sends the internal key and the token (Commerce BFF), so nothing that works today is refused. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0025",
+      "phase": "P3",
+      "repository": "Tec-Assets",
+      "category": "security",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A debug route ships to production",
+      "description": "src/app/api/debug/route.ts answers GET with whether the caller holds a token, the caller's own tec_user cookie and its verified user id. It reveals nothing about anyone else, but a debug endpoint has no place in production and grows.",
+      "evidence": [
+        {
+          "ref": "EV-0049",
+          "location": "Tec-Assets src/app/api/debug/route.ts",
+          "observation": "GET returns tokenExists, userCookie, userId"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/debug/route.ts"
+      ],
+      "root_cause": "Left from a debugging session.",
+      "technical_impact": "Small information surface.",
+      "business_impact": "None today.",
+      "recommendation": "Delete the route (or gate it to non-production).",
+      "acceptance_criteria": [
+        "No /api/debug route on main"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-Assets 12e86c1"
+        ],
+        "note": "Route deleted; nothing called it. Assets 303/303. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0026",
+      "phase": "P3",
+      "repository": "Tec-App",
+      "category": "security",
+      "severity": "INFO",
+      "confidence": "HIGH",
+      "title": "A Firebase web API key is in the Hub's service worker",
+      "description": "tec-frontend/public/firebase-messaging-sw.js holds the Firebase web config key. Firebase web keys are public by design (they identify the project; Firebase rules authorise). It is the only credential-shaped string in the full history of all 30 repositories.",
+      "evidence": [
+        {
+          "ref": "EV-0050",
+          "location": "04-security/secret-scan.json",
+          "observation": "google-api-key in firebase-messaging-sw.js, on main"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/public/firebase-messaging-sw.js"
+      ],
+      "root_cause": "By design.",
+      "technical_impact": "None if the key is restricted.",
+      "business_impact": "None.",
+      "recommendation": "Owner: confirm in Google Cloud that the key is restricted to the Hub's HTTP referrers and to the Firebase APIs it uses.",
+      "acceptance_criteria": [
+        "The key shows HTTP-referrer and API restrictions in Google Cloud"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [],
+      "remediation": {
+        "state": "OWNER_ACTION",
+        "refs": [],
+        "note": "Check the key restrictions in Google Cloud."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0027",
+      "phase": "P3",
+      "repository": "Tec-App · tec-auth · all apps (CLAUDE.md)",
+      "category": "documentation",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The instruction files say the session cookies are HttpOnly; ADR-001 says tec_access_token is not",
+      "description": "Hub and tec-auth CLAUDE.md: 'Hub sets HttpOnly cookies'; ADR-001 (accepted) sets tec_access_token httpOnly:false so Pi Browser can read it, and the code follows the ADR. A reviewer who trusts the instruction file misjudges the risk.",
+      "evidence": [
+        {
+          "ref": "EV-0051",
+          "location": "knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md:43-56",
+          "observation": "ADR-001 httpOnly:false"
+        },
+        {
+          "ref": "EV-0052",
+          "location": "Tec-App CLAUDE.md (Auth Pattern)",
+          "observation": "'Hub sets HttpOnly cookies'"
+        },
+        {
+          "ref": "EV-0053",
+          "location": "tec-template-base src/app/api/auth/sso-callback/route.ts:94",
+          "observation": "httpOnly: false"
+        }
+      ],
+      "affected_files": [
+        "CLAUDE.md (Hub, tec-auth, apps)"
+      ],
+      "root_cause": "Instruction files written before ADR-001.",
+      "technical_impact": "A wrong mental model of what a script can read.",
+      "business_impact": "Risk misjudged.",
+      "recommendation": "State ADR-001 in the instruction files: tec_access_token is readable by script by decision; tec_refresh_token is HttpOnly.",
+      "acceptance_criteria": [
+        "No instruction file says the access token is HttpOnly"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P3",
+      "references": [
+        "ADR-001"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App 66fd11f9",
+          "Tec-Assets b696449",
+          "tec-auth 3bd99d4"
+        ],
+        "note": "Instruction files state ADR-001. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0028",
+      "phase": "P2",
+      "repository": "Tec-App",
+      "category": "reliability",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "A failed load of the wallet history or payment list shows an empty list",
+      "description": "useWallet.ts:197 and useAppPayments.ts:25 swallow a failed fetch ('transactions are optional'; 'absent beats wrong'). The screen then reads 'no transactions' — a statement about money that is not true — with nothing reported.",
+      "evidence": [
+        {
+          "ref": "EV-0054",
+          "location": "Tec-App tec-frontend/src/lib-client/hooks/useWallet.ts:197",
+          "observation": "catch { /* transactions are optional */ }"
+        },
+        {
+          "ref": "EV-0055",
+          "location": "Tec-App tec-frontend/src/lib-client/hooks/useAppPayments.ts:25",
+          "observation": "catch { /* the list is optional; absent beats wrong */ }"
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/src/lib-client/hooks/useWallet.ts",
+        "tec-frontend/src/lib-client/hooks/useAppPayments.ts"
+      ],
+      "root_cause": "Optional data treated as absent data.",
+      "technical_impact": "An outage looks like an empty history.",
+      "business_impact": "A Pioneer may think a payment is missing.",
+      "recommendation": "Keep the list optional but distinguish 'could not load' from 'none', and reportError the failure.",
+      "acceptance_criteria": [
+        "A failed history request renders an error state and reports it (test)"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/P2",
+      "references": [
+        "C-96",
+        "C-47 Forbidden #6"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-App e7d00c30"
+        ],
+        "note": "useWallet sets txError and reports; the page shows \"Could not load your transactions\" with Retry. wallet-history-failure.test.tsx red before, green after; Hub 177 files green. useAppPayments was already right (null → nothing rendered) — the finding over-counted it. committed locally — pushed when GitHub Actions is back"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0029",
+      "phase": "P3",
+      "repository": "tec-template-base + 23 apps (all but the Hub)",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "No app but the Hub could renew a session — the refresh token was not kept or not sent",
+      "description": "sso-callback sets tec_access_token, tec_user and tec_csrf; it never sets tec_refresh_token. /api/auth/refresh sends the refresh cookie if present and otherwise the access token, and pi-auth.ts calls it only after a 401 — when the access token has already expired. So a refresh cannot succeed once it is needed, and the session lasts exactly the access token's lifetime (7 days on Railway). It also means the access token's lifetime cannot be shortened (ADR-001's 24 h) without signing everyone out daily, which would multiply Pi sign-ins — the very load that made Pi Browser stop opening the wallet (10 Nov).",
+      "evidence": [
+        {
+          "ref": "EV-0057",
+          "location": "tec-template-base src/app/api/auth/sso-callback/route.ts:201-203",
+          "observation": "three cookies set; no tec_refresh_token"
+        },
+        {
+          "ref": "EV-0058",
+          "location": "tec-template-base src/app/api/auth/refresh/route.ts:9-20",
+          "observation": "reads tec_refresh_token, absent"
+        },
+        {
+          "ref": "EV-0059",
+          "location": "tec-template-base src/lib-client/pi/pi-auth.ts:76-120",
+          "observation": "refreshAccessToken called on 401 only"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/auth/sso-callback/route.ts",
+        "src/app/api/auth/refresh/route.ts",
+        "src/lib-client/pi/pi-auth.ts"
+      ],
+      "root_cause": "The SSO hand-off carries the access token only.",
+      "technical_impact": "No working refresh path in template apps.",
+      "business_impact": "Blocks shortening the token lifetime (part of TEC-AUDIT-0018).",
+      "recommendation": "Hand the refresh token over in the signed SSO payload and set it HttpOnly (C-123 §2 attributes); refresh shortly before expiry, not after a 401. Phone-verify in Pi Browser before shortening JWT_EXPIRES_IN.",
+      "acceptance_criteria": [
+        "A template app holds tec_refresh_token (HttpOnly) after sign-in",
+        "With a 10-minute access token, a session survives an hour of use in Pi Browser"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run2/remediation",
+      "references": [
+        "C-123 §2",
+        "ADR-001",
+        "TEC-AUDIT-0018"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base afdd94d",
+          "20 template apps",
+          "Tec-Commerce e6a33e9",
+          "Tec-Assets 56c3fe0",
+          "Tec-Ecommerce 11a9ab0"
+        ],
+        "note": "Implemented C-123 §4 for every app but the Hub (which already had it): lib/session-refresh.ts + a middleware step renew an expired (or <2 min) access token at the gateway with the HttpOnly, host-only refresh token, once per token, before any BFF call or /api/auth/me; the route runs with the new token and the rotated cookies (with tec_user + tec_csrf) ride the same response; pages never refresh (LAW 2); a failure leaves the request as it came; a rejected token is dropped. sso-callback keeps the app's OWN refresh token (from its pi-login); a Hub hand-off carries none, so no two holders share a single-use token. The refresh route uses the same helper (it sent the access token before — Commerce/Assets sent none in the header, so refresh was broken in all 23 apps). pi-auth no longer logs out on a failed refresh (C-123 §4). Ecommerce's refresh token moved from the shared domain to host-only. Tests: 11 + 4 + 3 shared cases, 3 red on the old code; every app's full suite, tsc and lint green. Committed locally. Phone check in Pi Browser required before shortening JWT_EXPIRES_IN (TEC-AUDIT-0018 part 2). Residual: an Ecommerce refresh cookie set on the shared domain before this fix lives up to 7 days.",
+        "verification": "Pi Browser: sign in to an app, wait past a short access-token lifetime, use the app — still signed in"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0030",
+      "phase": "P4",
+      "repository": "tec-core-backend (tec-payment-service)",
+      "category": "data-integrity",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "The hourly reconciliation completes a paid payment without the payment.completed.v1 event",
+      "description": "reconcileStalePayments runs every hour (server.ts cron). For a payment Pi shows as paid (developer_completed, or approved + verified) it calls markCompleted, which sets status 'completed' with a bare prisma.payment.update and writes an audit row — but no outbox event. Every consumer that delivers what was bought (commerce subscriptions, asset purchases, identity legend/nexus) listens to payment.completed.v1 only. So a payment the reconciliation rescues is marked paid and delivers nothing. The same gap was closed for the recovery endpoint by completeFromRecovery (conditional updateMany + saveOutboxEvent in one transaction); the cron path was not moved onto it. The update is also not conditional: a live /complete racing the cron can both write 'completed'.",
+      "evidence": [
+        {
+          "ref": "EV-0060",
+          "location": "tec-payment-service/src/services/reconciliation.service.ts:80-95",
+          "observation": "markCompleted: payment.update to completed + audit log; no saveOutboxEvent"
+        },
+        {
+          "ref": "EV-0061",
+          "location": "tec-payment-service/src/services/reconciliation.service.ts:194-210",
+          "observation": "called when Pi shows developer_completed or approved+verified"
+        },
+        {
+          "ref": "EV-0062",
+          "location": "tec-payment-service/src/server.ts:85-96",
+          "observation": "scheduled hourly (RECONCILE_SCHEDULE)"
+        },
+        {
+          "ref": "EV-0063",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:1280-1300",
+          "observation": "completeFromRecovery: the conditional, event-emitting path the cron should use"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/services/reconciliation.service.ts"
+      ],
+      "root_cause": "Two completion paths: the recovery endpoint was fixed to emit the event; the cron kept its own update.",
+      "technical_impact": "Invariant #2/#4 hold (Pi verified it, an audit row exists) but the event — the fact consumers act on — is never written (C-47 P4, Forbidden #6 silent failure).",
+      "business_impact": "A user who paid, whose payment the hourly job finished, gets no Pro / no asset / no order effect. Support sees \"completed\" and no delivery.",
+      "recommendation": "markCompleted calls completeFromRecovery (or the same conditional updateMany + saveOutboxEvent in one transaction) and emits only when the row actually transitioned.",
+      "acceptance_criteria": [
+        "A reconciled payment writes exactly one payment.completed.v1 outbox row",
+        "A second run, or a racing /complete, writes none",
+        "A test fails on the old markCompleted and passes on the new"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 Invariants #2 #4 · Forbidden #6",
+        "ADR-004",
+        "C-71"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 12cede00"
+        ],
+        "note": "services/payment-transitions.ts: completeOpenPayment = conditional updateMany (created/approved) + payment.completed.v1 in the same transaction, same envelope as the normal path. The reconciliation uses it; a lost race counts as skipped with no audit row. payment-transitions.test.ts: 4 cases red on the old reconciliation. 469/469, tsc, build. No PR before 1 Dec. Payments the cron completed before the fix still have no event — re-emitting them is a separate, audited, owner-approved step.",
+        "verification": "After deploy: a stale approved payment Pi shows as paid → one payment.completed.v1 in outbox_events and the consumer delivers"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0031",
+      "phase": "P4",
+      "repository": "tec-core-backend (tec-payment-service)",
+      "category": "data-integrity",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The recovery endpoint can cancel a payment that completed while it was asking Pi",
+      "description": "resolve-incomplete rejects a payment that is final when it reads it (409), then asks Pi — one or two network round trips — and only then cancels, with an unconditional update. In CASE C the guard at the write is `status !== 'cancelled'` on the status read BEFORE those round trips; the unreachable-on-Pi branch checks all three final states, but also on the old read. A payment completed by a concurrent /complete in that window is rewritten to 'cancelled'. (Corrected on 13 Nov while fixing it: the first text said a locally completed payment passes the guard; the 409 at the top stops that — the gap is the race window.)",
+      "evidence": [
+        {
+          "ref": "EV-0064",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:1442-1456",
+          "observation": "guard at the write is status !== 'cancelled', on a status read before the Pi calls"
+        },
+        {
+          "ref": "EV-0065",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:1371-1376",
+          "observation": "terminal states checked, then an unconditional update"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/controllers/payment.controller.ts"
+      ],
+      "root_cause": "The guard names one terminal state instead of the state machine (ALLOWED_TRANSITIONS).",
+      "technical_impact": "Terminal → terminal transition: breaks Invariant #7 and Forbidden #9.",
+      "business_impact": "A paid payment can be shown as cancelled; reports and support disagree with Pi.",
+      "recommendation": "Both branches use a conditional updateMany with status in ('created','approved') — the transitions ALLOWED_TRANSITIONS permits — and act on the count.",
+      "acceptance_criteria": [
+        "A completed or failed payment is never changed by resolve-incomplete",
+        "Test red on the old guard, green on the new"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 Invariant #7 · Forbidden #9"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 12cede00"
+        ],
+        "note": "Both cancel branches of resolve-incomplete use cancelOpenPayment (conditional on created/approved in the WHERE); the audit is written only when the row changed. Controller test for the race: red on the old code.",
+        "verification": "Covered by the unit test; no runtime step needed"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0032",
+      "phase": "P4",
+      "repository": "tec-core-backend (tec-payment-service)",
+      "category": "data-integrity",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "approve and complete read the payment, then update it by id — a check-then-act",
+      "description": "Both run inside a transaction but update with where: { id } after a separate read of the status, so two concurrent calls can both pass the check. The effect is limited: complete may write two outbox events, and every consumer is idempotent by paymentId (asset upsert by paymentId; subscription returns early on the same payment_id).",
+      "evidence": [
+        {
+          "ref": "EV-0066",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:377",
+          "observation": "approve: tx.payment.update where id"
+        },
+        {
+          "ref": "EV-0067",
+          "location": "tec-payment-service/src/controllers/payment.controller.ts:555",
+          "observation": "complete: tx.payment.update where id"
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/controllers/payment.controller.ts"
+      ],
+      "root_cause": "Read and write are separate statements without a status condition.",
+      "technical_impact": "Possible duplicate payment.completed.v1; absorbed by idempotent consumers.",
+      "business_impact": "None observed.",
+      "recommendation": "Conditional updateMany on the expected from-state, as completeFromRecovery does; emit only on count 1.",
+      "acceptance_criteria": [
+        "Two concurrent completes produce one event"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 Invariant #7",
+        "C-70"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 5863f4b9"
+        ],
+        "note": "approve and complete use the controller's transitionPayment: the from-state is in the WHERE; count 0 → the loser writes nothing, queues nothing, answers 409 INVALID_STATUS (what a sequential duplicate already got). Three cases in terminal-state-race.test.ts, red on the old code. 472/472, tsc, build.",
+        "verification": "Covered by the unit tests"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0033",
+      "phase": "P5",
+      "repository": "25 app repositories (all BFFs)",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "437 of 465 gateway calls from the apps' BFF routes have no timeout",
+      "description": "BFF routes call `${GATEWAY}/api/...` with fetch and no AbortSignal. The gateway itself now bounds slow upstreams (NEW-W), but when the gateway is the slow part — the 'Backend Offline' freeze — every pending BFF call waits until Vercel kills the function, and the screen shows a spinner instead of the state screen. The template's own session-refresh (8 s) is one of the 28 that do set one.",
+      "evidence": [
+        {
+          "ref": "EV-0068",
+          "location": "06-api-integration/evidence.md (per-app counts)",
+          "observation": "439/467 calls, every app 1–4 with a signal"
+        },
+        {
+          "ref": "EV-0069",
+          "location": "Tec-core-backend NEW-W",
+          "observation": "gateway-side timeouts exist; app-side do not"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/bff/**/route.ts (each app)"
+      ],
+      "root_cause": "No shared gateway-fetch helper; each route calls fetch directly.",
+      "technical_impact": "A slow gateway ties up a function per pending call; failures surface late and as timeouts, not as the 502/504 the screens handle.",
+      "business_impact": "During an incident users see endless loading instead of \"try again\".",
+      "recommendation": "One shared gatewayFetch(path, init) in the template (AbortSignal.timeout, default 10 s) used by every BFF route; template-sync carries it.",
+      "acceptance_criteria": [
+        "No BFF fetch to the gateway without a timeout (a check in CI)",
+        "A test: a hung gateway → the route answers 504 within the limit"
+      ],
+      "complexity": "M",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-96",
+        "NEW-W",
+        "C-78"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 0844012",
+          "23 apps (one commit each)",
+          "Tec-App 7bf879b4",
+          "tec-template-base 2118013 · 76196f5 (guard)",
+          "Tec-App a5ac7e3",
+          "Tec-Commerce f47e0d8",
+          "Tec-Assets be28497",
+          "Tec-Ecommerce 15c5971",
+          "Tec-Connection b1dc0f5 · 3b67697",
+          "Tec-Explorer 9376155 · 8f580d9",
+          "Tec-Life eac9295",
+          "Tec-Zone e710330",
+          "Tec-Nexus 26ad136",
+          "Tec-system ccd55de",
+          "Tec-Analytics- 59ad3b6",
+          "the guard in every other app"
+        ],
+        "note": "src/lib/gateway-fetch.ts (shared via template-sync): fetch with a deadline just past the gateway's own 504 (25 s) — 30 s, 90 s for an /ai/ path (the gateway waits 75 s for TEC AI) — so a live gateway always answers first and nothing it would complete is cut (a payment approve included); a caller's own signal still works. 435 gateway calls in 25 repositories (437 matched, the Hub's 2 own-origin calls then restored) moved onto it by a codemod; gateway-fetch.test.ts (shared) checks the deadlines and fails on any bare gateway fetch left in src/, with a self-check that the search finds one. Each repository: tsc, lint and its full suite green. Correction: two of the 467 calls counted in Run 3 were the Hub calling its OWN origin (${req.nextUrl.origin}/api/auth/refresh) — not gateway calls; they are left as they were and the search now exempts own-origin calls. True count: 465 gateway calls, 437 without a deadline. | Second pass (14 Nov 2026), found while bringing Life onto the template: the first sweep and its guard matched only fetch(`${X}/api/`, so every call whose URL is built first passed — `${GW}${path}` in the one helper each of seven apps routes its whole BFF through (Life, Zone, Nexus, Explorer, System, Connection, Analytics), fetch(url, …) in the shared GET helper of Commerce, Assets and Ecommerce and in Commerce payouts, fetch(BASE|url|target, …) in ten Hub routes (admin erasure, void-balances, account-merge, life-ai ×2, seller-liabilities, reconcile, assets, notifications mark-read), Explorer reviews. All now go through gatewayFetch. Non-gateway server calls with none got their own deadline: seven uploads to object storage (60 s), the OKX price (8 s), the Hub's AI-provider probes (30 s), Upstash rate-limit (2 s, falls back to memory as on any error), fetchWithRetry (30 s per attempt). The guard now judges EVERY fetch( in server code by its arguments (signal required unless the URL is relative or the app's own origin); its self-check holds seven bare shapes and five exempt ones; red on the old code and green after in each of the six apps changed in the second step (git stash). Lesson recorded: the first guard was checked to FIND a call, but only in the shape the sweep had already fixed — a self-check proves the search finds what it was written for, not what it was not. Note: the Hub's admin reconcile calls payment-service directly (PAYMENT_SERVICE_URL), not through the gateway — it has a deadline now; whether that call should exist is for P5 of the next cycle.",
+        "verification": "After deploy, with the gateway stopped: a BFF route answers with its error within ~30 s instead of hanging"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0034",
+      "phase": "P5",
+      "repository": "25 app repositories · TEC-SDK",
+      "category": "architecture",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The BFFs bypass the server SDK: one file per app imports it, and gateway responses are not schema-validated",
+      "description": "C-47 §14 says public integration goes through @yasser172/tec-sdk and every response is Zod-validated. In practice each app imports the SDK in a single file (src/lib/sdk.ts; none at all in Assets, Commerce, Life) and makes its 400+ gateway calls with raw fetch, reading the JSON as-is. The SDK itself was last changed on 13 Sep (1.4.0). So the contract the SDK is meant to pin is not the contract the apps use, and a backend shape change reaches the screens unchecked — the class of the nested-envelope Pro-status bug the template already documents.",
+      "evidence": [
+        {
+          "ref": "EV-0070",
+          "location": "tec-template-base src/lib/sdk.ts:1",
+          "observation": "the only SDK import"
+        },
+        {
+          "ref": "EV-0071",
+          "location": "06-api-integration/evidence.md",
+          "observation": "SDK-importing files per app: 0–1"
+        },
+        {
+          "ref": "EV-0072",
+          "location": "TEC-SDK origin/main",
+          "observation": "last commit 2026-09-13, version 1.4.0"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/bff/**",
+        "TEC-SDK src/"
+      ],
+      "root_cause": "The SDK covers payment/auth; domain routes were written straight against the gateway.",
+      "technical_impact": "Forbidden #5 (divergent SDK contract vs backend) cannot be detected; responses are trusted unvalidated.",
+      "business_impact": "A backend change can silently blank a screen or mis-gate a paid feature in many apps at once.",
+      "recommendation": "Do not wrap 400 calls at once. Decide in an ADR whether domain calls belong in the SDK; meanwhile validate at the edge with the shared gatewayFetch (0033) taking a zod schema for the money and entitlement routes first.",
+      "acceptance_criteria": [
+        "An ADR records where domain contracts live",
+        "Payment, wallet and subscription BFF responses are schema-checked"
+      ],
+      "complexity": "L",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-47 §14 · Forbidden #5",
+        "ADR-009"
+      ],
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-app a07a0aa1",
+          "12-final-assessment/adr-proposal-response-contracts.md"
+        ],
+        "note": "What the code showed on 14 Nov changes the finding's picture: the BFFs do not 'bypass' a working SDK — no production path uses the SDK at all, and the SDK's RESPONSE schemas describe an API that does not exist (paymentId/userId/amount:number on /payments; payment-service answers {success,data:{payment:{id,user_id,amount:'<decimal string>'}}} on /api/payment/*; the wallet and subscription schemas likewise). ADR-009's request schemas are imported by no app either. Done: (1) the Hub's wallet balance route — it answered a fabricated `balance: '0'` with a 200 whenever the wallet service failed, refused the session or answered something unreadable, defeating screens written to refuse a fake zero (C-135 §4, Forbidden #6). Now schema-checked at the edge: 503 / 502 / 401, an empty list the one honest zero; createHandler sends a handler's own NextResponse as built (it serialised it into a 200). (2) The decision is drafted for the owner: adr-proposal-response-contracts.md (unnumbered) — the SDK owns response contracts written from the services' real answers, payment / wallet / subscription first. Payment BFF routes are pass-through and the one field the client reads (the payment id) fails closed; the Pro status is read by readProState (0044). Seen in passing: the Hub's PATCH /api/bff/identity/profile sends `avatar`; identity reads `avatarUrl` — never saved. Left: the owner's decision on the ADR; then the SDK contracts (publish needs Actions)."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0035",
+      "phase": "P5",
+      "repository": "tec-template-base + 20 apps",
+      "category": "dead-code",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "The template's example route /api/bff/items calls a gateway path that does not exist",
+      "description": "Of 712 gateway paths the apps call, 709 match a route in the gateway registry. The other three: two are tests that call the app's own origin, and the third is /api/items, called by the example route src/app/api/bff/items that the template ships and 20 apps still carry. No gateway prefix serves it, so the live route can only fail.",
+      "evidence": [
+        {
+          "ref": "EV-0073",
+          "location": "tec-api-gateway/src/config/service-registry.ts",
+          "observation": "no ^/api/items prefix among 60"
+        },
+        {
+          "ref": "EV-0074",
+          "location": "tec-template-base src/app/api/bff/items/route.ts:30,55",
+          "observation": "fetch `${GW}/api/items`"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/bff/items/route.ts"
+      ],
+      "root_cause": "A copy-me example kept in production builds.",
+      "technical_impact": "A public route that always errors; noise in logs and error reports.",
+      "business_impact": "None to users unless something links to it.",
+      "recommendation": "Move the example out of src/app (e.g. docs/examples) in the template; remove it from the apps that do not use it.",
+      "acceptance_criteria": [
+        "No app ships /api/bff/items unless the gateway serves /api/items"
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run3",
+      "references": [
+        "C-96"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 0844012",
+          "20 apps",
+          "the copy in 18 apps (one commit each, 14 Nov)",
+          "the copy in 18 apps (14 Nov)"
+        ],
+        "note": "The example moved to docs/examples/bff-route.example.ts (still type-checked); removed from the 20 apps where it was the unchanged copy and nothing called it; template-sync carries the example and the helper instead. | 14 Nov: the copy itself, listed as shared but never carried into the apps, added to the 18 template apps (type-checked in each); template-sync check: every one matches (NBF's recorded exception aside). Life and Zone get it with 0005.",
+        "verification": "No app builds a /api/bff/items route"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0036",
+      "phase": "P6",
+      "repository": "tec-core-backend (payment · notification · realtime · analytics) · KB",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Notifications, live updates and analytics miss every payment completed off the normal path",
+      "description": "A completed payment is announced on two streams. payment.completed.v1 is durable (outbox, same transaction). The unversioned payment.completed is a direct publish after the response: skipped when the Redis publisher is not ready (the log says the outbox will retry — not for this stream), and never sent by the recovery endpoint or the hourly reconciliation. Wallet and commerce moved to .v1; notification, realtime and analytics still read only the unversioned stream. The catalog still lists wallet and commerce as its consumers; the drift check compares names, not consumers.",
+      "evidence": [
+        {
+          "ref": "EV-0075",
+          "location": "payment.controller.ts:600-630",
+          "observation": "best-effort publish after the response"
+        },
+        {
+          "ref": "EV-0076",
+          "location": "notification/realtime/analytics consumers",
+          "observation": "unversioned stream only"
+        },
+        {
+          "ref": "EV-0077",
+          "location": "events-catalog.yaml:60-72 · check-drift.py:167-193",
+          "observation": "stale consumer list; names only"
+        }
+      ],
+      "affected_files": [
+        "tec-notification-service/src/modules/notification/notification.consumer.ts",
+        "tec-realtime-service/src/redis/redis.consumer.ts",
+        "tec-analytics-service/src/modules/analytics/analytics.consumer.ts",
+        "tec-payment-service/src/controllers/payment.controller.ts",
+        "tec-payment-service/src/services/pi-api.ts",
+        "manifests/events-catalog.yaml"
+      ],
+      "root_cause": "A migration to the versioned stream (audit F-2, Aug) moved the money consumers and stopped there.",
+      "technical_impact": "Three consumers see a subset of completions; the subset depends on Redis readiness and on which path completed the payment.",
+      "business_impact": "A paying user may get no \"payment received\" notification and no live update; analytics under-counts revenue.",
+      "recommendation": "Move the three consumers to payment.completed.v1 (each idempotent by paymentId), then remove both direct publishes; fix the catalog; make check-drift compare consumer groups.",
+      "acceptance_criteria": [
+        "A completion through recovery produces a notification",
+        "No code publishes the unversioned payment.completed",
+        "check-drift fails on a stale consumer list"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-70",
+        "ADR-004",
+        "events-catalog F-2"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 1c5aaf38",
+          "Tec-core-backend f2d6bfa3",
+          "tec-knowledge-base 666ed93"
+        ],
+        "note": "notification, realtime and analytics dual-read both streams, once per paymentId; the payment log is truthful; check-drift compares consumers (found 4 stale entries) and the catalog is corrected. Retiring the legacy publish is a later change, after the consumers are deployed.",
+        "verification": "After deploy: a payment finished by resolve-incomplete produces a notification and a live update"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0037",
+      "phase": "P7",
+      "repository": "tec-template-base + 19 apps (all but Life of those that declare it)",
+      "category": "testing",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The 60 % coverage floor is declared in 21 app repositories and enforced in one",
+      "description": "Each vitest.config declares thresholds (60/60/60/50); CI runs npm test without coverage and @vitest/coverage-v8 is not installed, so the floor never runs. Only Tec-Life runs test:coverage. The Hub, Assets, Commerce and Ecommerce declare no floor at all. Measured here, the template is at 69.5/61.2/63.9/74.9.",
+      "evidence": [
+        {
+          "ref": "EV-0078",
+          "location": "vitest.config.ts · ci.yml (each app)",
+          "observation": "floor declared; CI runs npm test"
+        },
+        {
+          "ref": "EV-0079",
+          "location": "tec-template-base package.json",
+          "observation": "no coverage provider"
+        }
+      ],
+      "affected_files": [
+        "vitest.config.ts",
+        ".github/workflows/ci.yml",
+        "package.json"
+      ],
+      "root_cause": "The floor was added to the config; the CI step and dependency were not.",
+      "technical_impact": "Coverage can fall to zero without CI noticing.",
+      "business_impact": "A gate everyone believes in that never runs.",
+      "recommendation": "Template: add @vitest/coverage-v8 and run test:coverage in CI; carry it by template-sync; measure each app first and set its floor no higher than it passes.",
+      "acceptance_criteria": [
+        "CI fails when coverage falls below the floor in every app"
+      ],
+      "complexity": "S",
+      "references": [
+        "tec-template-base CLAUDE.md v2"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 7718d93",
+          "Tec-App 0288c0e7",
+          "24 app commits"
+        ],
+        "note": "CI runs test:coverage in every app (Life already did); the Hub could not measure at all (duplicate provider) — fixed; four apps below the fleet floor hold a ratchet at their measured level. Open: the template apps measure only the files their tests load — moving to every file in src/ needs the same ratchet, app by app.",
+        "verification": "CI fails when coverage falls below the floor in every app"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0038",
+      "phase": "P7",
+      "repository": "tec-core-backend",
+      "category": "testing",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "No test crosses a service boundary — event contracts are checked by neither side",
+      "description": "Each event's producer and consumers test against their own hand-written payloads; nothing checks that the stream name and shape one side writes is what the other reads. This cycle's costliest defects lived exactly there: commerce's order consumer was never registered and listened on the wrong stream (its own comment), the reconciliation wrote no event (0030), three consumers read a best-effort stream (0036). The two tests that use a real database skip in CI although the job already runs a Postgres.",
+      "evidence": [
+        {
+          "ref": "EV-0080",
+          "location": "commerce order.consumer.ts:5-11",
+          "observation": "never registered; wrong stream"
+        },
+        {
+          "ref": "EV-0081",
+          "location": "connection erasure-db.spec.ts:12 · identity deletion-ledger-db.spec.ts:15",
+          "observation": "skip without TEST_DATABASE_URL; CI has Postgres"
+        }
+      ],
+      "affected_files": [
+        "*/src/**/*.consumer.ts",
+        "tec-payment-service/src/services/outbox.service.ts",
+        ".github/workflows/ci.yml"
+      ],
+      "root_cause": "Tests are per service; the stream is nobody's test.",
+      "technical_impact": "A renamed stream or field passes every suite and fails silently in production.",
+      "business_impact": "Purchases not delivered, with green CI.",
+      "recommendation": "A contract fixture per event under shared/: the producer test asserts its real payload equals the fixture; each consumer test feeds the fixture through its handler. Set TEST_DATABASE_URL to the CI Postgres for the two real-database tests.",
+      "acceptance_criteria": [
+        "Changing a field in the outbox payload fails a consumer test",
+        "The two real-database tests run in CI"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-70",
+        "ADR-004"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run4",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 7dc328c6"
+        ],
+        "note": "shared/contracts/payment.completed.v1.json; one payload builder in payment-service, checked against it; commerce (subscription + order) and asset feed its examples through their real handlers; CI re-runs them on a contract change; the two real-database tests run on the job's Postgres. Not yet under contract: trust (legend), nexus, wallet.",
+        "verification": "Changing a field in the contract fails CI in the producer and the consumers"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0039",
+      "phase": "P8",
+      "repository": "tec-core-backend (19 services)",
+      "category": "operations",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Deploy-safety settings for 19 of 20 services exist only in Railway's dashboard",
+      "description": "Only tec-api-gateway keeps its Railway settings in the repo (railway.toml: healthcheckPath, healthcheckTimeout, stopTimeoutSeconds). For the other 19 the Healthcheck Path, the start command and 'Wait for CI' live in the dashboard only. The migrate-on-start script refuses to start on any doubt and depends on a healthcheck to keep the old deployment live; without one the service goes DOWN (payment-service, most of 8 Nov). Nothing in code says which services have it. Owner, 13 Nov: 'Wait for CI' is off on every service — a merge deploys immediately, with no CI behind it while Actions is refused.",
+      "evidence": [
+        {
+          "ref": "EV-0082",
+          "location": "tec-api-gateway/railway.toml",
+          "observation": "the only Railway config in the repo"
+        },
+        {
+          "ref": "EV-0083",
+          "location": "CLAUDE.md (backend) schema section",
+          "observation": "\"The service MUST have a Healthcheck Path\" — set by hand"
+        },
+        {
+          "ref": "EV-0084",
+          "location": "every service src",
+          "observation": "/health and /ready exist in all 20"
+        }
+      ],
+      "affected_files": [
+        "tec-*-service/railway.toml (absent)"
+      ],
+      "root_cause": "Railway was configured service by service in the UI.",
+      "technical_impact": "A service created or edited without the healthcheck turns a refused migration into an outage; nobody can review it.",
+      "business_impact": "Repeat of 8 Nov: payments down for hours.",
+      "recommendation": "A railway.toml per service (config-as-code): healthcheckPath '/health', healthcheckTimeout, startCommand 'npm start', stopTimeoutSeconds; a CI check that every service has one with a health path.",
+      "acceptance_criteria": [
+        "Every service directory has railway.toml with healthcheckPath",
+        "CI fails on a service without it"
+      ],
+      "complexity": "S",
+      "references": [
+        "C-78",
+        "8 Nov payment outage"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 4dda30dd"
+        ],
+        "note": "railway.toml with healthcheckPath \"/health\" in all 19 services; CI policy check. Owner: confirm Railway reads it from the service root.",
+        "verification": "A deploy whose migrate step refuses keeps the old deployment live"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0040",
+      "phase": "P8",
+      "repository": "all 30 repositories",
+      "category": "operations",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Every scheduled safety check runs on GitHub Actions — all stopped since 12 Nov; the restore check passes when unconfigured",
+      "description": "31 scheduled jobs — weekly CodeQL in 28 repositories, the KB's weekly drift check, the template's weekly fleet-drift, the monthly backup restore check — all on GitHub Actions, refused for the account since 12 Nov. None has run since; the next restore check is due 3 Dec. Separately, restore-check.yml passes with a notice when its secrets are missing, so a renamed secret would make it green and silent (it was configured and proven 12 Oct and 10 Nov). Owner, 13 Nov: ALERT_WEBHOOK_URL is not set on backup-job, so a failed nightly backup only marks the Railway cron run failed and alerts nobody — with the restore check stopped as well, a broken backup goes unseen.",
+      "evidence": [
+        {
+          "ref": "EV-0085",
+          "location": ".github/workflows/*.yml (schedule)",
+          "observation": "31 cron jobs, all Actions"
+        },
+        {
+          "ref": "EV-0086",
+          "location": "Tec-core-backend/.github/workflows/restore-check.yml (Configured? step)",
+          "observation": "::notice:: and success when unconfigured"
+        },
+        {
+          "ref": "EV-0087",
+          "location": "runtime-evidence/ev-2026-10-12-025.yaml",
+          "observation": "the check was real when configured"
+        },
+        {
+          "ref": "EV-0094",
+          "location": "owner, Railway backup-job variables, 13 Nov",
+          "observation": "ALERT_WEBHOOK_URL absent"
+        }
+      ],
+      "affected_files": [
+        ".github/workflows/restore-check.yml",
+        "tec-backup-job"
+      ],
+      "root_cause": "One provider for every guard; a check written to skip rather than fail.",
+      "technical_impact": "Security scans, drift and restore verification stop together with one billing problem.",
+      "business_impact": "A broken backup could go unnoticed until it is needed.",
+      "recommendation": "Set ALERT_WEBHOOK_URL on backup-job (owner; e.g. a free Discord channel webhook). Fail the restore check when unconfigured (exit 1). Run the restore check also as a Railway cron next to the backup (the code is already in tec-backup-job), so it does not depend on GitHub billing; record which guards run where in C-78.",
+      "acceptance_criteria": [
+        "The restore check fails red when its secrets are missing",
+        "A restore check runs monthly without GitHub Actions"
+      ],
+      "complexity": "S",
+      "references": [
+        "C-96",
+        "C-78",
+        "TEC-AUDIT-0006"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 719dbbb7"
+        ],
+        "note": "Restore check fails when unconfigured; RESTORE_LOCAL_POSTGRES=1 lets it run as a Railway cron (end-to-end tested). Owner: create the cron service (README step 5); ALERT_WEBHOOK_URL deferred (risk accepted).",
+        "verification": "The Railway cron restore check runs green on 3 Dec"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0041",
+      "phase": "P9",
+      "repository": "tec-core-backend (search · business)",
+      "category": "performance",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Public directory searches return every match, uncapped, through a full-table substring scan",
+      "description": "Explorer search (explorer.service.ts:235) and NX search (nx.service.ts:112) are public routes that return every matching row with no take and no page. Explorer matches each word with `contains` on search_text, whose btree index cannot serve LIKE '%…%'. An empty query returns the whole directory.",
+      "evidence": [
+        {
+          "ref": "EV-0089",
+          "location": "tec-search-service explorer.service.ts:235 · explorer.controller.ts:105",
+          "observation": "findMany(where) — no take"
+        },
+        {
+          "ref": "EV-0090",
+          "location": "tec-business-service nx.service.ts:112 · nx.controller.ts:27",
+          "observation": "findMany(where) — no take"
+        },
+        {
+          "ref": "EV-0091",
+          "location": "tec-search-service schema.prisma:168",
+          "observation": "@@index([search_text]) — btree"
+        }
+      ],
+      "affected_files": [
+        "tec-search-service/src/modules/explorer/explorer.service.ts",
+        "tec-business-service/src/modules/nx/nx.service.ts"
+      ],
+      "root_cause": "Written for a small directory.",
+      "technical_impact": "Response size and database time grow linearly with the directory; one request can read the whole table.",
+      "business_impact": "Slow discovery as merchants join; an easy load amplifier.",
+      "recommendation": "A take (e.g. 50) with a cursor on both; for Explorer a pg_trgm GIN index on search_text (a migration) or Postgres full-text search.",
+      "acceptance_criteria": [
+        "Both searches answer at most one page",
+        "EXPLAIN shows an index scan for a word query"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-108"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 61b9d346"
+        ],
+        "note": "Both searches paged (≤100, hasMore); pg_trgm GIN index on search_text (migration).",
+        "verification": "EXPLAIN on production uses the trigram index"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0042",
+      "phase": "P8",
+      "repository": "25 app repositories",
+      "category": "operations",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "No app pins the Node version it builds on",
+      "description": "No engines.node and no .nvmrc in any of 25 app repositories; CI uses Node 22, Vercel uses each project's dashboard setting. A change on Vercel's side builds production on a version CI never ran.",
+      "evidence": [
+        {
+          "ref": "EV-0088",
+          "location": "package.json (25 repos)",
+          "observation": "no engines; no .nvmrc"
+        }
+      ],
+      "affected_files": [
+        "package.json"
+      ],
+      "root_cause": "Never declared.",
+      "technical_impact": "Build/runtime drift between CI and production.",
+      "business_impact": "A surprise build break or behaviour change on deploy.",
+      "recommendation": "\"engines\": { \"node\": \"22.x\" } in the template (template-sync dependency pin) and every app.",
+      "acceptance_criteria": [
+        "Every app declares engines.node"
+      ],
+      "complexity": "S",
+      "references": [],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base fc5a570",
+          "24 app commits",
+          "tec-template-base 6c66613"
+        ],
+        "note": "engines.node 22.x everywhere; template-sync marker. | 14 Nov: fc5a570 (this finding's template fix) broke template-sync.test — it added a marker on package.json (\"node\": \"22.x\") and the test rewrote package.json compactly, erasing it. The template's full suite had not been run on that commit; found when it was. Fixed in the test (it writes the file the way it is written).",
+        "verification": "Vercel build logs show Node 22"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0043",
+      "phase": "P9",
+      "repository": "tec-core-backend · KB",
+      "category": "performance",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Capacity has never been measured, and no latency objective exists",
+      "description": "k6 scripts exist (gateway, payment; workflow_dispatch only) but no run is recorded anywhere in the KB; slo-definitions.yaml sets availability targets only. How many users the platform carries is unknown.",
+      "evidence": [
+        {
+          "ref": "EV-0092",
+          "location": "Tec-core-backend/k6/",
+          "observation": "two scripts; no recorded run"
+        },
+        {
+          "ref": "EV-0093",
+          "location": "manifests/slo-definitions.yaml",
+          "observation": "availability only"
+        }
+      ],
+      "affected_files": [
+        "k6/",
+        "manifests/slo-definitions.yaml"
+      ],
+      "root_cause": "No staging to run them against (0006).",
+      "technical_impact": "Limits are discovered in production, as in June.",
+      "business_impact": "Launch capacity is a guess.",
+      "recommendation": "p95 latency objectives for gateway, auth and payment in slo-definitions.yaml; one recorded k6 run against a preview/staging once 0006 gives one.",
+      "acceptance_criteria": [
+        "A recorded k6 run in runtime-evidence/",
+        "Latency SLOs defined"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-78",
+        "TEC-AUDIT-0006"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run5",
+      "remediation": {
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "KB"
+        ],
+        "note": "Latency SLOs defined (C-78 §2, slo-definitions.yaml). A recorded k6 run waits on staging (0006).",
+        "verification": "A recorded k6 run in runtime-evidence/"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0044",
+      "phase": "P10",
+      "repository": "20 template apps · tec-template-base",
+      "category": "maintainability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Eleven files are copied into 8–18 apps with no tracker, and some have already diverged",
+      "description": "Source files identical in 8–18 apps and in none of template-sync's lists (shared, fleet, markers): bff/subscription, auth/me, the Pro cancel button, ErrorBoundary, i18n, useMe, and the referral loop (route, RefApply, RefCapture, InviteCard, lib-client/referral). Among 7 sampled apps auth/me — the session check — exists in 3 versions and the cancel button in 4. The referral loop (C-133) is in 16 apps but not in the template, so a new app is born without it. A fix to any of them reaches one app, and fleet-drift does not notice.",
+      "evidence": [
+        {
+          "ref": "EV-0095",
+          "location": "11-ecosystem/evidence.md (sha1 per file per app)",
+          "observation": "11 untracked duplicates"
+        },
+        {
+          "ref": "EV-0096",
+          "location": "template-sync.json shared/fleet/markers",
+          "observation": "none of the 11 listed"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/auth/me/route.ts",
+        "src/app/api/bff/subscription/route.ts",
+        "src/components/referral/*",
+        "src/lib-client/referral.ts"
+      ],
+      "root_cause": "Features rolled out by copying, before template-sync existed, and never registered after.",
+      "technical_impact": "Silent divergence of session and entitlement logic across the fleet.",
+      "business_impact": "A sign-in or Pro bug fixed in one app stays in the others.",
+      "recommendation": "Put the referral loop in the template; reconcile each of the 11 to one version (diff, pick, test); add them to shared (or markers where an app must customise).",
+      "acceptance_criteria": [
+        "Every file present in ≥5 apps is in a template-sync list",
+        "auth/me is one version fleet-wide"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-123",
+        "C-133",
+        "TEC-AUDIT-0005"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run6",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base fcba950 · b3ce215",
+          "20 apps (two commits each)",
+          "tec-template-base 53c6955",
+          "21 apps (Assets included)",
+          "contract half: template + 20 apps (14 Nov)"
+        ],
+        "note": "Run 6 remediation. | 14 Nov. Measured first, per file across the 20 template apps, then by behaviour (comments and whitespace set aside): auth/me had two behaviours (17 plain, 3 that log WHICH session cookies a refused request carried — names only; how C-123 §11 was found) → the diagnostic one, with its helper and test; useMe identical in behaviour in all 20 → one; ErrorBoundary and CancelProButton → the template's (tokens; the button reads both subscription shapes — the apps' copy read only one); the referral loop (C-133), in 16 apps and not in the template → into the template, wired in its layout, with the first test it has had anywhere; payment/create identical in behaviour in 19 of 20 (NBF/Brookfield differ in layout only) → the template's, which imports APP_SOURCE instead of declaring it a second time; sso-callback-carry-on (the template's version also checks the handoff-entry fix the apps already had), pi-network (with System's ADR-007 guards — the Pi SDK never loads in a Hub-owned session; passes in all 20). An app's own version stays as a recorded exception with its reason (its translated copy or palette; no referral loop in Analytics/Explorer/NBF/Brookfield — the owner's product decision). All 20: template-sync matches; type-check, lint and every test green (Analytics' auth test faked a request with only cookies.get — completed). Correction to the acceptance criterion: 'every file in ≥5 apps' is wrong — 13 of the 20 such paths are each app's own by nature (icon, page, privacy, app-meta, texts). The right criterion is every file that SHOULD be identical, and those are listed. Left, by design question rather than copying: the subscription route (two contracts: the template's flat ProState vs the apps' commerce envelope; Alert's SettingsView would read Pro as Free on the flat one) — tracked now by a marker on its Testnet rule; unifying it means every app's Pro card reading lib/subscription/pro-status.ts, which no app has yet; i18n/index (5 versions), tec-design-tokens.css (7), app.test (8) — per-app theme and language. | 14 Nov, later — the subscription contract, done by expand–contract (expand only): lib/subscription/read-pro-state.ts, a pure reader for commerce's envelope AND the apps' flat route, fail-closed (paid plan + isActive exactly true + not expired + period not ended); the server resolver and every screen use it. Its tests pin the six shapes commerce's app-subscription.service really returns; pro-reader-guard.test.ts fails any screen that reads /api/bff/subscription by hand (red in every app before). Measured first: the hand readers had TWO rules — SettingsView (19 apps) ignored expiry, the Pro card counted a missing isActive as active — that agreed only because commerce sends plan FREE for every non-entitled state. Found and fixed on the way: (1) Analytics' and Connection's settings read d.subscription without unwrapping `data` — a paying user's settings said FREE; (2) Life's home page fell back to the HUB plan in the tec_user cookie while loading or on a failed read — another app's entitlement and a client-side claim (owner's per-app decision 2026-10-02; P6); now pinned by a test, red on the old page; (3) the template resolver counted a paid plan as active without isActive (commerce never sends that; now it would not pass). The CONTRACT half (routes all answering the flat shape) is left: with every reader tolerant of both shapes, it is now a change to one route per app, not to forty screens. | Contract half done the same day: /api/bff/subscription, lib/subscription/pro-status.ts and app-pro.test.ts are shared — every template app's route answers the resolver's flat ProState (System excepted: it sells no Pro). Visible difference: none — with no session the route now answers FREE (200) where it answered 401, and every screen ended at FREE either way. Remaining under this finding: i18n/index (5 versions), tec-design-tokens.css (7), app.test (8) — each app's own language and theme, kept per app by design.",
+        "verification": "fleet-drift on main lists no app; the subscription contract has its own item"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0045",
+      "phase": "P10",
+      "repository": "fleet · TEC-SDK · Tec-ui · tec-auth",
+      "category": "architecture",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The fleet does not run the same TEC packages — and the Hub runs none of the UI or auth ones",
+      "description": "tec-ui 3.0.0 in 21 apps, 2.1.0 (the pre-amber palette, C-83) in Assets, Commerce and Ecommerce. tec-sdk 1.4.0 is published and used by no app (21 on 1.3.0, 4 on 1.2.2). The Hub depends on neither tec-ui nor tec-auth, although its CLAUDE.md lists both and says a tec-ui bump must deploy all four apps together.",
+      "evidence": [
+        {
+          "ref": "EV-0097",
+          "location": "package-lock.json (25 apps)",
+          "observation": "resolved versions table in 11-ecosystem/report.md"
+        },
+        {
+          "ref": "EV-0098",
+          "location": "Tec-App package.json · tec-frontend/package.json",
+          "observation": "no @yasser172/tec-ui, no @yasser172/tec-auth"
+        },
+        {
+          "ref": "EV-0099",
+          "location": "npm view @yasser172/tec-sdk versions",
+          "observation": "1.4.0 published"
+        }
+      ],
+      "affected_files": [
+        "package.json (apps)",
+        "Tec-App/CLAUDE.md"
+      ],
+      "root_cause": "Releases without a fleet bump; the Hub grew its own implementations.",
+      "technical_impact": "Two visual palettes and three SDK contracts live at once; the shared auth package does not cover the identity authority itself.",
+      "business_impact": "Inconsistent look between apps; an SDK fix reaches nobody until each app bumps.",
+      "recommendation": "Bump Assets/Commerce/Ecommerce to tec-ui ^3 (C-83); every app to the current tec-sdk after 0019; decide by ADR whether the Hub adopts tec-auth/tec-ui or the instructions say it does not.",
+      "acceptance_criteria": [
+        "One tec-ui major and one tec-sdk minor fleet-wide",
+        "The Hub instructions match its dependencies"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-83",
+        "TEC-AUDIT-0019",
+        "TEC-AUDIT-0034"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run6",
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 9615f07",
+          "20 apps",
+          "Tec-Assets 28188c8",
+          "Tec-Commerce a51ddfc",
+          "Tec-Ecommerce a363226",
+          "Tec-App 4c14b88 · 60e07227",
+          "Tec-App f7d1f7bd"
+        ],
+        "note": "Run 6 remediation. | 14 Nov. tec-ui: Assets/Commerce/Ecommerce pinned EXACTLY 2.1.0 (so 3.x never arrived) → ^3.0.0 (C-83; no export changed). tec-sdk: every range was ^1.2.2, the lockfiles differed (21 on 1.3.0, the Hub and the older three on 1.2.2) → ^1.4.0 everywhere but the Hub (1.3.1 packaging, 1.4.0 adds an analytics client — additive). Moving Ecommerce to 1.4.0 failed its production build: browser code reached the server SDK — lib-client/pi/pi-auth.ts → lib/sdk.ts → @yasser172/tec-sdk, which since 1.3.0 imports node's async_hooks. A new test (sdk-boundary.test.ts, shared; follows imports transitively from every 'use client' file and src/lib-client) found the same path in the template and 21 of 25 repos — latent where no page imports pi-auth, live in Ecommerce and the Hub. Its two uses could not work in a browser (clearAuthToken held nothing; resolveIncomplete had no gateway address — the Hub's SDK falls back to http://localhost:4000). Fixed in the template, the 20 apps, Ecommerce and the Hub: resolvePendingPayment goes through the app's own resolve-incomplete route; the browser 'SDK step' is gone. Red before and green after; production builds pass (template, Commerce, Assets, Ecommerce, Hub). The Hub instructions now say what it depends on (no tec-ui, no tec-auth, no packages/ folder). LEFT (owner decision): the Hub's lib-client/pi/pi-payment.ts → lib/sdk.ts for getPaymentStatus() — no production caller, cannot work in a browser; remove it, or a server route that checks the caller owns the payment. Until then the Hub stays on tec-sdk 1.2.2 and its boundary test names that one path. Also the owner's: whether the Hub adopts tec-ui / tec-auth (ADR). | 14 Nov, later (owner: 'كمل' on the recommendation): getPaymentStatus() removed from the Hub's lib-client/pi/pi-payment.ts and PiRuntime with the six tests that exercised it against a mocked SDK; the Hub's boundary test now names no exception (red with the old file, green after); the Hub moves to tec-sdk ^1.4.0 — type-check, lint, 3,267 tests and a production build pass. Both acceptance criteria hold locally: one tec-ui major (^3, every app that uses it) and one tec-sdk minor (^1.4.0, all 25 repos); the Hub's instructions match its dependencies. Whether the Hub ADOPTS tec-ui/tec-auth stays an open design decision (ADR), not part of this finding.",
+        "verification": "On main: every repo's lockfile resolves tec-sdk 1.4.x and (where used) tec-ui 3.x; sdk-boundary.test.ts green in every app"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0046",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0100",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/run6",
+      "references": [
+        "C-47 Invariant #2",
+        "C-71",
+        "TEC-AUDIT-0007"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 7ab8885f"
+        ],
+        "note": "Found while doing 0007; fixed locally the same day (committed, not pushed — Actions). Owner's database count before deploy (14 Nov, production): 0 — the deploy refuses no existing listing.",
+        "verification": "The fix deployed, and its test (red on the old code) green on main"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0047",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0101",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/run6",
+      "references": [
+        "C-47 P6",
+        "TEC-AUDIT-0007"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend fa236bb8"
+        ],
+        "note": "Found while doing 0007; fixed locally the same day (committed, not pushed — Actions).",
+        "verification": "The fix deployed, and its test (red on the old code) green on main"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0048",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0102",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/kb-review",
+      "references": [
+        "C-47 P6",
+        "C-112",
+        "ADR-010"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend a8ec2652",
+          "Tec-core-backend fdd7b478"
+        ],
+        "note": "Found while rewriting C-112 (KB review, 14 Nov 2026); the same pattern was checked in every app with the same feature and fixed in all of them in one commit, on the work branch (pushed; no PR before 1 Dec — Actions).",
+        "verification": "The fix deployed, and its tests (red on the old code) green on main"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0049",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "An outbox event that fails its last allowed attempt is never marked failed",
+      "description": "payment-service markEventFailed decides 'final' from the attempt count before the current failure (attempts >= maxAttempts). With max_attempts 5, the fifth failure arrives at attempts 4, is not final, and the row returns to 'pending' with attempts 5; the worker selects attempts < 5, so the row is never retried and never marked 'failed', and the 'permanently failed' warning never fires.",
+      "evidence": [
+        {
+          "ref": "EV-0103",
+          "location": "tec-payment-service/src/services/outbox.service.ts (markEventFailed) · outbox.worker.ts (SELECT … attempts < 5)",
+          "observation": "A unit test driving five failures with max_attempts 5 ends at {attempts: 5, status: 'pending'} on the old code."
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/services/outbox.service.ts",
+        "tec-payment-service/src/services/outbox.worker.ts"
+      ],
+      "root_cause": "Off-by-one: the final-failure test uses the count before the failure it is recording; the worker's limit is a literal 5 instead of the row's max_attempts.",
+      "technical_impact": "A payment.*.v1 event that cannot be published sits in 'pending' forever, indistinguishable from one waiting for its next retry.",
+      "business_impact": "A consumer that depends on the event (delivery, Pro activation, Legend) never runs and nobody is told — C-47 Forbidden #6 (silent failure in a financial flow).",
+      "recommendation": "Final = attempts + 1 >= maxAttempts; select attempts < max_attempts. Recover rows already stuck (pending, attempts >= max_attempts) through an audited step, not an ad-hoc update.",
+      "acceptance_criteria": [
+        "Five failures with max_attempts 5 leave the row 'failed' and log once (test).",
+        "The worker reads max_attempts from the row.",
+        "Stuck production rows counted: 0 (owner, payment-db Query tab, 2026-11-14) — nothing to recover."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "first_seen": "2026-11-11/kb-review",
+      "references": [
+        "C-47 Forbidden #6",
+        "C-47 Forbidden #10",
+        "C-70"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend cde747f9"
+        ],
+        "note": "Found while drafting the Outbox ADR (KB review, 14 Nov 2026). Fixed on the work branch with a test red on the old code. Production read the same day: 0 rows pending with attempts >= max_attempts, so no recovery is needed.",
+        "verification": "The fix deployed and its test green on main (the production count is done: 0)"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0050",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "governance",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "A Zone verification, once granted, cannot be withdrawn",
+      "description": "tec-trust-service ZoneService.reviewDecision accepts a decision only on a PENDING entity; VERIFIED and REVOKED are final (a test pins it). C-120 ('Zone Became Consumable') says zone.badge.revoked.v1 exists so a granted badge can come back down, and §7 promises disputes. In the code the revoke event fires only when a pending request is refused — a verified merchant or project found to be fraudulent keeps its badge everywhere.",
+      "evidence": [
+        {
+          "ref": "EV-0104",
+          "location": "tec-trust-service/src/modules/zone/zone.service.ts (reviewDecision: status !== PENDING → 400) · src/__tests__/zone.service.spec.ts ('refuses to re-decide a terminal entity')",
+          "observation": "VERIFIED → REVOKE answers 400 'Cannot review an entity in status VERIFIED'."
+        }
+      ],
+      "affected_files": [
+        "tec-trust-service/src/modules/zone/zone.service.ts"
+      ],
+      "root_cause": "Two written intents disagree: the state machine treats VERIFIED as terminal; the charter and the revoke event treat a verification as withdrawable.",
+      "technical_impact": "No path from VERIFIED to REVOKED; consumers (Explorer, Connection, Epic, NBF, Legend) never receive a withdrawal for a granted badge.",
+      "business_impact": "Zone sells trust: a badge that cannot be withdrawn after fraud is trusted for longer than it deserves (C-120: 'a verification that cannot be taken back is worse than one never given').",
+      "recommendation": "Owner decides the rule, then code follows: e.g. VERIFIED → REVOKED by an ADMIN who is not the submitter (optionally not the original verifier, or two reviewers per §7), with a required evidence note; REVOKED stays final and a new request starts a new entity.",
+      "acceptance_criteria": [
+        "The rule recorded (C-120 §7 or an ADR).",
+        "A test: VERIFIED → REVOKE allowed per the rule and emits zone.badge.revoked.v1; the disallowed paths refused."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "first_seen": "2026-11-11/kb-review",
+      "references": [
+        "C-120 §7",
+        "C-47 Invariant 7"
+      ],
+      "remediation": {
+        "state": "OWNER_ACTION",
+        "refs": [],
+        "note": "Found writing C-120's Technical Architecture from the code (14 Nov 2026). Not changed: the terminal rule is pinned by a test, so which intent is right is the owner's decision.",
+        "verification": "The decided rule in C-120 and its test green on main"
+      }
+    }
+  ]
+}
