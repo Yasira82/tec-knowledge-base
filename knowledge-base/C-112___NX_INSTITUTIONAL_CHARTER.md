@@ -79,7 +79,7 @@ any verified one, and buying Pro never sets `verified`.
 | Board, detail, posting, NX Pro | ✅ live |
 | Trust-weighted **matching** (Life intent + Connection graph) | `[Planned State]` — ADR-010 "Phase 1+" |
 | A Zone verification flowing into `verified` | not wired — today every posting starts unverified |
-| The entitlement behind `featured` | under review (owner has the details) |
+| The entitlement behind `featured` | TEC-AUDIT-0048 (withheld while open) — fixed on the backend work branch, not deployed |
 
 ## 8. RELATED
 
