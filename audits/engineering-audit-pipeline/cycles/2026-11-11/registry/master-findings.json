@@ -2398,7 +2398,8 @@
       "remediation": {
         "state": "FIXED_LOCAL",
         "refs": [
-          "Tec-core-backend a8ec2652"
+          "Tec-core-backend a8ec2652",
+          "Tec-core-backend fdd7b478"
         ],
         "note": "Found while rewriting C-112 (KB review, 14 Nov 2026); the same pattern was checked in every app with the same feature and fixed in all of them in one commit, on the work branch (pushed; no PR before 1 Dec — Actions).",
         "verification": "The fix deployed, and its tests (red on the old code) green on main"
@@ -2448,6 +2449,47 @@
         ],
         "note": "Found while drafting the Outbox ADR (KB review, 14 Nov 2026). Fixed on the work branch with a test red on the old code. Production read the same day: 0 rows pending with attempts >= max_attempts, so no recovery is needed.",
         "verification": "The fix deployed and its test green on main (the production count is done: 0)"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0050",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "governance",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "A Zone verification, once granted, cannot be withdrawn",
+      "description": "tec-trust-service ZoneService.reviewDecision accepts a decision only on a PENDING entity; VERIFIED and REVOKED are final (a test pins it). C-120 ('Zone Became Consumable') says zone.badge.revoked.v1 exists so a granted badge can come back down, and §7 promises disputes. In the code the revoke event fires only when a pending request is refused — a verified merchant or project found to be fraudulent keeps its badge everywhere.",
+      "evidence": [
+        {
+          "ref": "EV-0104",
+          "location": "tec-trust-service/src/modules/zone/zone.service.ts (reviewDecision: status !== PENDING → 400) · src/__tests__/zone.service.spec.ts ('refuses to re-decide a terminal entity')",
+          "observation": "VERIFIED → REVOKE answers 400 'Cannot review an entity in status VERIFIED'."
+        }
+      ],
+      "affected_files": [
+        "tec-trust-service/src/modules/zone/zone.service.ts"
+      ],
+      "root_cause": "Two written intents disagree: the state machine treats VERIFIED as terminal; the charter and the revoke event treat a verification as withdrawable.",
+      "technical_impact": "No path from VERIFIED to REVOKED; consumers (Explorer, Connection, Epic, NBF, Legend) never receive a withdrawal for a granted badge.",
+      "business_impact": "Zone sells trust: a badge that cannot be withdrawn after fraud is trusted for longer than it deserves (C-120: 'a verification that cannot be taken back is worse than one never given').",
+      "recommendation": "Owner decides the rule, then code follows: e.g. VERIFIED → REVOKED by an ADMIN who is not the submitter (optionally not the original verifier, or two reviewers per §7), with a required evidence note; REVOKED stays final and a new request starts a new entity.",
+      "acceptance_criteria": [
+        "The rule recorded (C-120 §7 or an ADR).",
+        "A test: VERIFIED → REVOKE allowed per the rule and emits zone.badge.revoked.v1; the disallowed paths refused."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "first_seen": "2026-11-11/kb-review",
+      "references": [
+        "C-120 §7",
+        "C-47 Invariant 7"
+      ],
+      "remediation": {
+        "state": "OWNER_ACTION",
+        "refs": [],
+        "note": "Found writing C-120's Technical Architecture from the code (14 Nov 2026). Not changed: the terminal rule is pinned by a test, so which intent is right is the owner's decision.",
+        "verification": "The decided rule in C-120 and its test green on main"
       }
     }
   ]

@@ -83,6 +83,8 @@ while open (README §7), both fixed locally the same day — 47 findings (`remed
 The KB review (14 Nov) surfaced **0048** (MEDIUM, security, withheld): fixed on the backend work
 branch the same day, with its tests. Drafting the Outbox ADR surfaced **0049** (MEDIUM, reliability):
 an outbox event's last failure never marked it failed — fixed the same way. 49 findings.
+Writing C-120 from the code surfaced **0050** (MEDIUM, governance): a granted Zone verification
+cannot be withdrawn — the owner's decision. 50 findings.
 
 ## Next
 
