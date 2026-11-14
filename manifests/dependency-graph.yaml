@@ -7,7 +7,7 @@
 # v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
 # This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
 #
-# Generated: 2026-11-14T15:28:13.923497
+# Generated: 2026-11-14T16:18:59.915834
 
 documents:
 

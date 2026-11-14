@@ -28,10 +28,7 @@ done
 # Known gaps — sections a charter does not have yet, each with why it is not invented here.
 # Remove an entry when the section is written.
 declare -A KNOWN_GAPS=(
-  # Zone's charter (C-120) is the constitutional runtime format: a PREAMBLE, not a Mission
-  # section, and no Technical Architecture section (its backend moved from identity-service
-  # to trust-service on 2026-10-16; the section must be written from that code, by its owner).
-  ["C-120___ZONE_CONSTITUTIONAL_RUNTIME_CHARTER.md"]="Missing Mission section|Missing Technical Architecture section"
+  # (none — C-120's Mission and Technical Architecture were written from the code on 2026-11-14)
 )
 
 # Self-check: the list must reach past C-115, or this gate has fallen back to the old one.
