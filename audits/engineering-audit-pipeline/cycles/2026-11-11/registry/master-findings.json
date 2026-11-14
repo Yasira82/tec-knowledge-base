@@ -561,9 +561,14 @@
         "C-71 §3"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Still open (re-measured in Run 6: asset price is Float at HEAD). P4 did not do the expand–contract migration; it needs a production row count first and changes the Assets contract (price as a string). The P4 report said 'fixed locally' in error — corrected."
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 2ef4c835",
+          "Tec-Assets dad06c7",
+          "Tec-core-backend PR #505 (draft)"
+        ],
+        "note": "Production read 2026-11-14 (owner): 35 listings, 3–999, none over 8 decimals. price → DECIMAL(20,8) in place (a DO block refuses the cast if any row would change), compared as a decimal, refused at the door past 8 decimals or 10^12, a string at the API edge. Tec-Assets reads either shape and deploys first. The migration needs MIGRATE_ALLOW_DESTRUCTIVE=20261114120000_listing_price_decimal on that deploy (owner).",
+        "verification": "Deployed in order (Tec-Assets, then asset-service with the flag); a marketplace purchase in production; tests green on main"
       }
     },
     {
@@ -613,9 +618,12 @@
         "C-71"
       ],
       "remediation": {
-        "state": "OWNER_ACTION",
-        "refs": [],
-        "note": "Needs a production row count of the wallet Account table before it is dropped; still open after P4."
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend 3667ace6"
+        ],
+        "note": "wallet accounts: 0 rows in production (owner, 2026-11-14); dropped by a migration that refuses if a row exists and needs MIGRATE_ALLOW_DESTRUCTIVE=20261114130000_drop_unused_accounts (owner). Analytics DailyMetric.total_volume and Life target_amount stay Float until their tables are next migrated, as recommended — neither moves money.",
+        "verification": "The wallet migration applied in production; the other two columns moved when their tables are next migrated"
       }
     },
     {
