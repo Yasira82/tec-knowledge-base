@@ -84,12 +84,14 @@
         "C-47 §12"
       ],
       "remediation": {
-        "state": "PENDING_MERGE",
+        "state": "FIXED_LOCAL",
         "refs": [
           "tec-nbf #32",
-          "tec-brookfield #28"
+          "tec-brookfield #28",
+          "Tec-core-backend c6950705 (realtime) · fb57efec (wallet) · afc1a1b0 (auth) · 7d48c933 (gateway) · 60ab52d1 (payment)"
         ],
-        "note": "The two apps close with these merges; the four Express services and the stellar-sdk major are scheduled after 1 Dec (Actions minutes)."
+        "note": "The two apps close with these merges; the four Express services and the stellar-sdk major are scheduled after 1 Dec (Actions minutes). | 14 Nov — all of it, locally. The four Express services move to Nest 11 (the versions the other 16 services run — one Nest major across the backend), throttler 6 for auth, and each service's OWN express dependency (types only) to ^5: the old express 4 copy was where body-parser's advisory lived. npm audit --omit=dev high: realtime 5→0, wallet 5→0, auth 5→0, gateway 3→0. Code changes: the gateway's 404 used expressApp.use('*'), which express 5 refuses at start — the gateway would not have booted; now use() with no path, pinned by a test (CI never boots the gateway). auth: parseExpiry typed for @nestjs/jwt 11 (value unchanged — the 16 Oct ten-minute-session fix intact; boot logs 86400 s / 604800 s). Each service was BUILT AND BOOTED, not only tested: realtime (health, socket.io handshake), wallet against a throwaway DB (every money route refuses without credentials), auth (guards, CORS, lifetimes), the gateway against an echo upstream — a payment body arrives byte-identical, paths rewrite, the query passes raw, 200 KB intact, forged alg:none token 401. payment-service: its two highs came from toml 3 under @stellar/stellar-sdk 13, used only by stellartoml/federation, which the service never imports; an npm override pins toml 5.0.1 — signing untouched, and checked with the REAL library (a payment transaction signs, verifies and round-trips). NBF and Brookfield are on next 15.5.29. LEFT, recorded for the next cycle (not caused by this change; the code is the same): (1) stellar-sdk 17 for the A2U path, only with a real Testnet A2U payment — its unit tests mock the library; (2) auth's ThrottlerModule is configured but no ThrottlerGuard is registered — 25 logins in a row, no 429; the gateway's in-memory limiter is what limits auth today (auth is private); (3) auth answers a refused CORS origin with 500, not 403 — refused, but with the wrong status.",
+        "verification": "npm audit --omit=dev on main: 0 high / 0 critical in gateway, auth, wallet, realtime, payment; each boots on Railway after deploy"
       }
     },
     {
