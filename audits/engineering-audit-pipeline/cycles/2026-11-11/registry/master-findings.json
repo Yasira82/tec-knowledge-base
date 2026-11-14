@@ -354,8 +354,10 @@
       ],
       "remediation": {
         "state": "SCHEDULED",
-        "refs": [],
-        "note": "Last step of the rotation plan (asymmetric signing); backend, after 1 Dec."
+        "refs": [
+          "12-final-assessment/adr-proposal-asymmetric-session-tokens.md"
+        ],
+        "note": "Decision drafted for the owner (14 Nov, unnumbered): auth-service alone signs session tokens with ES256; every verifier holds public keys only (JWT_PUBLIC_KEYS, a variable — not a JWKS fetch); a dual-accept rollout so no one is signed out. Found while drafting: auth-service is not the only signer — the Hub signs the AI context token with JWT_SECRET (lib/ai/context-token.ts, verified by tec-ai-service). Code waits on the owner's decision; backend, after 1 Dec."
       }
     },
     {
