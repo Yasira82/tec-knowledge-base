@@ -256,7 +256,7 @@
 
 | Content | Title | One sentence |
 |---------|---------|----------|
-| **C-132** | Service Extraction & Modular Architecture Policy | ADR-011 detail — Modules-First (App→Module→Service); new service only on a T1–T4 production trigger; Design-for-Extraction (Explorer→search-service); payment-service is the only Pi custodian; target now = 11 services |
+| **C-132** | Service Extraction & Modular Architecture Policy | ADR-011 detail — Modules-First (App→Module→Service); new service only on a T1–T4 production trigger; Design-for-Extraction (Explorer→search-service); payment-service is the only Pi custodian; 20 deployed services today (§7.1; the ADR amending it for the October move is still to be recorded) |
 
 ---
 

@@ -158,15 +158,17 @@ the machine-readable fleet source is [`architecture/app-fleet.yaml`](architectur
 FundX pools, Insure escrow, and Brookfield investment/REIT mechanics remain read-only
 and hard-gated; a live subscription is not custody readiness.
 
-### Backend Services (Railway — 12 Active)
+### Backend Services (Railway — 20 deployed: the gateway + 19)
 
 ```
 Gateway :3000  │  Auth    :5001  │  Wallet   :5002  │  Payment :5003
 Asset   :5004  │  Identity:5005  │  Notify   :5006  │  Storage :5007
 KYC     :5008  │  Commerce:5009  │  Realtime :5010  │  Analytics:5011
+Life    :5012  │  AI      :5013  │  Connection:5014 │  Nexus   :5015
+Search  :5016  │  Platform:5017  │  Business :5018  │  Trust   :5019
 ```
 
-> **Port Authority:** C-20 (checked against each `main.ts` every week by the drift job). Public: gateway + realtime only (ADR-005).
+> **Port Authority:** C-20 (checked against each `main.ts` every week by the drift job). Public: gateway + realtime only (ADR-004, BFF-only).
 
 ### Release Chain
 
