@@ -124,8 +124,8 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
   today, conditionally ready** after merge + deploy, the phone checks and one passed restore. The
   P4 report had called 0012/0013 fixed — corrected: open. Order of work: `remediation-roadmap.md`.
 
-- **Run 6 remediation (14 Nov, local):** 0035 · 0005 · 0044 done; 0045 partly (the Hub waits on
-  one decision). Two of my own earlier fixes were incomplete and are now finished: 0033's guard
+- **Run 6 remediation (14 Nov, local):** 0035 · 0005 · 0044 · 0045 done (the Hub's last browser path to the
+  server SDK removed on the owner's go-ahead; all 25 repos on tec-sdk ^1.4.0). Two of my own earlier fixes were incomplete and are now finished: 0033's guard
   missed every URL built in a variable (seven apps' whole BFF had no deadline), and Run 5 had
   broken a template test. New and serious: browser code reached the server SDK in the template and
   21 of 25 repos (`pi-auth` → `lib/sdk`); it broke Ecommerce's build on tec-sdk 1.4.0 — removed,
