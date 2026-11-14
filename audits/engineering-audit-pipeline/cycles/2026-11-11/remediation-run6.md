@@ -28,5 +28,22 @@ a test red on the code before it and green after, then type-check, lint and the 
 
 - Whether the Hub adopts `tec-ui` / `tec-auth` (ADR).
 - The referral loop in Analytics, Explorer, NBF and Brookfield (product decision).
-- One subscription contract: every app's Pro card reading `lib/subscription/pro-status.ts`
-  (today each parses commerce's answer by hand) — its own piece of work.
+
+## Later on 14 Nov — one reading of the Pro status (0044, expand half)
+
+Every screen in 21 apps and the server now read "is this person Pro here?" through one pure,
+fail-closed reader, tested against the six shapes commerce really returns, with a guard against
+hand-parsing. Two user-visible bugs went with the old readers: **Analytics' and Connection's
+settings showed FREE to paying users** (the envelope was never unwrapped), and **Life's home page
+borrowed the Hub plan from the cookie** when its own read was loading or failed. The routes still
+answer two shapes; making them one is now a change to one file per app.
+
+## Recommendations on what is the owner's to decide (not decided here)
+
+| Question | Recommendation | Why |
+|---|---|---|
+| Should the Hub depend on `tec-auth`? | **No — record it as the decision** | The Hub issues the session; `tec-auth` is the library for apps that consume it. A dependency would point the wrong way |
+| Should the Hub adopt `tec-ui`? | **Not in Phase 0** — revisit when a component exists in both | The Hub has its own tokens; adopting means restyling the Hub, a visual change with no defect behind it |
+| The referral loop in Analytics and Explorer | **Yes** | Both are TEC apps under C-133's growth loop; it is the shared files plus two lines in the layout |
+| The referral loop in NBF and Brookfield | **The owner's call** | They carry their own brand; whether TEC's invite reward belongs there is a product question |
+
