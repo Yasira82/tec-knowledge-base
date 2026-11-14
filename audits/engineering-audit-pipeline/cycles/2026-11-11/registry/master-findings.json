@@ -2395,6 +2395,52 @@
         "note": "Found while rewriting C-112 (KB review, 14 Nov 2026); the same pattern was checked in every app with the same feature and fixed in all of them in one commit, on the work branch (pushed; no PR before 1 Dec — Actions).",
         "verification": "The fix deployed, and its tests (red on the old code) green on main"
       }
+    },
+    {
+      "id": "TEC-AUDIT-0049",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "An outbox event that fails its last allowed attempt is never marked failed",
+      "description": "payment-service markEventFailed decides 'final' from the attempt count before the current failure (attempts >= maxAttempts). With max_attempts 5, the fifth failure arrives at attempts 4, is not final, and the row returns to 'pending' with attempts 5; the worker selects attempts < 5, so the row is never retried and never marked 'failed', and the 'permanently failed' warning never fires.",
+      "evidence": [
+        {
+          "ref": "EV-0103",
+          "location": "tec-payment-service/src/services/outbox.service.ts (markEventFailed) · outbox.worker.ts (SELECT … attempts < 5)",
+          "observation": "A unit test driving five failures with max_attempts 5 ends at {attempts: 5, status: 'pending'} on the old code."
+        }
+      ],
+      "affected_files": [
+        "tec-payment-service/src/services/outbox.service.ts",
+        "tec-payment-service/src/services/outbox.worker.ts"
+      ],
+      "root_cause": "Off-by-one: the final-failure test uses the count before the failure it is recording; the worker's limit is a literal 5 instead of the row's max_attempts.",
+      "technical_impact": "A payment.*.v1 event that cannot be published sits in 'pending' forever, indistinguishable from one waiting for its next retry.",
+      "business_impact": "A consumer that depends on the event (delivery, Pro activation, Legend) never runs and nobody is told — C-47 Forbidden #6 (silent failure in a financial flow).",
+      "recommendation": "Final = attempts + 1 >= maxAttempts; select attempts < max_attempts. Recover rows already stuck (pending, attempts >= max_attempts) through an audited step, not an ad-hoc update.",
+      "acceptance_criteria": [
+        "Five failures with max_attempts 5 leave the row 'failed' and log once (test).",
+        "The worker reads max_attempts from the row.",
+        "Stuck production rows counted and resolved through an audited recovery (owner)."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "first_seen": "2026-11-11/kb-review",
+      "references": [
+        "C-47 Forbidden #6",
+        "C-47 Forbidden #10",
+        "C-70"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend cde747f9"
+        ],
+        "note": "Found while drafting the Outbox ADR (KB review, 14 Nov 2026). Fixed on the work branch with a test red on the old code; stuck rows are left for an audited recovery.",
+        "verification": "The fix deployed, its test green on main, and a count of stuck rows (pending, attempts >= max_attempts) read from production"
+      }
     }
   ]
 }
