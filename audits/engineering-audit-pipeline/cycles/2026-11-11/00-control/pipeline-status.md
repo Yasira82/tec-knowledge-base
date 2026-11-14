@@ -78,6 +78,9 @@ the Hub uses neither `tec-ui` nor `tec-auth`). Correction: 0012 · 0013 were wro
 in the P4 report — they are open. Score 6.3 on `main`, 7.1 after merge
 (`12-final-assessment/engineering-scorecard.md`).
 
+Remediation on 14 Nov surfaced two more, **0046** (HIGH) and **0047** (MEDIUM): security, withheld
+while open (README §7), both fixed locally the same day — 47 findings (`remediation-run6.md`).
+
 ## Next
 
 The cycle is closed; this folder is not edited again (README §2) except for each finding's

@@ -63,3 +63,27 @@ report-only twin refuses eval and reports to `/api/csp-report`. The Hub's own bu
 eval. **Owner:** after the deploy, one Pi Browser sign-in and one Mode-2 payment; if the log has no
 `csp.violation` line with `eval`, set `CSP_ENFORCE_NO_EVAL=1` on Vercel and redeploy. The same
 pattern then goes to the template apps (0018 part 3).
+
+## Later on 14 Nov — request bodies through schemas (0007)
+
+Every service now reads a request body one way: `parseBody` (the template's
+`src/middleware/parse-body.ts`, byte-identical wherever it is carried, checked in CI) — the
+schema's output, or a 400 that names each field and never its value. It went in at every body
+edge that had a gap in kyc, storage, notification, realtime, identity and commerce, each with a
+test that fails on the old code. Types were the smaller part of what it caught:
+
+- **Unregistering one device unregistered all of them.** A DELETE with no token ran
+  `deleteMany({ token: undefined, user_id })`, and Prisma reads `undefined` as no condition.
+- A storage purge sent `keys` that was not a list answered "deleted 0" — a cleanup that did
+  nothing and said it was fine.
+- `done: "true"` on a reminder **un-ticked** it; a review rating of 1000 went into a product's
+  stars; a gift's `days` could reach the service as NaN.
+- Two security holes, recorded as **0046** and **0047** (withheld while open, README §7).
+
+Not converted, on purpose: routes that already check every field by hand with a named reason
+(analytics' intent observation, identity's internal controllers, commerce's payout). Rewriting a
+strict, tested validator in another library adds a diff, not safety.
+
+The Hub half: `file-size.test.ts` — no source file over 600 lines without a recorded reason. Four
+are listed (the campaign page first, at 1229), each with its reason and a ceiling it may not grow
+past.
