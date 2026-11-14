@@ -87,3 +87,17 @@ strict, tested validator in another library adds a diff, not safety.
 The Hub half: `file-size.test.ts` — no source file over 600 lines without a recorded reason. Four
 are listed (the campaign page first, at 1229), each with its reason and a ceiling it may not grow
 past.
+
+## Later on 14 Nov — contracts (0034)
+
+Reading the code changed the finding. The BFFs do not bypass a working SDK: **no production path
+uses the SDK at all**, and its response schemas describe an API that does not exist (camelCase
+fields and numeric amounts on `/payments`, where payment-service answers snake_case rows with
+decimal-string amounts on `/api/payment/*`). ADR-009's request schemas are imported by no app either.
+
+- **Fixed (tec-app a07a0aa1):** the Hub's wallet balance route answered `balance: '0'` with a 200
+  when the wallet service was down or unreadable — under screens written to refuse a fabricated
+  zero. Now 503 / 502 / 401; and `createHandler` stops turning a handler's own error response
+  into a 200.
+- **Proposed for the owner:** `12-final-assessment/adr-proposal-response-contracts.md` — the SDK
+  owns response contracts, written from the services' real answers, money and entitlement first.

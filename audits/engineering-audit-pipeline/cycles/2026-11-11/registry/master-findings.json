@@ -1666,9 +1666,12 @@
         "ADR-009"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Scheduled after Run 3. Seen during 0007: the Hub's BFF PATCH /api/bff/identity/profile sends `avatar`; identity's route reads `avatarUrl` — the avatar sent that way is never saved. One more contract the SDK would pin."
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-app a07a0aa1",
+          "12-final-assessment/adr-proposal-response-contracts.md"
+        ],
+        "note": "What the code showed on 14 Nov changes the finding's picture: the BFFs do not 'bypass' a working SDK — no production path uses the SDK at all, and the SDK's RESPONSE schemas describe an API that does not exist (paymentId/userId/amount:number on /payments; payment-service answers {success,data:{payment:{id,user_id,amount:'<decimal string>'}}} on /api/payment/*; the wallet and subscription schemas likewise). ADR-009's request schemas are imported by no app either. Done: (1) the Hub's wallet balance route — it answered a fabricated `balance: '0'` with a 200 whenever the wallet service failed, refused the session or answered something unreadable, defeating screens written to refuse a fake zero (C-135 §4, Forbidden #6). Now schema-checked at the edge: 503 / 502 / 401, an empty list the one honest zero; createHandler sends a handler's own NextResponse as built (it serialised it into a 200). (2) The decision is drafted for the owner: adr-proposal-response-contracts.md (unnumbered) — the SDK owns response contracts written from the services' real answers, payment / wallet / subscription first. Payment BFF routes are pass-through and the one field the client reads (the payment id) fails closed; the Pro status is read by readProState (0044). Seen in passing: the Hub's PATCH /api/bff/identity/profile sends `avatar`; identity reads `avatarUrl` — never saved. Left: the owner's decision on the ADR; then the SDK contracts (publish needs Actions)."
       }
     },
     {
