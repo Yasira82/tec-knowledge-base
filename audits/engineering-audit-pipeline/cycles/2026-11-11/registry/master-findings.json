@@ -945,11 +945,15 @@
         "TEC-AUDIT-0002"
       ],
       "remediation": {
-        "state": "SCHEDULED",
+        "state": "PARTLY_FIXED_LOCAL",
         "refs": [
-          "TEC-AUDIT-0002"
+          "tec-template-base ed24ecc",
+          "23 apps + the Hub (one commit each, 14 Nov)",
+          "TEC-SDK 656fc2b (2.0.0, not published)",
+          "Tec-core-backend b2db0736"
         ],
-        "note": "zod 4 migration, with 0002."
+        "note": "14 Nov. zod 4 everywhere it is a direct dependency: the template and 23 apps (one change: z.record() takes its key schema, in payment/create), the Hub, 13 backend services (one change: payment-service's PI_SANDBOX messages move to zod 4's error hook, word for word), and TEC-SDK — prepared as 2.0.0, because it exports zod schemas. The packed 2.0.0 was installed temporarily in the template, Ecommerce and the Hub: type-check, every test and a production build pass, and zod 4 is the only zod in their tree; restored after. Found on the way: payment-service's env test built its own copy of the schema and never read env.ts; it now loads the real module (red on the old env.ts under zod 4). LEFT: until TEC-SDK 2.0.0 is published (its release workflow, after GitHub Actions is back) and every consumer moves to ^2.0.0, each app still resolves zod 3 INSIDE @yasser172/tec-sdk — isolated (apps import only TecSdk, never its schemas), but present in the lock, so the acceptance criterion is not yet met. Process notes, recorded so they are not repeated: (1) a loop ran template-sync apply over Commerce, Assets, Ecommerce and the Hub — apps not made from the template — copying ~45–100 template files into each; caught by their tests and the Hub's 109-file commit, undone file by file (every new file checked to be a template copy) before any push; apply now refuses an untracked repo (tec-template-base c851c65, with a test). (2) The disk filled mid-run; results printed then (\"0 errors\") were false — a corrupted node_modules was reinstalled and every number above was re-measured after space was freed.",
+        "verification": "After the SDK release: npm ls zod on main shows only 4.x in every app; npm audit --omit=dev lists no zod"
       }
     },
     {
