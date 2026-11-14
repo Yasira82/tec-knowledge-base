@@ -2304,7 +2304,7 @@
         "refs": [
           "Tec-core-backend 7ab8885f"
         ],
-        "note": "Found while doing 0007; fixed locally the same day (committed, not pushed — Actions). Owner: one database count is needed before deploy — given directly, not here.",
+        "note": "Found while doing 0007; fixed locally the same day (committed, not pushed — Actions). Owner's database count before deploy (14 Nov, production): 0 — the deploy refuses no existing listing.",
         "verification": "The fix deployed, and its test (red on the old code) green on main"
       }
     },
