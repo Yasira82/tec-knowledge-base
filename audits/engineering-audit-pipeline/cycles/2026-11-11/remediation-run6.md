@@ -35,8 +35,8 @@ Every screen in 21 apps and the server now read "is this person Pro here?" throu
 fail-closed reader, tested against the six shapes commerce really returns, with a guard against
 hand-parsing. Two user-visible bugs went with the old readers: **Analytics' and Connection's
 settings showed FREE to paying users** (the envelope was never unwrapped), and **Life's home page
-borrowed the Hub plan from the cookie** when its own read was loading or failed. The routes still
-answer two shapes; making them one is now a change to one file per app.
+borrowed the Hub plan from the cookie** when its own read was loading or failed. The contract half followed the same day: every template app's route now answers the one
+shape (the resolver's), from one shared file.
 
 ## Recommendations on what is the owner's to decide (not decided here)
 
