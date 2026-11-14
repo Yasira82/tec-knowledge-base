@@ -13,6 +13,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 | Session | Record |
 |---|---|
 | 64 | [Session 64 — the Engineering Audit Pipeline becomes the review process; Run 1 (P0–P1) of cycle 2026-11-11 (11 Nov 2026)](session-64.md) |
+| 65 | [Session 65 — cycle 2026-11-11 remediated; KB governance review; where to resume (12–14 Nov 2026)](session-65.md) |
 | 63 | [Session 63 — an engineering review of the whole platform, and its findings fixed the same day (11 Nov 2026)](session-63.md) |
 | 62 | [Session 62 — rotation steps 2–4 done; Pi Browser stops opening the wallet after many sign-ins; visits counted once a day; the bottom bar clears Android's buttons (10–11 Nov 2026)](session-62.md) |
 | 61 | [Session 61 — every service migrates at start; production's databases compared, not assumed; one guard everywhere; the rotation begins (8–10 Nov 2026)](session-61.md) |
