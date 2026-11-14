@@ -164,9 +164,12 @@
         "C-47 P6"
       ],
       "remediation": {
-        "state": "SCHEDULED",
-        "refs": [],
-        "note": "Needs the Pi SDK bootstrap moved to a nonce'd script first; taken up in P3 (Run 2)."
+        "state": "PARTLY_FIXED_LOCAL",
+        "refs": [
+          "tec-app 2916874d"
+        ],
+        "note": "'unsafe-inline' is gone from the Hub's script-src: the middleware sends a fresh nonce per request with 'strict-dynamic' (src/lib/csp.ts, the one place the policy is written; next.config.js no longer carries it). The boot scripts, the Pi SDK <Script> and the sign-in landing page carry the nonce; object-src 'none' and base-uri 'self' added; violations go to /api/csp-report (logged without query strings or script samples — the landing page's address holds a one-time token). On a production build every page is dynamic and every executable script on seven pages carries the header's nonce; in Chromium the pages hydrate, the boot scripts run, and an injected onerror handler is refused (the old policy ran it). 'unsafe-eval' is still in the ENFORCED policy: the Pi SDK (sdk.minepi.com) could not be read from here, and if it calls eval, removing it breaks sign-in for everyone. A report-only twin refuses eval; the Hub's own build has no eval / new Function in any chunk. Left: a Pi Browser sign-in + Mode-2 payment on the deployed Hub; if they leave no 'eval' line in the csp.violation log, set CSP_ENFORCE_NO_EVAL=1 on Vercel and redeploy.",
+        "verification": "Production Hub response: Content-Security-Policy script-src has a nonce and no 'unsafe-inline' (and, after the switch, no 'unsafe-eval'); a Pi Browser sign-in and Mode-2 payment work"
       }
     },
     {

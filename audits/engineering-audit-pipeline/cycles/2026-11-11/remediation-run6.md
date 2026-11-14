@@ -47,3 +47,19 @@ shape (the resolver's), from one shared file.
 | The referral loop in Analytics and Explorer | **Yes** | Both are TEC apps under C-133's growth loop; it is the shared files plus two lines in the layout |
 | The referral loop in NBF and Brookfield | **The owner's call** | They carry their own brand; whether TEC's invite reward belongs there is a product question |
 
+
+## Later on 14 Nov — the Hub's CSP (0004)
+
+The Hub's `script-src` no longer allows inline scripts wholesale. The middleware makes a fresh
+nonce per request and sends the policy (`src/lib/csp.ts`, the one place it is written) with
+`'strict-dynamic'`. Next.js stamps its own scripts with the nonce; the layout's boot scripts, the
+Pi SDK tag and the sign-in landing page stamp theirs. Checked on a production build in Chromium:
+every page is dynamic, every executable script carries the nonce, the pages hydrate, and an
+injected `onerror` handler — which the old policy ran — is refused.
+
+`'unsafe-eval'` is the one part left, on purpose. The Pi SDK is served from sdk.minepi.com and
+could not be read from here; if it calls eval, refusing it breaks sign-in for everyone. So a
+report-only twin refuses eval and reports to `/api/csp-report`. The Hub's own bundle has no
+eval. **Owner:** after the deploy, one Pi Browser sign-in and one Mode-2 payment; if the log has no
+`csp.violation` line with `eval`, set `CSP_ENFORCE_NO_EVAL=1` on Vercel and redeploy. The same
+pattern then goes to the template apps (0018 part 3).
