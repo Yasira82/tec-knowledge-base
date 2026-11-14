@@ -4,7 +4,7 @@
 # The Institutional Asset Registry — single source of truth for all
 # constitutional assets in the TEC Knowledge Base.
 #
-# Generated: 2026-11-14T15:19:56.405823
+# Generated: 2026-11-14T15:28:13.581889
 # Generator: scripts/build-asset-registry.py
 # Authority: C-117 Registry Integrity Constitution
 #
@@ -1438,7 +1438,7 @@ assets:
   - id: C-112
     type: charter
     tier: tier-1-institutional-intelligence
-    institutional_role: "NX Institutional Charter"
+    institutional_role: "NX Opportunity Exchange Institutional Charter"
     path: knowledge-base/C-112___NX_INSTITUTIONAL_CHARTER.md
     constitutional:
       truth_state: current-state
@@ -1446,7 +1446,7 @@ assets:
       verification_state: runtime-verified
       authority_scope: app
     owner: yasser
-    authoritative_for: ["c-112-nx-institutional-charter"]
+    authoritative_for: ["c-112-nx-opportunity-exchange-institutional-charter"]
     depends_on: [C-12, C-123, C-20, C-64]
     supersedes: []
     superseded_by: null

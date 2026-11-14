@@ -7,7 +7,7 @@
 # v3.6.2: depends_on is DAG-guaranteed (only refs to HIGHER-authority docs).
 # This eliminates ALL V1_AUTHORITY_INVERSION and V6_CYCLE_DETECTED violations.
 #
-# Generated: 2026-11-14T15:19:56.573404
+# Generated: 2026-11-14T15:28:13.923497
 
 documents:
 
@@ -948,7 +948,7 @@ documents:
     informs: []
 
   - id: "C-112"
-    title: "NX Institutional Charter"
+    title: "NX Opportunity Exchange Institutional Charter"
     filename: "C-112___NX_INSTITUTIONAL_CHARTER.md"
     tier: "tier-1-institutional-intelligence"
     authority_rank: 55

@@ -1,4 +1,4 @@
-# C-112 — NX INSTITUTIONAL CHARTER
+# C-112 — NX OPPORTUNITY EXCHANGE INSTITUTIONAL CHARTER
 ## Opportunity Exchange — "What is the right opportunity for me now?" (ADR-010)
 
 **Truth State:** `[Current State]` for what is built (below) · `[Planned State]` for matching
