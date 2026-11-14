@@ -15,8 +15,8 @@
 | P7 | Testing & QA | 4 | **PASSED_WITH_FINDINGS** (run on main BLOCKED — no CI) | 2 new · 13,823 tests run, all passing |
 | P8 | Infrastructure & DevOps | 5 | **PASSED_WITH_FINDINGS** (live Vercel/Railway reads BLOCKED) | 3 new |
 | P9 | Performance & Scalability | 5 | **PASSED_WITH_FINDINGS** (no benchmark — no staging) | 2 new |
-| P10 | Cross-Repository Audit | 6 | NOT_STARTED | — |
-| P11 | Final Engineering Assessment | 6 | NOT_STARTED | — |
+| P10 | Cross-Repository Audit | 6 | **PASSED_WITH_FINDINGS** | 2 new (0044 · 0045) · 0005 · 0019 · 0020 · 0034 referenced |
+| P11 | Final Engineering Assessment | 6 | **PASSED** | Verdict: not ready for outside money today; conditionally ready — `12-final-assessment/` |
 
 ## Gates
 
@@ -24,7 +24,11 @@
 |---|---|---|
 | A — Discovery completeness | **MET** | 30 repositories in scope, all cloned and read; every fleet entry in `architecture/app-fleet.yaml` has a clone (`fleet_entries_without_a_clone: []`) |
 | B — Architecture baseline | **MET** | Every canonical reference is identified (`baseline-references.md`); the one inconsistency (TEC-AUDIT-0016) is resolved in C-71 §3 |
-| C–G | not yet evaluated | Evaluated in Run 6 |
+| C — Security | **MET** | The CRITICAL closed and published; every open security finding registered, 0018 withheld (README §7) |
+| D — Data integrity | **MET** | P4 assessed every schema and migration; 0012 · 0013 open |
+| E — Integration | **MET** | P5 + P10; `payment.completed.v1` has a checked contract (local) |
+| F — Verification | **MET** | 13,823 tests run; the limits (Pi Browser, production, load) recorded in P7 · P9 |
+| G — Final assessment | **MET** | P0–P10 terminal before P11 |
 
 ## Register after Run 1 and its remediation (12 Nov)
 
@@ -65,7 +69,17 @@ Actions — all stopped since 12 Nov; the restore check passes when unconfigured
 directory searches return every match through a full scan), 0042 (no app pins Node), 0043
 (capacity never measured; no latency SLO).
 
+## After Run 6 (13 Nov) — the cycle's verdict
+
+45 findings: 1 CRITICAL (closed) · 5 HIGH · 20 MEDIUM · 16 LOW · 3 INFO. Closed 3; fixed and
+tested but not on `main` 23; fixed in part 4; open 15. New: 0044 (the referral loop's 11 files
+copied by hand into 18 apps, drifted), 0045 (TEC's own packages at two versions across the fleet;
+the Hub uses neither `tec-ui` nor `tec-auth`). Correction: 0012 · 0013 were wrongly reported fixed
+in the P4 report — they are open. Score 6.3 on `main`, 7.1 after merge
+(`12-final-assessment/engineering-scorecard.md`).
+
 ## Next
 
-Run 5 remediation done 13 Nov, locally (`remediation-run5.md`). Then **Run 6 — P10 + P11** (cross-repository audit, final assessment);
-read `09-infrastructure/handoff.md` and `10-performance/handoff.md` first.
+The cycle is closed; this folder is not edited again (README §2) except for each finding's
+`remediation` in the register. Run 6 remediation (roadmap step 7) needs the owner's go-ahead;
+everything waits on GitHub Actions to reach `main`. The next cycle opens a new folder.

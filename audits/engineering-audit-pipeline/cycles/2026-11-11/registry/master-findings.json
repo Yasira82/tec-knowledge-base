@@ -1,6 +1,6 @@
 {
   "cycle": "2026-11-11",
-  "updated_by": "run5",
+  "updated_by": "run6",
   "findings": [
     {
       "id": "TEC-AUDIT-0001",
@@ -214,7 +214,7 @@
           "tec-template-base #56",
           "20 app PRs"
         ],
-        "note": "The mechanism exists; it is not on main yet."
+        "note": "The mechanism exists; it is not on main yet. Run 6: template-sync is on the template branch; Life and Zone still miss 15–16 shared files (fleet screens, help, feedback, manifest, Pi Browser e2e)."
       }
     },
     {
@@ -542,9 +542,9 @@
         "C-71 §3"
       ],
       "remediation": {
-        "state": "DEFERRED_TO_P4",
+        "state": "SCHEDULED",
         "refs": [],
-        "note": "Measured before changing it: the price is stored, never computed, and every comparison already runs in integer 1e-8 units (purchase-product.ts covers()), so no listing is charged wrongly today. The type change is a migration that refuses without MIGRATE_ALLOW_DESTRUCTIVE and a contract change for the Assets app (price becomes a string in JSON). It is done as an expand–contract migration in P4 (Run 3), with the database phase, not rushed here."
+        "note": "Still open (re-measured in Run 6: asset price is Float at HEAD). P4 did not do the expand–contract migration; it needs a production row count first and changes the Assets contract (price as a string). The P4 report said 'fixed locally' in error — corrected."
       }
     },
     {
@@ -594,9 +594,9 @@
         "C-71"
       ],
       "remediation": {
-        "state": "DEFERRED_TO_P4",
+        "state": "OWNER_ACTION",
         "refs": [],
-        "note": "Dropping the unused wallet Account table needs a row count in production first; P4 runs it. The other two columns are not money that moves."
+        "note": "Needs a production row count of the wallet Account table before it is dropped; still open after P4."
       }
     },
     {
@@ -2100,6 +2100,109 @@
         ],
         "note": "Latency SLOs defined (C-78 §2, slo-definitions.yaml). A recorded k6 run waits on staging (0006).",
         "verification": "A recorded k6 run in runtime-evidence/"
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0044",
+      "phase": "P10",
+      "repository": "20 template apps · tec-template-base",
+      "category": "maintainability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Eleven files are copied into 8–18 apps with no tracker, and some have already diverged",
+      "description": "Source files identical in 8–18 apps and in none of template-sync's lists (shared, fleet, markers): bff/subscription, auth/me, the Pro cancel button, ErrorBoundary, i18n, useMe, and the referral loop (route, RefApply, RefCapture, InviteCard, lib-client/referral). Among 7 sampled apps auth/me — the session check — exists in 3 versions and the cancel button in 4. The referral loop (C-133) is in 16 apps but not in the template, so a new app is born without it. A fix to any of them reaches one app, and fleet-drift does not notice.",
+      "evidence": [
+        {
+          "ref": "EV-0095",
+          "location": "11-ecosystem/evidence.md (sha1 per file per app)",
+          "observation": "11 untracked duplicates"
+        },
+        {
+          "ref": "EV-0096",
+          "location": "template-sync.json shared/fleet/markers",
+          "observation": "none of the 11 listed"
+        }
+      ],
+      "affected_files": [
+        "src/app/api/auth/me/route.ts",
+        "src/app/api/bff/subscription/route.ts",
+        "src/components/referral/*",
+        "src/lib-client/referral.ts"
+      ],
+      "root_cause": "Features rolled out by copying, before template-sync existed, and never registered after.",
+      "technical_impact": "Silent divergence of session and entitlement logic across the fleet.",
+      "business_impact": "A sign-in or Pro bug fixed in one app stays in the others.",
+      "recommendation": "Put the referral loop in the template; reconcile each of the 11 to one version (diff, pick, test); add them to shared (or markers where an app must customise).",
+      "acceptance_criteria": [
+        "Every file present in ≥5 apps is in a template-sync list",
+        "auth/me is one version fleet-wide"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-123",
+        "C-133",
+        "TEC-AUDIT-0005"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run6",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 6 remediation."
+      }
+    },
+    {
+      "id": "TEC-AUDIT-0045",
+      "phase": "P10",
+      "repository": "fleet · TEC-SDK · Tec-ui · tec-auth",
+      "category": "architecture",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "The fleet does not run the same TEC packages — and the Hub runs none of the UI or auth ones",
+      "description": "tec-ui 3.0.0 in 21 apps, 2.1.0 (the pre-amber palette, C-83) in Assets, Commerce and Ecommerce. tec-sdk 1.4.0 is published and used by no app (21 on 1.3.0, 4 on 1.2.2). The Hub depends on neither tec-ui nor tec-auth, although its CLAUDE.md lists both and says a tec-ui bump must deploy all four apps together.",
+      "evidence": [
+        {
+          "ref": "EV-0097",
+          "location": "package-lock.json (25 apps)",
+          "observation": "resolved versions table in 11-ecosystem/report.md"
+        },
+        {
+          "ref": "EV-0098",
+          "location": "Tec-App package.json · tec-frontend/package.json",
+          "observation": "no @yasser172/tec-ui, no @yasser172/tec-auth"
+        },
+        {
+          "ref": "EV-0099",
+          "location": "npm view @yasser172/tec-sdk versions",
+          "observation": "1.4.0 published"
+        }
+      ],
+      "affected_files": [
+        "package.json (apps)",
+        "Tec-App/CLAUDE.md"
+      ],
+      "root_cause": "Releases without a fleet bump; the Hub grew its own implementations.",
+      "technical_impact": "Two visual palettes and three SDK contracts live at once; the shared auth package does not cover the identity authority itself.",
+      "business_impact": "Inconsistent look between apps; an SDK fix reaches nobody until each app bumps.",
+      "recommendation": "Bump Assets/Commerce/Ecommerce to tec-ui ^3 (C-83); every app to the current tec-sdk after 0019; decide by ADR whether the Hub adopts tec-auth/tec-ui or the instructions say it does not.",
+      "acceptance_criteria": [
+        "One tec-ui major and one tec-sdk minor fleet-wide",
+        "The Hub instructions match its dependencies"
+      ],
+      "complexity": "M",
+      "references": [
+        "C-83",
+        "TEC-AUDIT-0019",
+        "TEC-AUDIT-0034"
+      ],
+      "status": "OPEN",
+      "disclosure": "public",
+      "first_seen": "2026-11-11/run6",
+      "remediation": {
+        "state": "SCHEDULED",
+        "refs": [],
+        "note": "Run 6 remediation."
       }
     }
   ]

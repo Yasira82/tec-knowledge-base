@@ -7,7 +7,7 @@
 
 | Check | Method | Result |
 |---|---|---|
-| Money columns | every `schema.prisma` on main: `Decimal` vs `Float` on amount-like fields | DECIMAL(20,8) for payments, wallets, ledger, orders. The Float columns are the ones Run 1 found → **0012 · 0013** (fixed locally, Run 1) |
+| Money columns | every `schema.prisma` on main: `Decimal` vs `Float` on amount-like fields | DECIMAL(20,8) for payments, wallets, ledger, orders. The Float columns are the ones Run 1 found → **0012 · 0013, still open** (corrected in Run 6: this line first said "fixed locally, Run 1" — the register said, rightly, *deferred to P4*, and P4 did not do them; asset `price` is still `Float` at HEAD) |
 | Wallet never negative (Invariant #1) | migrations | `CHECK (balance >= 0)` in `20260419000000_financial_integrity` — **holds** |
 | One Pi payment, one row | unique constraints | `payments.pi_payment_id` is `@unique`; commerce `orders.payment_id` / `pi_payment_id` unique since `20261109120000_align_with_schema` — **holds** |
 | Order state changes | commerce writes to `orders.status` | conditional `updateMany` on the from-state — **holds** |

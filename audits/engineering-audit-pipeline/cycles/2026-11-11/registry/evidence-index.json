@@ -470,6 +470,31 @@
       "ref": "EV-0094",
       "finding": "TEC-AUDIT-0040",
       "location": "owner, Railway backup-job variables, 13 Nov"
+    },
+    {
+      "ref": "EV-0095",
+      "finding": "TEC-AUDIT-0044",
+      "location": "11-ecosystem/evidence.md (sha1 per file per app)"
+    },
+    {
+      "ref": "EV-0096",
+      "finding": "TEC-AUDIT-0044",
+      "location": "template-sync.json shared/fleet/markers"
+    },
+    {
+      "ref": "EV-0097",
+      "finding": "TEC-AUDIT-0045",
+      "location": "package-lock.json (25 apps)"
+    },
+    {
+      "ref": "EV-0098",
+      "finding": "TEC-AUDIT-0045",
+      "location": "Tec-App package.json · tec-frontend/package.json"
+    },
+    {
+      "ref": "EV-0099",
+      "finding": "TEC-AUDIT-0045",
+      "location": "npm view @yasser172/tec-sdk versions"
     }
   ]
 }

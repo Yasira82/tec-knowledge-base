@@ -117,6 +117,13 @@ token. Shortening the token to 24 h now waits only on one phone check in Pi Brow
   P9 — public Explorer/NX searches uncapped with a full scan (0041); capacity never measured, no
   latency SLO (0043). Live Vercel/Railway reads BLOCKED (connector down, no outside network).
 
+- **Run 6 (13 Nov) — the cycle closes:** P10 — framework versions uniform where a tool enforces
+  them; TEC's own packages at two versions each, the Hub on neither `tec-ui` nor `tec-auth` (0045);
+  the referral loop's 11 files copied by hand into 18 apps and drifted (0044). P11 — gates C–G met;
+  6.3/10 on `main`, 7.1 after the local fixes merge; **not ready for outside customers' money
+  today, conditionally ready** after merge + deploy, the phone checks and one passed restore. The
+  P4 report had called 0012/0013 fixed — corrected: open. Order of work: `remediation-roadmap.md`.
+
 ## Left open
 
 0. GitHub Actions back (owner's ticket 4956739); then push Run 2 and re-run every PR's checks.

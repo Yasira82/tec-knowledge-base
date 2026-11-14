@@ -4,7 +4,7 @@
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
 
-**Last Updated:** 11 November 2026 (Session 64 — the Engineering Audit Pipeline adopted; Run 1 of cycle 2026-11-11 registered 17 findings)
+**Last Updated:** 13 November 2026 (Session 64 — cycle 2026-11-11 of the Engineering Audit Pipeline closed: 45 findings, verdict in `12-final-assessment/`)
 
 > 🔧 **Resumed for the backend only (owner, 2026-11-07):** the audit's code phases are done (9 Nov); the
 > secrets rotation is done except Upstash (deferred) and step 7 (after Round 3). Read §2 rows 29 and 34 first, then `memory/sessions/session-63.md` → "Left open". **No backend push until 1 Dec** (the private repo's Actions minutes).
@@ -89,7 +89,7 @@ Replace rows as they close — do not strike them through and keep them.
   no credential in any repository's history; Run 3 (database, contracts) 13 Nov: 35 in all — the hourly payment
   reconciliation completes a paid payment with no event, so nothing is delivered (0030, HIGH). Run 4 (functions, tests) 13 Nov: 13 critical capabilities traced (8
   verified), 13,823 tests run, all green; notifications miss payments finished by recovery (0036). Run 5 (infrastructure, performance)
-  13 Nov: every scheduled guard (CodeQL, drift, the backup restore check) runs on GitHub Actions and stopped with it (0040). GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
+  13 Nov: every scheduled guard (CodeQL, drift, the backup restore check) runs on GitHub Actions and stopped with it (0040). Run 6 (ecosystem, verdict) 13 Nov: 45 findings, 6.3/10 on main, 7.1 after merge — **not ready for outside customers' money today, conditionally ready** (`audits/engineering-audit-pipeline/cycles/2026-11-11/12-final-assessment/`). GitHub Actions refused account-wide since 12 Nov (billing hold) — nothing pushed.
 - **[63](../memory/sessions/session-63.md) — 11 Nov.** An engineering review of the whole platform (6.8/10):
   an order could be marked PAID for any payment id — fixed, no sign of abuse; Next 15.5.29 in the apps; Nest 11 /
   Fastify 5 in 15 services; the Hub's CSP narrowed; the internal guard on the decoded path.
