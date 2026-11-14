@@ -2353,6 +2353,48 @@
         "note": "Found while doing 0007; fixed locally the same day (committed, not pushed — Actions).",
         "verification": "The fix deployed, and its test (red on the old code) green on main"
       }
+    },
+    {
+      "id": "TEC-AUDIT-0048",
+      "phase": "P10",
+      "repository": "Tec-core-backend",
+      "category": "security",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Withheld while open (README §7). Details were given to the owner directly.",
+      "description": "Withheld while open (README §7). Details were given to the owner directly.",
+      "evidence": [
+        {
+          "ref": "EV-0102",
+          "location": "withheld",
+          "observation": "Withheld while open (README §7). Details were given to the owner directly."
+        }
+      ],
+      "affected_files": [],
+      "root_cause": "Withheld while open (README §7). Details were given to the owner directly.",
+      "technical_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "business_impact": "Withheld while open (README §7). Details were given to the owner directly.",
+      "recommendation": "Withheld while open (README §7). Details were given to the owner directly.",
+      "acceptance_criteria": [
+        "Withheld while open (README §7). Details were given to the owner directly."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "disclosure": "withheld",
+      "first_seen": "2026-11-11/kb-review",
+      "references": [
+        "C-47 P6",
+        "C-112",
+        "ADR-010"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "Tec-core-backend a8ec2652"
+        ],
+        "note": "Found while rewriting C-112 (KB review, 14 Nov 2026); the same pattern was checked in every app with the same feature and fixed in all of them in one commit, on the work branch (pushed; no PR before 1 Dec — Actions).",
+        "verification": "The fix deployed, and its tests (red on the old code) green on main"
+      }
     }
   ]
 }
