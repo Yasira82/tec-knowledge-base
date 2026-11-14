@@ -58,8 +58,8 @@ if [ ! -d "$MKT_DIR" ]; then
 fi
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping marketing live-claim check."
-  exit 0
+  echo "❌ python3 not available — cannot run the marketing live-claim check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - "$FLEET" "$MKT_DIR" <<'PY'

@@ -1,6 +1,6 @@
 #!/bin/bash
 # TEC Knowledge Base — App Institutional Charter Validator
-# Validates C-100→C-115 charter files for required structure
+# Validates every app charter (C-100→C-115 + the fleet's) for required structure
 
 set -e
 
@@ -8,30 +8,35 @@ PASS=0
 FAIL=0
 ERRORS=()
 
-echo "🏛️  TEC Knowledge Base — Charter Validation (C-100→C-115)"
+echo "🏛️  TEC Knowledge Base — Charter Validation (C-100→C-115 + architecture/app-fleet.yaml)"
 echo "============================================================"
 
-# Expected charters
-CHARTERS=(
-  "C-100___HUB_INSTITUTIONAL_CHARTER.md"
-  "C-101___COMMERCE_INSTITUTIONAL_CHARTER.md"
-  "C-102___ASSETS_INSTITUTIONAL_CHARTER.md"
-  "C-103___ECOMMERCE_INSTITUTIONAL_CHARTER.md"
-  "C-104___TEC_AI_INSTITUTIONAL_CHARTER.md"
-  "C-105___ANALYTICS_INSTITUTIONAL_CHARTER.md"
-  "C-106___LIFE_INSTITUTIONAL_CHARTER.md"
-  "C-107___CONNECTION_INSTITUTIONAL_CHARTER.md"
-  "C-108___EXPLORER_INSTITUTIONAL_CHARTER.md"
-  "C-109___NEXUS_INSTITUTIONAL_CHARTER.md"
-  "C-110___SYSTEM_INSTITUTIONAL_CHARTER.md"
-  "C-111___ALERT_INSTITUTIONAL_CHARTER.md"
-  "C-112___NX_INSTITUTIONAL_CHARTER.md"
-  "C-113___FUNDX_INSTITUTIONAL_CHARTER.md"
-  "C-114___ESTATE_INSTITUTIONAL_CHARTER.md"
-  "C-115___DX_INSTITUTIONAL_CHARTER.md"
+KB_DIR="knowledge-base"
+
+# Which documents are app charters is not a list kept here. It was (C-100→C-115), and
+# the eight written after it — C-124→C-131 — were never checked (KB review, 14 Nov 2026).
+# The set is: the institutional charters C-100→C-115, plus every charter an app in
+# architecture/app-fleet.yaml (the one list of apps) names at C-100 or above.
+FLEET="architecture/app-fleet.yaml"
+[ -f "$FLEET" ] || { echo "❌ $FLEET not found — cannot know which charters to check"; exit 1; }
+NUMS=$( { seq 100 115; grep -oE 'charter: C-[0-9]+' "$FLEET" | grep -oE '[0-9]+' | awk '$1>=100'; } | sort -nu )
+CHARTERS=()
+for n in $NUMS; do
+  f=$(ls "$KB_DIR"/C-"$n"___*.md 2>/dev/null | head -1)
+  if [ -z "$f" ]; then CHARTERS+=("C-$n (no file)"); else CHARTERS+=("$(basename "$f")"); fi
+done
+# Known gaps — sections a charter does not have yet, each with why it is not invented here.
+# Remove an entry when the section is written.
+declare -A KNOWN_GAPS=(
+  # Zone's charter (C-120) is the constitutional runtime format: a PREAMBLE, not a Mission
+  # section, and no Technical Architecture section (its backend moved from identity-service
+  # to trust-service on 2026-10-16; the section must be written from that code, by its owner).
+  ["C-120___ZONE_CONSTITUTIONAL_RUNTIME_CHARTER.md"]="Missing Mission section|Missing Technical Architecture section"
 )
 
-KB_DIR="knowledge-base"
+# Self-check: the list must reach past C-115, or this gate has fallen back to the old one.
+[ "${#CHARTERS[@]}" -gt 16 ] || { echo "❌ self-check: only ${#CHARTERS[@]} charters found — the fleet list was not read"; exit 2; }
+
 
 if [ ! -d "$KB_DIR" ]; then
   echo "❌ knowledge-base/ directory not found"
@@ -67,7 +72,8 @@ for CHARTER in "${CHARTERS[@]}"; do
   fi
 
   # Check Authority Boundary section present
-  if ! grep -qi "Authority Boundary\|## Authority" "$FILE"; then
+  # The runtime charters (C-120 on) name it "What <App> owns / does not own".
+  if ! grep -qi "Authority Boundary\|## Authority\|^## .*WHAT .* OWNS" "$FILE"; then
     ERRORS_IN_FILE+=("Missing Authority Boundary section")
   fi
 
@@ -82,8 +88,20 @@ for CHARTER in "${CHARTERS[@]}"; do
   fi
 
   # Check Engineering Updates present (gap tracking)
-  if ! grep -qi "Engineering\|## Updates Required" "$FILE"; then
+  # The runtime charters track it as "Implementation Status" (or "Deployment Status") + "Build Protocol" / "Build Sequence".
+  if ! grep -qi "Engineering\|## Updates Required\|^## Implementation Status\|^## Deployment Status\|^## Build Protocol\|BUILD SEQUENCE" "$FILE"; then
     ERRORS_IN_FILE+=("Missing Engineering Updates / gap tracking")
+  fi
+
+  # A known gap is recorded with its reason instead of hidden — and only the sections
+  # named for it are forgiven; anything else missing still fails.
+  KNOWN="${KNOWN_GAPS[$CHARTER]:-}"
+  if [ -n "$KNOWN" ] && [ ${#ERRORS_IN_FILE[@]} -gt 0 ]; then
+    REMAINING=()
+    for ERR in "${ERRORS_IN_FILE[@]}"; do
+      case "|$KNOWN|" in *"|$ERR|"*) echo "  ⚠️  $CHARTER — known gap: $ERR";; *) REMAINING+=("$ERR");; esac
+    done
+    ERRORS_IN_FILE=("${REMAINING[@]}")
   fi
 
   # Report
@@ -117,4 +135,4 @@ if [ $FAIL -gt 0 ]; then
   exit 1
 fi
 
-echo "✅ All 16 App Institutional Charters valid!"
+echo "✅ All ${#CHARTERS[@]} app charters valid!"

@@ -16,9 +16,9 @@ echo "⚖️  TEC Knowledge Base — Authority Hierarchy Consistency"
 echo "========================================================"
 
 if [ ! -f "$MANIFEST" ]; then
-  echo "⚠️  CDG manifest not found at $MANIFEST — skipping."
+  echo "❌ CDG manifest not found at $MANIFEST — this check cannot run, so it fails."
   echo "    Generate with: python3 scripts/07_build_cdg.py"
-  exit 0
+  exit 1
 fi
 
 # Run AHV engine; --strict treats warnings as errors

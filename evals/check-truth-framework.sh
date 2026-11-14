@@ -24,6 +24,10 @@ TOTAL=0
 is_core_doc() {
   local cid="$1"
   local num=$(echo "$cid" | grep -oE '[0-9]+' | head -1)
+  # Base 10, leading zeros dropped: "02" must match 2. Compared as text it did not —
+  # C-00, C-01 and C-02 were never checked, and C-02 passed missing its Truth State.
+  [ -n "$num" ] || return 1
+  num=$((10#$num))
   case "$num" in
     0|1|2)        return 0 ;;   # Constitution + Identity + Current State
     10|11|12|13|14|15|16) return 0 ;;  # Architecture + Rules
@@ -36,6 +40,15 @@ is_core_doc() {
   esac
 }
 
+# Self-check: a gate that cannot see its own list passes everything. Fails loudly if
+# the numbers with a leading zero — or any core number — stop being recognised.
+for must in C-00 C-01 C-02 C-10 C-23 C-47 C-64 C-67; do
+  is_core_doc "$must" || { echo "❌ self-check: is_core_doc does not recognise $must — this gate is broken"; exit 2; }
+done
+for mustnot in C-03 C-24 C-100; do
+  ! is_core_doc "$mustnot" || { echo "❌ self-check: is_core_doc wrongly treats $mustnot as core"; exit 2; }
+done
+
 echo "🧭 TEC Knowledge Base — Truth Framework Adoption Check"
 echo "======================================================"
 echo "  Mode: BLOCKING for C-00→C-23, C-47, C-64, C-67"
@@ -43,8 +56,8 @@ echo "        INFORMATIONAL for all other documents"
 echo ""
 
 if [ ! -d "$KB_DIR" ]; then
-  echo "⚠️  knowledge-base/ directory not found — skipping."
-  exit 0
+  echo "❌ knowledge-base/ directory not found — nothing to check is a failure, not a pass."
+  exit 1
 fi
 
 for FILE in "$KB_DIR"/C-*.md; do

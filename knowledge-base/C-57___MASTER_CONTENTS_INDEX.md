@@ -199,7 +199,7 @@
 | **C-109** | Nexus | System of Coordination | Nexus Institutional Charter |
 | **C-110** | SYSTEM | System of Governance | System Institutional Charter |
 | **C-111** | ALERT | System of Risk | Alert Institutional Charter |
-| **C-112** | NX | System of Security | NX Institutional Charter |
+| **C-112** | NX | Opportunity Exchange (ADR-010 — the charter body still describes the old security role; a rewrite awaits the owner) | NX Institutional Charter |
 | **C-113** | FundX | Capital Coordination Infrastructure | FundX Institutional Charter |
 | **C-114** | Estate | Real Estate Coordination | Estate Institutional Charter |
 | **C-115** | DX | System of Construction | DX Developer Institutional Charter |

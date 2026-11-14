@@ -24,8 +24,8 @@ echo "🎯 TEC — SLO Definitions Engine"
 echo "==============================="
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping SLO definitions check."
-  exit 0
+  echo "❌ python3 not available — cannot run the SLO definitions check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - <<'PY'

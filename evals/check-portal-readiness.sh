@@ -30,8 +30,8 @@ echo "🛂 TEC — Portal Readiness Engine"
 echo "================================"
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping Portal readiness check."
-  exit 0
+  echo "❌ python3 not available — cannot run the Portal readiness check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - <<'PY'

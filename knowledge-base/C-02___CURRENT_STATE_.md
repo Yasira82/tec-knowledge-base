@@ -3,6 +3,7 @@
 
 > ⚠️ **SESSION START RULE:** هذا أول ملف لازم يتقرأ في كل session جديد. لا تعتمد على الذاكرة أو الملخص.
 > Repo: `yasira82/tec-knowledge-base` | Branch: `main`
+> **Truth State:** `[Current State]` · **Governance State:** `[Governance Approved]` · **Verification:** `[Documentation Verified]`
 
 **Last Updated:** 11 November 2026 (Session 63 — an engineering review of the whole platform, 6.8/10; its financial hole and dependency advisories fixed the same day)
 

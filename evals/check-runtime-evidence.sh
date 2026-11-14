@@ -31,8 +31,8 @@ echo "🧾 TEC — Runtime Evidence Engine"
 echo "================================"
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping runtime evidence check."
-  exit 0
+  echo "❌ python3 not available — cannot run the runtime evidence check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - <<'PY'

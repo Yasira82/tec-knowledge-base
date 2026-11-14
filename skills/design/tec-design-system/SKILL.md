@@ -9,7 +9,7 @@ metadata:
     - ui-patterns
     - bff-patterns
   related_documents:
-    - knowledge-base/C-47___KERNEL_SPEC___PLATFORM_CONSTITUTION.md
+    - knowledge-base/C-47_Kernel_Spec_Architecture_Binding.md
 ---
 
 # TEC Design System
