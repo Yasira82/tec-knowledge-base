@@ -248,7 +248,7 @@ The VAM defines **who can verify what, using which policy, at what confidence le
 
 | Asset | Path | Role |
 |-------|------|------|
-| **VAM Manifest** | `manifests/verification-authority-matrix.yaml` | Verification tiers + policies + per-tier requirements |
+| **VAM Manifest** | `manifests/verification-authority-matrix.md` | Verification tiers + policies + per-tier requirements |
 | **VAM Compliance Engine** | `evals/check-vam-compliance.sh` | CI gate: validates every current-state asset's verification_state against VAM requirements |
 
 ### Usage
@@ -258,7 +258,7 @@ The VAM defines **who can verify what, using which policy, at what confidence le
 bash evals/check-vam-compliance.sh
 ```
 
-See `manifests/verification-authority-matrix.yaml` for the full matrix.
+See `manifests/verification-authority-matrix.md` for the full matrix.
 
 ---
 

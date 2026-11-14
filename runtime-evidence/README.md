@@ -4,7 +4,7 @@ This directory holds **runtime evidence records** — append-only facts emitted 
 live platform (metrics, health snapshots, incidents, SLO breaches). It is the
 `Reality → Evidence → Governance` half of the Runtime Governance Layer.
 
-- **Contract:** `manifests/runtime-evidence-schema.yaml` (schema v1.0)
+- **Contract:** `manifests/runtime-evidence-schema.md` (schema v1.0)
 - **Coverage policy:** `manifests/runtime-evidence-coverage.yaml` (broad current-state claims)
 - **CI gate:** `evals/check-runtime-evidence.sh` validates every `**/*.yaml` here
 - **Authority:** C-96 (obligation) · C-92 (health model) · C-78 (SLOs) ·

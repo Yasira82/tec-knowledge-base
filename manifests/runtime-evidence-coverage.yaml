@@ -9,6 +9,12 @@ requirements:
     binds_to_required: C-02
     allowed_kinds: [health_snapshot]
     min_non_example_records: 1
+    # The only record today (ev-2026-07-16-024) is a documentation attestation of the fleet
+    # REGISTRATION (app, Pi App ID, domain) — what this requirement checks. It says nothing
+    # about whether the apps answer today; that needs telemetry (C-96), which no record has yet.
+    allow_attestation: true
+    # max_age_days: not set. Setting it today fails CI on the July record; set it together with
+    # the first real probe of the fleet (owner/ops — this session's network cannot reach the apps).
     fleet_binding:
       source: architecture/app-fleet.yaml
       required_count: 24

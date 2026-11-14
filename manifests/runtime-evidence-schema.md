@@ -134,7 +134,7 @@ binding_rules:
 | C-92 | Platform Health Model — `health_snapshot.phs` + `dimensions` come from here |
 | C-78 | SLOs — `slo_breach` records bind here |
 | C-93 | Verification Engine — the consumer of evidence (V-5) |
-| VAM  | `verification-authority-matrix.yaml` — runtime evidence = tier V-5 |
+| VAM  | `verification-authority-matrix.md` — runtime evidence = tier V-5 |
 | Drift Detection | code↔claim direction; Runtime Evidence = behavior↔claim direction |
 
 ---
