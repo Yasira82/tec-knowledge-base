@@ -2423,7 +2423,7 @@
       "acceptance_criteria": [
         "Five failures with max_attempts 5 leave the row 'failed' and log once (test).",
         "The worker reads max_attempts from the row.",
-        "Stuck production rows counted and resolved through an audited recovery (owner)."
+        "Stuck production rows counted: 0 (owner, payment-db Query tab, 2026-11-14) — nothing to recover."
       ],
       "complexity": "S",
       "status": "OPEN",
@@ -2438,8 +2438,8 @@
         "refs": [
           "Tec-core-backend cde747f9"
         ],
-        "note": "Found while drafting the Outbox ADR (KB review, 14 Nov 2026). Fixed on the work branch with a test red on the old code; stuck rows are left for an audited recovery.",
-        "verification": "The fix deployed, its test green on main, and a count of stuck rows (pending, attempts >= max_attempts) read from production"
+        "note": "Found while drafting the Outbox ADR (KB review, 14 Nov 2026). Fixed on the work branch with a test red on the old code. Production read the same day: 0 rows pending with attempts >= max_attempts, so no recovery is needed.",
+        "verification": "The fix deployed and its test green on main (the production count is done: 0)"
       }
     }
   ]
