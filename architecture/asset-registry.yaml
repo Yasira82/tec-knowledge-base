@@ -2033,4 +2033,107 @@ assets:
     type: constitution
     tier: tier-1-institutional-intelligence
     institutional_role: "Institutional Governance Constitution"
-    path: kno
+    path: knowledge-base/C-99___INSTITUTIONAL_GOVERNANCE_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: platform
+    owner: yasser
+    authoritative_for: ["c-99-institutional-governance-constitution", "c-99-constitutional-question", "c-99-core-constitutional-principle"]
+    depends_on: [C-00, C-02, C-40, C-47, C-64, C-67, C-68, C-78]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  # ===========================================================================
+  # TIER 2 EXPERIMENTAL
+  # ===========================================================================
+
+  - id: C-30
+    type: roadmap
+    tier: tier-2-experimental
+    institutional_role: "Platform Vision & 24 Apps Roadmap"
+    path: knowledge-base/C-30_Vision_24_Apps.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: [C-100, C-101, C-102, C-103, C-104, C-105, C-106, C-107, C-108, C-109, C-110, C-111, C-112, C-113, C-114, C-115, C-77]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-31
+    type: document
+    tier: tier-2-experimental
+    institutional_role: "App Blueprints"
+    path: knowledge-base/C-31_App_Blueprints_Life_Connection_Fundx_Estate.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-32
+    type: document
+    tier: tier-2-experimental
+    institutional_role: "App Blueprints"
+    path: knowledge-base/C-32_App_Blueprints_Nexus_Titan_DX.md
+    constitutional:
+      truth_state: future-vision
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: []
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+  - id: C-79
+    type: constitution
+    tier: tier-2-experimental
+    institutional_role: "Institutional Memory Constitution"
+    path: knowledge-base/C-79___INSTITUTIONAL_MEMORY_CONSTITUTION.md
+    constitutional:
+      truth_state: speculation
+      governance_state: draft
+      verification_state: assumed
+      authority_scope: experimental
+    owner: yasser
+    authoritative_for: []
+    depends_on: [C-50, C-64, C-84, C-85, C-92, C-93, C-94, C-95, C-96, C-97, C-98, C-99]
+    supersedes: []
+    superseded_by: null
+    last_verified: null
+    next_review: "2026-12-01"
+
+# =============================================================================
+# STATISTICS
+# =============================================================================
+# Total assets: 116
+#   tier-1-constitutional-runtime: 62
+#   tier-1-institutional-intelligence: 46
+#   tier-0-foundational: 4
+#   tier-2-experimental: 4
+#
+# Truth State distribution:
+#   current-state: 87
+#   future-vision: 16
+#   planned-state: 8
+#   speculation: 5
