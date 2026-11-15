@@ -87,6 +87,8 @@ Writing C-120 from the code surfaced **0050** (MEDIUM, governance): a granted Zo
 cannot be withdrawn — the owner's decision. 50 findings.
 The Round 3 phone check (15 Nov) found **0051** (HIGH, regression): the Hub's narrowed connect-src
 (#324, this cycle) broke Pi sign-in; rolled back on Vercel, fixed on the branch. 51 findings.
+The same check found **0052** (MEDIUM): a first visit's campaign arrival got 401 and was never retried —
+fixed in the template and all 23 apps. 52 findings.
 
 ## Next
 

@@ -2537,6 +2537,53 @@
         "note": "Mitigated in production by the rollback; fixed on the work branch. Vercel will not auto-promote new main builds while rolled back — the next production deploy must be the fixed branch, promoted on purpose. Found by the Round 3 launch checklist's phone check before any Pioneer was invited.",
         "verification": "The fixed branch deployed, sign-in + payment in Pi Browser, and the csp-report log read"
       }
+    },
+    {
+      "id": "TEC-AUDIT-0052",
+      "phase": "P10",
+      "repository": "fleet (24 apps)",
+      "category": "reliability",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "A first visit's campaign arrival is lost: the report fires before the app has a session and is never retried",
+      "description": "ArrivalReport posts /api/bff/pioneer/arrived the moment Pi signs the visitor in. On a first visit (expired TEC session, or straight from Pi before the app signs itself in) that request has no valid session and gets 401; the reporter retried only on a later page load. Owner's phone, Assets /pi-test, 15 Nov: 'HTTP 401 · recorded false', then 'HTTP 200 · recorded true' on the next visit.",
+      "evidence": [
+        {
+          "ref": "EV-0106",
+          "location": "src/components/pioneer/ArrivalReport.tsx (24 apps)",
+          "observation": "Assets /pi-test 401 then 200; Vercel logs show the session valid on the same visit's GETs."
+        }
+      ],
+      "affected_files": [
+        "src/components/pioneer/ArrivalReport.tsx"
+      ],
+      "root_cause": "The report is tied to the Pi sign-in, not to the TEC session existing; a 401 was treated as final for the page.",
+      "technical_impact": "Round 3 reports from first visits are marked `declared` instead of `partial`; coverage under-counts.",
+      "business_impact": "The reviewer loses the evidence that the app saw the sign-in; the mission itself still opens on the tap.",
+      "recommendation": "Retry a 401 after 3 s and 10 s, then stop; any other answer final.",
+      "acceptance_criteria": [
+        "Test in each app: 401 then 200 records on the retry; two retries at most; non-401 final.",
+        "After deploy: a first visit's /pi-test shows 200 · recorded true."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "first_seen": "2026-11-15/round3-launch-check",
+      "references": [
+        "C-133",
+        "TEC-AUDIT-0051"
+      ],
+      "remediation": {
+        "state": "FIXED_LOCAL",
+        "refs": [
+          "tec-template-base 7ff7a0f",
+          "Tec-Assets d7905bd",
+          "Tec-Commerce e591795",
+          "Tec-Ecommerce 4db4c5f",
+          "+20 template apps (same commit message)"
+        ],
+        "note": "Fixed in the template and all 23 fleet apps on the work branches, full suites and tsc green. Not deployed (Actions; merge order). Until deployed, a first visit's report is marked declared — the round can still run: missions open on the tap.",
+        "verification": "Deployed; a first-visit /pi-test reads 200 · recorded true"
+      }
     }
   ]
 }
