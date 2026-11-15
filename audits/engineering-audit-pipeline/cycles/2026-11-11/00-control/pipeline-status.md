@@ -85,6 +85,8 @@ branch the same day, with its tests. Drafting the Outbox ADR surfaced **0049** (
 an outbox event's last failure never marked it failed — fixed the same way. 49 findings.
 Writing C-120 from the code surfaced **0050** (MEDIUM, governance): a granted Zone verification
 cannot be withdrawn — the owner's decision. 50 findings.
+The Round 3 phone check (15 Nov) found **0051** (HIGH, regression): the Hub's narrowed connect-src
+(#324, this cycle) broke Pi sign-in; rolled back on Vercel, fixed on the branch. 51 findings.
 
 ## Next
 

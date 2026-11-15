@@ -2491,6 +2491,52 @@
         "note": "Found writing C-120's Technical Architecture from the code (14 Nov 2026). Not changed: the terminal rule is pinned by a test, so which intent is right is the owner's decision.",
         "verification": "The decided rule in C-120 and its test green on main"
       }
+    },
+    {
+      "id": "TEC-AUDIT-0051",
+      "phase": "P10",
+      "repository": "Tec-App",
+      "category": "regression",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "The Hub's narrowed connect-src (#324, from this cycle's review) broke Pi sign-in in Pi Browser",
+      "description": "#324 (11 Nov) replaced connect-src 'self' https: wss: with a named host list. On 15 Nov the owner's Pi Browser sign-in to hub.tecosystem.app showed 'Authentication failed' and no request reached /api/auth/pi-login (Vercel runtime logs empty). Instant Rollback to the deployment before #324 (6293474) made sign-in work at once.",
+      "evidence": [
+        {
+          "ref": "EV-0105",
+          "location": "Vercel tec-app-frontend: production dd41d5b (#324) → rolled back to 6293474 (#323), 15 Nov 2026",
+          "observation": "Sign-in fails on dd41d5b with no server request; succeeds on 6293474. Every other app kept connect-src https: wss: and signs in."
+        }
+      ],
+      "affected_files": [
+        "tec-frontend/next.config.js (main)",
+        "tec-frontend/src/lib/csp.ts (branch)"
+      ],
+      "root_cause": "The list was written from what the code shows the browser reaching; the Pi SDK is served by Pi and reaches a host that is not in it. A CSP narrowing was enforced before it was observed in report-only mode, and checked only by a unit test, not in Pi Browser.",
+      "technical_impact": "Pi.authenticate fails in the page; no Pi sign-in to the Hub, so no campaign, payments or wallet for any signed-out person.",
+      "business_impact": "The Hub — the SSO authority for 24 apps — could not sign anyone in from 11 Nov (deploy) until the rollback on 15 Nov.",
+      "recommendation": "Enforce 'self' https: wss:; run the named list in Content-Security-Policy-Report-Only and enforce it (CSP_ENFORCE_NAMED_CONNECT=1) only after a Pi Browser sign-in and a Mode-2 payment report nothing. Any CSP narrowing ships report-only first.",
+      "acceptance_criteria": [
+        "Branch: enforced connect-src 'self' https: wss:, named list in report-only (test).",
+        "After deploy: a Pi Browser sign-in and payment; /api/csp-report read for connect-src reports naming the missing host.",
+        "Vercel: the rollback undone only by deploying the fixed branch."
+      ],
+      "complexity": "S",
+      "status": "OPEN",
+      "first_seen": "2026-11-15/round3-launch-check",
+      "references": [
+        "TEC-AUDIT-0004",
+        "C-123"
+      ],
+      "remediation": {
+        "state": "MITIGATED",
+        "refs": [
+          "Vercel Instant Rollback to 6293474 (owner, 15 Nov)",
+          "Tec-App 10c29192"
+        ],
+        "note": "Mitigated in production by the rollback; fixed on the work branch. Vercel will not auto-promote new main builds while rolled back — the next production deploy must be the fixed branch, promoted on purpose. Found by the Round 3 launch checklist's phone check before any Pioneer was invited.",
+        "verification": "The fixed branch deployed, sign-in + payment in Pi Browser, and the csp-report log read"
+      }
     }
   ]
 }
