@@ -45,7 +45,7 @@ month, never Pi.
 | FundX | Learn how Pi capital pools work — browse educational pool charters, no risk yet. | اعرف إزاي تجميعات رأس المال بالباي بتشتغل — اتصفّح مواثيق تعليمية من غير مخاطرة دلوقتي. |
 | NBF | Start a verified Pi business in minutes — the entity that actually transacts. | ابدأ نشاط تجاري موثّق على باي في دقائق — الكيان اللي بيعامل فعلاً. |
 | Insure | See your risk score and the protections around your Pi activity. | شوف تقييم المخاطر بتاعك والحماية حوالين نشاطك على باي. |
-| Ecommerce | Shop Pi-native stores — real products, storefronts and delivery. | اتسوّق من متاجر باي — منتجات حقيقية وواجهات وتوصيل. |
+| Ecommerce | Shop Pi-native stores — browse real products and the storefronts that sell them. | اتسوّق من متاجر باي — منتجات حقيقية والمتاجر اللي بتبيعها. |
 | Estate | Explore property on Pi — own, lease, invest and manage, all in one place. | استكشف العقارات على باي — تملّك وأجّر واستثمر وادِر في مكان واحد. |
 | Brookfield | Explore institutional-grade assets and see who owns each project. | استكشف الأصول المؤسسية وشوف مين بيملك كل مشروع. |
 | Explorer | Find real businesses and opportunities that accept Pi near you. | لاقِ أنشطة وفرص حقيقية بتقبل باي قريبة منك. |
@@ -57,8 +57,8 @@ month, never Pi.
 | System | See the platform's rules in plain terms — what's allowed, and why. | شوف قواعد المنصّة ببساطة — إيه المسموح وليه. |
 | Alert | One smart inbox for everything that matters — your TEC activity + Pi news. | صندوق ذكي واحد لكل المهم — نشاطك في TEC + أخبار باي. |
 | Analytics | See the real numbers behind the Pi economy — your activity and market trends. | شوف الأرقام الحقيقية ورا اقتصاد باي — نشاطك واتجاهات السوق. |
-| VIP | Unlock premium experiences and benefits across the whole ecosystem. | افتح تجارب ومزايا مميّزة عبر المنظومة كلها. |
+| VIP | See the membership tiers and which TEC app gives each benefit — benefits are coming soon. | شوف مستويات العضوية وكل ميزة بيقدّمها أنهي تطبيق في TEC — المزايا جاية قريب. |
 | Elite | Earn official recognition for real achievement — never bought, only earned. | اكسب تقدير رسمي على إنجاز حقيقي — مبيتشراش، بيتكسب بس. |
-| Titan | Run your organization on Pi — team, roles and operations in one console. | شغّل مؤسستك على باي — فريق وأدوار وعمليات في لوحة واحدة. |
+| Titan | Preview: the map of an enterprise OS on Pi, and which system owns each part. | معاينة: خريطة نظام تشغيل المؤسسات على باي، وكل جزء تابع لأنهي نظام. |
 | Legend | Build a permanent, evidence-based reputation that follows you everywhere on Pi. | ابنِ سمعة دائمة مبنية على دليل بتمشي معاك في كل مكان على باي. |
 | Epic | Turn your idea into a real project — build, launch and grow it on Pi. | حوّل فكرتك لمشروع حقيقي — ابنيه وأطلقه ونمّيه على باي. |

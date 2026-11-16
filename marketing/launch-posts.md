@@ -121,13 +121,13 @@ Get your link → hub.tecosystem.app/hub/referral
 ### Ecommerce — 🏬
 **EN**
 > 🏬 TEC Ecommerce is live on Pi.
-> Shop Pi-native stores — real products, storefronts, and delivery.
+> Shop Pi-native stores — browse real products and the storefronts that sell them.
 > Browse a storefront and check out with Pi.
 > ecommerce.tecosystem.app · Founding Pioneer → hub.tecosystem.app/pioneers
 
 **AR**
 > 🏬 TEC Ecommerce شغّال دلوقتي على Pi.
-> اتسوّق من متاجر باي — منتجات حقيقية وواجهات وتوصيل.
+> اتسوّق من متاجر باي — منتجات حقيقية والمتاجر اللي بتبيعها.
 > اتصفّح متجر وادفع بالباي.
 > ecommerce.tecosystem.app · نادي الـ 100 المؤسّس → hub.tecosystem.app/pioneers
 
@@ -277,14 +277,14 @@ Get your link → hub.tecosystem.app/hub/referral
 ### VIP — 👑 (preview / معاينة)
 **EN**
 > 👑 TEC VIP — preview on Pi.
-> Unlock premium experiences and benefits across the whole ecosystem.
-> Benefits are eligibility; each app delivers the value.
+> See the membership tiers and which TEC app gives each benefit — benefits are coming soon.
+> Nothing is on sale until a benefit is real.
 > vip.tecosystem.app · Founding Pioneer → hub.tecosystem.app/pioneers
 
 **AR**
 > 👑 TEC VIP — معاينة على Pi.
-> افتح تجارب ومزايا مميّزة عبر المنظومة كلها.
-> المزايا أهلية؛ كل تطبيق بيقدّم القيمة نفسها.
+> شوف مستويات العضوية وكل ميزة بيقدّمها أنهي تطبيق في TEC — المزايا جاية قريب.
+> مفيش حاجة للبيع لحد ما ميزة تبقى حقيقية.
 > vip.tecosystem.app · نادي الـ 100 المؤسّس → hub.tecosystem.app/pioneers
 
 ### Epic — 🚀 (preview / معاينة)
@@ -316,13 +316,13 @@ Get your link → hub.tecosystem.app/hub/referral
 ### Titan — 🏛️ (preview / معاينة)
 **EN**
 > 🏛️ TEC Titan — preview on Pi.
-> Run your organization on Pi — team, roles, and operations in one console.
+> Preview: the map of an enterprise OS on Pi, and which system owns each part.
 > The enterprise counterpart to Life.
 > titan.tecosystem.app · Founding Pioneer → hub.tecosystem.app/pioneers
 
 **AR**
 > 🏛️ TEC Titan — معاينة على Pi.
-> شغّل مؤسستك على باي — فريق وأدوار وعمليات في لوحة واحدة.
+> معاينة: خريطة نظام تشغيل المؤسسات على باي، وكل جزء تابع لأنهي نظام.
 > النظير المؤسسي لـ Life.
 > titan.tecosystem.app · نادي الـ 100 المؤسّس → hub.tecosystem.app/pioneers
 
