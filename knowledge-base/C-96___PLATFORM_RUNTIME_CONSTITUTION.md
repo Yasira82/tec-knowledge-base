@@ -132,7 +132,7 @@ Diagnosis precedes resolution.
 Resolution without evidence is guesswork.
 ```
 
-> **Implemented by:** `manifests/runtime-evidence-schema.yaml` (schema v1.0) +
+> **Implemented by:** `manifests/runtime-evidence-schema.md` (schema v1.0) +
 > `evals/check-runtime-evidence.sh` (CI gate). Every record under
 > `runtime-evidence/` must be attributable to a `source` and `binds_to` ≥ 1
 > existing C-doc, so live behavior is bound back to the claim it evidences and is

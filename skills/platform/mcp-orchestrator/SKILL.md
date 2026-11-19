@@ -21,7 +21,7 @@ Use MCP tools to observe and verify the live state of the TEC platform. Always i
 |-----------|-----------|-------------|
 | **GitHub** | CI status, PR reviews, commits, branch state | Verify fixes landed, check test results |
 | **Vercel** | Deployments, runtime logs, error traces | Debug production issues, verify deploy success |
-| **Railway** | Service health, env vars, deploy logs | Check backend status, NEW-B verification |
+| **Railway** | Service health, env vars, deploy logs | Check backend status, INTERNAL_SECRET re-check |
 | **Supabase** | DB queries, migrations, schema | Database health if applicable |
 
 ## GitHub MCP — TEC Query Patterns
@@ -85,7 +85,7 @@ Check deployment:
 | `Sleeping` | Inactive (free tier) | Expected on free Railway plan |
 | `Building` | Deploying new version | Wait 2-3 minutes |
 
-## NEW-B Verification via Railway MCP
+## INTERNAL_SECRET check via Railway MCP (NEW-B is closed — use this to re-verify, e.g. for a new service)
 
 ```
 Query: List env vars for each service

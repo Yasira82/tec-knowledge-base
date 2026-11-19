@@ -10,7 +10,7 @@ before making substantial changes.
 
 ## Ground Rules
 
-- **Authority hierarchy** (conflicts resolve top-down): C-00 → C-67 (Source of Truth) → ADRs (C-64)
+- **Authority hierarchy** (conflicts resolve top-down): C-00 → C-47 (Kernel) → ADRs (C-64) → C-67 (Source of Truth)
   → C-77 → Current-State (C-02, C-78) → App Charters (C-100→C-115) → Runtime Evidence → Code.
 - **Truth Framework:** every C-document must declare a **Truth State** and **Governance State**
   in its header. Never present `[Planned State]` as `[Current State]`.

@@ -30,8 +30,8 @@ echo "🧩 TEC — Capability Registry Engine"
 echo "==================================="
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping capability registry check."
-  exit 0
+  echo "❌ python3 not available — cannot run the capability registry check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 python3 - <<'PY'
@@ -39,8 +39,8 @@ import os, re, sys, glob
 try:
     import yaml
 except Exception:
-    print("⚠️  pyyaml not available — skipping.")
-    sys.exit(0)
+    print("❌ pyyaml not available — this check cannot run (pip install pyyaml). It fails; it never passes.")
+    sys.exit(1)
 
 REG    = "manifests/capability-registry.yaml"
 KB_DIR = "knowledge-base"

@@ -1,5 +1,11 @@
 # C-23 — TEC SDK Shared Client
-## @yasser172/tec-sdk v1.2.2 — Internals + Usage
+## @yasser172/tec-sdk — Internals + Usage
+
+> **Version:** the SDK's own `package.json` is the source — this heading carried `v1.2.2` long
+> after 1.3.0 and 1.4.0 shipped (KB review, 14 Nov 2026). On `main` that day: **1.4.0**; each
+> app's range is in C-11 (generated). **Note:** no app calls these clients on a production
+> path, and their response schemas do not match the services' answers — TEC-AUDIT-0034 and
+> its ADR proposal (`audits/engineering-audit-pipeline/…/adr-proposal-response-contracts.md`).
 
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`

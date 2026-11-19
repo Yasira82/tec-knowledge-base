@@ -121,11 +121,11 @@ const mockCreateSuccess = () =>
 
 | ID | Issue | Status |
 |----|-------|--------|
-| NEW-B | INTERNAL_SECRET missing on Railway | ⚠️ OPS ONLY |
+| NEW-B | INTERNAL_SECRET missing on Railway | ✅ CLOSED — set on Railway; payment-service's env schema refuses to start without it (≥ 32 chars) |
 | NEW-A | Railway URLs removed from client bundle | ✅ CLOSED |
 
 ```bash
-# Fix NEW-B (one-time ops task)
+# If a NEW SERVICE needs the secret (NEW-B is closed): one value, the same on every service
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 # Set INTERNAL_SECRET on: tec-api-gateway, tec-auth-service,
 # tec-payment-service, tec-commerce-service

@@ -42,9 +42,9 @@ Governance > Heroics
 **Error Budget Rule:** Budget exhausted → feature freeze → reliability-only work.
 
 > **Machine-readable contract:** these targets are formalized in
-> `manifests/slo-definitions.yaml` (validated by `evals/check-slo-definitions.sh`).
+> `manifests/slo-definitions.md` (validated by `evals/check-slo-definitions.sh`).
 > A breach emits an `slo_breach` runtime-evidence record
-> (`manifests/runtime-evidence-schema.yaml`) bound back to this doc, consumable by
+> (`manifests/runtime-evidence-schema.md`) bound back to this doc, consumable by
 > the Verification Engine (C-93) at VAM tier V-5. Ops wires Prometheus alerts from
 > the manifest.
 

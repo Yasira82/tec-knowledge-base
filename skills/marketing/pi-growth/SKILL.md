@@ -10,7 +10,7 @@ metadata:
     - product-launch
     - content-strategy
   related_documents:
-    - knowledge-base/C-41___ENGINEERING_ROADMAP.md
+    - knowledge-base/C-41_Engineering_Roadmap.md
     - knowledge-base/C-77___STRATEGIC_ANALYSIS___RISK_ASSESSMENT.md
 ---
 
