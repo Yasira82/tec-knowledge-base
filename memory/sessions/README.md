@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 66 | [Session 66 — Life's coach on Claude, made professional from the owner's own conversations; Pi Next (15–20 Nov 2026)](session-66.md) — sessions 64–65 are on the work branch until their audit's security finding closes |
 | 63 | [Session 63 — an engineering review of the whole platform, and its findings fixed the same day (11 Nov 2026)](session-63.md) |
 | 62 | [Session 62 — rotation steps 2–4 done; Pi Browser stops opening the wallet after many sign-ins; visits counted once a day; the bottom bar clears Android's buttons (10–11 Nov 2026)](session-62.md) |
 | 61 | [Session 61 — every service migrates at start; production's databases compared, not assumed; one guard everywhere; the rotation begins (8–10 Nov 2026)](session-61.md) |
