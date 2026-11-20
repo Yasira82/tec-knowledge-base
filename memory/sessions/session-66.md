@@ -109,6 +109,18 @@ platform-wide token cap stands in front of it.
   app; Pro read server-side from the live subscription; if Pro cannot be read, the person is treated as
   free — never locked out by an outage.
 
+### A tier above Pro — ideas for later (20 Nov)
+
+> Truth State: **[Future Vision]**. Not planned: a third tier is decided only once Pro has paying
+> subscribers (10–20 of them), asked what they miss. The owner asked for the ideas to be kept.
+
+| Idea | What it is | Conflict |
+|---|---|---|
+| **1. Life Plus — family** | One subscription for 3–4 people of one family, each with their own private data | None — the strongest: it brings new people, not only money |
+| 2. A written monthly plan | A detailed monthly report — the goal, the steps taken, what helped, what is next — to keep or share | A new feature: after Phase 0 |
+| 3. A higher limit | e.g. 100 replies a day | Easy, but little value: few need more than 40 |
+| 4. A stronger model | Replies from a model larger than Haiku | Against the owner's decision of 20 Nov (one model, no router); would need measuring first |
+
 ## Left open
 
 1. Owner: deploy tec-ai-service after each merge (#517 merged 20 Nov); merge #518.
