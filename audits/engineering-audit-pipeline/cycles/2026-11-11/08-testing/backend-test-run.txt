@@ -1,0 +1,20 @@
+tec-ai-service | Tests: 736 passed, 736 total | Test Suites: 35 passed, 35 total | coverage-threshold-config:1
+tec-analytics-service | Tests: 176 passed, 176 total | Test Suites: 14 passed, 14 total | coverage-threshold-config:1
+tec-asset-service | Tests: 139 passed, 139 total | Test Suites: 15 passed, 15 total | coverage-threshold-config:1
+tec-auth-service | Tests: 133 passed, 133 total | Test Suites: 15 passed, 15 total | coverage-threshold-config:1
+tec-business-service | Tests: 107 passed, 107 total | Test Suites: 9 passed, 9 total | coverage-threshold-config:1
+tec-commerce-service | Tests: 319 passed, 319 total | Test Suites: 34 passed, 34 total | coverage-threshold-config:1
+tec-connection-service | Tests: 1 skipped, 410 passed, 411 total | Test Suites: 1 skipped, 13 passed, 13 of 14 total | coverage-threshold-config:1
+tec-identity-service | Tests: 1 skipped, 175 passed, 176 total | Test Suites: 1 skipped, 16 passed, 16 of 17 total | coverage-threshold-config:1
+tec-kyc-service | Tests: 71 passed, 71 total | Test Suites: 6 passed, 6 total | coverage-threshold-config:1
+tec-life-service | Tests: 253 passed, 253 total | Test Suites: 24 passed, 24 total | coverage-threshold-config:1
+tec-nexus-service | Tests: 214 passed, 214 total | Test Suites: 11 passed, 11 total | coverage-threshold-config:1
+tec-notification-service | Tests: 52 passed, 52 total | Test Suites: 6 passed, 6 total | coverage-threshold-config:1
+tec-payment-service | Tests: 472 passed, 472 total | Test Suites: 39 passed, 39 total | coverage-threshold-config:1
+tec-platform-service | Tests: 403 passed, 403 total | Test Suites: 19 passed, 19 total | coverage-threshold-config:1
+tec-realtime-service | Tests: 29 passed, 29 total | Test Suites: 3 passed, 3 total | coverage-threshold-config:1
+tec-search-service | Tests: 191 passed, 191 total | Test Suites: 10 passed, 10 total | coverage-threshold-config:1
+tec-storage-service | Tests: 58 passed, 58 total | Test Suites: 5 passed, 5 total | coverage-threshold-config:1
+tec-trust-service | Tests: 112 passed, 112 total | Test Suites: 11 passed, 11 total | coverage-threshold-config:1
+tec-wallet-service | Tests: 99 passed, 99 total | Test Suites: 12 passed, 12 total | coverage-threshold-config:1
+tec-api-gateway | Tests: 115 passed, 115 total | Test Suites: 10 passed, 10 total | coverage-threshold-config:1

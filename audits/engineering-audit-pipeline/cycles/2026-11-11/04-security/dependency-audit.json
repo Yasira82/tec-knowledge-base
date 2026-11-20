@@ -1,0 +1,5347 @@
+{
+  "ref": "origin/main",
+  "results": [
+    {
+      "repository": "TEC-SDK",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 3,
+      "moderate": 1,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Alert",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Analytics-",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to authority injection via an unvalidated port in serialize",
+            "fast-uri vulnerable to host confusion via an unclosed bracket in the URI authority",
+            "fast-uri vulnerable to inconsistent host case normalization via percent-encoded octets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-App",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-App",
+      "lock": "tec-frontend/package-lock.json",
+      "critical": 1,
+      "high": 6,
+      "moderate": 1,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF",
+            "Axios: Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy",
+            "Axios: Incomplete Fix for CVE-2025-62718 \u2014 NO_PROXY Protection Bypassed via RFC 1122 Loopback Subnet (127.0.0.0/8) in Axios 1.15.0"
+          ],
+          "fix": true
+        },
+        {
+          "package": "form-data",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.0.5",
+          "via": [
+            "form-data: CRLF injection in form-data via unescaped multipart field names and filenames"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero",
+            "nanoid: Integer Overflow or Wraparound"
+          ],
+          "fix": true
+        },
+        {
+          "package": "next",
+          "severity": "critical",
+          "direct": true,
+          "range": "9.3.4-canary.0 - 16.3.0-preview.10",
+          "via": [
+            "Next.js: HTTP request smuggling in rewrites",
+            "Next.js: Unbounded next/image disk cache growth can exhaust storage",
+            "Next.js has a Denial of Service with Server Components"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": true
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Assets",
+      "lock": "package-lock.json",
+      "critical": 1,
+      "high": 15,
+      "moderate": 32,
+      "low": 1,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution auth subfields can inject Basic auth",
+            "Axios: Prototype pollution gadgets can alter axios request construction",
+            "Axios: Deep formToJSON Key Recursion Can Cause Denial of Service"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to server-side request forgery via malformed IPv6 normalization"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "happy-dom",
+          "severity": "critical",
+          "direct": true,
+          "range": "<=21.0.3",
+          "via": [
+            "Happy DOM: VM Context Escape can lead to Remote Code Execution",
+            "Happy DOM's fetch credentials include uses page-origin cookies instead of target-origin cookies",
+            "Happy DOM ECMAScriptModuleCompiler: unsanitized export names are interpolated as executable code"
+          ],
+          "fix": {
+            "name": "happy-dom",
+            "version": "21.0.4",
+            "major": true
+          }
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "vite",
+          "severity": "high",
+          "direct": false,
+          "range": "7.0.0 - 7.3.6",
+          "via": [
+            "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+            "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+            "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Commerce",
+      "lock": "package-lock.json",
+      "critical": 1,
+      "high": 15,
+      "moderate": 32,
+      "low": 2,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution auth subfields can inject Basic auth",
+            "Axios: Prototype pollution gadgets can alter axios request construction",
+            "Axios: Deep formToJSON Key Recursion Can Cause Denial of Service"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to server-side request forgery via malformed IPv6 normalization"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "happy-dom",
+          "severity": "critical",
+          "direct": true,
+          "range": "<=21.0.3",
+          "via": [
+            "Happy DOM: VM Context Escape can lead to Remote Code Execution",
+            "Happy DOM's fetch credentials include uses page-origin cookies instead of target-origin cookies",
+            "Happy DOM ECMAScriptModuleCompiler: unsanitized export names are interpolated as executable code"
+          ],
+          "fix": {
+            "name": "happy-dom",
+            "version": "21.0.4",
+            "major": true
+          }
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "vite",
+          "severity": "high",
+          "direct": false,
+          "range": "<=6.4.3",
+          "via": [
+            "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+            "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+            "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Connection",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to authority injection via an unvalidated port in serialize",
+            "fast-uri vulnerable to host confusion via an unclosed bracket in the URI authority",
+            "fast-uri vulnerable to inconsistent host case normalization via percent-encoded octets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Dx",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Ecommerce",
+      "lock": "package-lock.json",
+      "critical": 1,
+      "high": 15,
+      "moderate": 32,
+      "low": 1,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution auth subfields can inject Basic auth",
+            "Axios: Prototype pollution gadgets can alter axios request construction",
+            "Axios: Deep formToJSON Key Recursion Can Cause Denial of Service"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to server-side request forgery via malformed IPv6 normalization"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "happy-dom",
+          "severity": "critical",
+          "direct": true,
+          "range": "<=21.0.3",
+          "via": [
+            "Happy DOM: VM Context Escape can lead to Remote Code Execution",
+            "Happy DOM's fetch credentials include uses page-origin cookies instead of target-origin cookies",
+            "Happy DOM ECMAScriptModuleCompiler: unsanitized export names are interpolated as executable code"
+          ],
+          "fix": {
+            "name": "happy-dom",
+            "version": "21.0.4",
+            "major": true
+          }
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "vite",
+          "severity": "high",
+          "direct": false,
+          "range": "7.0.0 - 7.3.6",
+          "via": [
+            "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+            "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+            "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Elite",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Epic",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Estate",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Explorer",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Fundx",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Insure",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Legend",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Life",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 5,
+      "moderate": 2,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Nexus",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Nx",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Titan",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Vip",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-Zone",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "package-lock.json",
+      "critical": 2,
+      "high": 11,
+      "moderate": 6,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@mapbox/node-pre-gyp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.0.11",
+          "via": [
+            "via tar"
+          ],
+          "fix": {
+            "name": "bcrypt",
+            "version": "6.0.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@nestjs/config",
+          "severity": "high",
+          "direct": true,
+          "range": "1.1.6 - 4.0.3",
+          "via": [
+            "via lodash"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "@nestjs/platform-express",
+          "severity": "high",
+          "direct": true,
+          "range": "<=11.1.14 || 12.0.0-alpha.0 - 12.0.0-alpha.7",
+          "via": [
+            "via @nestjs/core",
+            "via body-parser",
+            "via multer"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "bcrypt",
+          "severity": "high",
+          "direct": true,
+          "range": "5.0.1 - 5.1.1",
+          "via": [
+            "via @mapbox/node-pre-gyp"
+          ],
+          "fix": {
+            "name": "bcrypt",
+            "version": "6.0.0",
+            "major": true
+          }
+        },
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.20.8",
+          "via": [
+            "body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement",
+            "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.1.20",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "lodash",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.17.23",
+          "via": [
+            "lodash vulnerable to Code Injection via `_.template` imports key names",
+            "Lodash has Prototype Pollution Vulnerability in `_.unset`, `_.omit`, and `_.pullAt` functions"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "multer",
+          "severity": "high",
+          "direct": false,
+          "range": "<=2.4.0",
+          "via": [
+            "Multer vulnerable to Denial of Service via incomplete cleanup",
+            "Multer vulnerable to Denial of Service via resource exhaustion",
+            "Multer Vulnerable to Denial of Service via Uncontrolled Recursion"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "path-to-regexp",
+          "severity": "high",
+          "direct": false,
+          "range": "<0.1.13",
+          "via": [
+            "path-to-regexp vulnerable to Regular Expression Denial of Service via multiple route parameters"
+          ],
+          "fix": true
+        },
+        {
+          "package": "proxy-addr",
+          "severity": "critical",
+          "direct": false,
+          "range": "1.1.0 - 2.0.7",
+          "via": [
+            "proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet"
+          ],
+          "fix": true
+        },
+        {
+          "package": "tar",
+          "severity": "critical",
+          "direct": false,
+          "range": "<=7.5.20",
+          "via": [
+            "node-tar Vulnerable to Arbitrary File Creation/Overwrite via Hardlink Path Traversal",
+            "node-tar is Vulnerable to Arbitrary File Overwrite and Symlink Poisoning via Insufficient Path Sanitization",
+            "Arbitrary File Read/Write via Hardlink Target Escape Through Symlink Chain in node-tar Extraction"
+          ],
+          "fix": {
+            "name": "bcrypt",
+            "version": "6.0.0",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-ai-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-analytics-service/package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-api-gateway/package-lock.json",
+      "critical": 0,
+      "high": 4,
+      "moderate": 9,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@nestjs/platform-express",
+          "severity": "high",
+          "direct": true,
+          "range": "<=11.1.14 || 12.0.0-alpha.0 - 12.0.0-alpha.7",
+          "via": [
+            "via @nestjs/core",
+            "via body-parser",
+            "via multer"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.20.8",
+          "via": [
+            "body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement",
+            "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "multer",
+          "severity": "high",
+          "direct": false,
+          "range": "<=2.4.0",
+          "via": [
+            "Multer vulnerable to Denial of Service via incomplete cleanup",
+            "Multer vulnerable to Denial of Service via resource exhaustion",
+            "Multer Vulnerable to Denial of Service via Uncontrolled Recursion"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-asset-service/package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-auth-service/package-lock.json",
+      "critical": 0,
+      "high": 5,
+      "moderate": 6,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@nestjs/config",
+          "severity": "high",
+          "direct": true,
+          "range": "1.1.6 - 4.0.3",
+          "via": [
+            "via lodash"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "@nestjs/platform-express",
+          "severity": "high",
+          "direct": true,
+          "range": "<=11.1.14 || 12.0.0-alpha.0 - 12.0.0-alpha.7",
+          "via": [
+            "via @nestjs/core",
+            "via body-parser",
+            "via express"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.20.8 || 2.0.0-beta.1 - 2.0.2",
+          "via": [
+            "body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement",
+            "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+            "via qs"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "lodash",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.17.23",
+          "via": [
+            "lodash vulnerable to Code Injection via `_.template` imports key names",
+            "Lodash has Prototype Pollution Vulnerability in `_.unset`, `_.omit`, and `_.pullAt` functions"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "multer",
+          "severity": "high",
+          "direct": false,
+          "range": "<=2.4.0",
+          "via": [
+            "Multer vulnerable to Denial of Service via incomplete cleanup",
+            "Multer vulnerable to Denial of Service via resource exhaustion",
+            "Multer Vulnerable to Denial of Service via Uncontrolled Recursion"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-backup-job/package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-business-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-commerce-service/package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-connection-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-identity-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-kyc-service/package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-life-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-nexus-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-notification-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 10,
+      "low": 1,
+      "critical_high": [
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.20.8 || 2.0.0-beta.1 - 2.0.2",
+          "via": [
+            "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+            "via qs"
+          ],
+          "fix": true
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-payment-service/package-lock.json",
+      "critical": 0,
+      "high": 3,
+      "moderate": 26,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@stellar/stellar-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "<=15.1.0",
+          "via": [
+            "via toml"
+          ],
+          "fix": {
+            "name": "@stellar/stellar-sdk",
+            "version": "17.4.0",
+            "major": true
+          }
+        },
+        {
+          "package": "toml",
+          "severity": "high",
+          "direct": false,
+          "range": "<=5.0.0",
+          "via": [
+            "toml-node: Uncontrolled Recursion",
+            "toml-node: Prototype Pollution Leads to `Object.prototype` Corruption via `__proto__` Key-Path Desynchronization",
+            "toml-node: Quadratic-complexity DoS via many array-of-tables headers in toml.parse()"
+          ],
+          "fix": {
+            "name": "@stellar/stellar-sdk",
+            "version": "17.4.0",
+            "major": true
+          }
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-platform-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-realtime-service/package-lock.json",
+      "critical": 0,
+      "high": 5,
+      "moderate": 6,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@nestjs/config",
+          "severity": "high",
+          "direct": true,
+          "range": "1.1.6 - 4.0.3",
+          "via": [
+            "via lodash"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "@nestjs/platform-express",
+          "severity": "high",
+          "direct": true,
+          "range": "<=11.1.14 || 12.0.0-alpha.0 - 12.0.0-alpha.7",
+          "via": [
+            "via @nestjs/core",
+            "via body-parser",
+            "via multer"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.20.8",
+          "via": [
+            "body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement",
+            "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "lodash",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.17.23",
+          "via": [
+            "lodash vulnerable to Code Injection via `_.template` imports key names",
+            "Lodash has Prototype Pollution Vulnerability in `_.unset`, `_.omit`, and `_.pullAt` functions"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "multer",
+          "severity": "high",
+          "direct": false,
+          "range": "<=2.4.0",
+          "via": [
+            "Multer vulnerable to Denial of Service via incomplete cleanup",
+            "Multer vulnerable to Denial of Service via resource exhaustion",
+            "Multer Vulnerable to Denial of Service via Uncontrolled Recursion"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-search-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-service-template/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-storage-service/package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 1,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-trust-service/package-lock.json",
+      "critical": 0,
+      "high": 1,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-core-backend",
+      "lock": "tec-wallet-service/package-lock.json",
+      "critical": 0,
+      "high": 6,
+      "moderate": 6,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@nestjs/config",
+          "severity": "high",
+          "direct": true,
+          "range": "1.1.6 - 4.0.3",
+          "via": [
+            "via lodash"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "@nestjs/platform-express",
+          "severity": "high",
+          "direct": true,
+          "range": "<=11.1.14 || 12.0.0-alpha.0 - 12.0.0-alpha.7",
+          "via": [
+            "via @nestjs/core",
+            "via body-parser",
+            "via express"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.20.8 || 2.0.0-beta.1 - 2.0.2",
+          "via": [
+            "body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement",
+            "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+            "via qs"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "lodash",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.17.23",
+          "via": [
+            "lodash vulnerable to Code Injection via `_.template` imports key names",
+            "Lodash has Prototype Pollution Vulnerability in `_.unset`, `_.omit`, and `_.pullAt` functions"
+          ],
+          "fix": {
+            "name": "@nestjs/config",
+            "version": "12.1.1",
+            "major": true
+          }
+        },
+        {
+          "package": "multer",
+          "severity": "high",
+          "direct": false,
+          "range": "<=2.4.0",
+          "via": [
+            "Multer vulnerable to Denial of Service via incomplete cleanup",
+            "Multer vulnerable to Denial of Service via resource exhaustion",
+            "Multer Vulnerable to Denial of Service via Uncontrolled Recursion"
+          ],
+          "fix": {
+            "name": "@nestjs/platform-express",
+            "version": "12.5.0",
+            "major": true
+          }
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": {
+            "name": "zod",
+            "version": "4.6.7",
+            "major": true
+          }
+        }
+      ]
+    },
+    {
+      "repository": "Tec-system",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "Tec-ui",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "low": 0,
+      "critical_high": []
+    },
+    {
+      "repository": "tec-brookfield",
+      "lock": "package-lock.json",
+      "critical": 1,
+      "high": 14,
+      "moderate": 29,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "8.0.0-alpha.2 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "next",
+          "severity": "critical",
+          "direct": true,
+          "range": "9.3.4-canary.0 - 16.3.0-preview.10",
+          "via": [
+            "Next.js: HTTP request smuggling in rewrites",
+            "Next.js: Unbounded next/image disk cache growth can exhaust storage",
+            "Next.js has a Denial of Service with Server Components"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "15.5.29",
+            "major": false
+          }
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "15.5.29",
+            "major": false
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "15.5.29",
+            "major": false
+          }
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "tec-nbf",
+      "lock": "package-lock.json",
+      "critical": 1,
+      "high": 14,
+      "moderate": 29,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "8.0.0-alpha.2 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "next",
+          "severity": "critical",
+          "direct": true,
+          "range": "9.3.4-canary.0 - 16.3.0-preview.10",
+          "via": [
+            "Next.js: HTTP request smuggling in rewrites",
+            "Next.js: Unbounded next/image disk cache growth can exhaust storage",
+            "Next.js has a Denial of Service with Server Components"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "15.5.29",
+            "major": false
+          }
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "15.5.29",
+            "major": false
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "15.5.29",
+            "major": false
+          }
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    },
+    {
+      "repository": "tec-template-base",
+      "lock": "package-lock.json",
+      "critical": 0,
+      "high": 14,
+      "moderate": 30,
+      "low": 0,
+      "critical_high": [
+        {
+          "package": "@sentry/nextjs",
+          "severity": "high",
+          "direct": true,
+          "range": "6.3.6 - 10.39.0",
+          "via": [
+            "via @sentry/node",
+            "via @sentry/opentelemetry",
+            "via @sentry/webpack-plugin"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "@yasser172/tec-sdk",
+          "severity": "high",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "via zod"
+          ],
+          "fix": false
+        },
+        {
+          "package": "axios",
+          "severity": "high",
+          "direct": true,
+          "range": "1.0.0 - 1.19.0",
+          "via": [
+            "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "brace-expansion",
+          "severity": "high",
+          "direct": false,
+          "range": "2.0.0 - 2.1.6",
+          "via": [
+            "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+            "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+            "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation"
+          ],
+          "fix": true
+        },
+        {
+          "package": "browserslist",
+          "severity": "high",
+          "direct": false,
+          "range": "<=4.28.6",
+          "via": [
+            "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+            "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)"
+          ],
+          "fix": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.1.8",
+          "via": [
+            "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+            "fast-uri vulnerable to host confusion via backslash authority introducer",
+            "fast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references"
+          ],
+          "fix": true
+        },
+        {
+          "package": "follow-redirects",
+          "severity": "high",
+          "direct": false,
+          "range": "1.16.0 - 1.16.1",
+          "via": [
+            "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects"
+          ],
+          "fix": true
+        },
+        {
+          "package": "nanoid",
+          "severity": "high",
+          "direct": false,
+          "range": "<=3.3.17",
+          "via": [
+            "nanoid: non-secure generators can loop indefinitely with negative size",
+            "nanoid: custom generators can loop indefinitely when size is zero"
+          ],
+          "fix": true
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "direct": false,
+          "range": "<=8.5.22",
+          "via": [
+            "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset"
+          ],
+          "fix": {
+            "name": "next",
+            "version": "16.4.6",
+            "major": true
+          }
+        },
+        {
+          "package": "rollup",
+          "severity": "high",
+          "direct": false,
+          "range": "3.0.0 - 3.29.5",
+          "via": [
+            "Rollup 4 has Arbitrary File Write via Path Traversal"
+          ],
+          "fix": {
+            "name": "@sentry/nextjs",
+            "version": "11.12.0",
+            "major": true
+          }
+        },
+        {
+          "package": "sharp",
+          "severity": "high",
+          "direct": false,
+          "range": "<=0.35.5-rc.1",
+          "via": [
+            "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "sharp : Vulnerability in librsvg dependency CVE-2026-96889"
+          ],
+          "fix": true
+        },
+        {
+          "package": "socket.io-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "4.0.0 - 4.2.6",
+          "via": [
+            "Socket.IO: Zero-attachment Memory Exhaustion"
+          ],
+          "fix": true
+        },
+        {
+          "package": "source-map-js",
+          "severity": "high",
+          "direct": false,
+          "range": "1.0.0 - 1.2.1",
+          "via": [
+            "source-map-js allows event-loop denial of service through indexed source-map section offsets"
+          ],
+          "fix": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "direct": true,
+          "range": "<4.6.6",
+          "via": [
+            "Zod can exhaust memory while validating oversized constrained collections"
+          ],
+          "fix": false
+        }
+      ]
+    }
+  ]
+}

@@ -82,6 +82,38 @@ slos:
     measurement: non_5xx_responses / total_responses
     binds_to: [C-78, C-96]
 
+  # Latency (TEC-AUDIT-0043) — [Planned State]: defined 13 Nov 2026, not yet measured (no recorded
+  # load test; no staging, TEC-AUDIT-0006). Same numbers as C-78 §2's latency table.
+  - id: gateway_latency_p95
+    title: API Gateway p95 latency
+    service: tec-api-gateway
+    tier: 0
+    objective: "p95 < 800ms"     # excludes routes that wait on Pi Network or TEC AI
+    window: 7d
+    mttr_target: 30m
+    measurement: p95(response_time) over gateway routes, Pi and AI routes excluded
+    binds_to: [C-78, C-96]
+
+  - id: auth_refresh_latency_p95
+    title: Auth token refresh p95 latency
+    service: tec-auth-service
+    tier: 0
+    objective: "p95 < 500ms"
+    window: 7d
+    mttr_target: 15m
+    measurement: p95(response_time) of /api/v1/auth/refresh
+    binds_to: [C-78, C-96]
+
+  - id: payment_create_latency_p95
+    title: Payment create p95 latency
+    service: tec-payment-service
+    tier: 0
+    objective: "p95 < 1000ms"    # approve/complete wait on Pi Network and are excluded
+    window: 7d
+    mttr_target: 15m
+    measurement: p95(response_time) of payment create
+    binds_to: [C-71, C-78]
+
   - id: pal_availability
     title: Pi Abstraction Layer availability
     service: PAL

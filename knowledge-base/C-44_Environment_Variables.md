@@ -180,7 +180,27 @@ Railway sets `PORT` per service.
 | `KYC_SERVICE_URL` | api-gateway |
 | `LIFE_CHECKIN_ENABLED` | life |
 | `LIFE_CHECKIN_SWEEP_MS` | life |
+| `LIFE_CONVERSATION_KEY` | life |
+| `LIFE_DELETION_LEDGER` | life |
+| `LIFE_EVAL_BASELINE` | ai |
+| `LIFE_EVAL_DELAY_MS` | ai |
+| `LIFE_EVAL_JUDGE` | ai |
+| `LIFE_EVAL_JUDGE_MODEL` | ai |
+| `LIFE_EVAL_LABELS` | ai |
+| `LIFE_EVAL_LIFE_MODELS` | ai |
+| `LIFE_EVAL_ONLY` | ai |
+| `LIFE_EVAL_REPEAT` | ai |
+| `LIFE_EVAL_RETRY_PAUSE_MS` | ai |
+| `LIFE_SEARCH_PER_DAY` | ai |
+| `LIFE_SEARCH_PER_PERSON_DAY` | ai |
 | `LIFE_SERVICE_URL` | api-gateway, identity |
+| `LIFE_TALK_MAX_RETRIES` | ai |
+| `LIFE_TALK_MODEL` | ai |
+| `LIFE_TALK_MODELS_EXTRA` | ai |
+| `LIFE_TALK_REASONING` | ai |
+| `LIFE_TALK_RESTATE` | ai |
+| `LIFE_TALK_TIMEOUT_MS` | ai |
+| `LIFE_TALK_UNDERSTAND_TIMEOUT_MS` | ai |
 | `LOG_LEVEL` | 19 — not asset |
 | `MAX_AMOUNT_LIMIT` | payment |
 | `MAX_EVENT_LOOP_LAG_MS` | api-gateway |
@@ -217,7 +237,7 @@ Railway sets `PORT` per service.
 | `PI_APP_WALLETS` | payment |
 | `PI_CLAIMED_APPS` | platform |
 | `PI_ENGAGEMENT_THRESHOLD` | platform |
-| `PI_HORIZON_URL` | analytics, payment |
+| `PI_HORIZON_URL` | analytics, nexus, payment |
 | `PI_HORIZON_URL_TESTNET` | payment |
 | `PI_HUB_APP_WALLET_ADDRESS` | payment |
 | `PI_MAINNET_HORIZON_URL` | payment |
@@ -249,6 +269,9 @@ Railway sets `PORT` per service.
 | `RATE_LIMIT_MAX_REQUESTS` | api-gateway |
 | `RATE_LIMIT_PAYMENT_MAX` | api-gateway |
 | `RATE_LIMIT_STATUS` | payment |
+| `RATE_LIMIT_USER_AUTH_MAX` | api-gateway |
+| `RATE_LIMIT_USER_MAX_REQUESTS` | api-gateway |
+| `RATE_LIMIT_USER_PAYMENT_MAX` | api-gateway |
 | `RATE_LIMIT_WINDOW` | payment |
 | `RATE_LIMIT_WINDOW_MS` | api-gateway |
 | `REALTIME_SERVICE_URL` | api-gateway |
@@ -269,6 +292,7 @@ Railway sets `PORT` per service.
 | `SUBSCRIPTION_MIN_PI_ENTERPRISE` | commerce |
 | `SUBSCRIPTION_MIN_PI_PRO` | commerce |
 | `SUPPORTED_CURRENCIES` | wallet |
+| `TAVILY_API_KEY` | ai |
 | `TESTNET_GATE_AMOUNT` | payment |
 | `TESTNET_GATE_MAX` | payment |
 | `TESTNET_GATE_SOURCES` | payment |

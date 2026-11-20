@@ -60,16 +60,19 @@ events:
   - name: payment.completed
     owner: tec-payment-service
     subject: paymentId
-    consumers: [tec-wallet-service, tec-commerce-service, tec-analytics-service, tec-notification-service, tec-realtime-service]
+    consumers: [tec-analytics-service, tec-notification-service, tec-realtime-service]   # wallet + commerce moved to .v1 (Aug)
     status: live
     verified: true
     binds_to: [C-70, C-71]
     note: >
       UNVERSIONED (naming-debt). The DIRECT emit (`EVENTS.PAYMENT_COMPLETED` XADD) that
-      wallet/commerce/analytics/notification/realtime consume. Payment ALSO emits
-      `payment.completed.v1` via the outbox (below) for Legend — same fact, two stream
-      names (dual-emission, stream-consistency audit F-2 2026-08-01). Works today; a future
-      coordinated change should converge on `.v1` (money-path blast radius → not a drive-by).
+      analytics/notification/realtime consume (wallet and commerce moved to `.v1` in August).
+      Payment ALSO emits `payment.completed.v1` via the outbox (below) — same fact, two stream
+      names (dual-emission, stream-consistency audit F-2 2026-08-01). BEST-EFFORT: skipped when
+      the Redis publisher is not ready, and never sent by the recovery endpoint or the hourly
+      reconciliation (TEC-AUDIT-0036). Retiring it: tec-core-backend 1c5aaf38 makes its three
+      consumers read `.v1` too, deduped by paymentId; once that is deployed they join `.v1`'s
+      list below, and the direct publishes are removed in a following change.
   - name: payment.completed.v1
     owner: tec-payment-service
     subject: paymentId
@@ -110,7 +113,7 @@ events:
   - name: kyc.verified
     owner: tec-kyc-service
     subject: piUsername
-    consumers: [tec-search-service/explorer, tec-analytics-service, tec-notification-service]
+    consumers: [tec-analytics-service, tec-notification-service]   # search/explorer moved to zone.badge.* (Zone verifies a listing; KYC a person)
     status: live
     verified: true
     binds_to: [C-70, C-108]
@@ -124,7 +127,7 @@ events:
   - name: kyc.rejected
     owner: tec-kyc-service
     subject: piUsername
-    consumers: [tec-search-service/explorer, tec-notification-service]
+    consumers: [tec-notification-service]   # search/explorer moved to zone.badge.*
     status: live
     verified: true
     binds_to: [C-70, C-108]
