@@ -12,6 +12,7 @@ F12, remediation step 7). **Current state lives in C-02; history lives here.**
 
 | Session | Record |
 |---|---|
+| 66 | [Session 66 — Life's coach on Claude, made professional from the owner's own conversations; Pi Next (15–20 Nov 2026)](session-66.md) |
 | 64 | [Session 64 — the Engineering Audit Pipeline becomes the review process; Run 1 (P0–P1) of cycle 2026-11-11 (11 Nov 2026)](session-64.md) |
 | 65 | [Session 65 — cycle 2026-11-11 remediated; KB governance review; where to resume (12–14 Nov 2026)](session-65.md) |
 | 63 | [Session 63 — an engineering review of the whole platform, and its findings fixed the same day (11 Nov 2026)](session-63.md) |
