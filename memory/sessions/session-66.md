@@ -66,10 +66,63 @@ repeated 3/3 → 1/3 (that form then covered); a new topic followed 1/3 → 3/3;
   device without the Pi app, showing the QR for the owner's phone to scan. Clearing the Pi app's cache
   did not help (and is not the cause). **Owner, 20 Nov: postponed until after Round 3.**
 
+## Life Pro — what it should sell (proposal, 20 Nov)
+
+> Truth State: **[Planned State]**. Governance State: **[Draft]** — the owner asked for it to be documented;
+> the numbers wait for his final yes. Implementation: after Round 3, so the experience does not change mid-round.
+
+**What Life Pro sells today (read from Tec-Life `main`):** 5π a month, paid once (no auto-renewal). It
+unlocks only unlimited active goals (free: 3) and Goal Insights. **The coach is free and unlimited per
+person** — the one thing of value, and the one thing that costs money (Claude tokens); only the day's
+platform-wide token cap stands in front of it.
+
+**Cost of one coach reply, measured 20 Nov on Claude (10 real conversations):** 2.1 model requests,
+~4,150 tokens in and ~475 out — **about $0.00065 a reply** (~$0.65 per 1,000), web search not included.
+
+**π price, 20 Nov (the Hub's card, PI/USDT on OKX): $0.0513** (−10.5% that day). At that price 5π covers
+~13 replies a day for a month, 6π ~16, 7π ~18.
+
+**The proposal:**
+
+| | Free | Life Pro **7π / month** |
+|---|---|---|
+| Coach replies | **10 a day** — the same model and quality all day | **40 a day** (a fair-use limit) |
+| Full memory · monthly review · Goal Insights · unlimited goals | — | ✅ |
+| Worst case per person per month | ~$0.20 | ~$0.78 |
+
+- After the limit, a warm message: what was said is kept; continue tomorrow, or Life Pro now. **A person in
+  danger is never cut off** — the safety reply and help numbers always go through.
+- A typical Pro user (one conversation of 6–8 replies, not every day) costs ~$0.10–0.15 a month: profit
+  at 7π. A user who hits 40 every day costs more than he pays; the rest cover him, and the platform's
+  daily token cap stays the last guard.
+- **Rejected: falling back to the free Groq model after the free replies.** Groq's free limit is per
+  model for the whole account (~200K tokens a day ≈ 50 replies for everyone together, and the same
+  quota the eval's judge uses); the person would find Life suddenly weaker mid-conversation, in the
+  dialect Groq handles worst; and their words would go to another company without the privacy page
+  saying so. Groq stays a candidate only as a fallback when Claude itself is down — a separate decision.
+- **Limits fixed and reviewed monthly**, not tied to the π price automatically: the price moves 10% in a
+  day, and a person's limit should not.
+- **How:** a per-person daily counter in Redis inside tec-ai-service (as the cost cap, #513), never in the
+  app; Pro read server-side from the live subscription; if Pro cannot be read, the person is treated as
+  free — never locked out by an outage.
+
+### A tier above Pro — ideas for later (20 Nov)
+
+> Truth State: **[Future Vision]**. Not planned: a third tier is decided only once Pro has paying
+> subscribers (10–20 of them), asked what they miss. The owner asked for the ideas to be kept.
+
+| Idea | What it is | Conflict |
+|---|---|---|
+| **1. Life Plus — family** | One subscription for 3–4 people of one family, each with their own private data | None — the strongest: it brings new people, not only money |
+| 2. A written monthly plan | A detailed monthly report — the goal, the steps taken, what helped, what is next — to keep or share | A new feature: after Phase 0 |
+| 3. A higher limit | e.g. 100 replies a day | Easy, but little value: few need more than 40 |
+| 4. A stronger model | Replies from a model larger than Haiku | Against the owner's decision of 20 Nov (one model, no router); would need measuring first |
+
 ## Left open
 
 1. Owner: deploy tec-ai-service after each merge (#517 merged 20 Nov); merge #518.
 2. 21 Nov: the full eval, `LIFE_EVAL_REPEAT=3`, on merged `main`, against the Haiku baseline.
 3. After Round 3: the hackathon — Console sign-in from a second device, register, then the demo video,
    the English listing and "PiNet integration".
-4. Later: a "this reply wasn't good" button for real users (with their consent) — a feature, after Phase 0.
+4. After Round 3: Life Pro as proposed above, once the owner confirms the numbers.
+5. Later: a "this reply wasn't good" button for real users (with their consent) — a feature, after Phase 0.
