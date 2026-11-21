@@ -76,20 +76,65 @@ a visit at `Pi.authenticate`, before any of this; the app's own `pi-login` token
 None of this touches it: its only open PR, tec-core-backend #505 (draft), merges cleanly with #533 and #534 in
 either order (tried with a real merge).
 
+## 6. Later on 21 Nov — deployed, and checked in Pi Browser
+
+- **Deployed** (owner's Railway screenshots, 13:27–13:28 GMT+2): tec-life-service with #533 — its migration ran on
+  start, and the boot log shows `deletion ledger replayed (2 requests) — Life is ready`, so `LIFE_DELETION_LEDGER` is
+  on — and tec-ai-service with #528–#535 (`migrate` found the schema up to date). #535 merged the same hour.
+- **Pi Browser (owner):** a sign-in and a payment in Life succeeded. Life's Vercel logs then showed:
+  - `csp.would_block` — ten reports, **one host only: `socialchain.app`**, Pi's own. Had the named list been enforced
+    without it, sign-in or payment would have broken, as in the Hub on 15 Nov (TEC-AUDIT-0051).
+  - `auth.sso_callback_unusable reason=replayed` once — the same sign-in link opened twice; the sign-in went through.
+- **`socialchain.app` added to the Report-Only list** — template #61 and all 23 apps (merged 21 Nov). The enforced
+  policy is unchanged (`'self' https: wss:`). Next: a few days of real use with no new report, then enforce.
+
+## 7. Does Life help? (owner: «النفع يتحقق»)
+
+The evals until now asked whether Life does **no harm**. Three pieces now ask whether it **helps**:
+
+| PR | What |
+|---|---|
+| #536 · Life #117 (merged) | `GET /identity/life/admin/outcomes` and its screen in Settings: counts of what people chose — the step and their answer, the daily taps, before/after (moved or not, never "better"), the feelings they picked, who came back after a week. No text is read; every count under 5 is null; the reader's own entries are left out; admin only, audited. Tested on a real Postgres |
+| #537 (merged) | Four usefulness criteria in the simulator (their own situation · small and specific · ready for the hard moment · varied) and what they found: a plan written in English was cut to empty lines (now rewritten in their dialect); a tried idea came back (now refused, unless the owner's `resolve` card answers); the named hard moment got no plan. On 12 simulated people, hard-moment failures 3 → 1; the 190-scenario run on Claude matches `main` |
+| #538 (open) | The coach already saw the week's taps but only noticed them. Now, when the step comes up: stuck (≥3 "not yet", none done) → offered smaller or moved; holding (≥5 done) → offered a little more. On Claude, 3 attempts each: 3/6 → 6/6 and 1/6 → 6/6 |
+
+## 8. Models — what a reply costs, and the orchestra
+
+- **Haiku, measured:** ~4,840 tokens per reply over ~2 requests (190 replies) — about **$1.3 a month** for 100
+  people × 20 messages.
+- **Sonnet for the plan replies** was proposed and **declined by the owner on cost**; its run was stopped after
+  two requests.
+- **Owner's decision:** phase 1 — an orchestra of **Claude Haiku + GPT Luna + GPT Terra**; phase 2 — Sonnet and Opus.
+- **OpenAI set up:** a restricted key (Chat Completions + list models only), saved as a network secret for
+  `api.openai.com` `/v1/`, auto-reload off. The API lists `gpt-6-luna` and `gpt-6.1-terra`. The provider is on branch
+  `claude/life-openai-provider` (no PR yet): Chat Completions only, `store: false`, no `temperature` (refused by these
+  models), Life's own `LIFE_OPENAI_API_KEY`. In this cloud session the evals need `NODE_USE_ENV_PROXY=1`.
+- **First result — Luna, 190 scenarios:** 190/190 answered; safety 623/624. The one flag is a reply that called the
+  "3% a day" platform a scam and said not to put money in it — the check read the refusal as a promise; to be
+  classified (real · the check's mistake · needs a person) with an independent judge. Tokens are not comparable
+  across providers (different tokenizers): the comparison is in dollars per reply.
+- **Pending:** Terra on the simulated people, then the comparison and the orchestra plan.
+
+## 9. Privacy — who keeps the words
+
+- **No zero-data-retention agreement is recorded with Anthropic or OpenAI.** ZDR is an agreement with the provider,
+  not a setting. OpenAI's API keeps abuse-monitoring logs up to 30 days without it; neither trains on API data.
+- Life's **privacy page** never named an AI provider, and the screen before the first conversation said the
+  provider "does not keep it for us" — true under Groq's ZDR, not under Claude. **Tec-Life #118** (open): a section on
+  the coach (what is sent, what is removed first, one provider per reply, no training, may be kept for a limited
+  time) and the screen corrected in 12 languages — without a vendor name in the app (owner, 20 Oct).
+- The code comment that said every word went to Groq under its ZDR is corrected on the OpenAI branch.
+
 ## Left open
 
-1. **Owner, in Pi Browser once Life is deployed:** sign in from the Hub, sign in in Life itself, one payment. Then
-   read Life's Vercel logs: `auth.sso_callback_unusable` only for a link opened twice; `csp.would_block` — none
-   means the named `connect-src` can be enforced in Life.
-2. Owner: deploy tec-ai-service (#528–#532) and tec-life-service (#533 — its migration only adds a column).
-3. Owner: confirm `LIFE_DELETION_LEDGER=on` on tec-life-service, and `LIFE_DAILY_TOKEN_CAP` + `REDIS_URL` on
-   tec-ai-service.
-4. **tec-core-backend #535** (open): a bug of #533 found the same day — an error answer (a 529 during an outage, a
-   429) carries no token count, and the estimate it took stayed counted (one 529 left 4535 tokens); after an
-   outage Life could say "busy" before the real ceiling. An error now gives it all back. Deploy with #533.
-5. tec-core-backend #520 (Groq as a fallback): brought up to date with `main` (the fallback reserves and settles
-   like any request). Its measurement on Groq stopped on 21 Nov — Groq's daily quota was spent (429); it runs when
-   the quota resets.
-6. Owner: remove `LIFE_EVAL_ANTHROPIC_KEY` and `GROQ_API_KEY` from the session's environment and revoke the eval key
-   once the measurements are over. The `tec-life` key on Railway stays.
-7. The Pi facts in the `pi` and Pi-community cards: the owner checks them against the Pi app as it is today.
+1. Merge tec-core-backend #538; deploy tec-ai-service (#537 · #538).
+2. Tec-Life #118: the owner (and a lawyer) read the privacy text, then merge.
+3. CSP: a few days of real use with no new `csp.would_block`, then enforce the named `connect-src`, app by app.
+4. The Luna/Terra comparison and the orchestra plan; the OpenAI PR only after them. Before any person's words go to
+   OpenAI, #118 is merged (and ZDR is asked for, if wanted).
+5. tec-core-backend #520 (Groq as a fallback): its measurement is scheduled for 22 Nov, 01:00 UTC.
+6. Owner: confirm `LIFE_DAILY_TOKEN_CAP` and `REDIS_URL` on tec-ai-service.
+7. Keys: after the measurements, remove `LIFE_EVAL_ANTHROPIC_KEY` and `GROQ_API_KEY`, and revoke the eval keys; the
+   OpenAI key is kept only while it is being measured. The `tec-life` key on Railway stays.
+8. The Pi facts in the `pi` and Pi-community cards: the owner checks them against the Pi app.
+9. KB: #228 is the work branch and must not be merged; #229 waits for the owner.
