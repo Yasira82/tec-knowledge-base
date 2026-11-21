@@ -4,7 +4,7 @@
 > Truth State: [Current State] — verified against live platform (June 2026)
 > Future Vision sections explicitly labeled
 > Authority: C-00 Platform Constitution + C-67 Source of Truth Matrix
-> ADR References: ADR-001 → ADR-007 (C-64)
+> ADR References: ADR-001 → ADR-014 (C-64 is the record)
 
 ---
 
@@ -49,7 +49,7 @@ Core Flow:
            Nexus — orchestrates mature layers
       ↓
  Layer 6:  Risk Infrastructure                      [Future Vision]
-           ALERT + NX
+           ALERT (security signals) · System Security Center — NX left this layer (ADR-010)
       ↓
  Layer 7:  Reasoning Infrastructure                 [Future Vision]
            TEC AI — Institutional Reasoning Runtime (cross-layer)
@@ -105,18 +105,18 @@ Systems of Production = Layer 9 (Apps)
                            │  x-internal-key: INTERNAL_SECRET
 ┌──────────────────────────▼──────────────────────────────────────┐
 │                    GATEWAY LAYER                                │
-│  tec-api-gateway  :4000  (Railway)                              │
+│  tec-api-gateway  :3000  (Railway)                              │
 │  JWT verification  ·  routing  ·  rate limiting                 │
 │  Single entry point — services NOT exposed to internet          │
 └──────┬───────┬──────────┬──────────┬──────────┬────────────────┘
        │       │          │          │          │
    ┌───▼─┐ ┌──▼──┐   ┌───▼──┐  ┌───▼──┐  ┌───▼──┐
    │Auth │ │Pay  │   │Comm  │  │Asset │  │ ...  │
-   │4001 │ │4002 │   │4003  │  │4006  │  │      │
+   │5001 │ │5003 │   │5009  │  │5004  │  │      │
    └─────┘ └─────┘   └──────┘  └──────┘  └──────┘
 ```
 
-**Rule (ADR-005):** Client NEVER calls Railway URLs directly. All traffic goes through BFF → Gateway.
+**Rule (ADR-004):** Client NEVER calls Railway URLs directly. All traffic goes through BFF → Gateway.
 
 ---
 
@@ -200,9 +200,9 @@ Based on ADR-002 + ADR-007. Every app supports both modes.
                     │                   │
               Hub PaymentModal   Pi Browser Wallet
                     │                   │
-              tec-payment-service :4002
+              tec-payment-service :5003
                     │
-              Outbox Pattern (ADR-004)
+              Outbox pattern (payment-service — C-20 §5; no C-64 record yet)
                     │
               Pi Network API
 ```
@@ -224,24 +224,28 @@ if (isHubNavigation() || !window.Pi || !piReady) {
 
 ## 7. BACKEND SERVICES MAP
 
+> **Ports and the full list of deployed services: C-20 is the authority** (gateway `:3000`,
+> services `:5001`–`:5019`). This table had the old 4000-series and twelve rows; the rows below
+> are the original twelve with C-20's ports — the eight added since (5012–5019) are in C-20.
+
 | Service | Port | Role | Owner Entity |
 |---------|------|------|------|
-| tec-api-gateway | 4000 | Entry point, routing, JWT verify | — |
-| tec-auth-service | 4001 | Pi identity, SSO, JWT issuance | Principal, Session |
-| tec-payment-service | 4002 | Pi payments, Outbox pattern | Payment |
-| tec-commerce-service | 4003 | Orders, products, merchants | Order, Subscription |
-| tec-identity-service | 4004 | User profiles, KYC status | Identity |
-| tec-kyc-service | 4005 | KYC verification workflow | — |
-| tec-asset-service | 4006 | NFT/digital asset management | Asset |
-| tec-analytics-service | 4007 | Platform metrics and events | — |
-| tec-notification-service | 4008 | Push/email notifications | Notification |
-| tec-realtime-service | 4009 | WebSocket events | — |
-| tec-storage-service | 4010 | File/media storage (R2) | — |
-| tec-wallet-service | 4011 | Pi wallet, balances, ledger | Wallet, LedgerEntry |
+| tec-api-gateway | 3000 | Entry point, routing, JWT verify | — |
+| tec-auth-service | 5001 | Pi identity, SSO, JWT issuance | Principal, Session |
+| tec-wallet-service | 5002 | Pi wallet, balances, ledger | Wallet, LedgerEntry |
+| tec-payment-service | 5003 | Pi payments, Outbox pattern | Payment |
+| tec-asset-service | 5004 | NFT/digital asset management | Asset |
+| tec-identity-service | 5005 | User profiles, KYC status | Identity |
+| tec-notification-service | 5006 | Push/email notifications | Notification |
+| tec-storage-service | 5007 | File/media storage (R2) | — |
+| tec-kyc-service | 5008 | KYC verification workflow | — |
+| tec-commerce-service | 5009 | Orders, products, merchants | Order, Subscription |
+| tec-realtime-service | 5010 | WebSocket events (public — the browser connects directly) | — |
+| tec-analytics-service | 5011 | Platform metrics and events | — |
 
-**Rule (ADR-005):** Services NEVER exposed directly to internet.
-**Rule (ADR-002):** Only `tec-auth-service` verifies Pi identity.
-**Rule (ADR-004):** Only `tec-payment-service` calls Pi Network API.
+**Rule (ADR-004):** Services NEVER exposed directly to the internet (realtime excepted — C-20).
+**Rule:** Only `tec-auth-service` verifies Pi identity (C-47; no ADR records it).
+**Rule (ADR-007):** Only `tec-payment-service` calls the Pi Network API.
 
 ---
 
@@ -271,7 +275,7 @@ Consumer groups (idempotent)
 ## 9. DATA ARCHITECTURE
 
 ### Database
-- PostgreSQL per service (Railway) — no shared databases (ADR-005)
+- PostgreSQL per service (Railway) — no shared databases (C-47 Forbidden #3)
 - `DECIMAL(20,8)` for ALL Pi amounts — stored as string in APIs
 - `balance >= 0` enforced at DB constraint level
 - Expand-contract migration pattern — never destructive
@@ -342,13 +346,19 @@ Consumer groups (idempotent)
 
 | ADR | Decision | Status |
 |-----|----------|--------|
-| ADR-001 | HttpOnly cookies for auth (httpOnly:false for access token — Pi Browser req.) | ACCEPTED |
+| ADR-001 | httpOnly:false on `tec_access_token` (Pi Browser requirement) | ACCEPTED |
 | ADR-002 | Dual-Mode Payment (Hub redirect + Direct) | ACCEPTED |
 | ADR-003 | FOREIGN_SESSION detection for Pi SDK | ACCEPTED |
-| ADR-004 | Outbox Pattern for payment-service | ACCEPTED |
-| ADR-005 | BFF Pattern — services not internet-facing | ACCEPTED |
-| ADR-006 | SSO redirect to Hub for all apps | ACCEPTED |
+| ADR-004 | BFF-Only Architecture — services not internet-facing | ACCEPTED |
+| ADR-005 | Redis Streams over Kafka/RabbitMQ | ACCEPTED |
+| ADR-006 | CSRF exclusion on payment BFF routes | ACCEPTED |
 | ADR-007 | Pi Payment Ownership Authority (isHubNavigation) | ACCEPTED |
+| ADR-008 → ADR-014 | Observability · unified payment contract · NX repurposed · modules-first · referral gift · Legend scoring · property certificate | see C-64 |
+
+> This table once numbered ADR-004 to ADR-006 differently from C-64 (Outbox · BFF · SSO redirect).
+> **C-64 is the record.** The Outbox pattern is cited as "ADR-004" in seven C-docs and in
+> payment-service's code, but C-64 has no record of it — recording it, with a number the owner
+> assigns, is open (KB review, 14 Nov 2026). The SSO redirect is a rule (C-123).
 
 Full ADR details → [`knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md`](../knowledge-base/C-64___ARCHITECTURE_DECISION_RECORDS.md)
 
@@ -470,7 +480,7 @@ Each app has a constitutional document defining its engineering authority, secur
 | System of Coordination | Nexus | C-109 | Future Vision |
 | System of Governance | SYSTEM | C-110 | Future Vision |
 | System of Risk | ALERT | C-111 | Future Vision |
-| System of Security | NX | C-112 | Future Vision |
+| Opportunity Exchange (ADR-010; was System of Security) | NX | C-112 | Current State (live app) |
 | Capital Coordination Infrastructure | FundX | C-113 | Future Vision |
 | Real Estate Coordination | Estate | C-114 | Future Vision |
 | System of Construction | DX | C-115 | Future Vision |
@@ -504,4 +514,4 @@ Settlement (Hub/Wallet)
 
 *Architecture Reference — TEC Platform v3.2.0 — June 2026*
 *Owner: Yasser | Yasira82 | @yasser172*
-*Authority: C-00 → C-67 → ADRs → App Charters (C-100→C-115) → This Document*
+*Authority: C-00 → C-47 → ADRs (C-64) → C-67 → App Charters (C-100+) → This Document*

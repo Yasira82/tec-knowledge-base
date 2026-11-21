@@ -15,7 +15,7 @@ This script closes that gap. It reads the code repos at a git ref and compares:
   cookies    C-13 / C-123 (None + Partitioned)     ↔ every cookie setter in the Hub, template and apps
   refresh    C-13 §1 (token + tec_user together)   ↔ every refresh route that renews the token
   fleet      architecture/app-fleet.yaml           ↔ Hub registry + SSO allowlist + each app's APP_SOURCE
-  slo        C-78 §2                               ↔ manifests/slo-definitions.yaml (same numbers, one authority)
+  slo        C-78 §2                               ↔ manifests/slo-definitions.md (same numbers, one authority)
   generated  the tables in C-11 + C-44                ↔ what generate-code-docs.py renders from the code now
 
 Each result is PASS, FAIL or SKIP (a repo that is not available). Exit 1 on any FAIL, or on
@@ -341,7 +341,7 @@ def check_slo():
     c78 = kb_glob_one('C-78')
     table = dict(re.findall(r'^\|\s*(Auth|Payments|Gateway|PAL|Hub)\s*\|\s*([\d.]+)%', kb_read(c78), re.M))
     # the manifest is Markdown with the YAML inside a ```yaml fence (audit F15)
-    text = kb_read('manifests/slo-definitions.yaml')
+    text = kb_read('manifests/slo-definitions.md')
     fence = re.search(r'^```yaml\n(.*?)^```', text, re.M | re.S)
     doc = yaml.safe_load(fence.group(1) if fence else text) or {}
     manifest = {s['id']: s['objective'] for s in doc.get('slos', [])}
@@ -350,9 +350,9 @@ def check_slo():
         obj = manifest.get(sid)
         m = re.search(r'([\d.]+)%', str(obj or ''))
         if said is None or m is None:
-            record(FAIL, 'slo', f'{row}: missing from {c78} §2 or {sid} missing from slo-definitions.yaml')
+            record(FAIL, 'slo', f'{row}: missing from {c78} §2 or {sid} missing from slo-definitions.md')
         elif float(said) != float(m.group(1)):
-            record(FAIL, 'slo', f'{row}: {c78} §2 says {said}%, slo-definitions.yaml {sid} says {obj}')
+            record(FAIL, 'slo', f'{row}: {c78} §2 says {said}%, slo-definitions.md {sid} says {obj}')
         else:
             record(PASS, 'slo', f'{row} {said}% — C-78 §2 = manifest')
 

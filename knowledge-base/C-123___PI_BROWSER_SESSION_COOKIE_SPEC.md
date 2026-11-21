@@ -105,8 +105,28 @@ clobber an established login (`authSettledRef`).
 
 ## §4 — TOKEN LIFECYCLE (server-side refresh)
 
-Backend reality: access token lives **~1h** (`JWT_EXPIRES_IN=3600`); refresh
-tokens are **single-use** (rotation — reuse → `401 "Refresh token already used"`).
+### §4.0 — Lifetimes: the one table (KB review, 14 Nov 2026)
+
+Before this table the KB gave three answers for the access token — **~1 h** (this section,
+`JWT_EXPIRES_IN=3600`), **7 days** (C-02) and **24 h** (ADR-001's "Token TTL 24h"). What the
+code says, read on 14 Nov 2026:
+
+| What | Lifetime | Where it is set | Verification |
+|---|---|---|---|
+| Access JWT (`exp`) | `JWT_EXPIRES_IN` on Railway — **the code default is 24 h** (`86400`) | auth-service `parseExpiry(…, 86400)`, every signing path | `[Code Verified]` for the default · the production value is **`[Assumed]`** until read |
+| Refresh JWT (`exp`) | `JWT_REFRESH_EXPIRES_IN` — **default 7 days** (`604800`); single-use (rotation) | auth-service, signed with `JWT_REFRESH_SECRET` (falls back to `JWT_SECRET`) | `[Code Verified]` default |
+| `tec_access_token` cookie | 24 h, script-readable (ADR-001) | Hub `pi-login` · `refresh` · `sso-callback`; template `sso-callback` + `lib/session-refresh.ts` | `[Code Verified]` |
+| `tec_user` · `tec_csrf` cookies | 24 h, renewed with the token (LAW: refresh renews all three) | same | `[Code Verified]` |
+| `tec_refresh_token` cookie | 7 days, **HttpOnly**, host-only | same | `[Code Verified]` |
+| When a refresh happens | server-side, on a BFF call or `/api/auth/me`, **120 s before** the access token expires (`REFRESH_AHEAD_SECONDS`); single-flight per refresh token | template `lib/session-refresh.ts` · Hub `createHandler` | `[Code Verified]` |
+
+**Production's access lifetime is read, not assumed:** auth-service logs
+`Token lifetimes: access <n>s, refresh <n>s` at every boot (an `ERROR` line if access < 1 h
+or refresh < access — #430). Whoever reads it replaces `[Assumed]` above with the number and
+the date. A JWT that outlives its 24 h cookie is not a longer session: the cookie is gone
+first, and the session continues only through the refresh cookie.
+
+Refresh tokens are **single-use** (rotation — reuse → `401 "Refresh token already used"`).
 
 ```
 Any /api/bff/* request (createHandler):

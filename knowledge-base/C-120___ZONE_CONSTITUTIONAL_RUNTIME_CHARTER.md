@@ -13,8 +13,8 @@
 > **Truth State:** `[Current State]` for V0/V1 (below) · `[Future Vision]` for V2→V4
 > **Verification:** `[Code Verified]` (merged) · deployment per app CLAUDE.md
 
-Zone's V0/V1 verification runtime is built in `tec-identity-service` (backend) +
-`tec-zone` (frontend), merged to `main`:
+Zone's V0/V1 verification runtime was built in `tec-identity-service` (backend; moved to
+`tec-trust-service` on 2026-10-16 — see Technical Architecture) + `tec-zone` (frontend), merged to `main`:
 - **Verified registry** (V1) + public entity detail — read layer live.
 - **Verification workflow** (§7): submit → PENDING → human review (admin-gated),
   evidence append-only, no self-verify, no paid path to VERIFIED.
@@ -69,6 +69,18 @@ be backed, the fix is saying what is true — not finding a worse data source.
 
 **Honest gap:** L3 is wired but unreached — no merchant has submitted an entity, so every
 listing sits at its lower tier. The chain is `[Code Verified]`, not `[Runtime Verified]`.
+
+## Mission
+
+> **Truth State:** `[Current State]` · **Verification:** `[Documentation Verified]` against §1–§4
+
+Record the evidence that something in the Pi economy is what it claims to be — a project, a
+merchant, a builder, a community — and serve a verified status that other runtimes can rely
+on. Zone answers *"What can be trusted?"* with **evidence and a human reviewer's sign-off**,
+never with a score, and never for money: Zone Pro buys a faster review, not a verdict (§7).
+Interpreting that evidence into trust belongs to Analytics and TEC AI (§4).
+
+---
 
 ## PREAMBLE
 
@@ -371,6 +383,53 @@ More TEC value → more zone.pi credibility
 This is a compounding network effect
 that does not depend only on TEC user growth.
 ```
+
+---
+
+## Technical Architecture
+
+> **Truth State:** `[Current State]` · **Verification:** `[Code Verified]` —
+> Last verified on code: 2026-11-14 (tec-core-backend, work branch; `origin/main` has the same
+> routes and models)
+
+**Where it runs.** The backend is the `zone` module of **`tec-trust-service`** (port 5019,
+C-20), with Legend, Elite and VIP. It moved there from `tec-identity-service` on 2026-10-16 on
+the **same paths**, so no app changed: the gateway sends `/api/identity/zone/*` to it when
+`TRUST_SERVICE_URL` is set. Its data is the logical database `tec_trust`. The frontend is
+`Tec-Zone` (`zone.tecosystem.app`); its BFF (`src/lib/zone/server.ts`) calls the gateway with
+the session token and the internal key.
+
+**Data** (`tec-trust-service/prisma/schema.prisma`):
+
+| Model | Holds | Rule |
+|---|---|---|
+| `ZoneEntity` (`zone_entities`) | handle, `type` (PROJECT · MERCHANT · BUILDER · COMMUNITY), name, `owner` (Pi username; null for seeded entities), `status` (PENDING · VERIFIED · REVOKED), `reviewer`, `priority`, `verified_at` | `priority` re-orders the queue only |
+| `ZoneEvidence` (`zone_evidence`) | `kind`, `note`, `source`, `created_at` — no `updated_at` | append-only (§7) |
+
+**API** (`zone.controller.ts`, `zone-internal.controller.ts`):
+
+| Route | Who | What |
+|---|---|---|
+| `GET registry` · `lookup` · `merchants` · `entity/:handle` | public | the verified registry, Trust Check, an entity with its evidence |
+| `GET my/submissions` | the session (JWT owner) | the caller's own requests |
+| `POST verification` | the session | submit → PENDING. `priority` is honoured only from the BFF (a `service` caller), resolved from the live Zone Pro subscription |
+| `POST entity/:handle/evidence` | the session, own entity only | append evidence |
+| `GET review/queue` · `PATCH entity/:handle/review` | an ADMIN (the role is identity's, asked over `/internal/`; identity down → 503) | queue by priority then age; VERIFY or REVOKE with a note — never on one's own submission |
+| `GET identity/internal/zone/verified/:owner` · `verified-names/:owner?type=` | services only (`x-internal-key` + the `/internal/` guard) | does this person hold a verification · which names of one type |
+
+**Events.** A decision on an entity with an owner emits `zone.badge.issued.v1` (VERIFY) or
+`zone.badge.revoked.v1` (REVOKE) through Redis Streams, after the database write; a failed emit
+never undoes the decision. Consumers and the type each accepts: the table under *Zone Became
+Consumable* above. Zone also files two alerts through Alert (C-111): a new request (operators)
+and the verdict (the applicant).
+
+**Known gaps** — what §7 promises and the code does not yet do:
+
+| §7 says | The code | Status |
+|---|---|---|
+| A granted badge can be withdrawn (the revoke event exists for it) | A decision is accepted only on a PENDING entity; VERIFIED and REVOKED are final, so a verified entity cannot be revoked — `zone.badge.revoked.v1` fires only when a request is refused | Open — TEC-AUDIT-0050; the state machine is the owner's decision |
+| Two reviewers for institutional verifications | One ADMIN reviewer, never the submitter | Open |
+| Disputes with evidence, resolved by a panel | No dispute path | Open — V2 (§5) |
 
 ---
 

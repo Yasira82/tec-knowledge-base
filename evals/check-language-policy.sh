@@ -32,8 +32,8 @@ echo "🔤 TEC — Language Policy Engine"
 echo "==============================="
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping language policy check."
-  exit 0
+  echo "❌ python3 not available — cannot run the language policy check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 UPDATE_BASELINE="${UPDATE_BASELINE:-}" python3 - <<'PY'

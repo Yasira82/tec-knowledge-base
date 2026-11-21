@@ -36,8 +36,8 @@ echo "🗓️  TEC — Verification Freshness Engine (max age ${MAX_AGE_DAYS} da
 echo "=========================================================="
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⚠️  python3 not available — skipping freshness check."
-  exit 0
+  echo "❌ python3 not available — cannot run the freshness check. A check that cannot run fails; it never passes."
+  exit 1
 fi
 
 MAX_AGE_DAYS="$MAX_AGE_DAYS" python3 - <<'PY'

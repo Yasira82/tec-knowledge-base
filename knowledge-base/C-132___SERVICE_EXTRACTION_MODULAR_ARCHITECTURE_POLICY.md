@@ -163,7 +163,7 @@ Read top-to-bottom; the first row that matches decides.
 | If the domain… | …then it is | Example |
 |---|---|---|
 | moves/holds Pi | **payment-service only** (never its own) | FundX, Insure, Brookfield custody |
-| is one of the 11 live core services | **its own service** (already extracted) | auth, payment, commerce, asset, analytics, … |
+| is one of the deployed services (20 — §7.1, C-20) | **its own service** (already extracted) | auth, payment, commerce, asset, analytics, … |
 | has a **T1–T4** trigger observed in prod | **extract to its own service** | Explorer → search-service (when load hits) |
 | owns real backend state, no trigger yet | **module in an existing service** (design-for-extraction if a candidate) | Life, Connection, Zone (live); Estate, FundX-state, Explorer, Insure-state, NX |
 | owns no backend state — only reads/orchestrates others | **frontend only** (BFF over existing services) | Nexus, TEC AI, System, DX, Titan, VIP, Elite, Epic, Legend, NBF, Brookfield |
@@ -172,21 +172,37 @@ Read top-to-bottom; the first row that matches decides.
 
 ## 7. Current Mapping — Apps → Modules → Services
 
-### 7.1 The live backend services (11) — no additions planned
+### 7.1 The live backend services — 20 (C-20 is the authority)
+
+> **Truth State:** `[Current State]` · **Verification:** `[Code Verified]` against C-20, which the
+> weekly drift job checks against every `main.ts`. Last verified: 2026-11-14.
+
+This section said **11 services, ports 4000–4010, "no additions planned"**. That was the July 2026
+state. On 2026-10-11 the owner decided that `tec-identity-service` is closed to new domain
+modules and that domains move to their own service or a shared domain host
+(`audits/APP_EXPANSION_ARCHITECTURE_2026-10-11.md`); eight services were deployed between
+12 and 16 Oct. Today, per C-20:
 
 ```
-tec-api-gateway (4000)     tec-notification-service (4008)
-tec-auth-service (4001)    tec-realtime-service (4009)
-tec-payment-service (4002) tec-storage-service (4010)
-tec-commerce-service (4003)
-tec-identity-service (4004)  ← hosts Life / Connection / Zone / Explorer / Legend / NBF modules
-tec-kyc-service (4005)
-tec-asset-service (4006)
-tec-analytics-service (4007)
+gateway :3000   (public)
+core     auth :5001 · wallet :5002 · payment :5003 · asset :5004 · identity :5005
+         notification :5006 · storage :5007 · kyc :5008 · commerce :5009
+         realtime :5010 (public) · analytics :5011
+moved out of identity (Oct 2026)
+         life :5012 · ai :5013 · connection :5014 · nexus :5015 · search :5016 (Explorer)
+         platform :5017 (System · DX · Feedback · Pioneer)
+         business :5018 (NBF · Titan · NX · Epic) · trust :5019 (Zone · Legend · Elite · VIP)
 ```
 
-> The target service count **now** is **these 11 — unchanged.** Not 12–18. The next
-> service is created only when §5 fires.
+**Terms** (used the same way in C-20, C-02, README): a **deployed service** is one Railway
+service with its own deploy — 20, the gateway included; a **domain module** is a code module
+inside one of them (e.g. Alert and Insure inside identity); an **app** is a frontend in
+`architecture/app-fleet.yaml` (24).
+
+> **Open (owner):** the 2026-10-11 decision says it becomes law through "an ADR amending C-132"
+> with a number the owner assigns. The services are live; that ADR is not in C-64 yet. Until it
+> is, §1–§6 (the extraction rules) stand as written, and §7.2–§7.5 below are the July 2026
+> mapping — superseded by the list above where they disagree.
 
 ### 7.2 Bucket A — App owns / is backed by a core service (already extracted)
 
@@ -315,7 +331,7 @@ Modules-First.           New service only on a documented T1–T4 trigger.
 Design-for-Extraction.   Candidates (Explorer) get a clean seam from day one.
 Financial Hard-Gate.     payment-service is the ONLY Pi custodian — always.
 extract-on-load.         Split when production forces it, not when you imagine it.
-Target now: 11 services. The other domains are modules or frontends.
+Today: 20 deployed services (§7.1, C-20) — the 11 of July 2026 plus the eight moved out of identity in October. The other domains are modules or frontends.
 ```
 
 ---

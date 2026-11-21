@@ -4,7 +4,7 @@
 > **Truth State:** `[Current State]`
 > **Governance State:** `[Governance Approved]`
 > **Verification:** `[Documentation Verified]`
-> **Binding SLOs:** **C-78 §2** is the authority and `manifests/slo-definitions.yaml` its
+> **Binding SLOs:** **C-78 §2** is the authority and `manifests/slo-definitions.md` its
 > machine-readable form (gated by `evals/check-slo-definitions.sh`). The **availability**
 > figures in this file are stricter than the binding ones —
 >

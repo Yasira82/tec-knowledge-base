@@ -4,7 +4,7 @@
 # XINFO over the shared Redis — the PRODUCER half of the C-96 evidence loop, twin of
 # tec-identity-service GET /health/streams). This sample is the exact shape the tool
 # writes; real records land in runtime-evidence/ when ops runs it against prod Redis.
-# Validates against manifests/runtime-evidence-schema.yaml.
+# Validates against manifests/runtime-evidence-schema.md.
 evidence_id: ev-2026-08-01-901
 kind: health_snapshot
 timestamp: "2026-08-01T00:00:00Z"
