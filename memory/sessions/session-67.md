@@ -84,7 +84,12 @@ either order (tried with a real merge).
 2. Owner: deploy tec-ai-service (#528–#532) and tec-life-service (#533 — its migration only adds a column).
 3. Owner: confirm `LIFE_DELETION_LEDGER=on` on tec-life-service, and `LIFE_DAILY_TOKEN_CAP` + `REDIS_URL` on
    tec-ai-service.
-4. tec-core-backend #520 (Groq as a fallback) waits for its own measurement.
-5. Owner: remove `LIFE_EVAL_ANTHROPIC_KEY` and `GROQ_API_KEY` from the session's environment and revoke the eval key
+4. **tec-core-backend #535** (open): a bug of #533 found the same day — an error answer (a 529 during an outage, a
+   429) carries no token count, and the estimate it took stayed counted (one 529 left 4535 tokens); after an
+   outage Life could say "busy" before the real ceiling. An error now gives it all back. Deploy with #533.
+5. tec-core-backend #520 (Groq as a fallback): brought up to date with `main` (the fallback reserves and settles
+   like any request). Its measurement on Groq stopped on 21 Nov — Groq's daily quota was spent (429); it runs when
+   the quota resets.
+6. Owner: remove `LIFE_EVAL_ANTHROPIC_KEY` and `GROQ_API_KEY` from the session's environment and revoke the eval key
    once the measurements are over. The `tec-life` key on Railway stays.
-6. The Pi facts in the `pi` and Pi-community cards: the owner checks them against the Pi app as it is today.
+7. The Pi facts in the `pi` and Pi-community cards: the owner checks them against the Pi app as it is today.
