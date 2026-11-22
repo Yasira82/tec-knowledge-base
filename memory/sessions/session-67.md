@@ -125,16 +125,59 @@ The evals until now asked whether Life does **no harm**. Three pieces now ask wh
   time) and the screen corrected in 12 languages — without a vendor name in the app (owner, 20 Oct).
 - The code comment that said every word went to Groq under its ZDR is corrected on the OpenAI branch.
 
+## 10. 22 Nov — the models in dollars, Groq closed, a loan policy
+
+**What a reply costs, measured in dollars** (32 scenarios, the same on each; input and output tokens counted
+apart, since reasoning tokens bill as output — a temporary log line, never committed):
+
+| Model | $ per reply | 100 people × 20 messages a month |
+|---|---|---|
+| GPT Luna | 0.0002 | ~0.4 |
+| Claude Haiku | 0.0007 | ~1.3 |
+| GPT Terra | 0.0018 | ~3.7 |
+
+GPT prices are the ones the owner gave (unverified against OpenAI's usage page). These are the measured
+scenarios, not the running bill.
+
+**Quality so far:**
+- **Safety, 190 scenarios:** Luna 190/190 answered, Terra 189/190 (a man asking for an app to read his wife's
+  phone got no help with it). Their hard flags — one Luna, two Terra — were all the check, not the reply: each
+  *denied* a forecast or named a scam. The check was fixed (#540).
+- **Simulated people (one run each, so a direction, not a verdict):** Luna met 71/88 criteria against Haiku's
+  58/88. Terra: 3 people complete (21/24); the other 9 stopped when Groq's daily limit for the model that plays
+  the person (200,000 tokens) ran out — to be finished.
+- **Owner's reading (22 Nov):** Luna the first candidate for ordinary replies, after repeat runs; Haiku stays as
+  the fallback; Terra waits for its full numbers; no router, and no real conversation to OpenAI, before the privacy
+  question is closed.
+
+**Groq as a fallback — closed (#520).** The 190-scenario run was refused by the free account's limits twice
+(8,000 tokens a minute, 200,000 a day per model; 42/190 answered the second time). A fallback takes all the
+traffic
+exactly when the main provider is down; limits this small rule it out. Haiku is the fallback. `GROQ_API_KEY` stays
+until the simulated runs are done: Groq plays the person and judges.
+
+**A loan — the owner's policy (#539, merged and deployed automatically).** In Luna's simulated «debt» conversation
+«انت شايف ايه؟» got «أنا شايف ما تاخدش قرض جديد»: the opinion card (give your view) beat the money card. The policy:
+the cost of a loan (interest, payments, risks), the alternatives, and a comparison of the scenarios the person
+gives — yes; telling them to take it or not, or that it is the best solution — never; with too little information,
+say it is not enough to decide. Enforced in code (a note whenever a loan is in the conversation; a reply that takes
+a side is rewritten once, then its sentences dropped) and measured: the two loan scenarios 6/6 on Haiku and 6/6 on
+Luna (the rewrite fired once on Luna and fixed it); the full suite on Haiku 196/196 answered, 0 critical.
+
+**Deploys are automatic:** a merge to `main` deploys the service on Railway (owner, 22 Nov). A merged PR reaches
+people at once — which is why each is measured on Haiku before it is opened, and why the OpenAI branch is not opened
+before the measurements and the privacy page.
+
 ## Left open
 
-1. Merge tec-core-backend #538; deploy tec-ai-service (#537 · #538).
-2. Tec-Life #118: the owner (and a lawyer) read the privacy text, then merge.
-3. CSP: a few days of real use with no new `csp.would_block`, then enforce the named `connect-src`, app by app.
-4. The Luna/Terra comparison and the orchestra plan; the OpenAI PR only after them. Before any person's words go to
-   OpenAI, #118 is merged (and ZDR is asked for, if wanted).
-5. tec-core-backend #520 (Groq as a fallback): its measurement is scheduled for 22 Nov, 01:00 UTC.
-6. Owner: confirm `LIFE_DAILY_TOKEN_CAP` and `REDIS_URL` on tec-ai-service.
-7. Keys: after the measurements, remove `LIFE_EVAL_ANTHROPIC_KEY` and `GROQ_API_KEY`, and revoke the eval keys; the
-   OpenAI key is kept only while it is being measured. The `tec-life` key on Railway stays.
-8. The Pi facts in the `pi` and Pi-community cards: the owner checks them against the Pi app.
-9. KB: #228 is the work branch and must not be merged; #229 waits for the owner.
+1. Terra: the 9 simulated people (scheduled 22 Nov, 16:34 UTC); then two repeat runs each of Luna and Haiku, same
+   people, same criteria.
+2. The router — by task, quality, safety, cost and availability — only after (1) and (3).
+3. Tec-Life #118: the owner (and a lawyer) read the privacy text, then merge; ZDR with OpenAI is the owner's choice.
+   No person's words go to OpenAI before it.
+4. CSP: a few days with no new `csp.would_block`, then enforce the named `connect-src`, app by app.
+5. Owner: confirm `LIFE_DAILY_TOKEN_CAP` and `REDIS_URL` on tec-ai-service; try a loan question in Life.
+6. Keys: after the simulated runs, remove `GROQ_API_KEY` and `LIFE_EVAL_ANTHROPIC_KEY` and revoke the eval keys; the
+   OpenAI key only while it is measured. The `tec-life` key on Railway stays.
+7. The Pi facts in the `pi` and Pi-community cards: the owner checks them against the Pi app.
+8. KB: #228 is the work branch and must not be merged; #229 waits for the owner.
