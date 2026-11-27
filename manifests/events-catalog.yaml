@@ -102,9 +102,12 @@ events:
     verified: true
     binds_to: [C-70, C-107]
     note: >
-      Connection consumes it into relationship trust signals (order-paid.consumer); Analytics
-      also tracks it as the merchant scoring dimension (ADR-013). Both verified in the
-      stream-consistency audit (2026-08-01).
+      Connection consumes it into relationship trust signals (order-paid.consumer). Analytics
+      tracks it as the merchant scoring dimension (ADR-013) — but until tec-core-backend #546
+      (2026-11-27) it dropped every one: the payload names sellers by user id and Analytics
+      keys reputation by Pi username. It now credits each seller with their share, under the
+      username read from its own user.created rows; a seller it cannot name is skipped and
+      logged. Orders paid before #546 are not backfilled.
 
   # ── KYC ───────────────────────────────────────────────────────────────────
   - name: kyc.verified
@@ -197,14 +200,16 @@ events:
     owner: tec-connection-service/connection
     subject: piUsername
     consumers: [tec-trust-service/legend, tec-analytics-service]
-    status: planned
+    status: live
     verified: false
     binds_to: [C-107, C-126]
     note: >
-      Collaboration milestone, recorded as a non-verified Legend signal. Consumers are MAPPED
-      (legend.consumer, analytics scoring) but NO service has ever produced it — it read `live`
-      only because identity's stream-health named it. Found 2026-10-17 when the drift check
-      moved Connection's owner to tec-connection-service. Planned until Connection emits it.
+      A trust milestone (tec-core-backend #547, 2026-11-27): the number of DISTINCT people who
+      completed a paid order with a seller reaches 5, 25, then 100 (TRUST_MILESTONES in
+      connection.service.ts) — earned through real Pi, never claimed (C-107). Emitted once per
+      rung, after the trust edges commit, only when a new buyer carried the count onto it; keyed
+      by the seller's piUsername; no amount, order id or buyer. A non-verified Legend signal; the
+      collaborator dimension of ADR-013 scoring. No service produced it before #547.
   - name: fundx.investment.closed.v1
     owner: tec-fundx (planned — no service yet)
     subject: piUsername
